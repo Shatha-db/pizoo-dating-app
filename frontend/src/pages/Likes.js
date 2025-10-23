@@ -79,15 +79,49 @@ const Likes = () => {
   };
 
   const ProfileGrid = ({ profiles }) => (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       {profiles.map((profile, i) => (
-        <div key={i} className="aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-pink-200 to-purple-200">
-          {profile.photos && profile.photos.length > 0 ? (
-            <img src={profile.photos[0]} alt="" className="w-full h-full object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-4xl">❤️</div>
-          )}
-        </div>
+        <Card key={i} className="overflow-hidden">
+          <div className="aspect-[3/4] relative bg-gradient-to-br from-pink-200 to-purple-200">
+            {profile.photos && profile.photos.length > 0 ? (
+              <img src={profile.photos[0]} alt="" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-4xl">❤️</div>
+            )}
+            
+            {/* Profile Info Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-3">
+              <h3 className="text-white font-bold text-base">
+                {profile.display_name}
+                {profile.age && `, ${profile.age}`}
+              </h3>
+              {profile.location && (
+                <p className="text-white/90 text-xs mb-2">📍 {profile.location}</p>
+              )}
+            </div>
+          </div>
+          
+          {/* Action Buttons */}
+          <div className="p-2 flex gap-2">
+            <Button
+              onClick={() => handleViewProfile(profile)}
+              variant="outline"
+              size="sm"
+              className="flex-1 text-xs"
+            >
+              <Eye className="w-3 h-3 ml-1" />
+              عرض
+            </Button>
+            <Button
+              onClick={() => handleMessage(profile)}
+              size="sm"
+              className="flex-1 bg-pink-500 hover:bg-pink-600 text-white text-xs"
+            >
+              <MessageCircle className="w-3 h-3 ml-1" />
+              رسالة
+            </Button>
+          </div>
+        </Card>
       ))}
     </div>
   );

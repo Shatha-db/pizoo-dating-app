@@ -553,6 +553,7 @@ class DatingAppTester:
         # 5. Discovery & Swipe Flow
         print("\n💕 Testing Discovery & Swipe Flow...")
         success, profiles = self.test_discover_profiles()
+        self.test_discover_profiles_with_category()
         if success:
             self.test_swipe_actions(profiles)
         

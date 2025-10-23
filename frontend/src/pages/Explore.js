@@ -113,8 +113,8 @@ const Explore = () => {
 
   const handleCategoryClick = (categoryId) => {
     setActiveCategory(categoryId);
-    // TODO: Navigate to filtered profiles
-    // navigate(`/browse/${categoryId}`);
+    // Navigate to home with filter
+    navigate('/home', { state: { category: categoryId } });
   };
 
   return (

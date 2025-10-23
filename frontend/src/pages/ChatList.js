@@ -63,7 +63,15 @@ const ChatList = () => {
       {/* Header */}
       <header className="bg-white shadow-sm p-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">الرسائل 💬</h1>
+          <div>
+            <h1 className="text-2xl font-bold">الرسائل 💬</h1>
+            {isConnected && (
+              <p className="text-xs text-green-600 flex items-center gap-1 mt-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                متصل - رسائل فورية
+              </p>
+            )}
+          </div>
           <button
             onClick={() => setShowSafetyTools(true)}
             className="text-gray-600 hover:text-gray-800"

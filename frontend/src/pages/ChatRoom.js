@@ -211,13 +211,13 @@ const ChatRoom = () => {
           return (
             <div
               key={msg.id || index}
-              className={`flex ${isSent ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${isSent ? 'justify-end' : 'justify-start'} animate-in slide-in-from-bottom-2`}
             >
               <div
                 className={`max-w-[70%] rounded-2xl px-4 py-2 ${
                   isSent
                     ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white'
-                    : 'bg-white text-gray-800'
+                    : 'bg-white text-gray-800 shadow-md'
                 }`}
               >
                 <p>{msg.content}</p>
@@ -230,6 +230,20 @@ const ChatRoom = () => {
             </div>
           );
         })}
+        
+        {/* Typing Indicator */}
+        {otherUser && isUserTyping(otherUser.id) && (
+          <div className="flex justify-start animate-pulse">
+            <div className="bg-gray-200 rounded-2xl px-4 py-2">
+              <div className="flex gap-1">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+              </div>
+            </div>
+          </div>
+        )}
+        
         <div ref={messagesEndRef} />
       </main>
 

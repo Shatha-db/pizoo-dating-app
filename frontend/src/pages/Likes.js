@@ -128,11 +128,18 @@ const Likes = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20" dir="rtl">
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-black/90 text-white px-6 py-3 rounded-full z-50 shadow-lg">
+          {toast}
+        </div>
+      )}
+
       <header className="bg-white shadow-sm p-4">
         <h1 className="text-2xl font-bold text-center">الإعجابات 💕</h1>
       </header>
 
-      <main className="max-w-md mx-auto p-4">
+      <main className="max-w-6xl mx-auto p-4">
         <Tabs defaultValue="sent" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="sent">أرسلت ({sent.length})</TabsTrigger>

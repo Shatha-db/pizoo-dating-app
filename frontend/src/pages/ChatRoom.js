@@ -152,12 +152,23 @@ const ChatRoom = () => {
           </button>
           
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-300 to-purple-300 flex items-center justify-center">
-              👤
+            <div className="relative">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-300 to-purple-300 flex items-center justify-center">
+                👤
+              </div>
+              {otherUser && isUserOnline(otherUser.id) && (
+                <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+              )}
             </div>
             <div>
-              <h2 className="font-bold">المستخدم</h2>
-              <span className="text-xs text-gray-500">نشط الآن</span>
+              <h2 className="font-bold">{otherUser?.name || 'المستخدم'}</h2>
+              <span className="text-xs text-gray-500">
+                {otherUser && isUserOnline(otherUser.id) ? (
+                  <span className="text-green-600">● نشط الآن</span>
+                ) : (
+                  'غير متصل'
+                )}
+              </span>
             </div>
           </div>
         </div>

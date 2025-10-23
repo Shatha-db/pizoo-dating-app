@@ -55,6 +55,49 @@ const LikesYou = () => {
     }
   };
 
+  const handleMessage = async (profile, e) => {
+    e.stopPropagation();
+    
+    if (!hasGoldAccess) {
+      setShowPremiumModal(true);
+      return;
+    }
+
+    try {
+      // Check if match exists
+      const matchesRes = await axios.get(`${API}/matches`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      const match = matchesRes.data.matches.find(m => 
+        m.profile.user_id === profile.user_id
+      );
+
+      if (match) {
+        // Match exists, go to chat
+        navigate(`/chat/${match.match_id}`);
+      } else {
+        // No match, send like
+        await axios.post(`${API}/swipe`, {
+          swiped_user_id: profile.user_id,
+          action: 'like'
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        showToast('تم الإعجاب! 💕 انتظر إعجاب الطرف الآخر لفتح الدردشة');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showToast('حدث خطأ، حاول مرة أخرى');
+    }
+  };
+
+  const showToast = (message) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 3000);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">

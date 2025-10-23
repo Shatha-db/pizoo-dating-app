@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useWebSocket } from '../context/WebSocketContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { ArrowRight, MoreVertical, Video, Send, Smile, Mic } from 'lucide-react';
@@ -13,6 +14,7 @@ const ChatRoom = () => {
   const { matchId } = useParams();
   const navigate = useNavigate();
   const { token, user } = useAuth();
+  const { isConnected, sendMessage: wsSendMessage, sendTypingIndicator, isUserOnline, isUserTyping, messages: wsMessages } = useWebSocket();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [otherUser, setOtherUser] = useState(null);
@@ -21,17 +23,25 @@ const ChatRoom = () => {
   const [hasAgreedToSafety, setHasAgreedToSafety] = useState(false);
   const [showReadReceipts, setShowReadReceipts] = useState(false);
   const messagesEndRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
 
   useEffect(() => {
     fetchMessages();
-    // Check if user has agreed to safety before
     const agreed = localStorage.getItem(`safety_consent_${user?.id}`);
     setHasAgreedToSafety(agreed === 'true');
-    
-    // Poll for new messages every 5 seconds
-    const interval = setInterval(fetchMessages, 5000);
-    return () => clearInterval(interval);
   }, [matchId]);
+
+  // Listen to WebSocket messages
+  useEffect(() => {
+    const newWsMessages = wsMessages.filter(msg => msg.match_id === matchId);
+    if (newWsMessages.length > 0) {
+      setMessages(prev => {
+        const existingIds = new Set(prev.map(m => m.id));
+        const uniqueNew = newWsMessages.filter(m => !existingIds.has(m.id));
+        return [...prev, ...uniqueNew];
+      });
+    }
+  }, [wsMessages, matchId]);
 
   useEffect(() => {
     scrollToBottom();

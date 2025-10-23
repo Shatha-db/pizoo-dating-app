@@ -257,11 +257,19 @@ const ChatRoom = () => {
           <input
             type="text"
             value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
+            onChange={handleTyping}
             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
             placeholder="اكتب رسالة..."
             className="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
+          
+          {/* WebSocket Status Indicator */}
+          {isConnected && (
+            <div className="absolute -top-8 right-4 text-xs text-green-600 flex items-center gap-1">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              متصل
+            </div>
+          )}
 
           <button
             onClick={handleSendMessage}

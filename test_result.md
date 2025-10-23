@@ -188,6 +188,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: Both sent and received likes APIs working correctly. Sent likes shows 2 profiles (from swipe tests), received likes empty (expected for new user)."
+      - working: true
+        agent: "testing"
+        comment: "✅ RE-TESTED: Both likes APIs fully functional. GET /api/likes/sent returns 3 sent likes as profile arrays, GET /api/likes/received returns 1 received like as profile array. Both endpoints returning correct data structure and profile information."
 
   - task: "Profile Create/Update API"
     implemented: true

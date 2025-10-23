@@ -98,8 +98,8 @@ const ChatList = () => {
                         </div>
                       )}
                     </div>
-                    {conv.user.is_online && (
-                      <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                    {isUserOnline(conv.user.id) && (
+                      <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full animate-pulse"></div>
                     )}
                   </div>
 

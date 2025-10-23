@@ -170,6 +170,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: Matches API working correctly. Returns user matches with profile data. No matches found in test (expected for new user)."
+      - working: true
+        agent: "testing"
+        comment: "✅ RE-TESTED: Matches API fully functional. Created mutual likes between test users and verified match creation. Returns correct match data structure with match_id, matched_at, and profile information. Match detection working perfectly."
 
   - task: "Likes Sent/Received API"
     implemented: true

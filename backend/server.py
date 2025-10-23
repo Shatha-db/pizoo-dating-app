@@ -1677,6 +1677,90 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# WebSocket Endpoint for Real-Time Chat
+@app.websocket("/ws/{user_id}")
+async def websocket_endpoint(websocket: WebSocket, user_id: str):
+    await manager.connect(user_id, websocket)
+    try:
+        while True:
+            # Receive message from client
+            data = await websocket.receive_json()
+            
+            message_type = data.get('type')
+            
+            if message_type == 'message':
+                # Send message to receiver
+                receiver_id = data.get('receiver_id')
+                message_data = {
+                    'type': 'new_message',
+                    'sender_id': user_id,
+                    'message': data.get('message'),
+                    'match_id': data.get('match_id'),
+                    'timestamp': datetime.now(timezone.utc).isoformat()
+                }
+                
+                # Save to database
+                await db.messages.insert_one({
+                    'id': str(uuid.uuid4()),
+                    'match_id': data.get('match_id'),
+                    'sender_id': user_id,
+                    'receiver_id': receiver_id,
+                    'content': data.get('message'),
+                    'message_type': 'text',
+                    'status': 'sent',
+                    'created_at': datetime.now(timezone.utc).isoformat()
+                })
+                
+                # Send to receiver if online
+                await manager.send_personal_message(message_data, receiver_id)
+                
+                # Send confirmation to sender
+                await manager.send_personal_message({
+                    'type': 'message_sent',
+                    'success': True
+                }, user_id)
+            
+            elif message_type == 'typing':
+                # Broadcast typing indicator
+                receiver_id = data.get('receiver_id')
+                await manager.send_personal_message({
+                    'type': 'typing',
+                    'user_id': user_id,
+                    'is_typing': data.get('is_typing', True)
+                }, receiver_id)
+            
+            elif message_type == 'read_receipt':
+                # Mark messages as read
+                match_id = data.get('match_id')
+                await db.messages.update_many(
+                    {
+                        'match_id': match_id,
+                        'receiver_id': user_id,
+                        'status': {'$ne': 'read'}
+                    },
+                    {
+                        '$set': {
+                            'status': 'read',
+                            'read_at': datetime.now(timezone.utc).isoformat()
+                        }
+                    }
+                )
+                
+                # Notify sender
+                sender_id = data.get('sender_id')
+                await manager.send_personal_message({
+                    'type': 'read_receipt',
+                    'match_id': match_id,
+                    'read_by': user_id
+                }, sender_id)
+    
+    except WebSocketDisconnect:
+        manager.disconnect(user_id)
+        await manager.broadcast_status(user_id, False)
+    except Exception as e:
+        logger.error(f"WebSocket error for user {user_id}: {str(e)}")
+        manager.disconnect(user_id)
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()

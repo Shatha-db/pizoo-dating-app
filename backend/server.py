@@ -50,7 +50,7 @@ class ConnectionManager:
         if user_id in self.active_connections:
             try:
                 await self.active_connections[user_id].send_json(message)
-            except:
+            except Exception:
                 self.disconnect(user_id)
     
     async def broadcast_status(self, user_id: str, online: bool):

@@ -134,6 +134,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: Profile discovery API working correctly. Returns 10 profiles for swiping, excludes current user and already swiped profiles. Dummy profiles seeded successfully."
+      - working: true
+        agent: "testing"
+        comment: "✅ RE-TESTED: Profile discovery API fully functional. Tested both with and without category parameter (?category=new-friends). Returns 20 profiles correctly, proper filtering logic working. All test scenarios passed."
 
   - task: "Swipe Action API"
     implemented: true

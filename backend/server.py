@@ -22,6 +22,59 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
+# WebSocket Connection Manager
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: Dict[str, WebSocket] = {}
+        self.user_status: Dict[str, dict] = {}
+    
+    async def connect(self, user_id: str, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections[user_id] = websocket
+        self.user_status[user_id] = {
+            'online': True,
+            'last_seen': datetime.now(timezone.utc).isoformat()
+        }
+        # Broadcast user online status
+        await self.broadcast_status(user_id, True)
+    
+    def disconnect(self, user_id: str):
+        if user_id in self.active_connections:
+            del self.active_connections[user_id]
+        self.user_status[user_id] = {
+            'online': False,
+            'last_seen': datetime.now(timezone.utc).isoformat()
+        }
+    
+    async def send_personal_message(self, message: dict, user_id: str):
+        if user_id in self.active_connections:
+            try:
+                await self.active_connections[user_id].send_json(message)
+            except:
+                self.disconnect(user_id)
+    
+    async def broadcast_status(self, user_id: str, online: bool):
+        status_message = {
+            'type': 'user_status',
+            'user_id': user_id,
+            'online': online,
+            'timestamp': datetime.now(timezone.utc).isoformat()
+        }
+        for connection_user_id, connection in self.active_connections.items():
+            if connection_user_id != user_id:
+                try:
+                    await connection.send_json(status_message)
+                except:
+                    pass
+    
+    def is_user_online(self, user_id: str) -> bool:
+        return user_id in self.active_connections
+    
+    def get_user_status(self, user_id: str) -> dict:
+        return self.user_status.get(user_id, {'online': False, 'last_seen': None})
+
+manager = ConnectionManager()
+
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

@@ -17,6 +17,7 @@ const LikesYou = () => {
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     fetchData();

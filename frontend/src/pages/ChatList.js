@@ -14,6 +14,7 @@ const API = `${BACKEND_URL}/api`;
 const ChatList = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
+  const { isUserOnline, isConnected } = useWebSocket();
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showSafetyTools, setShowSafetyTools] = useState(false);

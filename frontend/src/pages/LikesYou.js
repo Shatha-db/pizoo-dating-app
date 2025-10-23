@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import BottomNav from '../components/BottomNav';
-import { Lock, Star, Zap } from 'lucide-react';
+import { Lock, Star, Zap, MessageCircle } from 'lucide-react';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

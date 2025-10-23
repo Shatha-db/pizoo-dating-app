@@ -75,25 +75,55 @@ const ChatRoom = () => {
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
 
-    // Check safety consent
     if (!hasAgreedToSafety) {
       setShowSafetyConsent(true);
       return;
     }
 
-    try {
-      await axios.post(
-        `${API}/conversations/${matchId}/messages?content=${encodeURIComponent(newMessage)}`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+    // Send via WebSocket for real-time delivery
+    if (isConnected && otherUser) {
+      const success = wsSendMessage(matchId, otherUser.id, newMessage);
+      if (success) {
+        // Add message to local state immediately
+        const newMsg = {
+          id: Date.now().toString(),
+          sender_id: user.id,
+          content: newMessage,
+          created_at: new Date().toISOString(),
+          status: 'sent'
+        };
+        setMessages(prev => [...prev, newMsg]);
+        setNewMessage('');
+      }
+    } else {
+      // Fallback to HTTP if WebSocket not connected
+      try {
+        await axios.post(
+          `${API}/conversations/${matchId}/messages?content=${encodeURIComponent(newMessage)}`,
+          {},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setNewMessage('');
+        fetchMessages();
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
+    }
+  };
+
+  const handleTyping = (e) => {
+    setNewMessage(e.target.value);
+    
+    if (otherUser && isConnected) {
+      sendTypingIndicator(otherUser.id, true);
       
-      setNewMessage('');
-      fetchMessages();
-    } catch (error) {
-      console.error('Error sending message:', error);
+      // Stop typing indicator after 2 seconds
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      typingTimeoutRef.current = setTimeout(() => {
+        sendTypingIndicator(otherUser.id, false);
+      }, 2000);
     }
   };
 

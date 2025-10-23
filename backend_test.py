@@ -308,7 +308,7 @@ class DatingAppTester:
             return False
     
     def test_discover_profiles(self):
-        """Test profile discovery"""
+        """Test profile discovery without category filter"""
         if not self.auth_token:
             self.log_result("Discover Profiles", False, "No auth token available")
             return False
@@ -339,6 +339,40 @@ class DatingAppTester:
             except:
                 self.log_result("Discover Profiles", False, f"HTTP {response.status_code}: {response.text}")
             return False, []
+    
+    def test_discover_profiles_with_category(self):
+        """Test profile discovery with category filter"""
+        if not self.auth_token:
+            self.log_result("Discover Profiles (Category Filter)", False, "No auth token available")
+            return False
+        
+        # Test with category parameter
+        response = self.make_request("GET", "/profiles/discover?category=new-friends&limit=10", use_auth=True)
+        
+        if response is None:
+            self.log_result("Discover Profiles (Category Filter)", False, "Connection failed")
+            return False
+        
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                if "profiles" in data:
+                    profile_count = len(data["profiles"])
+                    self.log_result("Discover Profiles (Category Filter)", True, f"Found {profile_count} profiles with category filter")
+                    return True
+                else:
+                    self.log_result("Discover Profiles (Category Filter)", False, "No profiles key in response", data)
+                    return False
+            except json.JSONDecodeError:
+                self.log_result("Discover Profiles (Category Filter)", False, "Invalid JSON response", response.text)
+                return False
+        else:
+            try:
+                error_data = response.json()
+                self.log_result("Discover Profiles (Category Filter)", False, f"HTTP {response.status_code}: {error_data.get('detail', response.text)}")
+            except:
+                self.log_result("Discover Profiles (Category Filter)", False, f"HTTP {response.status_code}: {response.text}")
+            return False
     
     def test_swipe_actions(self, profiles):
         """Test swipe actions"""

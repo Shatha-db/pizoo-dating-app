@@ -246,11 +246,11 @@ frontend:
 
   - task: "Likes Page"
     implemented: true
-    working: true
-    file: "/app/frontend/src/pages/Likes.js"
+    working: "NA"
+    file: "/app/frontend/src/pages/Likes.js, /app/frontend/src/pages/LikesYou.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
@@ -258,6 +258,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: Likes page working perfectly. Both tabs (أرسلت/استلمت) visible and functional. Tab switching works smoothly. Profile grid displays correctly. Shows sent likes from swipe actions. Bottom navigation working."
+      - working: "NA"
+        agent: "main"
+        comment: "UPDATED: Fixed Likes page profiles interaction. Added: 1) View Profile button (routes to /profile/:userId), 2) Message button (checks for match, if exists -> /chat/:matchId, else like + toast), 3) Toast notifications for user feedback, 4) Better profile cards with name/age/location overlay, 5) Updated LikesYou.js with Message button for premium users. User reported profiles couldn't be opened or messaged."
 
   - task: "Profile Page"
     implemented: true

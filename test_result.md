@@ -213,11 +213,11 @@ frontend:
 
   - task: "Explore Page"
     implemented: true
-    working: true
+    working: "NA"
     file: "/app/frontend/src/pages/Explore.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
@@ -225,6 +225,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: Explore page working correctly. All 8 category cards display with proper gradients, emojis, titles in Arabic, and user counts. Category click navigation to home page works. Bottom navigation functional."
+      - working: "NA"
+        agent: "main"
+        comment: "UPDATED: Modified Explore page to show filtered results IN-PAGE instead of navigating away. Added: 1) Fetch profiles from /api/profiles/discover with category filter when tile clicked, 2) Loading state with spinner, 3) Empty state 'لا مزيد من النتائج', 4) Back button to return to categories, 5) Profile grid display with cards showing photos/info. User reported tiles weren't opening properly."
 
   - task: "Matches Page"
     implemented: true

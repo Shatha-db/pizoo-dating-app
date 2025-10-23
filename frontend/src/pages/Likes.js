@@ -12,10 +12,12 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const Likes = () => {
+  const navigate = useNavigate();
   const { token } = useAuth();
   const [sent, setSent] = useState([]);
   const [received, setReceived] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     fetchLikes();

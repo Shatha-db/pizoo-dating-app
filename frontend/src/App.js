@@ -101,6 +101,14 @@ function App() {
             }
           />
           <Route
+            path="/profile/:userId"
+            element={
+              <ProtectedRoute>
+                <ProfileView />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/likes-you"
             element={
               <ProtectedRoute>

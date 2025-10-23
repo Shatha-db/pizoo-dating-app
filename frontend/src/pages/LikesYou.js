@@ -156,45 +156,66 @@ const LikesYou = () => {
         {likesCount > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {receivedLikes.map((profile, index) => (
-              <div
+              <Card
                 key={index}
-                className="relative cursor-pointer group"
-                onClick={() => handleProfileClick(profile)}
+                className="overflow-hidden"
               >
-                <div className={`relative aspect-[3/4] rounded-xl overflow-hidden ${!hasGoldAccess ? 'blur-lg' : ''}`}>
-                  {profile.photos && profile.photos.length > 0 ? (
-                    <img
-                      src={profile.photos[0]}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-pink-300 to-purple-300 flex items-center justify-center text-6xl">
-                      ❤️
-                    </div>
-                  )}
-                  
-                  {/* Overlay for non-premium users */}
-                  {!hasGoldAccess && (
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <Lock className="w-8 h-8 mx-auto mb-2" />
-                        <p className="text-sm font-bold">Pizoo Gold</p>
+                <div 
+                  className="relative cursor-pointer group"
+                  onClick={() => handleProfileClick(profile)}
+                >
+                  <div className={`relative aspect-[3/4] overflow-hidden ${!hasGoldAccess ? 'blur-lg' : ''}`}>
+                    {profile.photos && profile.photos.length > 0 ? (
+                      <img
+                        src={profile.photos[0]}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-pink-300 to-purple-300 flex items-center justify-center text-6xl">
+                        ❤️
                       </div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                    
+                    {/* Overlay for non-premium users */}
+                    {!hasGoldAccess && (
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex items-center justify-center">
+                        <div className="text-center text-white">
+                          <Lock className="w-8 h-8 mx-auto mb-2" />
+                          <p className="text-sm font-bold">Pizoo Gold</p>
+                        </div>
+                      </div>
+                    )}
 
-                {/* Name (visible only for premium) */}
-                {hasGoldAccess && (
-                  <div className="mt-2">
-                    <p className="font-bold text-lg">{profile.display_name}</p>
-                    {profile.location && (
-                      <p className="text-sm text-gray-600">📍 {profile.location}</p>
+                    {/* Profile Info Overlay (only for premium) */}
+                    {hasGoldAccess && (
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-3">
+                        <h3 className="text-white font-bold text-base">
+                          {profile.display_name}
+                          {profile.age && `, ${profile.age}`}
+                        </h3>
+                        {profile.location && (
+                          <p className="text-white/90 text-xs">📍 {profile.location}</p>
+                        )}
+                      </div>
                     )}
                   </div>
+                </div>
+
+                {/* Message Button (only for premium users) */}
+                {hasGoldAccess && (
+                  <div className="p-2">
+                    <Button
+                      onClick={(e) => handleMessage(profile, e)}
+                      className="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm"
+                      size="sm"
+                    >
+                      <MessageCircle className="w-4 h-4 ml-1" />
+                      إرسال رسالة
+                    </Button>
+                  </div>
                 )}
-              </div>
+              </Card>
             ))}
           </div>
         ) : (

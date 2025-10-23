@@ -120,10 +120,33 @@ const Explore = () => {
     }
   ];
 
-  const handleCategoryClick = (categoryId) => {
+  const handleCategoryClick = async (categoryId) => {
     setActiveCategory(categoryId);
-    // Navigate to home with filter
-    navigate('/home', { state: { category: categoryId } });
+    setShowResults(true);
+    setLoading(true);
+    
+    try {
+      // Fetch profiles with category filter
+      const response = await axios.get(`${API}/profiles/discover?category=${categoryId}&limit=20`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setFilteredProfiles(response.data.profiles || []);
+    } catch (error) {
+      console.error('Error fetching profiles:', error);
+      setFilteredProfiles([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBackToCategories = () => {
+    setShowResults(false);
+    setActiveCategory(null);
+    setFilteredProfiles([]);
+  };
+
+  const handleProfileClick = (profile) => {
+    navigate('/home');
   };
 
   return (

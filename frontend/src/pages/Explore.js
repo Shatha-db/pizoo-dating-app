@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import BottomNav from '../components/BottomNav';
 import { Card } from '../components/ui/card';
-import { Moon, Zap, Heart, Users, Globe, Music, Coffee, Mountain } from 'lucide-react';
+import { Moon, Zap, Heart, Users, Globe, Music, Coffee, Mountain, ArrowRight, Loader2 } from 'lucide-react';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const Explore = () => {
   const navigate = useNavigate();
+  const { token } = useAuth();
   const [activeCategory, setActiveCategory] = useState(null);
+  const [filteredProfiles, setFilteredProfiles] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showResults, setShowResults] = useState(false);
 
   const categories = [
     {

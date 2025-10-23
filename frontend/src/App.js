@@ -142,6 +142,7 @@ function App() {
         </Routes>
         <Toaster />
       </BrowserRouter>
+      </WebSocketProvider>
     </AuthProvider>
   );
 }

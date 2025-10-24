@@ -746,11 +746,26 @@ async def get_my_profile(current_user: dict = Depends(get_current_user)):
 async def update_profile(request: ProfileUpdateRequest, current_user: dict = Depends(get_current_user)):
     profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})
     
+    # If profile doesn't exist, create it
     if not profile:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="الملف الشخصي غير موجود"
+        from datetime import date
+        age = None
+        
+        new_profile = Profile(
+            user_id=current_user['id'],
+            display_name=current_user.get('name', ''),
+            photos=[],
+            interests=[],
+            languages=[],
+            age=age
         )
+        
+        profile_dict = new_profile.model_dump()
+        profile_dict['created_at'] = profile_dict['created_at'].isoformat()
+        profile_dict['updated_at'] = profile_dict['updated_at'].isoformat()
+        
+        await db.profiles.insert_one(profile_dict)
+        profile = profile_dict
     
     # Update only provided fields (but allow empty lists/arrays)
     update_data = {}

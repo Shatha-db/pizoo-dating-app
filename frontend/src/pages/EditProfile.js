@@ -49,6 +49,22 @@ const EditProfile = () => {
   const [dietaryPreference, setDietaryPreference] = useState('');
   const [interests, setInterests] = useState([]);
   const [newInterest, setNewInterest] = useState('');
+  
+  // New Tinder-like fields
+  const [school, setSchool] = useState('');
+  const [company, setCompany] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
+  const [livingIn, setLivingIn] = useState('');
+  const [hometown, setHometown] = useState('');
+  const [genderIdentity, setGenderIdentity] = useState('');
+  const [showGender, setShowGender] = useState(true);
+  const [sexualOrientation, setSexualOrientation] = useState('');
+  const [showOrientation, setShowOrientation] = useState(true);
+  const [sleepingHabits, setSleepingHabits] = useState('');
+  const [socialMedia, setSocialMedia] = useState('');
+  const [vaccinated, setVaccinated] = useState('');
+  const [religion, setReligion] = useState('');
+  const [politicalViews, setPoliticalViews] = useState('');
 
   useEffect(() => {
     fetchProfile();

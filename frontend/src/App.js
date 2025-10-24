@@ -178,6 +178,15 @@ function App() {
             }
           />
           <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute>
+                <Notifications />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
             path="/premium"
             element={
               <ProtectedRoute>

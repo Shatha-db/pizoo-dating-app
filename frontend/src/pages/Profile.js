@@ -32,13 +32,89 @@ const Profile = () => {
           headers: { Authorization: `Bearer ${token}` }
         })
       ]);
-      setProfile(profileRes.data);
+      const profileData = profileRes.data;
+      setProfile(profileData);
       setUser(userRes.data);
+      
+      // Calculate completion score
+      calculateCompletionScore(profileData);
     } catch (error) {
       console.error('Error fetching profile:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const calculateCompletionScore = (profile) => {
+    if (!profile) {
+      setCompletionScore(0);
+      return;
+    }
+
+    let score = 0;
+    const maxScore = 100;
+
+    // Photos (30 points - 10 per photo, max 3)
+    if (profile.photos && profile.photos.length > 0) {
+      score += Math.min(profile.photos.length * 10, 30);
+    }
+
+    // Basic info (20 points)
+    if (profile.display_name) score += 5;
+    if (profile.age) score += 5;
+    if (profile.location) score += 5;
+    if (profile.occupation) score += 5;
+
+    // Bio (10 points)
+    if (profile.bio && profile.bio.length > 50) score += 10;
+    else if (profile.bio) score += 5;
+
+    // Interests (10 points)
+    if (profile.interests && profile.interests.length >= 3) score += 10;
+    else if (profile.interests && profile.interests.length > 0) score += 5;
+
+    // Languages (10 points)
+    if (profile.languages && profile.languages.length >= 2) score += 10;
+    else if (profile.languages && profile.languages.length > 0) score += 5;
+
+    // Lifestyle info (10 points)
+    if (profile.pets) score += 2;
+    if (profile.drinking) score += 2;
+    if (profile.smoking) score += 2;
+    if (profile.exercise) score += 2;
+    if (profile.dietary_preference) score += 2;
+
+    // Relationship goals (5 points)
+    if (profile.relationship_goals) score += 5;
+
+    // Education (5 points)
+    if (profile.education) score += 5;
+
+    setCompletionScore(Math.min(score, maxScore));
+  };
+
+  const getMissingFields = () => {
+    if (!profile) return [];
+    
+    const missing = [];
+    
+    if (!profile.photos || profile.photos.length < 3) {
+      missing.push('أضف المزيد من الصور (3 على الأقل)');
+    }
+    if (!profile.bio || profile.bio.length < 50) {
+      missing.push('اكتب نبذة أطول عنك');
+    }
+    if (!profile.interests || profile.interests.length < 3) {
+      missing.push('أضف المزيد من الاهتمامات');
+    }
+    if (!profile.languages || profile.languages.length < 2) {
+      missing.push('أضف لغات تتحدثها');
+    }
+    if (!profile.occupation) {
+      missing.push('أضف وظيفتك');
+    }
+    
+    return missing;
   };
 
   const handleLogout = () => {

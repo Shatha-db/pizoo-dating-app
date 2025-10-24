@@ -380,8 +380,31 @@ const EditProfile = () => {
                         <img
                           src={photo}
                           alt={`صورة ${index + 1}`}
-                          className="w-full h-full object-cover rounded-lg"
+                          className={`w-full h-full object-cover rounded-lg ${
+                            primaryPhotoIndex === index ? 'ring-4 ring-yellow-400' : ''
+                          }`}
                         />
+                        
+                        {/* Primary Badge */}
+                        {primaryPhotoIndex === index && (
+                          <div className="absolute top-1 right-1 bg-yellow-400 text-black text-xs px-2 py-1 rounded-full font-bold flex items-center gap-1">
+                            <Star className="w-3 h-3 fill-current" />
+                            رئيسية
+                          </div>
+                        )}
+                        
+                        {/* Set as Primary Button */}
+                        {primaryPhotoIndex !== index && (
+                          <button
+                            onClick={() => setPrimaryPhotoIndex(index)}
+                            disabled={uploadingPhotos}
+                            className="absolute bottom-1 right-1 bg-blue-500 text-white text-xs px-2 py-1 rounded-full hover:bg-blue-600 disabled:opacity-50"
+                          >
+                            اجعلها رئيسية
+                          </button>
+                        )}
+                        
+                        {/* Remove Button */}
                         <button
                           onClick={() => handleRemovePhoto(index)}
                           disabled={uploadingPhotos}

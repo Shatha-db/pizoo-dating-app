@@ -25,6 +25,7 @@ const EditProfile = () => {
   
   // Profile data
   const [photos, setPhotos] = useState(Array(9).fill(null));
+  const [primaryPhotoIndex, setPrimaryPhotoIndex] = useState(0); // الصورة الرئيسية
   const [displayName, setDisplayName] = useState('');
   const [bio, setBio] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');

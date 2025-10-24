@@ -28,6 +28,8 @@ import DoubleDating from './pages/DoubleDating';
 import DoubleDatingInfo from './pages/DoubleDatingInfo';
 import Premium from './pages/Premium';
 import Settings from './pages/Settings';
+import Terms from './pages/Terms';
+import TermsNew from './pages/TermsNew';
 import { Toaster } from './components/ui/sonner';
 import './App.css';
 

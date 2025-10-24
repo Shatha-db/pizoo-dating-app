@@ -1986,6 +1986,123 @@ async def update_discovery_settings(
     return {"message": "Discovery settings updated successfully"}
 
 
+# ===== Double Dating System =====
+
+@api_router.get("/double-dating/friends")
+async def get_double_dating_friends(current_user: dict = Depends(get_current_user)):
+    """Get user's double dating friends"""
+    friends_data = await db.double_dating_friends.find({
+        "user_id": current_user['id'],
+        "status": "accepted"
+    }).to_list(length=None)
+    
+    # Get friend profiles
+    friends = []
+    for friend_data in friends_data:
+        friend_profile = await db.profiles.find_one(
+            {"user_id": friend_data['friend_user_id']},
+            {"_id": 0}
+        )
+        if friend_profile:
+            friends.append({
+                "id": friend_data['id'],
+                "user_id": friend_data['friend_user_id'],
+                "name": friend_profile.get('name', 'Unknown'),
+                "photo": friend_profile.get('primary_photo', friend_profile.get('photos', [None])[0]),
+                "age": friend_profile.get('age'),
+                "accepted_at": friend_data.get('accepted_at')
+            })
+    
+    return {"friends": friends}
+
+
+@api_router.post("/double-dating/invite/{friend_user_id}")
+async def invite_double_dating_friend(
+    friend_user_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Invite a friend to double dating"""
+    # Check if already invited
+    existing = await db.double_dating_friends.find_one({
+        "user_id": current_user['id'],
+        "friend_user_id": friend_user_id
+    })
+    
+    if existing:
+        return {"message": "Friend already invited", "status": existing['status']}
+    
+    # Check limit (max 3 friends)
+    count = await db.double_dating_friends.count_documents({
+        "user_id": current_user['id'],
+        "status": "accepted"
+    })
+    
+    if count >= 3:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="You can only have up to 3 double dating friends"
+        )
+    
+    # Create invitation
+    friend_data = {
+        "id": str(uuid.uuid4()),
+        "user_id": current_user['id'],
+        "friend_user_id": friend_user_id,
+        "status": "pending",
+        "invited_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.double_dating_friends.insert_one(friend_data)
+    
+    return {"message": "Friend invited successfully", "invitation": friend_data}
+
+
+@api_router.post("/double-dating/accept/{invitation_id}")
+async def accept_double_dating_invitation(
+    invitation_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Accept double dating invitation"""
+    invitation = await db.double_dating_friends.find_one({
+        "id": invitation_id,
+        "friend_user_id": current_user['id'],
+        "status": "pending"
+    })
+    
+    if not invitation:
+        raise HTTPException(status_code=404, detail="Invitation not found")
+    
+    # Update status
+    await db.double_dating_friends.update_one(
+        {"id": invitation_id},
+        {
+            "$set": {
+                "status": "accepted",
+                "accepted_at": datetime.now(timezone.utc).isoformat()
+            }
+        }
+    )
+    
+    return {"message": "Invitation accepted successfully"}
+
+
+@api_router.delete("/double-dating/friends/{friend_id}")
+async def remove_double_dating_friend(
+    friend_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Remove a double dating friend"""
+    result = await db.double_dating_friends.delete_one({
+        "id": friend_id,
+        "user_id": current_user['id']
+    })
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Friend not found")
+    
+    return {"message": "Friend removed successfully"}
+
+
 # ===== Report & Block System =====
 
 @api_router.post("/report")

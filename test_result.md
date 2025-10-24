@@ -274,6 +274,21 @@ frontend:
         agent: "testing"
         comment: "✅ TESTED: Matches page working correctly. Empty state displays properly for new users with appropriate Arabic message and emoji. API integration functional. Bottom navigation present."
 
+  - task: "Chat Page New Layout"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/pages/ChatList.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "NEW LAYOUT: Updated ChatList.js to match Tinder-style layout with horizontal scroll for new matches at top and vertical list of conversations below. Features: 1) Top section 'المعجبون الجُدد' with circular profile pictures in horizontal scroll, 2) Bottom section 'الرسائل' with vertical conversation list, 3) Online status indicators, 4) Proper RTL layout for Arabic."
+      - working: false
+        agent: "testing"
+        comment: "❌ UNABLE TO TEST: All attempts to access /chat page redirect to /login page due to authentication requirements. Cannot verify new Tinder-style layout with horizontal matches section and vertical messages section. Code review shows proper implementation with both sections and circular profile pictures. BLOCKER: Authentication system prevents testing of new chat layout."
+
   - task: "Likes Page"
     implemented: true
     working: false

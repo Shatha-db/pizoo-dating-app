@@ -224,8 +224,8 @@ const Explore = () => {
           </div>
         ) : (
           <>
-            <h1 className="text-2xl font-bold">استكشاف 🔍</h1>
-            <p className="text-gray-600 text-sm">اكتشف أشخاص جدد حسب اهتماماتك</p>
+            <h1 className="text-2xl font-bold dark:text-gray-900">استكشاف 🔍</h1>
+            <p className="text-gray-600 dark:text-gray-700 text-sm">اكتشف أشخاص جدد حسب اهتماماتك</p>
           </>
         )}
       </header>

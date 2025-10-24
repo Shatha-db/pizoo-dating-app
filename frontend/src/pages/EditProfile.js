@@ -414,6 +414,115 @@ const EditProfile = () => {
               </div>
             </Card>
 
+            {/* About Me Section - like Tinder */}
+            <Card className="p-6 space-y-4">
+              <h2 className="font-bold text-lg">عني</h2>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">🏫 المدرسة</label>
+                <Input
+                  value={school}
+                  onChange={(e) => setSchool(e.target.value)}
+                  placeholder="أضف مدرسة"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">🏢 الشركة</label>
+                <Input
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  placeholder="أضف شركة"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">💼 المسمى الوظيفي</label>
+                <Input
+                  value={jobTitle}
+                  onChange={(e) => setJobTitle(e.target.value)}
+                  placeholder="أضف مسمى وظيفي"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">🏙️ اعيش في</label>
+                <Input
+                  value={livingIn}
+                  onChange={(e) => setLivingIn(e.target.value)}
+                  placeholder="أضف مدينة"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">🏡 مسقط الرأس</label>
+                <Input
+                  value={hometown}
+                  onChange={(e) => setHometown(e.target.value)}
+                  placeholder="أضف مسقط رأس"
+                />
+              </div>
+            </Card>
+
+            {/* Gender & Orientation */}
+            <Card className="p-6 space-y-4">
+              <h2 className="font-bold text-lg">الهوية الجنسية والتوجه</h2>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">الهوية الجنسية</label>
+                <select
+                  value={genderIdentity}
+                  onChange={(e) => setGenderIdentity(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2 mb-2"
+                >
+                  <option value="">اختر...</option>
+                  <option value="woman">امرأة</option>
+                  <option value="man">رجل</option>
+                  <option value="non-binary">غير ثنائي</option>
+                  <option value="trans-woman">امرأة متحولة</option>
+                  <option value="trans-man">رجل متحول</option>
+                  <option value="prefer-not-to-say">أفضل عدم الإفصاح</option>
+                </select>
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={showGender}
+                    onChange={(e) => setShowGender(e.target.checked)}
+                    className="rounded"
+                  />
+                  <span>إظهار الهوية الجنسية في ملفي الشخصي</span>
+                </label>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">التوجه الجنسي</label>
+                <select
+                  value={sexualOrientation}
+                  onChange={(e) => setSexualOrientation(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2 mb-2"
+                >
+                  <option value="">اختر...</option>
+                  <option value="straight">مغاير</option>
+                  <option value="gay">مثلي</option>
+                  <option value="lesbian">مثلية</option>
+                  <option value="bisexual">ثنائي الجنس</option>
+                  <option value="asexual">لاجنسي</option>
+                  <option value="pansexual">كلي الجنس</option>
+                  <option value="queer">كوير</option>
+                  <option value="questioning">مستكشف</option>
+                </select>
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={showOrientation}
+                    onChange={(e) => setShowOrientation(e.target.checked)}
+                    className="rounded"
+                  />
+                  <span>إظهار التوجه الجنسي في ملفي الشخصي</span>
+                </label>
+              </div>
+            </Card>
+
             {/* Interests */}
             <Card className="p-6 space-y-4">
               <h2 className="font-bold text-lg">الاهتمامات</h2>

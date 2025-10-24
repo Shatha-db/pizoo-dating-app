@@ -155,6 +155,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ RE-TESTED: Swipe API fully functional. Tested all actions (like, pass, super_like) with mutual like scenarios. Match creation working correctly when two users mutually like each other. All swipe actions processed successfully."
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE TEST: Swipe API with weekly limits working perfectly. Successfully tested 12 consecutive likes with proper remaining count tracking (11, 10, 9... 0). 13th like properly blocked with 403 error and clear message about weekly limit. Limit enforcement fully functional."
 
   - task: "Matches API"
     implemented: true

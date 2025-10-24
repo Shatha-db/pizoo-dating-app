@@ -13,6 +13,7 @@ const API = `${BACKEND_URL}/api`;
 const Settings = () => {
   const navigate = useNavigate();
   const { token, logout } = useAuth();
+  const { t, i18n } = useTranslation();
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
 

@@ -8,28 +8,50 @@ const API = `${BACKEND_URL}/api`;
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Initialize auth on mount
   useEffect(() => {
-    if (token) {
-      fetchUserProfile();
+    const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+    
+    if (storedToken) {
+      setToken(storedToken);
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (e) {
+          console.error('Error parsing stored user:', e);
+        }
+      }
+      // Verify token is still valid
+      fetchUserProfile(storedToken);
     } else {
       setLoading(false);
     }
-  }, [token]);
+  }, []);
 
-  const fetchUserProfile = async () => {
+  const fetchUserProfile = async (authToken = token) => {
+    if (!authToken) {
+      setLoading(false);
+      return;
+    }
+    
     try {
       const response = await axios.get(`${API}/user/profile`, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${authToken}`
         }
       });
       setUser(response.data);
+      localStorage.setItem('user', JSON.stringify(response.data));
     } catch (error) {
       console.error('Error fetching user profile:', error);
-      logout();
+      // Only logout if token is invalid (401)
+      if (error.response?.status === 401) {
+        logout();
+      }
     } finally {
       setLoading(false);
     }

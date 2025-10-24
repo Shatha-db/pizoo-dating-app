@@ -113,6 +113,69 @@ const Home = () => {
     setCanRewind(swipeHistory.length > 1);
   };
 
+  const checkBoostStatus = async () => {
+    try {
+      const response = await axios.get(`${API}/boost/status`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.data.is_active) {
+        setBoostActive(true);
+        setBoostTimeRemaining(response.data.time_remaining_seconds);
+        
+        // Start countdown
+        const interval = setInterval(() => {
+          setBoostTimeRemaining(prev => {
+            if (prev <= 1) {
+              clearInterval(interval);
+              setBoostActive(false);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      }
+    } catch (error) {
+      console.error('Error checking boost:', error);
+    }
+  };
+
+  const handleBoost = async () => {
+    if (boostActive) return;
+
+    try {
+      const response = await axios.post(`${API}/boost/activate`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      setBoostActive(true);
+      setBoostTimeRemaining(30 * 60); // 30 minutes
+      
+      // Start countdown
+      const interval = setInterval(() => {
+        setBoostTimeRemaining(prev => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setBoostActive(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      alert('🚀 تم تفعيل Boost! سيظهر ملفك الشخصي أكثر لمدة 30 دقيقة!');
+    } catch (error) {
+      console.error('Error activating boost:', error);
+      alert('حدث خطأ أثناء تفعيل Boost');
+    }
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   const currentProfile = profiles[currentIndex];
 
   if (loading) {

@@ -179,6 +179,37 @@ class Match(BaseModel):
     model_config = ConfigDict(extra="ignore")
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    match_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user1_id: str
+    user2_id: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class Report(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    reporter_id: str  # User who is reporting
+    reported_user_id: str  # User being reported
+    reason: str  # harassment, inappropriate_content, fake_profile, scam, other
+    details: Optional[str] = None
+    status: str = "pending"  # pending, reviewed, resolved
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class Block(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    blocker_id: str  # User who is blocking
+    blocked_user_id: str  # User being blocked
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class Match(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user1_id: str
     user2_id: str
     matched_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

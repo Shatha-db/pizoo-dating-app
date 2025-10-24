@@ -284,22 +284,7 @@ class UserSettings(BaseModel):
     theme: str = "system"  # system, light, dark
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
-
 # ===== Request/Response Models =====
-
-class RegisterRequest(BaseModel):
-    name: str
-    email: EmailStr
-    phone_number: str
-    password: str
-    terms_accepted: bool
-
-
-class LoginRequest(BaseModel):
-    email: EmailStr
-    password: str
-
 
 class TokenResponse(BaseModel):
     access_token: str

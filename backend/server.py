@@ -519,6 +519,33 @@ async def register(request: RegisterRequest):
     
     await db.subscriptions.insert_one(subscription_dict)
     
+    # Create empty profile for the user
+    from datetime import date
+    age = None
+    try:
+        # Try to calculate age if date of birth exists
+        if hasattr(user, 'date_of_birth') and user.date_of_birth:
+            today = date.today()
+            dob = datetime.fromisoformat(user.date_of_birth).date()
+            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+    except:
+        pass
+    
+    profile = Profile(
+        user_id=user.id,
+        display_name=user.name,
+        photos=[],
+        interests=[],
+        languages=[],
+        age=age
+    )
+    
+    profile_dict = profile.model_dump()
+    profile_dict['created_at'] = profile_dict['created_at'].isoformat()
+    profile_dict['updated_at'] = profile_dict['updated_at'].isoformat()
+    
+    await db.profiles.insert_one(profile_dict)
+    
     # Create access token
     access_token = create_access_token(data={"sub": user.id})
     

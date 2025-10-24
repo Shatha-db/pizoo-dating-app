@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // Cloudinary configuration
-const CLOUD_NAME = 'demo'; // Replace with your cloud name
-const UPLOAD_PRESET = 'unsigned_preset'; // Replace with your upload preset
+const CLOUD_NAME = 'dpm7hliv6';
+const UPLOAD_PRESET = 'pizoo_profiles';
 
 /**
  * Upload image to Cloudinary

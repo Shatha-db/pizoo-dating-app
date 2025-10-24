@@ -27,6 +27,7 @@ const Home = () => {
   useEffect(() => {
     fetchProfiles();
     checkNewLikes();
+    checkBoostStatus();
   }, []);
 
   const fetchProfiles = async () => {

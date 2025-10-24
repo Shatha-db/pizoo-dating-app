@@ -83,6 +83,14 @@ const Home = () => {
   const handleSwipe = async (action) => {
     if (!currentProfile) return;
     
+    // Check if user has reached limit before making the request
+    if (usageStats && !usageStats.is_premium && action !== 'pass') {
+      if (usageStats.likes.remaining <= 0) {
+        setShowLimitWarning(true);
+        return;
+      }
+    }
+    
     // Save swipe to history (keep last 5)
     const newHistory = [...swipeHistory, {
       profile: currentProfile,
@@ -105,9 +113,33 @@ const Home = () => {
         setTimeout(() => setShowMatch(false), 3000);
       }
       
+      // Update usage stats if returned
+      if (response.data.remaining_likes !== undefined) {
+        setUsageStats(prev => ({
+          ...prev,
+          likes: {
+            ...prev.likes,
+            remaining: response.data.remaining_likes,
+            sent: prev.likes.sent + 1
+          }
+        }));
+        
+        // Show warning if getting close to limit
+        if (response.data.remaining_likes <= 2 && response.data.remaining_likes > 0) {
+          setShowLimitWarning(true);
+          setTimeout(() => setShowLimitWarning(false), 3000);
+        }
+      }
+      
       setCurrentIndex(currentIndex + 1);
     } catch (error) {
       console.error('Error:', error);
+      // Check if it's a 403 error (limit reached)
+      if (error.response && error.response.status === 403) {
+        setShowLimitWarning(true);
+        // Refresh usage stats
+        fetchUsageStats();
+      }
     }
   };
 

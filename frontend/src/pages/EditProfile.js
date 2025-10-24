@@ -196,7 +196,7 @@ const EditProfile = () => {
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
+    setTimeout(() => setToast(null), type === 'info' ? 2000 : 3000);
   };
 
   const handleSave = async () => {

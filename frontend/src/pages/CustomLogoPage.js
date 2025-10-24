@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
-import { CustomLogoPreview } from '../components/CustomLogo';
+import CustomLogo from '../components/CustomLogo';
 import { X, Check } from 'lucide-react';
 
 const CustomLogoPage = () => {
@@ -36,7 +36,34 @@ const CustomLogoPage = () => {
         </div>
       </header>
 
-      <CustomLogoPreview />
+      <main className="max-w-4xl mx-auto p-8">
+        <div className="bg-white rounded-2xl shadow-lg p-12">
+          <div className="flex flex-col items-center gap-8">
+            <h2 className="text-3xl font-bold text-center">شعار Pizoo</h2>
+            
+            <div className="bg-gradient-to-br from-pink-50 to-purple-50 p-12 rounded-xl">
+              <CustomLogo size="xl" />
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6 w-full">
+              <div className="bg-white p-6 rounded-lg border-2">
+                <p className="text-sm text-gray-600 mb-4 text-center">كبير</p>
+                <CustomLogo size="lg" />
+              </div>
+              
+              <div className="bg-white p-6 rounded-lg border-2">
+                <p className="text-sm text-gray-600 mb-4 text-center">متوسط</p>
+                <CustomLogo size="md" />
+              </div>
+              
+              <div className="bg-white p-6 rounded-lg border-2">
+                <p className="text-sm text-gray-600 mb-4 text-center">صغير</p>
+                <CustomLogo size="sm" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };

@@ -250,7 +250,7 @@ const Home = () => {
           </Button>
         </div>
         <div className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">
-          ❤️‍🔥 Pizoo
+          <PizooLogo size="sm" showText={true} animated={false} />
         </div>
         <div className="flex gap-2">
           <Button 

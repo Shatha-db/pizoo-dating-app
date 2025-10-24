@@ -272,9 +272,15 @@ const EditProfile = () => {
       {/* Toast Notification */}
       {toast && (
         <div className={`fixed top-4 left-1/2 transform -translate-x-1/2 ${
-          toast.type === 'error' ? 'bg-red-500' : 'bg-green-500'
+          toast.type === 'error' ? 'bg-red-500' : toast.type === 'info' ? 'bg-blue-500' : 'bg-green-500'
         } text-white px-6 py-3 rounded-full z-50 shadow-lg flex items-center gap-2`}>
-          {toast.type === 'error' ? <AlertCircle className="w-5 h-5" /> : <Check className="w-5 h-5" />}
+          {toast.type === 'error' ? (
+            <AlertCircle className="w-5 h-5" />
+          ) : toast.type === 'info' ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            <Check className="w-5 h-5" />
+          )}
           {toast.message}
         </div>
       )}

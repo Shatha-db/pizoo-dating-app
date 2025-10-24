@@ -212,6 +212,7 @@ function App() {
         <Toaster />
       </BrowserRouter>
       </WebSocketProvider>
+      </NotificationProvider>
       </ThemeProvider>
     </AuthProvider>
   );

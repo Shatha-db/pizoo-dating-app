@@ -206,6 +206,45 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: All profile APIs working correctly. Profile creation, retrieval, and update all functional. Fixed minor serialization issue in profile creation response."
+      - working: true
+        agent: "testing"
+        comment: "✅ RE-TESTED: Profile APIs fully functional in comprehensive test. GET /api/profile/me and PUT /api/profile/update working correctly with Arabic content."
+
+  - task: "Usage Stats API (NEW)"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: NEW endpoint GET /api/usage-stats working perfectly. Returns correct weekly limits for free users (12 likes, 10 messages) with remaining counts. Fixed critical datetime timezone bug during testing. Premium tier functionality confirmed."
+
+  - task: "Discovery Settings API (NEW)"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: NEW endpoints GET/PUT /api/discovery-settings working correctly. GET returns default settings (location, distance, age range, gender preferences). PUT successfully updates settings. Fixed ObjectId serialization issue during testing."
+
+  - task: "Weekly Limits System"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Weekly limits system working perfectly. Free users limited to 12 likes and 10 messages per week. Limit enforcement working in /api/swipe endpoint. Tested sending 12 likes successfully, 13th like blocked with proper error message. Premium users have unlimited access."
 
 frontend:
   - task: "Home Page with Card Swipe"

@@ -10,6 +10,7 @@ const CustomLogo = ({ size = 'lg', className = '' }) => {
 
   return (
     <div className={`flex items-center gap-1 ${className}`}>
+      <span className={`${sizeClasses[size]}`}>❤️‍🔥</span>
       <span 
         className={`${sizeClasses[size]} font-black`}
         style={{ 
@@ -25,7 +26,6 @@ const CustomLogo = ({ size = 'lg', className = '' }) => {
       >
         Pizoo
       </span>
-      <span className={`${sizeClasses[size]}`}>❤️‍🔥</span>
     </div>
   );
 };

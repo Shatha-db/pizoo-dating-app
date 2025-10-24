@@ -1734,6 +1734,84 @@ async def get_blocked_users(current_user: dict = Depends(get_current_user)):
     return {"blocked_users": profiles}
 
 
+# ===== Boost System =====
+
+@api_router.post("/boost/activate")
+async def activate_boost(current_user: dict = Depends(get_current_user)):
+    """Activate boost for 30 minutes (increases profile visibility)"""
+    # Check if user already has an active boost
+    active_boost = await db.boosts.find_one({
+        "user_id": current_user['id'],
+        "is_active": True
+    })
+    
+    if active_boost:
+        # Check if still valid
+        ends_at = datetime.fromisoformat(active_boost['ends_at'])
+        if ends_at > datetime.now(timezone.utc):
+            return {
+                "message": "لديك boost نشط بالفعل",
+                "ends_at": active_boost['ends_at']
+            }
+    
+    # Create new boost (30 minutes duration)
+    ends_at = datetime.now(timezone.utc) + timedelta(minutes=30)
+    
+    boost = Boost(
+        user_id=current_user['id'],
+        ends_at=ends_at
+    )
+    
+    boost_dict = boost.model_dump()
+    boost_dict['started_at'] = boost_dict['started_at'].isoformat()
+    boost_dict['ends_at'] = boost_dict['ends_at'].isoformat()
+    
+    await db.boosts.insert_one(boost_dict)
+    
+    return {
+        "message": "تم تفعيل Boost لمدة 30 دقيقة! 🚀",
+        "boost_id": boost.id,
+        "ends_at": boost_dict['ends_at']
+    }
+
+
+@api_router.get("/boost/status")
+async def get_boost_status(current_user: dict = Depends(get_current_user)):
+    """Get current boost status"""
+    active_boost = await db.boosts.find_one({
+        "user_id": current_user['id'],
+        "is_active": True
+    })
+    
+    if not active_boost:
+        return {
+            "is_active": False,
+            "message": "لا يوجد boost نشط"
+        }
+    
+    ends_at = datetime.fromisoformat(active_boost['ends_at'])
+    now = datetime.now(timezone.utc)
+    
+    if ends_at <= now:
+        # Boost expired, deactivate it
+        await db.boosts.update_one(
+            {"id": active_boost['id']},
+            {"$set": {"is_active": False}}
+        )
+        return {
+            "is_active": False,
+            "message": "انتهى Boost"
+        }
+    
+    time_remaining = (ends_at - now).total_seconds()
+    
+    return {
+        "is_active": True,
+        "ends_at": active_boost['ends_at'],
+        "time_remaining_seconds": int(time_remaining)
+    }
+
+
 @api_router.get("/terms")
 async def get_terms():
     terms_content = """

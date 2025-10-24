@@ -54,6 +54,10 @@ const Settings = () => {
     navigate('/login');
   };
 
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">

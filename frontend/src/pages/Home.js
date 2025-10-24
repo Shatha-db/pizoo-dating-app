@@ -234,9 +234,9 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-200 dark:via-gray-300 dark:to-gray-400 pb-20" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-pink-25 to-rose-50 dark:from-gray-200 dark:via-gray-300 dark:to-gray-400 pb-20" dir="rtl">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-200 shadow-sm p-4 flex justify-between items-center sticky top-0 z-10">
+      <header className="bg-pink-50/80 dark:bg-gray-200 shadow-sm p-4 flex justify-between items-center sticky top-0 z-10 backdrop-blur-sm">
         <div className="flex gap-2">
           <Button 
             variant="ghost" 
@@ -249,8 +249,8 @@ const Home = () => {
             </svg>
           </Button>
         </div>
-        <div className="flex items-center">
-          <CustomLogo size="sm" />
+        <div className="flex items-center flex-1 justify-center">
+          <CustomLogo size="lg" />
         </div>
         <div className="flex gap-2">
           <Button 

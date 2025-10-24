@@ -1811,8 +1811,8 @@ async def send_message(
         "match_id": match_id,
         "sender_id": current_user['id'],
         "receiver_id": receiver_id,
-        "content": content,
-        "message_type": message_type,
+        "content": request.content,
+        "message_type": request.message_type,
         "status": "sent",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "read_at": None

@@ -108,6 +108,10 @@ const ChatRoom = () => {
         fetchMessages();
       } catch (error) {
         console.error('Error sending message:', error);
+        // Check if it's a 403 error (message limit reached)
+        if (error.response && error.response.status === 403) {
+          setShowMessageLimitWarning(true);
+        }
       }
     }
   };

@@ -384,12 +384,16 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Authentication System"
     - "Explore Page"
     - "Likes Page"
     - "Profile View Page"
-  stuck_tasks: []
+  stuck_tasks:
+    - "Explore Page"
+    - "Likes Page"
+    - "Profile View Page"
   test_all: false
-  test_priority: "high_first"
+  test_priority: "authentication_first"
 
 agent_communication:
   - agent: "main"

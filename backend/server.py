@@ -141,6 +141,7 @@ class Profile(BaseModel):
     has_children: Optional[bool] = None
     wants_children: Optional[bool] = None
     languages: List[str] = []
+    current_mood: Optional[str] = None  # serious, casual, fun, romantic - كيف تشعر اليوم
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 

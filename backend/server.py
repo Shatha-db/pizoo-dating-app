@@ -356,6 +356,31 @@ class ProfileUpdateRequest(BaseModel):
     has_children: Optional[bool] = None
     wants_children: Optional[bool] = None
     languages: Optional[List[str]] = None
+    photos: Optional[List[str]] = None  # Add photos field
+    primary_photo_index: Optional[int] = None
+    # Additional fields
+    school: Optional[str] = None
+    company: Optional[str] = None
+    job_title: Optional[str] = None
+    living_in: Optional[str] = None
+    hometown: Optional[str] = None
+    gender_identity: Optional[str] = None
+    show_gender: Optional[bool] = None
+    sexual_orientation: Optional[str] = None
+    show_orientation: Optional[bool] = None
+    sleeping_habits: Optional[str] = None
+    social_media: Optional[str] = None
+    vaccinated: Optional[str] = None
+    religion: Optional[str] = None
+    political_views: Optional[str] = None
+    zodiac_sign: Optional[str] = None
+    personality_type: Optional[str] = None
+    communication_style: Optional[str] = None
+    love_style: Optional[str] = None
+    pets: Optional[str] = None
+    exercise: Optional[str] = None
+    dietary_preference: Optional[str] = None
+    family_plans: Optional[str] = None
 
 
 class PhotoUploadRequest(BaseModel):

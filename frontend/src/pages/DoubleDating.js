@@ -192,11 +192,21 @@ const DoubleDating = () => {
                 className="aspect-square rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col items-center justify-center relative border-2 border-dashed border-gray-300"
               >
                 {invitedFriends[num - 1] ? (
-                  <img
-                    src={invitedFriends[num - 1].photo}
-                    alt={invitedFriends[num - 1].name}
-                    className="w-full h-full object-cover rounded-2xl"
-                  />
+                  <>
+                    <img
+                      src={invitedFriends[num - 1].photo}
+                      alt={invitedFriends[num - 1].name}
+                      className="w-full h-full object-cover rounded-2xl"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeFriend(invitedFriends[num - 1].id)}
+                      className="absolute top-2 right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full p-1"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  </>
                 ) : (
                   <>
                     <Users className="w-12 h-12 text-gray-400 mb-2" />

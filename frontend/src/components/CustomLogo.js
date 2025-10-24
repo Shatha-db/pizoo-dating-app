@@ -1,11 +1,11 @@
 import React from 'react';
 
-const CustomLogo = ({ size = 'md', className = '' }) => {
+const CustomLogo = ({ size = 'lg', className = '' }) => {
   const sizeClasses = {
-    sm: 'h-8',
-    md: 'h-12',
-    lg: 'h-16',
-    xl: 'h-20'
+    sm: 'h-12',
+    md: 'h-16',
+    lg: 'h-24',
+    xl: 'h-32'
   };
 
   return (
@@ -14,6 +14,7 @@ const CustomLogo = ({ size = 'md', className = '' }) => {
         src="/pizoo-logo-transparent.png" 
         alt="Pizoo" 
         className={`${sizeClasses[size]} w-auto object-contain`}
+        style={{ imageRendering: '-webkit-optimize-contrast' }}
       />
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { ArrowRight, ChevronLeft, Shield, HelpCircle, Users, Lock, FileText, LogOut, Globe } from 'lucide-react';
@@ -13,6 +14,7 @@ const API = `${BACKEND_URL}/api`;
 const Settings = () => {
   const navigate = useNavigate();
   const { token, logout } = useAuth();
+  const { theme, updateTheme } = useTheme();
   const { t, i18n } = useTranslation();
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);

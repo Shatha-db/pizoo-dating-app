@@ -59,19 +59,17 @@ export const WebSocketProvider = ({ children }) => {
         handleMessage(data);
       };
 
-      ws.current.onerror = (error) => {
-        console.error('❌ WebSocket error:', error);
-      };
-
       ws.current.onclose = () => {
         console.log('🔌 WebSocket disconnected');
         setIsConnected(false);
         
-        // Auto-reconnect after 3 seconds
-        reconnectTimeout.current = setTimeout(() => {
-          console.log('🔄 Reconnecting...');
-          connectWebSocket();
-        }, 3000);
+        // Auto-reconnect after 3 seconds if user still logged in
+        if (user?.id) {
+          reconnectTimeout.current = setTimeout(() => {
+            console.log('🔄 Reconnecting...');
+            connectWebSocket();
+          }, 3000);
+        }
       };
     } catch (error) {
       console.error('Failed to connect WebSocket:', error);

@@ -273,11 +273,11 @@ frontend:
 
   - task: "Likes Page"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/src/pages/Likes.js, /app/frontend/src/pages/LikesYou.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
@@ -288,6 +288,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "UPDATED: Fixed Likes page profiles interaction. Added: 1) View Profile button (routes to /profile/:userId), 2) Message button (checks for match, if exists -> /chat/:matchId, else like + toast), 3) Toast notifications for user feedback, 4) Better profile cards with name/age/location overlay, 5) Updated LikesYou.js with Message button for premium users. User reported profiles couldn't be opened or messaged."
+      - working: false
+        agent: "testing"
+        comment: "❌ UNABLE TO TEST: All attempts to access /likes page redirect to /login page due to authentication requirements. Cannot verify if View Profile and Message buttons are working. Code review shows proper implementation with both buttons, match checking logic, and toast notifications. BLOCKER: Authentication system prevents testing of implemented fixes."
 
   - task: "Profile Page"
     implemented: true

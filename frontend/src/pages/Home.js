@@ -265,6 +265,32 @@ const Home = () => {
         </div>
       </header>
 
+      {/* Usage Stats Banner for Free Users */}
+      {usageStats && !usageStats.is_premium && (
+        <div className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-3">
+          <div className="max-w-md mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold">{usageStats.likes.remaining}</div>
+                <div className="text-xs opacity-90">إعجابات متبقية</div>
+              </div>
+              <div className="h-8 w-px bg-white/30"></div>
+              <div className="text-center">
+                <div className="text-2xl font-bold">{usageStats.messages.remaining}</div>
+                <div className="text-xs opacity-90">رسائل متبقية</div>
+              </div>
+            </div>
+            <Button
+              size="sm"
+              className="bg-white text-pink-600 hover:bg-gray-100"
+              onClick={() => navigate('/premium')}
+            >
+              ترقية 💎
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Main Card */}
       <main className="max-w-md mx-auto px-4 pt-6">
         {currentProfile ? (

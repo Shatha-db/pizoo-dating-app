@@ -765,9 +765,11 @@ const EditProfile = () => {
                   className="w-full border border-gray-300 rounded-md p-2"
                 >
                   <option value="">اختر...</option>
-                  <option value="long-term">علاقة طويلة الأمد</option>
+                  <option value="long-term-partner">شريك لفترة طويلة</option>
+                  <option value="long-term-open">علاقة طويلة، منفتح على قصيرة</option>
+                  <option value="short-term-open">قصيرة، منفتح على طويلة</option>
                   <option value="short-term">علاقة قصيرة الأمد</option>
-                  <option value="friendship">صداقة</option>
+                  <option value="new-friends">أصدقاء جدد</option>
                   <option value="figuring-out">ما زلت أفكر</option>
                 </select>
               </div>

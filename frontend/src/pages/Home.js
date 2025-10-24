@@ -66,6 +66,15 @@ const Home = () => {
   const handleSwipe = async (action) => {
     if (!currentProfile) return;
     
+    // Save swipe to history (keep last 5)
+    const newHistory = [...swipeHistory, {
+      profile: currentProfile,
+      action: action,
+      index: currentIndex
+    }].slice(-5);
+    setSwipeHistory(newHistory);
+    setCanRewind(true);
+    
     try {
       const response = await axios.post(`${API}/swipe`, {
         swiped_user_id: currentProfile.user_id,
@@ -83,6 +92,22 @@ const Home = () => {
     } catch (error) {
       console.error('Error:', error);
     }
+  };
+
+  const handleRewind = () => {
+    if (swipeHistory.length === 0) return;
+    
+    // Get last swipe
+    const lastSwipe = swipeHistory[swipeHistory.length - 1];
+    
+    // Remove from history
+    setSwipeHistory(swipeHistory.slice(0, -1));
+    
+    // Go back to that profile
+    setCurrentIndex(lastSwipe.index);
+    
+    // Check if we can still rewind
+    setCanRewind(swipeHistory.length > 1);
   };
 
   const currentProfile = profiles[currentIndex];

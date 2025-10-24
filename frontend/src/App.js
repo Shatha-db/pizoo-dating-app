@@ -25,6 +25,7 @@ import TopPicks from './pages/TopPicks';
 import DiscoverySettings from './pages/DiscoverySettings';
 import DoubleDating from './pages/DoubleDating';
 import DoubleDatingInfo from './pages/DoubleDatingInfo';
+import Notifications from './pages/Notifications';
 import Premium from './pages/Premium';
 import Settings from './pages/Settings';
 import TermsNew from './pages/TermsNew';

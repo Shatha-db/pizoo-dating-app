@@ -205,6 +205,48 @@ const Settings = () => {
           </select>
         </Card>
 
+        {/* Language Selection */}
+        <Card className="p-4">
+          <div className="flex items-center gap-2 mb-4">
+            <Globe className="w-5 h-5 text-blue-500" />
+            <h2 className="font-bold text-lg">{t('settings.language')}</h2>
+          </div>
+          
+          <div className="space-y-2">
+            <button
+              onClick={() => changeLanguage('ar')}
+              className={`w-full p-4 rounded-lg text-right flex items-center justify-between transition-all ${
+                i18n.language === 'ar' 
+                  ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white shadow-lg' 
+                  : 'bg-gray-100 hover:bg-gray-200'
+              }`}
+            >
+              <span className="font-medium">العربية</span>
+              {i18n.language === 'ar' && (
+                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-pink-500 text-xl">✓</span>
+                </div>
+              )}
+            </button>
+
+            <button
+              onClick={() => changeLanguage('en')}
+              className={`w-full p-4 rounded-lg text-left flex items-center justify-between transition-all ${
+                i18n.language === 'en' 
+                  ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white shadow-lg' 
+                  : 'bg-gray-100 hover:bg-gray-200'
+              }`}
+            >
+              <span className="font-medium">English</span>
+              {i18n.language === 'en' && (
+                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-pink-500 text-xl">✓</span>
+                </div>
+              )}
+            </button>
+          </div>
+        </Card>
+
         {/* Support & Community */}
         <Card className="p-4">
           <h2 className="font-bold text-lg mb-4">الدعم والمجتمع</h2>

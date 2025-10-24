@@ -174,6 +174,23 @@ class PaymentMethod(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
+
+class Notification(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str  # المستخدم الذي سيستقبل الإشعار
+    type: str  # new_match, new_message, new_like, super_like, profile_view
+    title: str
+    message: str
+    link: Optional[str] = None  # رابط للانتقال إليه عند الضغط
+    related_user_id: Optional[str] = None  # المستخدم المرتبط بالإشعار
+    related_user_name: Optional[str] = None
+    related_user_photo: Optional[str] = None
+    is_read: bool = False
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
 class Swipe(BaseModel):
     model_config = ConfigDict(extra="ignore")
     

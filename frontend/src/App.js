@@ -46,6 +46,7 @@ function App() {
           <Route path="/privacy" element={<TermsNew />} />
           <Route path="/cookies" element={<TermsNew />} />
           <Route path="/logo-preview" element={<LogoPreview />} />
+          <Route path="/custom-logo" element={<CustomLogoPage />} />
           <Route path="/dashboard" element={<Navigate to="/home" replace />} />
           <Route
             path="/add-payment"

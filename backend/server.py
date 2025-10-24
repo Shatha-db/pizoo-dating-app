@@ -783,9 +783,18 @@ async def discover_profiles(
     swiped = await db.swipes.find({"user_id": current_user['id']}, {"_id": 0, "swiped_user_id": 1}).to_list(length=1000)
     swiped_ids = [s['swiped_user_id'] for s in swiped]
     
+    # Get blocked users (both ways - users I blocked and users who blocked me)
+    my_blocks = await db.blocks.find({"blocker_id": current_user['id']}, {"_id": 0, "blocked_user_id": 1}).to_list(length=1000)
+    blocked_me = await db.blocks.find({"blocked_user_id": current_user['id']}, {"_id": 0, "blocker_id": 1}).to_list(length=1000)
+    
+    blocked_ids = [b['blocked_user_id'] for b in my_blocks] + [b['blocker_id'] for b in blocked_me]
+    
+    # Combine all excluded IDs
+    excluded_ids = list(set(swiped_ids + blocked_ids))
+    
     # Build filter query
     query = {
-        "user_id": {"$ne": current_user['id'], "$nin": swiped_ids}
+        "user_id": {"$ne": current_user['id'], "$nin": excluded_ids}
     }
     
     # Apply filters

@@ -11,14 +11,85 @@ const API = `${BACKEND_URL}/api`;
 
 const DoubleDating = () => {
   const navigate = useNavigate();
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [invitedFriends, setInvitedFriends] = useState([]);
   const [showSettings, setShowSettings] = useState(false);
+  const [showInviteOptions, setShowInviteOptions] = useState(false);
   const [settings, setSettings] = useState({
     showOnFriendProfile: true,
     showFriendOnMyProfile: true,
     showPersonalAccounts: false
   });
+
+  useEffect(() => {
+    fetchFriends();
+  }, []);
+
+  const fetchFriends = async () => {
+    try {
+      const response = await axios.get(`${API}/double-dating/friends`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setInvitedFriends(response.data.friends || []);
+    } catch (error) {
+      console.error('Error fetching friends:', error);
+    }
+  };
+
+  const removeFriend = async (friendId) => {
+    try {
+      await axios.delete(`${API}/double-dating/friends/${friendId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setInvitedFriends(invitedFriends.filter(f => f.id !== friendId));
+    } catch (error) {
+      console.error('Error removing friend:', error);
+    }
+  };
+
+  const generateInviteMessage = () => {
+    const appUrl = window.location.origin;
+    const inviteCode = user?.id || 'PIZOO2024';
+    
+    return `🔥 مرحباً! انضم إليّ على Pizoo - أفضل تطبيق للمواعدة المزدوجة!
+
+✨ أكثر من 100,000 مستخدم نشط
+💕 تطبيق آمن وموثوق
+👥 ميزة المواعدة المزدوجة الفريدة
+🎉 انضم الآن وشكّل ثنائياً معي!
+
+رابط التسجيل: ${appUrl}
+كود الدعوة: ${inviteCode}
+
+#Pizoo #مواعدة_مزدوجة #التعارف`;
+  };
+
+  const shareViaWhatsApp = () => {
+    const message = encodeURIComponent(generateInviteMessage());
+    window.open(`https://wa.me/?text=${message}`, '_blank');
+    setShowInviteOptions(false);
+  };
+
+  const shareViaFacebook = () => {
+    const appUrl = window.location.origin;
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(appUrl)}`, '_blank');
+    setShowInviteOptions(false);
+  };
+
+  const shareViaTwitter = () => {
+    const message = encodeURIComponent('انضم إليّ على Pizoo - أفضل تطبيق للمواعدة المزدوجة! 🔥💕');
+    const appUrl = window.location.origin;
+    window.open(`https://twitter.com/intent/tweet?text=${message}&url=${encodeURIComponent(appUrl)}`, '_blank');
+    setShowInviteOptions(false);
+  };
+
+  const copyInviteLink = () => {
+    const message = generateInviteMessage();
+    navigator.clipboard.writeText(message).then(() => {
+      alert('تم نسخ رسالة الدعوة! 📋');
+      setShowInviteOptions(false);
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 pb-20" dir="rtl">

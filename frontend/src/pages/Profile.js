@@ -16,6 +16,7 @@ const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [completionScore, setCompletionScore] = useState(0);
 
   useEffect(() => {
     fetchProfileData();

@@ -206,6 +206,16 @@ class Block(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
+class Boost(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    started_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    ends_at: datetime  # 30 minutes from start
+    is_active: bool = True
+
+
 class Match(BaseModel):
     model_config = ConfigDict(extra="ignore")
     

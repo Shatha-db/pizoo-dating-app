@@ -1302,6 +1302,60 @@ async def swipe_action(request: SwipeRequest, current_user: dict = Depends(get_c
                 match_dict['matched_at'] = match_dict['matched_at'].isoformat()
                 
                 await db.matches.insert_one(match_dict)
+                
+                # Create notifications for both users
+                current_user_profile = await db.profiles.find_one(
+                    {"user_id": current_user['id']},
+                    {"_id": 0, "display_name": 1, "photos": 1}
+                )
+                swiped_user_profile = await db.profiles.find_one(
+                    {"user_id": request.swiped_user_id},
+                    {"_id": 0, "display_name": 1, "photos": 1}
+                )
+                
+                # Notification for current user
+                if swiped_user_profile:
+                    await create_notification(
+                        user_id=current_user['id'],
+                        notification_type="new_match",
+                        title="🎉 تطابق جديد!",
+                        message=f"لديك تطابق جديد مع {swiped_user_profile.get('display_name', 'مستخدم')}",
+                        link=f"/chat/{match.id}",
+                        related_user_id=request.swiped_user_id,
+                        related_user_name=swiped_user_profile.get('display_name'),
+                        related_user_photo=swiped_user_profile.get('photos', [None])[0] if swiped_user_profile.get('photos') else None
+                    )
+                
+                # Notification for swiped user
+                if current_user_profile:
+                    await create_notification(
+                        user_id=request.swiped_user_id,
+                        notification_type="new_match",
+                        title="🎉 تطابق جديد!",
+                        message=f"لديك تطابق جديد مع {current_user_profile.get('display_name', 'مستخدم')}",
+                        link=f"/chat/{match.id}",
+                        related_user_id=current_user['id'],
+                        related_user_name=current_user_profile.get('display_name'),
+                        related_user_photo=current_user_profile.get('photos', [None])[0] if current_user_profile.get('photos') else None
+                    )
+        else:
+            # No match yet, but send notification for like received
+            if request.action == 'super_like':
+                current_user_profile = await db.profiles.find_one(
+                    {"user_id": current_user['id']},
+                    {"_id": 0, "display_name": 1, "photos": 1}
+                )
+                if current_user_profile:
+                    await create_notification(
+                        user_id=request.swiped_user_id,
+                        notification_type="super_like",
+                        title="⭐ Super Like!",
+                        message=f"{current_user_profile.get('display_name', 'شخص ما')} أرسل لك Super Like!",
+                        link=f"/profile/{current_user['id']}",
+                        related_user_id=current_user['id'],
+                        related_user_name=current_user_profile.get('display_name'),
+                        related_user_photo=current_user_profile.get('photos', [None])[0] if current_user_profile.get('photos') else None
+                    )
     
     # Get remaining limits for response
     remaining_likes = None

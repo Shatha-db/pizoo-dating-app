@@ -202,8 +202,19 @@ const Home = () => {
           >
             <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
           </Button>
-          <Button variant="ghost" size="icon">
-            <Zap className="w-6 h-6 text-purple-500" />
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={handleBoost}
+            className="relative"
+            disabled={boostActive}
+          >
+            <Zap className={`w-6 h-6 ${boostActive ? 'text-yellow-500 animate-pulse' : 'text-purple-500'}`} />
+            {boostActive && (
+              <span className="absolute -bottom-1 text-xs font-bold text-purple-600">
+                {formatTime(boostTimeRemaining)}
+              </span>
+            )}
           </Button>
         </div>
       </header>

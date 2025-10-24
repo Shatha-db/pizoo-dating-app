@@ -105,6 +105,51 @@ const ProfileView = () => {
     setTimeout(() => setToast(null), 3000);
   };
 
+  const handleReport = async () => {
+    if (!reportReason) {
+      showToast('الرجاء اختيار سبب الإبلاغ');
+      return;
+    }
+
+    try {
+      await axios.post(`${API}/report`, {
+        reported_user_id: userId,
+        reason: reportReason,
+        details: reportDetails
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      showToast('تم الإبلاغ بنجاح ✅');
+      setShowReportModal(false);
+      setShowOptionsMenu(false);
+      setReportReason('');
+      setReportDetails('');
+    } catch (error) {
+      console.error('Error reporting:', error);
+      showToast('حدث خطأ أثناء الإبلاغ');
+    }
+  };
+
+  const handleBlock = async () => {
+    if (!confirm('هل أنت متأكد من حظر هذا المستخدم؟')) return;
+
+    try {
+      await axios.post(`${API}/block`, {
+        blocked_user_id: userId
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      showToast('تم حظر المستخدم بنجاح ✅');
+      setShowOptionsMenu(false);
+      navigate(-1);
+    } catch (error) {
+      console.error('Error blocking:', error);
+      showToast('حدث خطأ أثناء الحظر');
+    }
+  };
+
   const nextPhoto = () => {
     if (profile?.photos && currentPhotoIndex < profile.photos.length - 1) {
       setCurrentPhotoIndex(currentPhotoIndex + 1);

@@ -1936,6 +1936,8 @@ async def get_discovery_settings(current_user: dict = Depends(get_current_user))
             "updated_at": datetime.now(timezone.utc).isoformat()
         }
         await db.discovery_settings.insert_one(settings_data)
+        # Remove _id if it was added by MongoDB
+        settings_data.pop('_id', None)
         return settings_data
     
     return settings

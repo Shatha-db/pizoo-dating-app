@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useWebSocket } from '../context/WebSocketContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
-import { ArrowRight, MoreVertical, Video, Send, Smile, Mic } from 'lucide-react';
+import { ArrowRight, MoreVertical, Video, Send, Smile, Mic, Star } from 'lucide-react';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

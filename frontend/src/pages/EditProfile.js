@@ -129,18 +129,38 @@ const EditProfile = () => {
     }
   };
 
-  const handlePhotoUpload = (index, event) => {
+  const handlePhotoUpload = async (index, event) => {
     const file = event.target.files[0];
-    if (file) {
-      // In production, upload to server/cloud
-      // For now, use FileReader for preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newPhotos = [...photos];
-        newPhotos[index] = reader.result;
-        setPhotos(newPhotos);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    try {
+      setUploadingPhotos(true);
+      setUploadProgress({ ...uploadProgress, [index]: 0 });
+
+      // Compress image first
+      showToast('جاري ضغط الصورة...', 'info');
+      const compressedFile = await compressImage(file);
+
+      // Upload to Cloudinary
+      showToast('جاري رفع الصورة...', 'info');
+      const imageUrl = await uploadImageToCloudinary(compressedFile, (progress) => {
+        setUploadProgress({ ...uploadProgress, [index]: progress });
+      });
+
+      // Update photos array
+      const newPhotos = [...photos];
+      newPhotos[index] = imageUrl;
+      setPhotos(newPhotos);
+
+      showToast('تم رفع الصورة بنجاح! ✅', 'success');
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      showToast(error.message || 'فشل رفع الصورة', 'error');
+    } finally {
+      setUploadingPhotos(false);
+      const newProgress = { ...uploadProgress };
+      delete newProgress[index];
+      setUploadProgress(newProgress);
     }
   };
 

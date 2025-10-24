@@ -6,8 +6,6 @@ import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import Welcome from './pages/Welcome';
-import Dashboard from './pages/Dashboard';
 import AddPayment from './pages/AddPayment';
 import ProfileSetup from './pages/ProfileSetup';
 import Discover from './pages/Discover';

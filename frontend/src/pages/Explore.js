@@ -206,6 +206,7 @@ const Explore = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-20" dir="rtl">
+      <Toaster />
       {/* Header */}
       <header className="bg-white shadow-sm p-4 sticky top-0 z-10">
         {showResults ? (
@@ -239,10 +240,19 @@ const Explore = () => {
                 {moods.map((mood) => (
                   <button
                     key={mood.id}
-                    className={`${mood.color} text-white px-6 py-3 rounded-full flex items-center gap-2 whitespace-nowrap shadow-lg hover:shadow-xl transition-shadow`}
+                    onClick={() => handleMoodSelect(mood.id)}
+                    disabled={moodLoading}
+                    className={`${
+                      selectedMood === mood.id 
+                        ? 'ring-4 ring-white ring-offset-2' 
+                        : ''
+                    } ${mood.color} text-white px-6 py-3 rounded-full flex items-center gap-2 whitespace-nowrap shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     <span className="text-xl">{mood.emoji}</span>
                     <span className="font-medium">{mood.title}</span>
+                    {selectedMood === mood.id && (
+                      <span className="text-xl">✓</span>
+                    )}
                   </button>
                 ))}
               </div>

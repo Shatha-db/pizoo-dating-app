@@ -312,6 +312,17 @@ class DiscoverySettings(BaseModel):
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
+class DoubleDatingFriend(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str  # User who owns this friend list
+    friend_user_id: str  # Friend's user ID
+    status: str = "pending"  # pending, accepted, rejected
+    invited_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    accepted_at: Optional[datetime] = None
+
+
 # ===== Request/Response Models =====
 
 class TokenResponse(BaseModel):

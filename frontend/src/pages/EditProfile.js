@@ -83,6 +83,7 @@ const EditProfile = () => {
       const profile = response.data;
       if (profile) {
         setPhotos([...(profile.photos || []), ...Array(9 - (profile.photos?.length || 0)).fill(null)]);
+        setPrimaryPhotoIndex(profile.primary_photo_index || 0);
         setDisplayName(profile.display_name || '');
         setBio(profile.bio || '');
         setDateOfBirth(profile.date_of_birth || '');

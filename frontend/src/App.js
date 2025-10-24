@@ -19,6 +19,7 @@ import Matches from './pages/Matches';
 import ChatList from './pages/ChatList';
 import ChatRoom from './pages/ChatRoom';
 import Profile from './pages/Profile';
+import ProfileNew from './pages/ProfileNew';
 import ProfileView from './pages/ProfileView';
 import EditProfile from './pages/EditProfile';
 import TopPicks from './pages/TopPicks';

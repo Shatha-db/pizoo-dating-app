@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useNotifications } from '../context/NotificationContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import BottomNav from '../components/BottomNav';
 import CustomLogo from '../components/CustomLogo';
-import { Heart, X, Star, RotateCcw, Zap, Info } from 'lucide-react';
+import { Heart, X, Star, RotateCcw, Zap, Info, Bell } from 'lucide-react';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

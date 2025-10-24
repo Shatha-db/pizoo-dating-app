@@ -203,7 +203,23 @@ const EditProfile = () => {
         smoking: smoking,
         exercise: exercise,
         dietary_preference: dietaryPreference,
-        interests: interests
+        interests: interests,
+        
+        // New fields
+        school: school,
+        company: company,
+        job_title: jobTitle,
+        living_in: livingIn,
+        hometown: hometown,
+        gender_identity: genderIdentity,
+        show_gender: showGender,
+        sexual_orientation: sexualOrientation,
+        show_orientation: showOrientation,
+        sleeping_habits: sleepingHabits,
+        social_media: socialMedia,
+        vaccinated: vaccinated,
+        religion: religion,
+        political_views: politicalViews
       };
 
       await axios.put(`${API}/profile/update`, profileData, {

@@ -403,10 +403,12 @@ test_plan:
     - "Explore Page"
     - "Likes Page"
     - "Profile View Page"
+    - "Chat Page New Layout"
   stuck_tasks:
     - "Explore Page"
     - "Likes Page"
     - "Profile View Page"
+    - "Chat Page New Layout"
   test_all: false
   test_priority: "authentication_first"
 

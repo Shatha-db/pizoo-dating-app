@@ -18,6 +18,8 @@ const EditProfile = () => {
   const { token } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingPhotos, setUploadingPhotos] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState({});
   const [activeTab, setActiveTab] = useState('edit'); // 'edit' or 'preview'
   const [toast, setToast] = useState(null);
   

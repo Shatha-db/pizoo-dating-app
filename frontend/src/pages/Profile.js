@@ -141,6 +141,56 @@ const Profile = () => {
       </header>
 
       <main className="max-w-md mx-auto p-4 space-y-4">
+        {/* Profile Completion Card */}
+        <Card className="p-4 bg-gradient-to-r from-green-50 to-blue-50">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="font-bold text-lg">اكتمال الملف الشخصي</h3>
+            <span className={`text-2xl font-bold ${
+              completionScore >= 80 ? 'text-green-600' : 
+              completionScore >= 50 ? 'text-yellow-600' : 'text-red-600'
+            }`}>
+              {completionScore}%
+            </span>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="w-full bg-gray-200 rounded-full h-3 mb-3">
+            <div 
+              className={`h-full rounded-full transition-all duration-500 ${
+                completionScore >= 80 ? 'bg-green-500' : 
+                completionScore >= 50 ? 'bg-yellow-500' : 'bg-red-500'
+              }`}
+              style={{ width: `${completionScore}%` }}
+            />
+          </div>
+          
+          {completionScore < 100 && (
+            <div>
+              <p className="text-sm text-gray-700 mb-2 font-medium">لتحسين ملفك الشخصي:</p>
+              <ul className="space-y-1">
+                {getMissingFields().slice(0, 3).map((field, index) => (
+                  <li key={index} className="text-sm text-gray-600 flex items-start gap-2">
+                    <span className="text-orange-500 mt-0.5">•</span>
+                    <span>{field}</span>
+                  </li>
+                ))}
+              </ul>
+              {completionScore < 80 && (
+                <p className="text-xs text-gray-500 mt-2">
+                  💡 ملف كامل = المزيد من المطابقات!
+                </p>
+              )}
+            </div>
+          )}
+          
+          {completionScore === 100 && (
+            <div className="flex items-center gap-2 text-green-600">
+              <Star className="w-5 h-5 fill-current" />
+              <span className="font-medium">ممتاز! ملفك الشخصي مكتمل 🎉</span>
+            </div>
+          )}
+        </Card>
+
         {/* Profile Card */}
         <Card className="overflow-hidden">
           <div className="relative h-48 bg-gradient-to-br from-pink-400 to-purple-500">

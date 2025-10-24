@@ -88,6 +88,14 @@ function App() {
             }
           />
           <Route
+            path="/discovery-settings"
+            element={
+              <ProtectedRoute>
+                <DiscoverySettings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/likes"
             element={
               <ProtectedRoute>

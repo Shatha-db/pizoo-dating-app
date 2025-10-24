@@ -77,22 +77,22 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-red-500 to-orange-500 flex items-center justify-center p-4" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-red-500 to-orange-500 dark:from-gray-300 dark:via-gray-400 dark:to-gray-500 flex items-center justify-center p-4" dir="rtl">
       {/* Logo/Brand */}
       <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
         <PizooCustomLogo size="lg" animated={true} />
       </div>
 
-      <Card className="w-full max-w-md mt-20">
+      <Card className="w-full max-w-md mt-20 dark:bg-gray-200">
         <CardHeader className="text-center pb-2">
-          <CardTitle className="text-2xl font-bold">إنشاء حساب جديد</CardTitle>
-          <CardDescription className="text-sm text-gray-600 mt-3 leading-relaxed">
+          <CardTitle className="text-2xl font-bold dark:text-gray-900">إنشاء حساب جديد</CardTitle>
+          <CardDescription className="text-sm text-gray-600 dark:text-gray-700 mt-3 leading-relaxed">
             من خلال النقر على "إنشاء حساب"، فإنك توافق على{' '}
-            <Link to="/terms" className="text-blue-600 hover:underline font-medium">
+            <Link to="/terms" className="text-blue-600 dark:text-blue-700 hover:underline font-medium">
               شروطنا
             </Link>
             . تعرّف على طريقة تعاملنا مع بياناتك في{' '}
-            <Link to="/privacy" className="text-blue-600 hover:underline font-medium">
+            <Link to="/privacy" className="text-blue-600 dark:text-blue-700 hover:underline font-medium">
               سياسة الخصوصية
             </Link>
             {' '}و{' '}

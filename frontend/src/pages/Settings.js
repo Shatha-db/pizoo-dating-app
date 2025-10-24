@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
-import { ArrowRight, ChevronLeft, Shield, HelpCircle, Users, Lock, FileText, LogOut } from 'lucide-react';
+import { ArrowRight, ChevronLeft, Shield, HelpCircle, Users, Lock, FileText, LogOut, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

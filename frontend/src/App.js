@@ -79,6 +79,14 @@ function App() {
             }
           />
           <Route
+            path="/top-picks"
+            element={
+              <ProtectedRoute>
+                <TopPicks />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/likes"
             element={
               <ProtectedRoute>

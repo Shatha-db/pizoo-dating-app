@@ -725,16 +725,36 @@ async def update_profile(request: ProfileUpdateRequest, current_user: dict = Dep
             detail="الملف الشخصي غير موجود"
         )
     
-    # Update only provided fields
-    update_data = {k: v for k, v in request.model_dump().items() if v is not None}
+    # Update only provided fields (but allow empty lists/arrays)
+    update_data = {}
+    for key, value in request.model_dump().items():
+        if value is not None:
+            update_data[key] = value
+        # Special handling for photos - allow empty list
+        elif key == 'photos' and value is not None:
+            update_data[key] = value
+    
     update_data['updated_at'] = datetime.now(timezone.utc).isoformat()
+    
+    # If photos are being updated, ensure primary_photo_index is valid
+    if 'photos' in update_data and update_data['photos']:
+        if 'primary_photo_index' not in update_data:
+            update_data['primary_photo_index'] = 0
+        elif update_data['primary_photo_index'] >= len(update_data['photos']):
+            update_data['primary_photo_index'] = 0
     
     await db.profiles.update_one(
         {"user_id": current_user['id']},
         {"$set": update_data}
     )
     
-    return {"message": "تم تحديث الملف الشخصي بنجاح"}
+    # Return updated profile
+    updated_profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})
+    
+    return {
+        "message": "تم تحديث الملف الشخصي بنجاح",
+        "profile": updated_profile
+    }
 
 
 @api_router.post("/profile/photo/upload")

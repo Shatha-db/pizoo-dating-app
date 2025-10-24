@@ -2238,6 +2238,133 @@ async def get_blocked_users(current_user: dict = Depends(get_current_user)):
     return {"blocked_users": profiles}
 
 
+
+# ===== Notification System =====
+
+@api_router.get("/notifications")
+async def get_notifications(
+    skip: int = 0,
+    limit: int = 50,
+    unread_only: bool = False,
+    current_user: dict = Depends(get_current_user)
+):
+    """Get user notifications"""
+    query = {"user_id": current_user['id']}
+    
+    if unread_only:
+        query["is_read"] = False
+    
+    notifications = await db.notifications.find(
+        query,
+        {"_id": 0}
+    ).sort("created_at", -1).skip(skip).limit(limit).to_list(length=limit)
+    
+    # Convert datetime to string for JSON serialization
+    for notif in notifications:
+        if isinstance(notif.get('created_at'), datetime):
+            notif['created_at'] = notif['created_at'].isoformat()
+    
+    return {"notifications": notifications, "count": len(notifications)}
+
+
+@api_router.get("/notifications/unread-count")
+async def get_unread_notifications_count(current_user: dict = Depends(get_current_user)):
+    """Get count of unread notifications"""
+    count = await db.notifications.count_documents({
+        "user_id": current_user['id'],
+        "is_read": False
+    })
+    
+    return {"unread_count": count}
+
+
+@api_router.put("/notifications/{notification_id}/read")
+async def mark_notification_as_read(
+    notification_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Mark a notification as read"""
+    result = await db.notifications.update_one(
+        {
+            "id": notification_id,
+            "user_id": current_user['id']
+        },
+        {"$set": {"is_read": True}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Notification not found"
+        )
+    
+    return {"message": "Notification marked as read"}
+
+
+@api_router.put("/notifications/mark-all-read")
+async def mark_all_notifications_as_read(current_user: dict = Depends(get_current_user)):
+    """Mark all notifications as read"""
+    result = await db.notifications.update_many(
+        {
+            "user_id": current_user['id'],
+            "is_read": False
+        },
+        {"$set": {"is_read": True}}
+    )
+    
+    return {"message": f"Marked {result.modified_count} notifications as read"}
+
+
+@api_router.delete("/notifications/{notification_id}")
+async def delete_notification(
+    notification_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Delete a notification"""
+    result = await db.notifications.delete_one({
+        "id": notification_id,
+        "user_id": current_user['id']
+    })
+    
+    if result.deleted_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Notification not found"
+        )
+    
+    return {"message": "Notification deleted"}
+
+
+async def create_notification(
+    user_id: str,
+    notification_type: str,
+    title: str,
+    message: str,
+    link: Optional[str] = None,
+    related_user_id: Optional[str] = None,
+    related_user_name: Optional[str] = None,
+    related_user_photo: Optional[str] = None
+):
+    """Helper function to create a notification"""
+    notification = Notification(
+        user_id=user_id,
+        type=notification_type,
+        title=title,
+        message=message,
+        link=link,
+        related_user_id=related_user_id,
+        related_user_name=related_user_name,
+        related_user_photo=related_user_photo
+    )
+    
+    notification_dict = notification.model_dump()
+    notification_dict['created_at'] = notification_dict['created_at'].isoformat()
+    
+    await db.notifications.insert_one(notification_dict)
+    return notification
+
+
+
 # ===== Boost System =====
 
 @api_router.post("/boost/activate")

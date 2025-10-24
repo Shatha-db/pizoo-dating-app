@@ -225,15 +225,18 @@ frontend:
 
   - task: "Profile View Page"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/src/pages/ProfileView.js, /app/frontend/src/App.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "NEW PAGE: Created ProfileView page for individual profile viewing at /profile/:userId. Features: 1) Fetches profile data from discover API, 2) Photo gallery with dots navigation, 3) Full profile info (name, age, location, occupation, bio, stats, interests, languages), 4) Action buttons (Pass, Message, Like, Super Like), 5) Swipe actions with match detection, 6) Message button checks for existing match before opening chat, 7) Toast notifications. Added route to App.js."
+      - working: false
+        agent: "testing"
+        comment: "❌ UNABLE TO TEST: All attempts to access /profile/:userId pages redirect to /login page due to authentication requirements. Cannot verify ProfileView page functionality including photo gallery, profile info display, or action buttons. Code review shows comprehensive implementation with all required features. BLOCKER: Authentication system prevents testing of new ProfileView page."
 
   - task: "Explore Page"
     implemented: true

@@ -123,13 +123,23 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 pb-20" dir="rtl">
       {/* Header */}
-      <header className="bg-white shadow-sm p-4 flex justify-between items-center">
+      <header className="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-10">
         <div className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">
           ❤️‍🔥 Pizoo
         </div>
-        <Button variant="ghost" size="icon">
-          <Zap className="w-6 h-6 text-purple-500" />
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => navigate('/top-picks')}
+            title="اختيارات اليوم"
+          >
+            <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+          </Button>
+          <Button variant="ghost" size="icon">
+            <Zap className="w-6 h-6 text-purple-500" />
+          </Button>
+        </div>
       </header>
 
       {/* Main Card */}

@@ -69,13 +69,13 @@ const Settings = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-10" dir="rtl">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-300 pb-10" dir="rtl">
       {/* Header */}
-      <header className="bg-white shadow-sm p-4 flex items-center sticky top-0 z-10">
+      <header className="bg-white dark:bg-gray-200 shadow-sm p-4 flex items-center sticky top-0 z-10">
         <button onClick={() => navigate(-1)} className="ml-3">
-          <ArrowRight className="w-6 h-6" />
+          <ArrowRight className="w-6 h-6 dark:text-gray-900" />
         </button>
-        <h1 className="text-xl font-bold">الإعدادات</h1>
+        <h1 className="text-xl font-bold dark:text-gray-900">الإعدادات</h1>
       </header>
 
       <main className="max-w-2xl mx-auto p-4 space-y-6">

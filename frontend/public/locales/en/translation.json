@@ -1,0 +1,126 @@
+{
+  "common": {
+    "appName": "Pizoo",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "send": "Send",
+    "yes": "Yes",
+    "no": "No",
+    "or": "or"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "phoneNumber": "Phone Number",
+    "termsAccept": "I accept the terms and conditions",
+    "loginSuccess": "Login successful!",
+    "registerSuccess": "Registration successful!",
+    "loginError": "Login failed. Please check your credentials.",
+    "registerError": "Registration failed. Please try again."
+  },
+  "navigation": {
+    "home": "Home",
+    "explore": "Explore",
+    "likes": "Likes",
+    "matches": "Matches",
+    "messages": "Messages",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "profile": {
+    "editProfile": "Edit Profile",
+    "myProfile": "My Profile",
+    "about": "About Me",
+    "photos": "Photos",
+    "interests": "Interests",
+    "languages": "Languages",
+    "basicInfo": "Basic Information",
+    "lifestyle": "Lifestyle",
+    "relationshipGoals": "Relationship Goals",
+    "uploadPhoto": "Upload Photo",
+    "addPhoto": "Add Photo",
+    "setPrimary": "Set as Primary",
+    "primary": "Primary",
+    "photoLimit": "Add up to 9 photos",
+    "completionScore": "Profile Completion",
+    "completeProfile": "Complete your profile to get more matches!"
+  },
+  "discover": {
+    "discover": "Discover",
+    "topPicks": "Top Picks",
+    "newMatches": "New Matches",
+    "noMoreProfiles": "No more profiles",
+    "lookingFor": "Looking for"
+  },
+  "actions": {
+    "like": "Like",
+    "pass": "Pass",
+    "superLike": "Super Like",
+    "rewind": "Rewind",
+    "boost": "Boost",
+    "message": "Message",
+    "viewProfile": "View Profile",
+    "report": "Report",
+    "block": "Block",
+    "unblock": "Unblock"
+  },
+  "messages": {
+    "messages": "Messages",
+    "newMatches": "New Matches",
+    "conversations": "Conversations",
+    "typeMessage": "Type a message...",
+    "noMessages": "No messages yet",
+    "startConversation": "Start swiping to get matches and conversations!"
+  },
+  "likes": {
+    "likes": "Likes",
+    "sent": "Sent",
+    "received": "Received",
+    "likesYou": "Likes You",
+    "noLikesSent": "No likes sent yet",
+    "noLikesReceived": "No likes received yet"
+  },
+  "premium": {
+    "premium": "Premium",
+    "upgrade": "Upgrade to Premium",
+    "gold": "Gold",
+    "platinum": "Platinum",
+    "unlimitedLikes": "Unlimited Likes",
+    "unlimitedMessages": "Unlimited Messages",
+    "seeWhoLikesYou": "See Who Likes You",
+    "boostProfile": "Boost Your Profile",
+    "rewindSwipes": "Rewind Swipes"
+  },
+  "settings": {
+    "settings": "Settings",
+    "language": "Language",
+    "notifications": "Notifications",
+    "privacy": "Privacy",
+    "account": "Account",
+    "changeLanguage": "Change Language",
+    "selectLanguage": "Select Language"
+  },
+  "limits": {
+    "dailyLikesLimit": "Daily likes limit reached!",
+    "weeklyMessagesLimit": "Weekly messages limit reached!",
+    "upgradeToPremium": "Upgrade to Premium for unlimited access",
+    "likesRemaining": "likes remaining this week",
+    "messagesRemaining": "messages remaining this week"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "passwordsNotMatch": "Passwords do not match"
+  }
+}

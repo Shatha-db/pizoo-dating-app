@@ -415,6 +415,97 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
+# ===== Helper Functions for Usage Limits =====
+
+async def check_and_reset_weekly_limits(user: dict):
+    """Check if a week has passed and reset weekly limits"""
+    if 'week_start_date' not in user:
+        # Initialize if not exists
+        await db.users.update_one(
+            {"id": user['id']},
+            {"$set": {
+                "week_start_date": datetime.now(timezone.utc).isoformat(),
+                "likes_sent_this_week": 0,
+                "messages_sent_this_week": 0,
+                "premium_tier": user.get('premium_tier', 'free')
+            }}
+        )
+        user['likes_sent_this_week'] = 0
+        user['messages_sent_this_week'] = 0
+        user['premium_tier'] = user.get('premium_tier', 'free')
+        return user
+    
+    week_start = datetime.fromisoformat(user['week_start_date']) if isinstance(user['week_start_date'], str) else user['week_start_date']
+    now = datetime.now(timezone.utc)
+    days_passed = (now - week_start).days
+    
+    # If 7 days have passed, reset the counters
+    if days_passed >= 7:
+        await db.users.update_one(
+            {"id": user['id']},
+            {"$set": {
+                "week_start_date": now.isoformat(),
+                "likes_sent_this_week": 0,
+                "messages_sent_this_week": 0
+            }}
+        )
+        user['likes_sent_this_week'] = 0
+        user['messages_sent_this_week'] = 0
+        user['week_start_date'] = now.isoformat()
+    
+    return user
+
+
+async def can_send_like(user: dict) -> tuple[bool, str]:
+    """Check if user can send a like"""
+    # Premium users have unlimited likes
+    if user.get('premium_tier') in ['gold', 'platinum']:
+        return True, "unlimited"
+    
+    # Free users have 12 likes per week
+    user = await check_and_reset_weekly_limits(user)
+    likes_sent = user.get('likes_sent_this_week', 0)
+    
+    if likes_sent >= 12:
+        return False, f"Weekly like limit reached. You've sent {likes_sent}/12 likes this week."
+    
+    return True, f"{12 - likes_sent} likes remaining"
+
+
+async def can_send_message(user: dict) -> tuple[bool, str]:
+    """Check if user can send a message"""
+    # Premium users have unlimited messages
+    if user.get('premium_tier') in ['gold', 'platinum']:
+        return True, "unlimited"
+    
+    # Free users have 10 messages per week
+    user = await check_and_reset_weekly_limits(user)
+    messages_sent = user.get('messages_sent_this_week', 0)
+    
+    if messages_sent >= 10:
+        return False, f"Weekly message limit reached. You've sent {messages_sent}/10 messages this week."
+    
+    return True, f"{10 - messages_sent} messages remaining"
+
+
+async def increment_likes_count(user_id: str):
+    """Increment the weekly likes counter"""
+    await db.users.update_one(
+        {"id": user_id},
+        {"$inc": {"likes_sent_this_week": 1}}
+    )
+
+
+async def increment_messages_count(user_id: str):
+    """Increment the weekly messages counter"""
+    await db.users.update_one(
+        {"id": user_id},
+        {"$inc": {"messages_sent_this_week": 1}}
+    )
+
+
+# ===== Authentication =====
+
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

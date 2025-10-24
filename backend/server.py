@@ -1904,6 +1904,61 @@ async def update_settings(
     return {"message": "Settings updated successfully"}
 
 
+# ===== Discovery Settings APIs =====
+
+@api_router.get("/discovery-settings")
+async def get_discovery_settings(current_user: dict = Depends(get_current_user)):
+    """Get user discovery settings"""
+    settings = await db.discovery_settings.find_one({"user_id": current_user['id']}, {"_id": 0})
+    
+    if not settings:
+        # Create default settings
+        settings_data = {
+            "id": str(uuid.uuid4()),
+            "user_id": current_user['id'],
+            "location": "",
+            "max_distance": 50,
+            "interested_in": "all",
+            "min_age": 18,
+            "max_age": 100,
+            "show_new_profiles_only": False,
+            "show_verified_only": False,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.discovery_settings.insert_one(settings_data)
+        return settings_data
+    
+    return settings
+
+
+@api_router.put("/discovery-settings")
+async def update_discovery_settings(
+    settings_update: dict,
+    current_user: dict = Depends(get_current_user)
+):
+    """Update user discovery settings"""
+    settings_update["updated_at"] = datetime.now(timezone.utc).isoformat()
+    
+    result = await db.discovery_settings.update_one(
+        {"user_id": current_user['id']},
+        {"$set": settings_update}
+    )
+    
+    if result.matched_count == 0:
+        # Create if doesn't exist
+        settings_data = {
+            "id": str(uuid.uuid4()),
+            "user_id": current_user['id'],
+            **settings_update,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.discovery_settings.insert_one(settings_data)
+        return {"message": "Discovery settings created", "settings": settings_data}
+    
+    return {"message": "Discovery settings updated successfully"}
+
+
 # ===== Report & Block System =====
 
 @api_router.post("/report")

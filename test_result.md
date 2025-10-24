@@ -237,11 +237,11 @@ frontend:
 
   - task: "Explore Page"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/src/pages/Explore.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
@@ -252,6 +252,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "UPDATED: Modified Explore page to show filtered results IN-PAGE instead of navigating away. Added: 1) Fetch profiles from /api/profiles/discover with category filter when tile clicked, 2) Loading state with spinner, 3) Empty state 'لا مزيد من النتائج', 4) Back button to return to categories, 5) Profile grid display with cards showing photos/info. User reported tiles weren't opening properly."
+      - working: false
+        agent: "testing"
+        comment: "❌ UNABLE TO TEST: All attempts to access /explore page redirect to /login page due to authentication requirements. Cannot verify if category filtering fix is working. Code review shows proper implementation with in-page filtering, loading states, and back button functionality. BLOCKER: Authentication system prevents testing of implemented fixes."
 
   - task: "Matches Page"
     implemented: true

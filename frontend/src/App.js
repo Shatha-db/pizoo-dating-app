@@ -98,6 +98,22 @@ function App() {
             }
           />
           <Route
+            path="/double-dating"
+            element={
+              <ProtectedRoute>
+                <DoubleDating />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/double-dating-info"
+            element={
+              <ProtectedRoute>
+                <DoubleDatingInfo />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/likes"
             element={
               <ProtectedRoute>

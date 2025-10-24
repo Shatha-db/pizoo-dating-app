@@ -64,9 +64,13 @@ export const AuthProvider = ({ children }) => {
         password
       });
       const { access_token, user: userData } = response.data;
+      
+      // Save to state and localStorage
       setToken(access_token);
       setUser(userData);
       localStorage.setItem('token', access_token);
+      localStorage.setItem('user', JSON.stringify(userData));
+      
       return { success: true };
     } catch (error) {
       return { 
@@ -86,9 +90,13 @@ export const AuthProvider = ({ children }) => {
         terms_accepted: termsAccepted
       });
       const { access_token, user: userData } = response.data;
+      
+      // Save to state and localStorage
       setToken(access_token);
       setUser(userData);
       localStorage.setItem('token', access_token);
+      localStorage.setItem('user', JSON.stringify(userData));
+      
       return { success: true };
     } catch (error) {
       return { 
@@ -102,6 +110,8 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login'; // Redirect to login
   };
 
   return (

@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Complete remaining 10% of dating app Phase 1: Finalize Explore page, Matches page, and App.js routing with all pages (Home, Explore, Likes, Matches, Profile). Add BottomNav to Home page. Then test backend APIs and frontend flows. After Phase 1, implement Phase 2: Real-time Chat System between matches."
+user_problem_statement: "Fix two critical user-reported issues: 1) Dark/Light mode toggle in Settings page not applying theme to the app, 2) 'How do you feel today?' mood buttons in Explore page not working and not saving to user profile."
 
 backend:
   - task: "User Authentication (Register/Login)"

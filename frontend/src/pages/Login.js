@@ -50,16 +50,16 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-red-500 to-orange-500 flex items-center justify-center p-4" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-red-500 to-orange-500 dark:from-gray-300 dark:via-gray-400 dark:to-gray-500 flex items-center justify-center p-4" dir="rtl">
       {/* Logo/Brand */}
       <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
         <PizooCustomLogo size="lg" animated={true} />
       </div>
 
-      <Card className="w-full max-w-md mt-20" data-testid="login-card">
+      <Card className="w-full max-w-md mt-20 dark:bg-gray-200" data-testid="login-card">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">تسجيل الدخول</CardTitle>
-          <CardDescription className="text-gray-600">
+          <CardTitle className="text-2xl font-bold dark:text-gray-900">تسجيل الدخول</CardTitle>
+          <CardDescription className="text-gray-600 dark:text-gray-700">
             أهلاً بعودتك! نحن سعداء برؤيتك مجدداً
           </CardDescription>
         </CardHeader>

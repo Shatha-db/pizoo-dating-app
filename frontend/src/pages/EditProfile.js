@@ -204,6 +204,23 @@ const EditProfile = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
+      // Filter out null photos and reorder with primary first
+      const filteredPhotos = photos.filter(p => p !== null);
+      
+      if (filteredPhotos.length === 0) {
+        showToast('يرجى إضافة صورة واحدة على الأقل', 'error');
+        setSaving(false);
+        return;
+      }
+      
+      // Reorder photos to have primary first
+      const reorderedPhotos = [...filteredPhotos];
+      if (primaryPhotoIndex > 0 && primaryPhotoIndex < reorderedPhotos.length) {
+        const primaryPhoto = reorderedPhotos[primaryPhotoIndex];
+        reorderedPhotos.splice(primaryPhotoIndex, 1);
+        reorderedPhotos.unshift(primaryPhoto);
+      }
+      
       const profileData = {
         display_name: displayName,
         bio: bio,
@@ -213,7 +230,8 @@ const EditProfile = () => {
         occupation: occupation,
         education: education,
         location: location,
-        photos: photos.filter(p => p !== null),
+        photos: reorderedPhotos,
+        primary_photo_index: 0, // Always 0 after reordering
         zodiac_sign: zodiacSign,
         languages: languages,
         relationship_goals: relationshipGoals,

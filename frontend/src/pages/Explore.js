@@ -5,6 +5,7 @@ import BottomNav from '../components/BottomNav';
 import { Card } from '../components/ui/card';
 import { Moon, Zap, Heart, Users, Globe, Music, Coffee, Mountain, ArrowRight, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import { toast, Toaster } from 'react-hot-toast';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -16,6 +17,8 @@ const Explore = () => {
   const [filteredProfiles, setFilteredProfiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [selectedMood, setSelectedMood] = useState(null);
+  const [moodLoading, setMoodLoading] = useState(false);
 
   const categories = [
     {

@@ -280,15 +280,20 @@ const EditProfile = () => {
         political_views: politicalViews
       };
 
-      await axios.put(`${API}/profile/update`, profileData, {
+      console.log('Saving profile with photos:', reorderedPhotos);
+
+      const response = await axios.put(`${API}/profile/update`, profileData, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
+      console.log('Profile save response:', response.data);
 
       showToast('تم حفظ التغييرات بنجاح! ✅');
       setTimeout(() => navigate('/profile'), 1500);
     } catch (error) {
       console.error('Error saving profile:', error);
-      showToast('حدث خطأ أثناء الحفظ', 'error');
+      console.error('Error details:', error.response?.data);
+      showToast('حدث خطأ أثناء الحفظ: ' + (error.response?.data?.detail || error.message), 'error');
     } finally {
       setSaving(false);
     }

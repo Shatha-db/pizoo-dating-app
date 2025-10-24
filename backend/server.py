@@ -1965,6 +1965,8 @@ async def update_discovery_settings(
             "created_at": datetime.now(timezone.utc).isoformat()
         }
         await db.discovery_settings.insert_one(settings_data)
+        # Remove _id if it was added by MongoDB
+        settings_data.pop('_id', None)
         return {"message": "Discovery settings created", "settings": settings_data}
     
     return {"message": "Discovery settings updated successfully"}

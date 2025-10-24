@@ -102,10 +102,6 @@ const Profile = () => {
               <Edit className="w-4 h-4 ml-2" />
               تعديل البروفايل
             </Button>
-            >
-              <Edit className="w-4 h-4 ml-2" />
-              تعديل الملف الشخصي
-            </Button>
           </div>
         </Card>
 

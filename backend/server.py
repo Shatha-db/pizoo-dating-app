@@ -1907,6 +1907,25 @@ async def send_message(
     if current_user.get('premium_tier') not in ['gold', 'platinum']:
         await increment_messages_count(current_user['id'])
     
+    # Send notification to receiver
+    sender_profile = await db.profiles.find_one(
+        {"user_id": current_user['id']},
+        {"_id": 0, "display_name": 1, "photos": 1}
+    )
+    
+    if sender_profile:
+        preview = request.content[:50] + "..." if len(request.content) > 50 else request.content
+        await create_notification(
+            user_id=receiver_id,
+            notification_type="new_message",
+            title=f"💬 رسالة جديدة من {sender_profile.get('display_name', 'مستخدم')}",
+            message=preview,
+            link=f"/chat/{match_id}",
+            related_user_id=current_user['id'],
+            related_user_name=sender_profile.get('display_name'),
+            related_user_photo=sender_profile.get('photos', [None])[0] if sender_profile.get('photos') else None
+        )
+    
     # Get remaining messages for response
     remaining_messages = None
     if current_user.get('premium_tier') not in ['gold', 'platinum']:

@@ -7,7 +7,8 @@ import { Label } from '../components/ui/label';
 import { Checkbox } from '../components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Alert, AlertDescription } from '../components/ui/alert';
-import { Heart, Phone } from 'lucide-react';
+import { Phone } from 'lucide-react';
+import { PizooCustomLogo } from '../components/CustomLogo';
 
 const Register = () => {
   const navigate = useNavigate();

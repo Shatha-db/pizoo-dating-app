@@ -619,7 +619,7 @@ async def register(request: RegisterRequest):
             today = date.today()
             dob = datetime.fromisoformat(user.date_of_birth).date()
             age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-    except:
+    except Exception:
         pass
     
     profile = Profile(

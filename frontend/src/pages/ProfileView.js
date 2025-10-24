@@ -184,14 +184,22 @@ const ProfileView = () => {
       )}
 
       {/* Header */}
-      <header className="bg-white shadow-sm p-4 sticky top-0 z-10 flex items-center gap-3">
+      <header className="bg-white shadow-sm p-4 sticky top-0 z-10 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate(-1)}
+            className="p-2 hover:bg-gray-100 rounded-full"
+          >
+            <ArrowRight className="w-6 h-6" />
+          </button>
+          <h1 className="text-xl font-bold">البروفايل</h1>
+        </div>
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => setShowOptionsMenu(true)}
           className="p-2 hover:bg-gray-100 rounded-full"
         >
-          <ArrowRight className="w-6 h-6" />
+          <MoreVertical className="w-6 h-6" />
         </button>
-        <h1 className="text-xl font-bold">البروفايل</h1>
       </header>
 
       <main className="max-w-2xl mx-auto">

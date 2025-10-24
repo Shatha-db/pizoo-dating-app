@@ -249,8 +249,8 @@ const Home = () => {
             </svg>
           </Button>
         </div>
-        <div className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">
-          <PizooCustomLogo size="sm" showText={true} animated={false} />
+        <div className="flex items-center">
+          <PizooCustomLogo size="sm" animated={false} />
         </div>
         <div className="flex gap-2">
           <Button 

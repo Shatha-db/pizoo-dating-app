@@ -237,11 +237,64 @@ const DoubleDating = () => {
 
         {/* Invite Button */}
         <Button
-          onClick={() => {/* Add invite functionality */}}
+          onClick={() => setShowInviteOptions(true)}
           className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-6 text-lg rounded-xl"
         >
           دعوة الأصدقاء
         </Button>
+
+        {/* Invite Options Modal */}
+        {showInviteOptions && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-md p-6 bg-white">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold">مشاركة التطبيق</h3>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowInviteOptions(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              
+              <div className="space-y-3">
+                <Button
+                  onClick={shareViaWhatsApp}
+                  className="w-full bg-green-500 hover:bg-green-600 text-white flex items-center gap-3 justify-center py-3"
+                >
+                  <Share2 className="w-5 h-5" />
+                  مشاركة عبر WhatsApp
+                </Button>
+                
+                <Button
+                  onClick={shareViaFacebook}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-3 justify-center py-3"
+                >
+                  <Share2 className="w-5 h-5" />
+                  مشاركة عبر Facebook
+                </Button>
+                
+                <Button
+                  onClick={shareViaTwitter}
+                  className="w-full bg-sky-500 hover:bg-sky-600 text-white flex items-center gap-3 justify-center py-3"
+                >
+                  <Share2 className="w-5 h-5" />
+                  مشاركة عبر Twitter
+                </Button>
+                
+                <Button
+                  onClick={copyInviteLink}
+                  variant="outline"
+                  className="w-full flex items-center gap-3 justify-center py-3"
+                >
+                  <Share2 className="w-5 h-5" />
+                  نسخ رسالة الدعوة
+                </Button>
+              </div>
+            </Card>
+          </div>
+        )}
 
         {/* Info Cards */}
         <div className="grid md:grid-cols-2 gap-4 mt-6">

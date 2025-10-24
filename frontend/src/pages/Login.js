@@ -8,7 +8,7 @@ import { Checkbox } from '../components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { LogIn } from 'lucide-react';
-import { PizooCustomLogo } from '../components/CustomLogo';
+import CustomLogo from '../components/CustomLogo';
 
 const Login = () => {
   const navigate = useNavigate();

@@ -445,7 +445,16 @@ async def check_and_reset_weekly_limits(user: dict):
         user['premium_tier'] = user.get('premium_tier', 'free')
         return user
     
-    week_start = datetime.fromisoformat(user['week_start_date']) if isinstance(user['week_start_date'], str) else user['week_start_date']
+    if isinstance(user['week_start_date'], str):
+        week_start = datetime.fromisoformat(user['week_start_date'])
+        # Ensure timezone awareness
+        if week_start.tzinfo is None:
+            week_start = week_start.replace(tzinfo=timezone.utc)
+    else:
+        week_start = user['week_start_date']
+        if week_start.tzinfo is None:
+            week_start = week_start.replace(tzinfo=timezone.utc)
+    
     now = datetime.now(timezone.utc)
     days_passed = (now - week_start).days
     

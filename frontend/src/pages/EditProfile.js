@@ -169,9 +169,17 @@ const EditProfile = () => {
   const handleRemovePhoto = (index) => {
     const newPhotos = [...photos];
     newPhotos[index] = null;
+    
     // Shift photos to fill gap
     const filteredPhotos = newPhotos.filter(p => p !== null);
     setPhotos([...filteredPhotos, ...Array(9 - filteredPhotos.length).fill(null)]);
+    
+    // Adjust primary photo index if needed
+    if (primaryPhotoIndex === index) {
+      setPrimaryPhotoIndex(0); // Reset to first photo
+    } else if (primaryPhotoIndex > index) {
+      setPrimaryPhotoIndex(primaryPhotoIndex - 1); // Shift index
+    }
   };
 
   const handleAddLanguage = () => {

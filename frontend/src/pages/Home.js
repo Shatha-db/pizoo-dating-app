@@ -451,6 +451,53 @@ const Home = () => {
         </div>
       )}
 
+      {/* Limit Warning Modal */}
+      {showLimitWarning && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <Card className="max-w-md w-full p-6 bg-gradient-to-br from-purple-50 to-pink-50">
+            <div className="text-center">
+              <div className="text-6xl mb-4">⏰</div>
+              <h2 className="text-2xl font-bold mb-2 text-gray-800">
+                وصلت إلى حدك الأسبوعي!
+              </h2>
+              <p className="text-gray-600 mb-1">
+                المستخدمون المجانيون لديهم:
+              </p>
+              <ul className="text-right mb-6 space-y-2">
+                <li className="flex items-center justify-center gap-2">
+                  <span className="font-semibold">12 إعجاب</span>
+                  <Heart className="w-5 h-5 text-pink-500" />
+                </li>
+                <li className="flex items-center justify-center gap-2">
+                  <span className="font-semibold">10 رسائل</span>
+                  <span className="text-xl">💬</span>
+                </li>
+                <li className="text-sm text-gray-500">كل أسبوع</li>
+              </ul>
+
+              <Button
+                onClick={() => {
+                  setShowLimitWarning(false);
+                  navigate('/premium');
+                }}
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold text-lg py-6 mb-3"
+              >
+                <Star className="w-5 h-5 ml-2 fill-white" />
+                ترقية إلى Premium
+              </Button>
+              
+              <Button
+                onClick={() => setShowLimitWarning(false)}
+                variant="ghost"
+                className="w-full"
+              >
+                إغلاق
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
+
       <BottomNav />
     </div>
   );

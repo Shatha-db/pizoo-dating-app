@@ -21,7 +21,10 @@ const CustomLogo = ({ size = 'lg', className = '' }) => {
           backgroundClip: 'text',
           textShadow: '2px 2px 4px rgba(236, 72, 153, 0.2)',
           letterSpacing: '-0.02em',
-          fontWeight: 900
+          fontWeight: 900,
+          WebkitTextStroke: '1px rgba(236, 72, 153, 0.3)',
+          textStroke: '1px rgba(236, 72, 153, 0.3)',
+          paintOrder: 'stroke fill'
         }}
       >
         Pizoo

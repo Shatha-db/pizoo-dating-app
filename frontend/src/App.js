@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { WebSocketProvider } from './context/WebSocketContext';
+import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -36,8 +37,9 @@ import './App.css';
 function App() {
   return (
     <AuthProvider>
-      <WebSocketProvider>
-        <BrowserRouter>
+      <ThemeProvider>
+        <WebSocketProvider>
+          <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate to="/register" replace />} />
           <Route path="/register" element={<Register />} />

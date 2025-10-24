@@ -414,6 +414,36 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     return user
 
 
+# ===== Request Models =====
+
+class RegisterRequest(BaseModel):
+    name: str
+    email: EmailStr
+    phone_number: str
+    password: str
+    terms_accepted: bool
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class SwipeRequest(BaseModel):
+    swiped_user_id: str
+    action: str  # like, pass, super_like
+
+
+class ReportRequest(BaseModel):
+    reported_user_id: str
+    reason: str  # harassment, inappropriate_content, fake_profile, scam, other
+    details: Optional[str] = None
+
+
+class BlockRequest(BaseModel):
+    blocked_user_id: str
+
+
 # ===== API Endpoints =====
 
 @api_router.get("/")

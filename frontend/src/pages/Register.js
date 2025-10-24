@@ -80,7 +80,7 @@ const Register = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-500 via-red-500 to-orange-500 dark:from-gray-300 dark:via-gray-400 dark:to-gray-500 flex items-center justify-center p-4" dir="rtl">
       {/* Logo/Brand */}
       <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
-        <PizooCustomLogo size="lg" animated={true} />
+        <CustomLogo size="lg" />
       </div>
 
       <Card className="w-full max-w-md mt-20 dark:bg-gray-200">

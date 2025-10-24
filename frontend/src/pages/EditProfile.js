@@ -153,8 +153,15 @@ const EditProfile = () => {
       const newPhotos = [...photos];
       newPhotos[index] = imageUrl;
       setPhotos(newPhotos);
-
-      showToast('تم رفع الصورة بنجاح! ✅', 'success');
+      
+      // If this is the first photo, make it primary automatically
+      const filledPhotos = newPhotos.filter(p => p !== null);
+      if (filledPhotos.length === 1) {
+        setPrimaryPhotoIndex(index);
+        showToast('تم رفع الصورة بنجاح! ✅ هذه الآن صورة البروفايل الرئيسية', 'success');
+      } else {
+        showToast('تم رفع الصورة بنجاح! ✅', 'success');
+      }
     } catch (error) {
       console.error('Error uploading photo:', error);
       showToast(error.message || 'فشل رفع الصورة', 'error');

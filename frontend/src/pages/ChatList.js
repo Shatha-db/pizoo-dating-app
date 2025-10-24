@@ -87,60 +87,113 @@ const ChatList = () => {
       </header>
 
       <main className="max-w-2xl mx-auto">
-        {conversations.length > 0 ? (
-          <div className="divide-y">
-            {conversations.map((conv) => (
-              <div
-                key={conv.match_id}
-                className="bg-white p-4 hover:bg-gray-50 cursor-pointer transition-colors"
-                onClick={() => navigate(`/chat/${conv.match_id}`)}
-              >
-                <div className="flex items-center gap-4">
-                  {/* Profile Picture */}
+        {/* New Matches Section - Horizontal Scroll */}
+        {matches.length > 0 && (
+          <div className="bg-white border-b border-gray-200 py-4">
+            <div className="px-4 mb-3">
+              <h2 className="font-bold text-lg text-pink-500 flex items-center gap-2">
+                <span className="text-2xl">💕</span>
+                المعجبون الجُدد
+                <span className="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">
+                  {matches.length}
+                </span>
+              </h2>
+            </div>
+            
+            <div className="flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
+              {matches.map((match) => (
+                <div
+                  key={match.match_id}
+                  className="flex-shrink-0 cursor-pointer"
+                  onClick={() => navigate(`/chat/${match.match_id}`)}
+                >
                   <div className="relative">
-                    <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-pink-300 to-purple-300">
-                      {conv.user.photo ? (
+                    <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-pink-400 bg-gradient-to-br from-pink-300 to-purple-300">
+                      {match.profile.photos && match.profile.photos.length > 0 ? (
                         <img
-                          src={conv.user.photo}
-                          alt={conv.user.display_name}
+                          src={match.profile.photos[0]}
+                          alt={match.profile.display_name}
                           className="w-full h-full object-cover"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-3xl">
-                          👤
+                          ❤️
                         </div>
                       )}
                     </div>
-                    {isUserOnline(conv.user.id) && (
-                      <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full animate-pulse"></div>
+                    {isUserOnline(match.profile.user_id) && (
+                      <div className="absolute bottom-0 right-0 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></div>
                     )}
                   </div>
+                  <p className="text-xs text-center mt-2 font-medium truncate w-20">
+                    {match.profile.display_name}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
-                  {/* Message Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <h3 className="font-bold text-lg truncate">
-                        {conv.user.display_name}
-                      </h3>
-                      <span className="text-xs text-gray-500">
-                        {formatTime(conv.last_message.created_at)}
-                      </span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-600 truncate">
-                        {conv.last_message.content || 'ابدأ المحادثة...'}
-                      </p>
-                      {conv.unread_count > 0 && (
-                        <span className="bg-pink-500 text-white text-xs px-2 py-1 rounded-full min-w-[20px] text-center">
-                          {conv.unread_count}
-                        </span>
+        {/* Messages Section */}
+        {conversations.length > 0 ? (
+          <div>
+            <div className="px-4 py-3 bg-gray-100">
+              <h2 className="font-bold text-sm text-gray-600">الرسائل</h2>
+            </div>
+            <div className="divide-y">
+              {conversations.map((conv) => (
+                <div
+                  key={conv.match_id}
+                  className="bg-white p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                  onClick={() => navigate(`/chat/${conv.match_id}`)}
+                >
+                  <div className="flex items-center gap-4">
+                    {/* Profile Picture */}
+                    <div className="relative">
+                      <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-pink-300 to-purple-300">
+                        {conv.user.photo ? (
+                          <img
+                            src={conv.user.photo}
+                            alt={conv.user.display_name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-3xl">
+                            👤
+                          </div>
+                        )}
+                      </div>
+                      {isUserOnline(conv.user.id) && (
+                        <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full animate-pulse"></div>
                       )}
+                    </div>
+
+                    {/* Message Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="font-bold text-lg truncate">
+                          {conv.user.display_name}
+                        </h3>
+                        <span className="text-xs text-gray-500">
+                          {formatTime(conv.last_message.created_at)}
+                        </span>
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm text-gray-600 truncate">
+                          {conv.last_message.content || 'ابدأ المحادثة...'}
+                        </p>
+                        {conv.unread_count > 0 && (
+                          <span className="bg-pink-500 text-white text-xs px-2 py-1 rounded-full min-w-[20px] text-center">
+                            {conv.unread_count}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         ) : (
           <div className="text-center py-20 px-4">

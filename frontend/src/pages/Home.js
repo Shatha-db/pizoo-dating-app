@@ -23,12 +23,26 @@ const Home = () => {
   const [canRewind, setCanRewind] = useState(false);
   const [boostActive, setBoostActive] = useState(false);
   const [boostTimeRemaining, setBoostTimeRemaining] = useState(0);
+  const [usageStats, setUsageStats] = useState(null);
+  const [showLimitWarning, setShowLimitWarning] = useState(false);
 
   useEffect(() => {
     fetchProfiles();
     checkNewLikes();
     checkBoostStatus();
+    fetchUsageStats();
   }, []);
+
+  const fetchUsageStats = async () => {
+    try {
+      const response = await axios.get(`${API}/usage-stats`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUsageStats(response.data);
+    } catch (error) {
+      console.error('Error fetching usage stats:', error);
+    }
+  };
 
   const fetchProfiles = async () => {
     try {

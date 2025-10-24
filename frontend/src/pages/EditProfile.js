@@ -6,8 +6,9 @@ import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Select } from '../components/ui/select';
-import { ArrowRight, Camera, X, Plus, Check, AlertCircle } from 'lucide-react';
+import { ArrowRight, Camera, X, Plus, Check, AlertCircle, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import { uploadImageToCloudinary, compressImage } from '../utils/cloudinaryUpload';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;

@@ -250,7 +250,7 @@ const Home = () => {
           </Button>
         </div>
         <div className="flex items-center">
-          <PizooCustomLogo size="sm" animated={false} />
+          <CustomLogo size="sm" />
         </div>
         <div className="flex gap-2">
           <Button 

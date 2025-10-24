@@ -134,6 +134,14 @@ function App() {
             path="/profile"
             element={
               <ProtectedRoute>
+                <ProfileNew />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/old"
+            element={
+              <ProtectedRoute>
                 <Profile />
               </ProtectedRoute>
             }

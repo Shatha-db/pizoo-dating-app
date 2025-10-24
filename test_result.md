@@ -249,6 +249,18 @@ backend:
         agent: "testing"
         comment: "✅ TESTED: Weekly limits system working perfectly. Free users limited to 12 likes and 10 messages per week. Limit enforcement working in /api/swipe endpoint. Tested sending 12 likes successfully, 13th like blocked with proper error message. Premium users have unlimited access."
 
+  - task: "Profile Mood Field (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: Added 'current_mood' field to Profile model. Supports values: serious, casual, fun, romantic. Field is optional and can be updated via /api/profile/update endpoint. Ready for testing."
+
 frontend:
   - task: "Home Page with Card Swipe"
     implemented: true

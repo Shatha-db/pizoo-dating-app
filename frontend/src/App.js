@@ -29,7 +29,6 @@ import DoubleDatingInfo from './pages/DoubleDatingInfo';
 import Premium from './pages/Premium';
 import Settings from './pages/Settings';
 import TermsNew from './pages/TermsNew';
-import LogoPreview from './pages/LogoPreview';
 import CustomLogoPage from './pages/CustomLogoPage';
 import { Toaster } from './components/ui/sonner';
 import './App.css';
@@ -47,7 +46,6 @@ function App() {
           <Route path="/terms" element={<TermsNew />} />
           <Route path="/privacy" element={<TermsNew />} />
           <Route path="/cookies" element={<TermsNew />} />
-          <Route path="/logo-preview" element={<LogoPreview />} />
           <Route path="/custom-logo" element={<CustomLogoPage />} />
           <Route path="/dashboard" element={<Navigate to="/home" replace />} />
           <Route

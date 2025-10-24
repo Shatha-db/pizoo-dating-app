@@ -1598,6 +1598,123 @@ async def update_settings(
     return {"message": "Settings updated successfully"}
 
 
+# ===== Report & Block System =====
+
+@api_router.post("/report")
+async def report_user(
+    request: ReportRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """Report a user for inappropriate behavior"""
+    # Check if already reported
+    existing_report = await db.reports.find_one({
+        "reporter_id": current_user['id'],
+        "reported_user_id": request.reported_user_id
+    })
+    
+    if existing_report:
+        return {"message": "لقد قمت بالإبلاغ عن هذا المستخدم مسبقاً"}
+    
+    # Create report
+    report = Report(
+        reporter_id=current_user['id'],
+        reported_user_id=request.reported_user_id,
+        reason=request.reason,
+        details=request.details
+    )
+    
+    report_dict = report.model_dump()
+    report_dict['created_at'] = report_dict['created_at'].isoformat()
+    
+    await db.reports.insert_one(report_dict)
+    
+    return {
+        "message": "تم الإبلاغ بنجاح. سنراجع الأمر في أقرب وقت",
+        "report_id": report.id
+    }
+
+
+@api_router.post("/block")
+async def block_user(
+    request: BlockRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """Block a user"""
+    # Check if already blocked
+    existing_block = await db.blocks.find_one({
+        "blocker_id": current_user['id'],
+        "blocked_user_id": request.blocked_user_id
+    })
+    
+    if existing_block:
+        return {"message": "هذا المستخدم محظور بالفعل"}
+    
+    # Create block
+    block = Block(
+        blocker_id=current_user['id'],
+        blocked_user_id=request.blocked_user_id
+    )
+    
+    block_dict = block.model_dump()
+    block_dict['created_at'] = block_dict['created_at'].isoformat()
+    
+    await db.blocks.insert_one(block_dict)
+    
+    # Remove any existing matches
+    await db.matches.delete_many({
+        "$or": [
+            {"user1_id": current_user['id'], "user2_id": request.blocked_user_id},
+            {"user1_id": request.blocked_user_id, "user2_id": current_user['id']}
+        ]
+    })
+    
+    return {
+        "message": "تم حظر المستخدم بنجاح",
+        "block_id": block.id
+    }
+
+
+@api_router.delete("/block/{blocked_user_id}")
+async def unblock_user(
+    blocked_user_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Unblock a user"""
+    result = await db.blocks.delete_one({
+        "blocker_id": current_user['id'],
+        "blocked_user_id": blocked_user_id
+    })
+    
+    if result.deleted_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="لم يتم العثور على حظر لهذا المستخدم"
+        )
+    
+    return {"message": "تم إلغاء الحظر بنجاح"}
+
+
+@api_router.get("/blocked-users")
+async def get_blocked_users(current_user: dict = Depends(get_current_user)):
+    """Get list of blocked users"""
+    blocks = await db.blocks.find(
+        {"blocker_id": current_user['id']},
+        {"_id": 0}
+    ).to_list(length=1000)
+    
+    blocked_user_ids = [block['blocked_user_id'] for block in blocks]
+    
+    # Get profiles of blocked users
+    profiles = []
+    if blocked_user_ids:
+        profiles = await db.profiles.find(
+            {"user_id": {"$in": blocked_user_ids}},
+            {"_id": 0, "user_id": 1, "display_name": 1, "photos": 1}
+        ).to_list(length=1000)
+    
+    return {"blocked_users": profiles}
+
+
 @api_router.get("/terms")
 async def get_terms():
     terms_content = """

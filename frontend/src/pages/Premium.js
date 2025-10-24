@@ -71,6 +71,54 @@ const Premium = () => {
       </header>
 
       <main className="max-w-4xl mx-auto p-4 space-y-6">
+        {/* Free vs Premium Comparison */}
+        <Card className="p-6 bg-gradient-to-br from-white to-gray-50">
+          <h3 className="text-2xl font-bold mb-6 text-center">قارن الخطط</h3>
+          <div className="grid md:grid-cols-3 gap-4">
+            {/* Free */}
+            <div className="text-center p-4 border-2 border-gray-200 rounded-lg">
+              <div className="text-4xl mb-2">🆓</div>
+              <h4 className="font-bold text-lg mb-3">مجاني</h4>
+              <div className="space-y-2 text-sm text-gray-600">
+                <p>✅ 12 إعجاب / أسبوع</p>
+                <p>✅ 10 رسائل / أسبوع</p>
+                <p>❌ مطابقات محدودة</p>
+                <p>❌ لا يمكن معرفة من أعجب بك</p>
+              </div>
+            </div>
+
+            {/* Gold */}
+            <div className="text-center p-4 border-4 border-yellow-400 rounded-lg bg-gradient-to-br from-yellow-50 to-orange-50 relative">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-white text-xs px-3 py-1 rounded-full font-bold">
+                الأكثر شعبية
+              </div>
+              <div className="text-4xl mb-2">⭐</div>
+              <h4 className="font-bold text-lg mb-3">Gold</h4>
+              <div className="space-y-2 text-sm">
+                <p>✅ إعجابات غير محدودة</p>
+                <p>✅ رسائل غير محدودة</p>
+                <p>✅ معرفة من أعجب بك</p>
+                <p>✅ 5 سوبر لايك يومياً</p>
+                <p>✅ تراجع غير محدود</p>
+              </div>
+            </div>
+
+            {/* Platinum */}
+            <div className="text-center p-4 border-4 border-purple-400 rounded-lg bg-gradient-to-br from-purple-50 to-pink-50">
+              <div className="text-4xl mb-2">👑</div>
+              <h4 className="font-bold text-lg mb-3">Platinum</h4>
+              <div className="space-y-2 text-sm">
+                <p>✅ كل مميزات Gold</p>
+                <p>✅ رسائلك تُقرأ أولاً</p>
+                <p>✅ معرفة من شاهد بروفايلك</p>
+                <p>✅ تعزيز مجاني شهرياً</p>
+                <p>✅ إخفاء الإعلانات</p>
+                <p>✅ أولوية في الدعم</p>
+              </div>
+            </div>
+          </div>
+        </Card>
+
         {/* Plan Selection */}
         <div className="grid md:grid-cols-2 gap-4">
           {plans.map((plan) => (

@@ -36,8 +36,9 @@ function App() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <WebSocketProvider>
-          <BrowserRouter>
+        <NotificationProvider>
+          <WebSocketProvider>
+            <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate to="/register" replace />} />
           <Route path="/register" element={<Register />} />

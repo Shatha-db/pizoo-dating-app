@@ -6,7 +6,7 @@ import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Select } from '../components/ui/select';
-import { ArrowRight, Camera, X, Plus, Check, AlertCircle, Loader2 } from 'lucide-react';
+import { ArrowRight, Camera, X, Plus, Check, AlertCircle, Loader2, Star } from 'lucide-react';
 import axios from 'axios';
 import { uploadImageToCloudinary, compressImage } from '../utils/cloudinaryUpload';
 

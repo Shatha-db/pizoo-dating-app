@@ -21,6 +21,8 @@ const Home = () => {
   const [newLikesCount, setNewLikesCount] = useState(0);
   const [swipeHistory, setSwipeHistory] = useState([]); // Store last 5 swipes
   const [canRewind, setCanRewind] = useState(false);
+  const [boostActive, setBoostActive] = useState(false);
+  const [boostTimeRemaining, setBoostTimeRemaining] = useState(0);
 
   useEffect(() => {
     fetchProfiles();

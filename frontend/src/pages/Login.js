@@ -51,8 +51,29 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-500 via-red-500 to-orange-500 flex items-center justify-center p-4" dir="rtl">
       {/* Logo/Brand */}
-      <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
-        <h1 className="text-6xl font-bold text-white drop-shadow-lg">❤️‍🔥 Pizoo</h1>
+      <div className="absolute top-8 left-1/2 transform -translate-x-1/2 flex items-center gap-3">
+        {/* Logo Icon */}
+        <div className="relative">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Heart Shape */}
+            <path d="M24 42C24 42 6 30 6 18C6 12.4772 10.4772 8 16 8C19.3137 8 22.2353 9.72549 24 12.2353C25.7647 9.72549 28.6863 8 32 8C37.5228 8 42 12.4772 42 18C42 30 24 42 24 42Z" 
+                  fill="white" 
+                  stroke="white" 
+                  strokeWidth="2"/>
+            {/* Sparkle/Fire element on top */}
+            <circle cx="32" cy="10" r="3" fill="#FFD700">
+              <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="38" cy="14" r="2" fill="#FFD700">
+              <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+        
+        {/* Logo Text */}
+        <h1 className="text-5xl font-bold text-white drop-shadow-2xl tracking-tight" style={{ fontFamily: "'Poppins', sans-serif" }}>
+          Pizoo
+        </h1>
       </div>
 
       <Card className="w-full max-w-md mt-20" data-testid="login-card">

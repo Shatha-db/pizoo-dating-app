@@ -451,6 +451,30 @@ frontend:
         agent: "testing"
         comment: "✅ COMPREHENSIVE RE-TEST: Login page working excellently. Beautiful Arabic UI with RTL layout, all form elements functional (email/phone input, password input, remember me checkbox). Form validation and interaction working perfectly. Navigation links functional. UI/UX testing complete - login form ready for backend integration."
 
+  - task: "Mood Selection Feature (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Explore.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: Fixed mood buttons in Explore page. Added onClick handlers that save selected mood to user profile via /api/profile/update. Visual feedback with ring highlight and checkmark for selected mood. Toast notifications for success/error. Fetches current mood on page load. Uses react-hot-toast for notifications."
+
+  - task: "Dark/Light Mode Theme (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/context/ThemeContext.js, /app/frontend/src/pages/Settings.js, /app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: Created ThemeContext to manage dark/light mode. Theme is fetched from backend settings API and applied globally using Tailwind dark mode classes. Supports 3 modes: system (auto-detect), light, dark. Settings.js now uses ThemeContext instead of direct API calls. Theme persists across sessions and applies immediately when changed. Theme indicator shows current mode (⚙️ system, ☀️ light, 🌙 dark)."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"

@@ -5,7 +5,7 @@ import { useWebSocket } from '../context/WebSocketContext';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import BottomNav from '../components/BottomNav';
-import { Shield, Flag, Settings as SettingsIcon } from 'lucide-react';
+import { Shield, Flag, Settings as SettingsIcon, Heart, Camera } from 'lucide-react';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -13,16 +13,28 @@ const API = `${BACKEND_URL}/api`;
 
 const ChatList = () => {
   const navigate = useNavigate();
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const { isUserOnline, isConnected } = useWebSocket();
   const [conversations, setConversations] = useState([]);
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showSafetyTools, setShowSafetyTools] = useState(false);
+  const [showWelcomeMessage, setShowWelcomeMessage] = useState(true);
 
   useEffect(() => {
     fetchData();
+    checkWelcomeMessage();
   }, []);
+
+  const checkWelcomeMessage = () => {
+    const dismissed = localStorage.getItem(`welcome_message_${user?.id}`);
+    setShowWelcomeMessage(!dismissed);
+  };
+
+  const dismissWelcomeMessage = () => {
+    localStorage.setItem(`welcome_message_${user?.id}`, 'true');
+    setShowWelcomeMessage(false);
+  };
 
   const fetchData = async () => {
     try {
@@ -49,8 +61,10 @@ const ChatList = () => {
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 60) return `${diffMins} دقيقة`;
-    if (diffHours < 24) return `${diffHours} ساعة`;
+    if (diffMins < 1) return 'الآن';
+    if (diffMins < 60) return `${diffMins} د`;
+    if (diffHours < 24) return `${diffHours} س`;
+    if (diffDays === 1) return 'أمس';
     if (diffDays < 7) return `${diffDays} يوم`;
     return date.toLocaleDateString('ar');
   };
@@ -64,40 +78,82 @@ const ChatList = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20" dir="rtl">
+    <div className="min-h-screen bg-white pb-20" dir="rtl">
       {/* Header */}
-      <header className="bg-white shadow-sm p-4 sticky top-0 z-10">
-        <div className="flex items-center justify-between">
+      <header className="bg-white shadow-sm p-4 sticky top-0 z-10 border-b border-gray-100">
+        <div className="flex items-center justify-between max-w-2xl mx-auto">
           <div>
-            <h1 className="text-2xl font-bold">الرسائل 💬</h1>
-            {isConnected && (
-              <p className="text-xs text-green-600 flex items-center gap-1 mt-1">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                متصل - رسائل فورية
-              </p>
-            )}
+            <h1 className="text-2xl font-bold text-gray-800">الرسائل</h1>
           </div>
-          <button
-            onClick={() => setShowSafetyTools(true)}
-            className="text-gray-600 hover:text-gray-800"
-          >
-            <Shield className="w-6 h-6" />
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => navigate('/double-dating')}
+              className="p-2 hover:bg-gray-100 rounded-full"
+            >
+              <svg className="w-6 h-6 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </button>
+            <button
+              onClick={() => setShowSafetyTools(true)}
+              className="p-2 hover:bg-gray-100 rounded-full"
+            >
+              <Shield className="w-6 h-6 text-gray-600" />
+            </button>
+          </div>
         </div>
       </header>
 
       <main className="max-w-2xl mx-auto">
+        {/* Welcome Message from Team Pizoo */}
+        {showWelcomeMessage && (
+          <div className="px-4 py-4 border-b border-gray-100">
+            <div className="flex gap-3">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-red-500 rounded-full flex items-center justify-center">
+                  <Heart className="w-6 h-6 text-white" />
+                </div>
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="font-bold text-gray-800">Team Pizoo</h3>
+                  <button
+                    onClick={dismissWelcomeMessage}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="bg-gray-100 rounded-2xl rounded-tr-none p-3 mb-2">
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    مرحباً بك في Pizoo! 🎉 غد لدينا لنشاركك معك نصائح للتأكد من حصولك على أفضل تجربة ممكنة. وعندما تشعر بالخيرة؟ اسحب لليمين.
+                  </p>
+                </div>
+                <div className="bg-gray-100 rounded-2xl rounded-tr-none p-3">
+                  <p className="text-gray-700 text-sm mb-2">
+                    <span className="font-bold">الجميع هنا ليروك:</span> أضف المزيد من الصور لزيادة فرصك في تبادل الإعجاب.
+                  </p>
+                  <Button
+                    onClick={() => navigate('/edit-profile')}
+                    className="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white text-sm py-2 mt-2"
+                  >
+                    <Camera className="w-4 h-4 ml-2" />
+                    إضافة صور
+                  </Button>
+                </div>
+                <p className="text-xs text-gray-400 mt-2">اليوم 9:16 ص</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* New Matches Section - Horizontal Scroll */}
         {matches.length > 0 && (
-          <div className="bg-white border-b border-gray-200 py-4">
+          <div className="py-4 border-b border-gray-100">
             <div className="px-4 mb-3">
-              <h2 className="font-bold text-lg text-pink-500 flex items-center gap-2">
-                <span className="text-2xl">💕</span>
-                المعجبون الجُدد
-                <span className="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">
-                  {matches.length}
-                </span>
-              </h2>
+              <h2 className="font-bold text-base text-gray-800">المعجبون الجُدد</h2>
             </div>
             
             <div className="flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">

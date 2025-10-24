@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Fix two critical user-reported issues: 1) Dark/Light mode toggle in Settings page not applying theme to the app, 2) 'How do you feel today?' mood buttons in Explore page not working and not saving to user profile."
+user_problem_statement: "Complete comprehensive code review and cleanup: Fix all errors, remove duplicates, resolve issues, and prepare for next development phase."
 
 backend:
   - task: "User Authentication (Register/Login)"

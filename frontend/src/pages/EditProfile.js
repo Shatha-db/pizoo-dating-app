@@ -782,8 +782,9 @@ const EditProfile = () => {
                   className="w-full border border-gray-300 rounded-md p-2"
                 >
                   <option value="">اختر...</option>
-                  <option value="yes">نعم</option>
-                  <option value="no">لا</option>
+                  <option value="yes">نعم لدي</option>
+                  <option value="no">لا ليس لدي</option>
+                  <option value="prefer-not-to-say">أفضل عدم الإفصاح</option>
                 </select>
               </div>
 
@@ -795,10 +796,26 @@ const EditProfile = () => {
                   className="w-full border border-gray-300 rounded-md p-2"
                 >
                   <option value="">اختر...</option>
-                  <option value="yes">نعم</option>
-                  <option value="no">لا</option>
+                  <option value="yes">نعم أريد</option>
+                  <option value="no">لا أريد</option>
                   <option value="maybe">ربما</option>
-                  <option value="open">منفتح على الفكرة</option>
+                  <option value="open-to-children">منفتح على الأطفال</option>
+                  <option value="not-sure">غير متأكد</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">👪 خطط العائلة</label>
+                <select
+                  value={familyPlans}
+                  onChange={(e) => setFamilyPlans(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                >
+                  <option value="">اختر...</option>
+                  <option value="want-children">أريد أطفال</option>
+                  <option value="dont-want-children">لا أريد أطفال</option>
+                  <option value="open-to-children">منفتح على الأطفال</option>
+                  <option value="not-sure">غير متأكد بعد</option>
                 </select>
               </div>
             </Card>

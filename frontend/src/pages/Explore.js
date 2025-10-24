@@ -152,6 +152,58 @@ const Explore = () => {
     navigate('/home');
   };
 
+  const handleMoodSelect = async (moodId) => {
+    setMoodLoading(true);
+    setSelectedMood(moodId);
+    
+    try {
+      // Update profile with current mood
+      await axios.put(
+        `${API}/profile/update`,
+        { current_mood: moodId },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      
+      toast.success('تم تحديث مزاجك بنجاح! 🎉', {
+        duration: 2000,
+        position: 'top-center',
+        style: {
+          background: '#10b981',
+          color: '#fff',
+          fontWeight: 'bold'
+        }
+      });
+    } catch (error) {
+      console.error('Error updating mood:', error);
+      toast.error('فشل تحديث المزاج. حاول مرة أخرى', {
+        duration: 2000,
+        position: 'top-center'
+      });
+    } finally {
+      setMoodLoading(false);
+    }
+  };
+
+  // Fetch user's current mood on component mount
+  useEffect(() => {
+    const fetchCurrentMood = async () => {
+      try {
+        const response = await axios.get(`${API}/profile/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.data.current_mood) {
+          setSelectedMood(response.data.current_mood);
+        }
+      } catch (error) {
+        console.error('Error fetching mood:', error);
+      }
+    };
+    
+    fetchCurrentMood();
+  }, [token]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-20" dir="rtl">
       {/* Header */}

@@ -102,6 +102,22 @@ const EditProfile = () => {
         setExercise(profile.exercise || '');
         setDietaryPreference(profile.dietary_preference || '');
         setInterests(profile.interests || []);
+        
+        // New fields
+        setSchool(profile.school || '');
+        setCompany(profile.company || '');
+        setJobTitle(profile.job_title || '');
+        setLivingIn(profile.living_in || location || '');
+        setHometown(profile.hometown || '');
+        setGenderIdentity(profile.gender_identity || '');
+        setShowGender(profile.show_gender !== false);
+        setSexualOrientation(profile.sexual_orientation || '');
+        setShowOrientation(profile.show_orientation !== false);
+        setSleepingHabits(profile.sleeping_habits || '');
+        setSocialMedia(profile.social_media || '');
+        setVaccinated(profile.vaccinated || '');
+        setReligion(profile.religion || '');
+        setPoliticalViews(profile.political_views || '');
       }
     } catch (error) {
       console.error('Error fetching profile:', error);

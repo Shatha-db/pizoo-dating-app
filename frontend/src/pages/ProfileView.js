@@ -381,6 +381,108 @@ const ProfileView = () => {
         {/* Bottom padding for action buttons */}
         <div className="h-24"></div>
       </main>
+
+      {/* Options Menu Modal */}
+      {showOptionsMenu && (
+        <div className="fixed inset-0 bg-black/50 flex items-end z-50" onClick={() => setShowOptionsMenu(false)}>
+          <Card className="w-full bg-white rounded-t-3xl p-6 animate-slide-up" onClick={(e) => e.stopPropagation()}>
+            <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
+            
+            <div className="space-y-3">
+              <button
+                onClick={() => {
+                  setShowOptionsMenu(false);
+                  setShowReportModal(true);
+                }}
+                className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 rounded-lg transition-colors text-right"
+              >
+                <Flag className="w-6 h-6 text-orange-500" />
+                <div>
+                  <div className="font-medium">إبلاغ</div>
+                  <div className="text-sm text-gray-600">الإبلاغ عن محتوى غير لائق</div>
+                </div>
+              </button>
+
+              <button
+                onClick={handleBlock}
+                className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 rounded-lg transition-colors text-right"
+              >
+                <Ban className="w-6 h-6 text-red-500" />
+                <div>
+                  <div className="font-medium text-red-600">حظر</div>
+                  <div className="text-sm text-gray-600">لن ترى هذا المستخدم بعد الآن</div>
+                </div>
+              </button>
+            </div>
+
+            <Button
+              onClick={() => setShowOptionsMenu(false)}
+              variant="ghost"
+              className="w-full mt-4"
+            >
+              إلغاء
+            </Button>
+          </Card>
+        </div>
+      )}
+
+      {/* Report Modal */}
+      {showReportModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-md bg-white p-6">
+            <h2 className="text-xl font-bold mb-4">إبلاغ عن مستخدم</h2>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">سبب الإبلاغ *</label>
+                <select
+                  value={reportReason}
+                  onChange={(e) => setReportReason(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                >
+                  <option value="">اختر السبب...</option>
+                  <option value="harassment">تحرش أو إزعاج</option>
+                  <option value="inappropriate_content">محتوى غير لائق</option>
+                  <option value="fake_profile">حساب وهمي</option>
+                  <option value="scam">احتيال أو نصب</option>
+                  <option value="other">أخرى</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">التفاصيل (اختياري)</label>
+                <textarea
+                  value={reportDetails}
+                  onChange={(e) => setReportDetails(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                  rows={4}
+                  placeholder="أضف أي تفاصيل إضافية..."
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <Button
+                onClick={() => {
+                  setShowReportModal(false);
+                  setReportReason('');
+                  setReportDetails('');
+                }}
+                variant="outline"
+                className="flex-1"
+              >
+                إلغاء
+              </Button>
+              <Button
+                onClick={handleReport}
+                className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
+              >
+                إرسال الإبلاغ
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

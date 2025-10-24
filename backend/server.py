@@ -1707,6 +1707,14 @@ async def send_message(
     current_user: dict = Depends(get_current_user)
 ):
     """Send a message in a conversation"""
+    # Check message limits for free users
+    can_message, message_limit_info = await can_send_message(current_user)
+    if not can_message:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=message_limit_info
+        )
+    
     # Verify match exists
     match = await db.matches.find_one(
         {
@@ -1740,9 +1748,21 @@ async def send_message(
     
     await db.messages.insert_one(message_data)
     
+    # Increment message counter for free users
+    if current_user.get('premium_tier') not in ['gold', 'platinum']:
+        await increment_messages_count(current_user['id'])
+    
+    # Get remaining messages for response
+    remaining_messages = None
+    if current_user.get('premium_tier') not in ['gold', 'platinum']:
+        updated_user = await db.users.find_one({"id": current_user['id']}, {"_id": 0})
+        messages_sent = updated_user.get('messages_sent_this_week', 0)
+        remaining_messages = max(0, 10 - messages_sent)
+    
     return {
         "message": "Message sent successfully",
-        "data": message_data
+        "data": message_data,
+        "remaining_messages": remaining_messages
     }
 
 

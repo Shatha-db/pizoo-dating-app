@@ -205,21 +205,21 @@ const Explore = () => {
   }, [token]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-20" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-300 dark:to-gray-400 pb-20" dir="rtl">
       <Toaster />
       {/* Header */}
-      <header className="bg-white shadow-sm p-4 sticky top-0 z-10">
+      <header className="bg-white dark:bg-gray-200 shadow-sm p-4 sticky top-0 z-10">
         {showResults ? (
           <div className="flex items-center gap-3">
             <button
               onClick={handleBackToCategories}
-              className="p-2 hover:bg-gray-100 rounded-full"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-300 rounded-full"
             >
               <ArrowRight className="w-6 h-6" />
             </button>
             <div>
-              <h1 className="text-2xl font-bold">النتائج</h1>
-              <p className="text-gray-600 text-sm">{filteredProfiles.length} نتيجة</p>
+              <h1 className="text-2xl font-bold dark:text-gray-900">النتائج</h1>
+              <p className="text-gray-600 dark:text-gray-700 text-sm">{filteredProfiles.length} نتيجة</p>
             </div>
           </div>
         ) : (

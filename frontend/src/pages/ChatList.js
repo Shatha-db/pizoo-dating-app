@@ -47,9 +47,49 @@ const ChatList = () => {
   const handleFileChange = async (event) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      // Navigate to edit profile page
-      navigate('/edit-profile');
+      // Upload photos to Cloudinary and save to profile
+      const uploadPromises = Array.from(files).map(file => uploadToCloudinary(file));
+      
+      try {
+        const uploadedUrls = await Promise.all(uploadPromises);
+        
+        // Update profile with new photos
+        await axios.put(
+          `${API}/profile/update`,
+          {
+            photos: uploadedUrls
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        
+        alert('تم رفع الصور بنجاح! ✅');
+        // Navigate to edit profile to see and manage photos
+        navigate('/edit-profile');
+      } catch (error) {
+        console.error('Error uploading photos:', error);
+        alert('حدث خطأ أثناء رفع الصور');
+      }
     }
+  };
+
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'pizoo_photos');
+    formData.append('cloud_name', 'YOUR_CLOUD_NAME'); // Replace with your Cloudinary cloud name
+
+    const response = await fetch(
+      'https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload', // Replace with your Cloudinary cloud name
+      {
+        method: 'POST',
+        body: formData
+      }
+    );
+
+    const data = await response.json();
+    return data.secure_url;
   };
 
   const fetchData = async () => {

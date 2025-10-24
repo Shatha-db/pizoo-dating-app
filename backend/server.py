@@ -1147,6 +1147,15 @@ async def get_top_picks(current_user: dict = Depends(get_current_user)):
 
 @api_router.post("/swipe")
 async def swipe_action(request: SwipeRequest, current_user: dict = Depends(get_current_user)):
+    # Check if action is a like and enforce limits
+    if request.action in ['like', 'super_like']:
+        can_like, message = await can_send_like(current_user)
+        if not can_like:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=message
+            )
+    
     # Save swipe
     swipe = Swipe(
         user_id=current_user['id'],
@@ -1158,6 +1167,10 @@ async def swipe_action(request: SwipeRequest, current_user: dict = Depends(get_c
     swipe_dict['created_at'] = swipe_dict['created_at'].isoformat()
     
     await db.swipes.insert_one(swipe_dict)
+    
+    # Increment like counter if it's a like action
+    if request.action in ['like', 'super_like']:
+        await increment_likes_count(current_user['id'])
     
     # Check for match if action is like or super_like
     is_match = False
@@ -1192,10 +1205,18 @@ async def swipe_action(request: SwipeRequest, current_user: dict = Depends(get_c
                 
                 await db.matches.insert_one(match_dict)
     
+    # Get remaining limits for response
+    remaining_likes = None
+    if current_user.get('premium_tier') not in ['gold', 'platinum']:
+        updated_user = await db.users.find_one({"id": current_user['id']}, {"_id": 0})
+        likes_sent = updated_user.get('likes_sent_this_week', 0)
+        remaining_likes = max(0, 12 - likes_sent)
+    
     return {
         "success": True,
         "is_match": is_match,
-        "action": request.action
+        "action": request.action,
+        "remaining_likes": remaining_likes
     }
 
 

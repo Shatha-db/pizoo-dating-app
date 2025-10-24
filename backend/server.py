@@ -109,6 +109,14 @@ class User(BaseModel):
     terms_accepted: bool = False
     terms_accepted_at: Optional[datetime] = None
     profile_completed: bool = False
+    
+    # Premium tier (free, gold, platinum)
+    premium_tier: str = "free"
+    
+    # Weekly usage tracking for free users
+    likes_sent_this_week: int = 0
+    messages_sent_this_week: int = 0
+    week_start_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class Profile(BaseModel):

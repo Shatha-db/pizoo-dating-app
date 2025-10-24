@@ -21,6 +21,7 @@ import ChatRoom from './pages/ChatRoom';
 import Profile from './pages/Profile';
 import ProfileView from './pages/ProfileView';
 import EditProfile from './pages/EditProfile';
+import TopPicks from './pages/TopPicks';
 import Premium from './pages/Premium';
 import Settings from './pages/Settings';
 import { Toaster } from './components/ui/sonner';

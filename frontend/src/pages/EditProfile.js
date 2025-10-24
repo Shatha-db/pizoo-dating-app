@@ -341,7 +341,15 @@ const EditProfile = () => {
               <div className="grid grid-cols-3 gap-3">
                 {photos.map((photo, index) => (
                   <div key={index} className="relative aspect-square">
-                    {photo ? (
+                    {uploadProgress[index] !== undefined ? (
+                      // Uploading state
+                      <div className="w-full h-full border-2 border-pink-400 rounded-lg flex flex-col items-center justify-center bg-pink-50">
+                        <Loader2 className="w-8 h-8 text-pink-500 animate-spin mb-2" />
+                        <span className="text-xs text-pink-600 font-medium">
+                          {uploadProgress[index]}%
+                        </span>
+                      </div>
+                    ) : photo ? (
                       <>
                         <img
                           src={photo}
@@ -350,18 +358,22 @@ const EditProfile = () => {
                         />
                         <button
                           onClick={() => handleRemovePhoto(index)}
-                          className="absolute top-1 left-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                          disabled={uploadingPhotos}
+                          className="absolute top-1 left-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 disabled:opacity-50"
                         >
                           <X className="w-4 h-4" />
                         </button>
                       </>
                     ) : (
-                      <label className="w-full h-full border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-pink-400 hover:bg-pink-50 transition-colors">
+                      <label className={`w-full h-full border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-pink-400 hover:bg-pink-50 transition-colors ${
+                        uploadingPhotos ? 'opacity-50 pointer-events-none' : ''
+                      }`}>
                         <input
                           type="file"
                           accept="image/*"
                           className="hidden"
                           onChange={(e) => handlePhotoUpload(index, e)}
+                          disabled={uploadingPhotos}
                         />
                         <Plus className="w-8 h-8 text-gray-400" />
                       </label>

@@ -151,8 +151,16 @@ const ChatList = () => {
                   <p className="text-gray-700 text-sm mb-2">
                     <span className="font-bold">الجميع هنا ليروك:</span> أضف المزيد من الصور لزيادة فرصك في تبادل الإعجاب.
                   </p>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
                   <Button
-                    onClick={() => navigate('/edit-profile')}
+                    onClick={handleAddPhotos}
                     className="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white text-sm py-2 mt-2"
                   >
                     <Camera className="w-4 h-4 ml-2" />

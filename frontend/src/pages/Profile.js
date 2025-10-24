@@ -97,7 +97,11 @@ const Profile = () => {
 
             <Button 
               className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white"
-              onClick={() => navigate('/profile/setup')}
+              onClick={() => navigate('/profile/edit')}
+            >
+              <Edit className="w-4 h-4 ml-2" />
+              تعديل البروفايل
+            </Button>
             >
               <Edit className="w-4 h-4 ml-2" />
               تعديل الملف الشخصي

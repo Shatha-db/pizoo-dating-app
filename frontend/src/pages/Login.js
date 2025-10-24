@@ -208,33 +208,3 @@ const Login = () => {
 };
 
 export default Login;
-                onChange={handleChange}
-                placeholder="أدخل كلمة المرور"
-                data-testid="password-input"
-              />
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading}
-              data-testid="login-submit-button"
-            >
-              {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-gray-600">
-            ليس لديك حساب؟{' '}
-            <Link to="/register" className="text-blue-600 hover:underline" data-testid="register-link">
-              إنشاء حساب جديد
-            </Link>
-          </p>
-        </CardFooter>
-      </Card>
-    </div>
-  );
-};
-
-export default Login;

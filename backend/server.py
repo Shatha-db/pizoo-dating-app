@@ -841,6 +841,56 @@ async def get_my_profile(current_user: dict = Depends(get_current_user)):
     return profile
 
 
+@api_router.get("/usage-stats")
+async def get_usage_stats(current_user: dict = Depends(get_current_user)):
+    """Get current usage statistics for free users"""
+    # Check and reset if needed
+    user = await check_and_reset_weekly_limits(current_user)
+    
+    # Refresh user data
+    user = await db.users.find_one({"id": current_user['id']}, {"_id": 0})
+    
+    premium_tier = user.get('premium_tier', 'free')
+    
+    if premium_tier in ['gold', 'platinum']:
+        return {
+            "premium_tier": premium_tier,
+            "is_premium": True,
+            "likes": {
+                "unlimited": True,
+                "sent": user.get('likes_sent_this_week', 0),
+                "remaining": None
+            },
+            "messages": {
+                "unlimited": True,
+                "sent": user.get('messages_sent_this_week', 0),
+                "remaining": None
+            }
+        }
+    
+    # Free user
+    likes_sent = user.get('likes_sent_this_week', 0)
+    messages_sent = user.get('messages_sent_this_week', 0)
+    
+    return {
+        "premium_tier": "free",
+        "is_premium": False,
+        "likes": {
+            "unlimited": False,
+            "limit": 12,
+            "sent": likes_sent,
+            "remaining": max(0, 12 - likes_sent)
+        },
+        "messages": {
+            "unlimited": False,
+            "limit": 10,
+            "sent": messages_sent,
+            "remaining": max(0, 10 - messages_sent)
+        },
+        "week_start_date": user.get('week_start_date')
+    }
+
+
 @api_router.put("/profile/update")
 async def update_profile(request: ProfileUpdateRequest, current_user: dict = Depends(get_current_user)):
     profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})

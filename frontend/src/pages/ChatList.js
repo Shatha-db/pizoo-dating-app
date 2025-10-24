@@ -20,6 +20,7 @@ const ChatList = () => {
   const [loading, setLoading] = useState(true);
   const [showSafetyTools, setShowSafetyTools] = useState(false);
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(true);
+  const fileInputRef = React.useRef(null);
 
   useEffect(() => {
     fetchData();
@@ -34,6 +35,21 @@ const ChatList = () => {
   const dismissWelcomeMessage = () => {
     localStorage.setItem(`welcome_message_${user?.id}`, 'true');
     setShowWelcomeMessage(false);
+  };
+
+  const handleAddPhotos = () => {
+    // Open file picker
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = async (event) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      // Navigate to edit profile page
+      navigate('/edit-profile');
+    }
   };
 
   const fetchData = async () => {

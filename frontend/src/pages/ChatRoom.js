@@ -288,15 +288,11 @@ const ChatRoom = () => {
       {/* Safety Consent Modal */}
       {showSafetyConsent && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card className="max-w-md w-full p-6 bg-white">
-            <div className="text-center mb-4">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <h2 className="text-xl font-bold mb-2">سلامة أعضائنا هي أولوية رئيسية</h2>
-              <p className="text-gray-600 text-sm mb-4">
+          <Card className="max-w-md w-full p-6">
+            <div className="text-center mb-6">
+              <div className="text-6xl mb-4">🛡️</div>
+              <h2 className="text-2xl font-bold mb-4">السلامة أولاً</h2>
+              <p className="text-sm text-gray-700 mb-4">
                 نستخدم أنظمة آلية ويدوية لمراقبة الدردشات ومقاطع الفيديو للكشف عن النشاط غير القانوني.
               </p>
               <p className="text-sm text-gray-700 mb-6">
@@ -318,6 +314,45 @@ const ChatRoom = () => {
             >
               لا ترسل الرسالة
             </Button>
+          </Card>
+        </div>
+      )}
+
+      {/* Message Limit Warning Modal */}
+      {showMessageLimitWarning && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <Card className="max-w-md w-full p-6 bg-gradient-to-br from-purple-50 to-pink-50">
+            <div className="text-center">
+              <div className="text-6xl mb-4">💬</div>
+              <h2 className="text-2xl font-bold mb-2 text-gray-800">
+                وصلت إلى حد الرسائل الأسبوعي!
+              </h2>
+              <p className="text-gray-600 mb-4">
+                المستخدمون المجانيون يمكنهم إرسال 10 رسائل كل أسبوع.
+              </p>
+              <p className="text-gray-600 mb-6">
+                قم بالترقية إلى Premium للحصول على رسائل غير محدودة! 💎
+              </p>
+
+              <Button
+                onClick={() => {
+                  setShowMessageLimitWarning(false);
+                  navigate('/premium');
+                }}
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold text-lg py-6 mb-3"
+              >
+                <Star className="w-5 h-5 ml-2" />
+                ترقية إلى Premium
+              </Button>
+              
+              <Button
+                onClick={() => setShowMessageLimitWarning(false)}
+                variant="ghost"
+                className="w-full"
+              >
+                إغلاق
+              </Button>
+            </div>
           </Card>
         </div>
       )}

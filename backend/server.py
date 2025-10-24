@@ -294,6 +294,24 @@ class UserSettings(BaseModel):
     theme: str = "system"  # system, light, dark
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class DiscoverySettings(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    location: str = ""
+    max_distance: int = 50  # in kilometers
+    interested_in: str = "all"  # male, female, all
+    min_age: int = 18
+    max_age: int = 100
+    show_new_profiles_only: bool = False
+    show_verified_only: bool = False
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
 # ===== Request/Response Models =====
 
 class TokenResponse(BaseModel):

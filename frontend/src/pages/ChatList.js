@@ -16,21 +16,26 @@ const ChatList = () => {
   const { token } = useAuth();
   const { isUserOnline, isConnected } = useWebSocket();
   const [conversations, setConversations] = useState([]);
+  const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showSafetyTools, setShowSafetyTools] = useState(false);
 
   useEffect(() => {
-    fetchConversations();
+    fetchData();
   }, []);
 
-  const fetchConversations = async () => {
+  const fetchData = async () => {
     try {
-      const response = await axios.get(`${API}/conversations`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setConversations(response.data.conversations || []);
+      // Fetch both matches and conversations
+      const [matchesRes, conversationsRes] = await Promise.all([
+        axios.get(`${API}/matches`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${API}/conversations`, { headers: { Authorization: `Bearer ${token}` } })
+      ]);
+      
+      setMatches(matchesRes.data.matches || []);
+      setConversations(conversationsRes.data.conversations || []);
     } catch (error) {
-      console.error('Error fetching conversations:', error);
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }

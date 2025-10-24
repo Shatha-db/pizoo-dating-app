@@ -432,7 +432,8 @@ const EditProfile = () => {
               </div>
 
               <p className="text-sm text-gray-600 mt-4 text-center">
-                أضف ما يصل إلى 9 صور. استمتع بتذوات عند تشاركك لشخصيتك.
+                أضف ما يصل إلى 9 صور. استمتع بتنوع في عرض شخصيتك.<br/>
+                <span className="text-yellow-600 font-medium">⭐ اضغط "اجعلها رئيسية" لاختيار صورة البروفايل الرئيسية</span>
               </p>
             </Card>
 

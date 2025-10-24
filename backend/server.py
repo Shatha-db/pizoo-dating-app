@@ -743,6 +743,74 @@ async def discover_profiles(current_user: dict = Depends(get_current_user), limi
     return {"profiles": profiles}
 
 
+@api_router.get("/profiles/top-picks")
+async def get_top_picks(current_user: dict = Depends(get_current_user)):
+    """
+    Get daily top picks based on user preferences and compatibility
+    """
+    # Get current user's profile
+    my_profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})
+    
+    if not my_profile:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="يجب إكمال ملفك الشخصي أولاً"
+        )
+    
+    # Get users already swiped
+    swiped = await db.swipes.find({"user_id": current_user['id']}, {"_id": 0, "swiped_user_id": 1}).to_list(length=1000)
+    swiped_ids = [s['swiped_user_id'] for s in swiped]
+    
+    # Get all profiles
+    all_profiles = await db.profiles.find(
+        {
+            "user_id": {"$ne": current_user['id'], "$nin": swiped_ids}
+        },
+        {"_id": 0}
+    ).to_list(length=100)
+    
+    # Score profiles based on compatibility
+    scored_profiles = []
+    for profile in all_profiles:
+        score = 0
+        
+        # Interest matching (30 points)
+        if my_profile.get('interests') and profile.get('interests'):
+            common_interests = set(my_profile['interests']) & set(profile['interests'])
+            score += len(common_interests) * 10
+        
+        # Relationship goals matching (25 points)
+        if my_profile.get('relationship_goals') == profile.get('relationship_goals'):
+            score += 25
+        
+        # Age compatibility (20 points)
+        if my_profile.get('age') and profile.get('age'):
+            age_diff = abs(my_profile['age'] - profile['age'])
+            if age_diff <= 5:
+                score += 20
+            elif age_diff <= 10:
+                score += 10
+        
+        # Language matching (15 points)
+        if my_profile.get('languages') and profile.get('languages'):
+            common_languages = set(my_profile['languages']) & set(profile['languages'])
+            score += len(common_languages) * 5
+        
+        # Lifestyle compatibility (10 points)
+        lifestyle_factors = ['pets', 'drinking', 'smoking', 'exercise']
+        for factor in lifestyle_factors:
+            if my_profile.get(factor) == profile.get(factor):
+                score += 2.5
+        
+        scored_profiles.append((profile, score))
+    
+    # Sort by score and get top 10
+    scored_profiles.sort(key=lambda x: x[1], reverse=True)
+    top_picks = [profile for profile, score in scored_profiles[:10]]
+    
+    return {"profiles": top_picks}
+
+
 @api_router.post("/swipe")
 async def swipe_action(request: SwipeRequest, current_user: dict = Depends(get_current_user)):
     # Save swipe

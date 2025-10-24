@@ -197,14 +197,20 @@ const Settings = () => {
           <h2 className="font-bold text-lg mb-4">الوضع الذكي</h2>
           
           <select
-            value={settings?.theme || 'system'}
-            onChange={(e) => updateSetting('theme', e.target.value)}
-            className="w-full p-3 border rounded-lg"
+            value={theme}
+            onChange={(e) => updateTheme(e.target.value)}
+            className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600"
           >
             <option value="system">استخدام إعدادات النظام</option>
             <option value="light">الوضع المضيء</option>
             <option value="dark">الوضع الداكن</option>
           </select>
+          
+          <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            {theme === 'system' && '⚙️ يتبع إعدادات نظامك'}
+            {theme === 'light' && '☀️ الوضع المضيء مفعّل'}
+            {theme === 'dark' && '🌙 الوضع الداكن مفعّل'}
+          </div>
         </Card>
 
         {/* Language Selection */}

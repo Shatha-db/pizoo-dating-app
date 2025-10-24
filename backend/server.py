@@ -1768,11 +1768,14 @@ async def get_messages(match_id: str, current_user: dict = Depends(get_current_u
     return {"messages": messages}
 
 
+class SendMessageRequest(BaseModel):
+    content: str
+    message_type: str = "text"
+
 @api_router.post("/conversations/{match_id}/messages")
 async def send_message(
     match_id: str,
-    content: str,
-    message_type: str = "text",
+    request: SendMessageRequest,
     current_user: dict = Depends(get_current_user)
 ):
     """Send a message in a conversation"""

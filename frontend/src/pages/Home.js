@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import BottomNav from '../components/BottomNav';
+import { PizooLogo } from '../components/Logo';
 import { Heart, X, Star, RotateCcw, Zap, Info } from 'lucide-react';
 import axios from 'axios';
 

@@ -32,7 +32,10 @@ export const WebSocketProvider = ({ children }) => {
   }, [user?.id]);
 
   const connectWebSocket = () => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      console.log('⏭️ Skipping WebSocket connection - no user logged in');
+      return;
+    }
 
     try {
       // Only connect if we have a valid user
@@ -43,6 +46,12 @@ export const WebSocketProvider = ({ children }) => {
       ws.current.onopen = () => {
         console.log('✅ WebSocket connected');
         setIsConnected(true);
+      };
+
+      ws.current.onerror = (error) => {
+        console.log('⚠️ WebSocket error (non-critical):', error.message || 'Connection failed');
+        // Don't throw error - WebSocket is optional feature
+        setIsConnected(false);
       };
 
       ws.current.onmessage = (event) => {

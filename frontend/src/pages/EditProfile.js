@@ -667,6 +667,90 @@ const EditProfile = () => {
                   <option value="omnivore">يأكل كل شيء</option>
                 </select>
               </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">😴 عادات النوم</label>
+                <select
+                  value={sleepingHabits}
+                  onChange={(e) => setSleepingHabits(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                >
+                  <option value="">اختر...</option>
+                  <option value="early-bird">صحوة مبكرة</option>
+                  <option value="night-owl">بومة ليلية</option>
+                  <option value="in-between">بينهما</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">📱 التواصل الاجتماعي</label>
+                <select
+                  value={socialMedia}
+                  onChange={(e) => setSocialMedia(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                >
+                  <option value="">اختر...</option>
+                  <option value="influencer">مؤثر</option>
+                  <option value="active">نشيط</option>
+                  <option value="passive">سلبي</option>
+                  <option value="off-the-grid">بعيد عن الشبكات</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">💉 حالة اللقاح</label>
+                <select
+                  value={vaccinated}
+                  onChange={(e) => setVaccinated(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                >
+                  <option value="">اختر...</option>
+                  <option value="vaccinated">ملقح</option>
+                  <option value="not-vaccinated">غير ملقح</option>
+                  <option value="prefer-not-to-say">أفضل عدم الإفصاح</option>
+                </select>
+              </div>
+            </Card>
+
+            {/* Beliefs */}
+            <Card className="p-6 space-y-4">
+              <h2 className="font-bold text-lg">المعتقدات</h2>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">🙏 الدين</label>
+                <select
+                  value={religion}
+                  onChange={(e) => setReligion(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                >
+                  <option value="">اختر...</option>
+                  <option value="muslim">مسلم</option>
+                  <option value="christian">مسيحي</option>
+                  <option value="jewish">يهودي</option>
+                  <option value="hindu">هندوسي</option>
+                  <option value="buddhist">بوذي</option>
+                  <option value="atheist">ملحد</option>
+                  <option value="agnostic">لا أدري</option>
+                  <option value="spiritual">روحاني</option>
+                  <option value="other">آخر</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">🗳️ الآراء السياسية</label>
+                <select
+                  value={politicalViews}
+                  onChange={(e) => setPoliticalViews(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                >
+                  <option value="">اختر...</option>
+                  <option value="liberal">ليبرالي</option>
+                  <option value="moderate">معتدل</option>
+                  <option value="conservative">محافظ</option>
+                  <option value="not-political">غير مهتم بالسياسة</option>
+                  <option value="prefer-not-to-say">أفضل عدم الإفصاح</option>
+                </select>
+              </div>
             </Card>
 
             {/* Relationship Goals */}

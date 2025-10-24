@@ -718,7 +718,18 @@ async def delete_photo(index: int, current_user: dict = Depends(get_current_user
 
 
 @api_router.get("/profiles/discover")
-async def discover_profiles(current_user: dict = Depends(get_current_user), limit: int = 20):
+async def discover_profiles(
+    current_user: dict = Depends(get_current_user), 
+    limit: int = 20,
+    category: Optional[str] = None,
+    min_age: Optional[int] = None,
+    max_age: Optional[int] = None,
+    max_distance: Optional[int] = None,
+    gender: Optional[str] = None
+):
+    """
+    Discover profiles with advanced filtering and smart matching
+    """
     # Get current user's profile
     my_profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})
     
@@ -732,15 +743,93 @@ async def discover_profiles(current_user: dict = Depends(get_current_user), limi
     swiped = await db.swipes.find({"user_id": current_user['id']}, {"_id": 0, "swiped_user_id": 1}).to_list(length=1000)
     swiped_ids = [s['swiped_user_id'] for s in swiped]
     
-    # Get other profiles (exclude current user and already swiped)
-    profiles = await db.profiles.find(
-        {
-            "user_id": {"$ne": current_user['id'], "$nin": swiped_ids}
-        },
-        {"_id": 0}
-    ).limit(limit).to_list(length=limit)
+    # Build filter query
+    query = {
+        "user_id": {"$ne": current_user['id'], "$nin": swiped_ids}
+    }
     
-    return {"profiles": profiles}
+    # Apply filters
+    if category:
+        # Filter by interests/category
+        query["interests"] = {"$in": [category]}
+    
+    if gender:
+        query["gender"] = gender
+    
+    # Age filter
+    if min_age or max_age:
+        age_filter = {}
+        if min_age:
+            age_filter["$gte"] = min_age
+        if max_age:
+            age_filter["$lte"] = max_age
+        if age_filter:
+            query["age"] = age_filter
+    
+    # Get filtered profiles
+    profiles = await db.profiles.find(query, {"_id": 0}).limit(limit * 2).to_list(length=limit * 2)
+    
+    # Score and sort profiles by compatibility
+    scored_profiles = []
+    for profile in profiles:
+        score = 0
+        
+        # Interest matching (highest weight - 40 points)
+        if my_profile.get('interests') and profile.get('interests'):
+            common_interests = set(my_profile['interests']) & set(profile['interests'])
+            score += len(common_interests) * 8
+        
+        # Relationship goals matching (30 points)
+        if my_profile.get('relationship_goals') == profile.get('relationship_goals'):
+            score += 30
+        elif my_profile.get('relationship_goals') and profile.get('relationship_goals'):
+            # Partial match for similar goals
+            my_goals = my_profile.get('relationship_goals', '')
+            their_goals = profile.get('relationship_goals', '')
+            if 'long-term' in my_goals and 'long-term' in their_goals:
+                score += 15
+            elif 'short-term' in my_goals and 'short-term' in their_goals:
+                score += 15
+        
+        # Age compatibility (15 points)
+        if my_profile.get('age') and profile.get('age'):
+            age_diff = abs(my_profile['age'] - profile['age'])
+            if age_diff <= 3:
+                score += 15
+            elif age_diff <= 5:
+                score += 10
+            elif age_diff <= 10:
+                score += 5
+        
+        # Language matching (10 points)
+        if my_profile.get('languages') and profile.get('languages'):
+            common_languages = set(my_profile['languages']) & set(profile['languages'])
+            score += min(len(common_languages) * 5, 10)
+        
+        # Lifestyle compatibility (5 points total)
+        lifestyle_factors = ['pets', 'drinking', 'smoking', 'exercise', 'dietary_preference']
+        matching_lifestyle = 0
+        for factor in lifestyle_factors:
+            if my_profile.get(factor) and profile.get(factor):
+                if my_profile.get(factor) == profile.get(factor):
+                    matching_lifestyle += 1
+        score += matching_lifestyle
+        
+        # Profile completeness bonus (photos, bio, interests) - encourage complete profiles
+        if profile.get('photos') and len(profile.get('photos', [])) >= 3:
+            score += 5
+        if profile.get('bio') and len(profile.get('bio', '')) > 50:
+            score += 3
+        if profile.get('interests') and len(profile.get('interests', [])) >= 3:
+            score += 2
+        
+        scored_profiles.append((profile, score))
+    
+    # Sort by score descending and return top results
+    scored_profiles.sort(key=lambda x: x[1], reverse=True)
+    final_profiles = [profile for profile, score in scored_profiles[:limit]]
+    
+    return {"profiles": final_profiles}
 
 
 @api_router.get("/profiles/top-picks")

@@ -3292,3 +3292,16 @@ async def test_email_notification(
         raise HTTPException(status_code=400, detail="Invalid notification type")
     
     return {"success": success, "type": notification_type}
+
+
+# Mount the API router
+app.include_router(api_router)
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

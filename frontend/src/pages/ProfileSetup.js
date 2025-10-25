@@ -419,7 +419,7 @@ const ProfileSetup = () => {
             </div>
           )}
 
-          {/* Step 3: الهوايات واللغات */}
+          {/* Step 3: الهوايات واللغات والصور */}
           {step === 3 && (
             <div className="space-y-4">
               <div className="space-y-2">

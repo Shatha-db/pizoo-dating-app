@@ -2454,6 +2454,170 @@ async def create_notification(
 
 # ===== Boost System =====
 
+
+
+# ===== Stories System =====
+
+@api_router.post("/stories")
+async def create_story(
+    media_url: str,
+    media_type: str,
+    caption: Optional[str] = None,
+    current_user: dict = Depends(get_current_user)
+):
+    """Create a new story"""
+    story = Story(
+        user_id=current_user['id'],
+        media_url=media_url,
+        media_type=media_type,
+        caption=caption
+    )
+    
+    story_dict = story.model_dump()
+    story_dict['created_at'] = story_dict['created_at'].isoformat()
+    story_dict['expires_at'] = story_dict['expires_at'].isoformat()
+    
+    await db.stories.insert_one(story_dict)
+    
+    return {"message": "Story created successfully", "story": story_dict}
+
+
+@api_router.get("/stories/feed")
+async def get_stories_feed(current_user: dict = Depends(get_current_user)):
+    """Get all active stories from matches and connections"""
+    # Get user's matches
+    matches = await db.matches.find({
+        "$or": [
+            {"user1_id": current_user['id']},
+            {"user2_id": current_user['id']}
+        ]
+    }).to_list(length=1000)
+    
+    # Extract match user IDs
+    match_user_ids = set()
+    for match in matches:
+        if match['user1_id'] != current_user['id']:
+            match_user_ids.add(match['user1_id'])
+        if match['user2_id'] != current_user['id']:
+            match_user_ids.add(match['user2_id'])
+    
+    # Add current user to see their own stories
+    match_user_ids.add(current_user['id'])
+    
+    # Get active stories (not expired)
+    now = datetime.now(timezone.utc)
+    stories = await db.stories.find({
+        "user_id": {"$in": list(match_user_ids)},
+        "expires_at": {"$gt": now.isoformat()}
+    }, {"_id": 0}).sort("created_at", -1).to_list(length=1000)
+    
+    # Group stories by user
+    stories_by_user = {}
+    for story in stories:
+        user_id = story['user_id']
+        if user_id not in stories_by_user:
+            stories_by_user[user_id] = []
+        
+        # Check if current user has viewed this story
+        story['viewed_by_me'] = current_user['id'] in story.get('views', [])
+        stories_by_user[user_id].append(story)
+    
+    # Get profile info for each user with stories
+    user_profiles = {}
+    for user_id in stories_by_user.keys():
+        profile = await db.profiles.find_one(
+            {"user_id": user_id},
+            {"_id": 0, "user_id": 1, "display_name": 1, "photos": 1}
+        )
+        if profile:
+            user_profiles[user_id] = profile
+    
+    # Format response
+    feed = []
+    for user_id, user_stories in stories_by_user.items():
+        if user_id in user_profiles:
+            feed.append({
+                "user": user_profiles[user_id],
+                "stories": user_stories,
+                "has_unseen": any(not s['viewed_by_me'] for s in user_stories)
+            })
+    
+    return {"feed": feed}
+
+
+@api_router.post("/stories/{story_id}/view")
+async def view_story(
+    story_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Mark story as viewed"""
+    story = await db.stories.find_one({"id": story_id}, {"_id": 0})
+    
+    if not story:
+        raise HTTPException(status_code=404, detail="Story not found")
+    
+    # Add user to views if not already viewed
+    if current_user['id'] not in story.get('views', []):
+        await db.stories.update_one(
+            {"id": story_id},
+            {"$push": {"views": current_user['id']}}
+        )
+    
+    return {"message": "Story viewed"}
+
+
+@api_router.get("/stories/user/{user_id}")
+async def get_user_stories(
+    user_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Get stories for a specific user"""
+    now = datetime.now(timezone.utc)
+    stories = await db.stories.find({
+        "user_id": user_id,
+        "expires_at": {"$gt": now.isoformat()}
+    }, {"_id": 0}).sort("created_at", 1).to_list(length=100)
+    
+    for story in stories:
+        story['viewed_by_me'] = current_user['id'] in story.get('views', [])
+    
+    return {"stories": stories}
+
+
+@api_router.delete("/stories/{story_id}")
+async def delete_story(
+    story_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Delete a story"""
+    story = await db.stories.find_one({"id": story_id}, {"_id": 0})
+    
+    if not story:
+        raise HTTPException(status_code=404, detail="Story not found")
+    
+    if story['user_id'] != current_user['id']:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this story")
+    
+    await db.stories.delete_one({"id": story_id})
+    
+    return {"message": "Story deleted successfully"}
+
+
+@api_router.get("/stories/my-stories")
+async def get_my_stories(current_user: dict = Depends(get_current_user)):
+    """Get current user's active stories with view counts"""
+    now = datetime.now(timezone.utc)
+    stories = await db.stories.find({
+        "user_id": current_user['id'],
+        "expires_at": {"$gt": now.isoformat()}
+    }, {"_id": 0}).sort("created_at", -1).to_list(length=100)
+    
+    for story in stories:
+        story['view_count'] = len(story.get('views', []))
+    
+    return {"stories": stories}
+
+
 @api_router.post("/boost/activate")
 async def activate_boost(current_user: dict = Depends(get_current_user)):
     """Activate boost for 30 minutes (increases profile visibility)"""

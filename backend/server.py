@@ -133,7 +133,9 @@ class Profile(BaseModel):
     looking_for: Optional[str] = None  # ماذا يبحث عنه
     interests: List[str] = []  # الهوايات
     photos: List[str] = []  # قائمة روابط الصور
-    location: Optional[str] = None
+    location: Optional[str] = None  # Location string (e.g., "New York, USA")
+    latitude: Optional[float] = None  # GPS latitude coordinate
+    longitude: Optional[float] = None  # GPS longitude coordinate
     occupation: Optional[str] = None
     education: Optional[str] = None
     relationship_goals: Optional[str] = None  # serious, casual, friendship

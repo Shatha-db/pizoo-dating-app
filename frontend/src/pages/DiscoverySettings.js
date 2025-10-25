@@ -184,10 +184,12 @@ const DiscoverySettings = () => {
           {/* Map View */}
           <div className="mb-4 rounded-lg overflow-hidden border-2 border-gray-200" style={{ height: '300px' }}>
             <MapContainer 
+              key={mapKey}
               center={[userLocation.lat, userLocation.lng]} 
               zoom={10} 
               style={{ height: '100%', width: '100%' }}
               zoomControl={true}
+              scrollWheelZoom={false}
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

@@ -45,9 +45,12 @@ const DiscoverySettings = () => {
   const [locationLoading, setLocationLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [mapKey, setMapKey] = useState(0); // Force remount of map
 
   useEffect(() => {
     fetchSettings();
+    getUserLocation();
+  }, []);
     getUserLocation();
   }, []);
 

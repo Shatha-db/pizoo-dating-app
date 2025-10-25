@@ -143,7 +143,8 @@ const ProfileSetup = () => {
         ...formData,
         height: formData.height ? parseInt(formData.height) : null,
         interests,
-        languages
+        languages,
+        photos
       }, {
         headers: {
           Authorization: `Bearer ${token}`

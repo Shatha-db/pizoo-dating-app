@@ -195,16 +195,26 @@ const Profile = () => {
 
         {/* Profile Card */}
         <Card className="overflow-hidden">
-          <div className="relative h-48 bg-gradient-to-br from-pink-400 to-purple-500">
+          <div className="relative h-48 bg-gradient-to-br from-pink-400 to-purple-500 cursor-pointer" onClick={() => {
+            if (profile?.photos && profile.photos.length > 0) {
+              setSelectedPhotoIndex(0);
+              setShowPhotoModal(true);
+            }
+          }}>
             {profile?.photos && profile.photos.length > 0 ? (
               <img 
                 src={profile.photos[0]} 
                 alt={profile.display_name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover hover:opacity-90 transition-opacity"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-white text-6xl">
                 👤
+              </div>
+            )}
+            {profile?.photos && profile.photos.length > 1 && (
+              <div className="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
+                +{profile.photos.length - 1} صور
               </div>
             )}
           </div>

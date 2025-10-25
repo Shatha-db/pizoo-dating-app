@@ -19,7 +19,7 @@ i18n
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
       caches: ['localStorage'],
-      lookupLocalStorage: 'i18nextLng',
+      lookupLocalStorage: 'preferred_language', // Match with Settings.js
     },
     
     interpolation: {

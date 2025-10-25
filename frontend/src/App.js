@@ -5,7 +5,6 @@ import { WebSocketProvider } from './context/WebSocketContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { NotificationProvider } from './context/NotificationContext';
 import ProtectedRoute from './components/ProtectedRoute';
-import LanguageSelection from './pages/LanguageSelection';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import AddPayment from './pages/AddPayment';
@@ -42,7 +41,7 @@ function App() {
           <WebSocketProvider>
             <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LanguageSelection />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/terms" element={<TermsNew />} />

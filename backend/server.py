@@ -153,6 +153,7 @@ class Profile(BaseModel):
     display_name: str  # اسم العرض أو الاسم المستعار
     bio: Optional[str] = None  # نبذة عن النفس
     date_of_birth: Optional[str] = None
+    age: Optional[int] = None  # العمر المحسوب من تاريخ الميلاد
     gender: Optional[str] = None  # male, female, other
     height: Optional[int] = None  # بالسم
     looking_for: Optional[str] = None  # ماذا يبحث عنه

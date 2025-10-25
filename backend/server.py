@@ -1230,6 +1230,18 @@ async def discover_profiles(
                     matching_lifestyle += 1
         score += matching_lifestyle
         
+        # Proximity bonus (20 points) - closer users get higher scores
+        if profile.get('distance') is not None:
+            distance = profile['distance']
+            if distance <= 5:  # Within 5 km
+                score += 20
+            elif distance <= 15:  # Within 15 km
+                score += 15
+            elif distance <= 30:  # Within 30 km
+                score += 10
+            elif distance <= 50:  # Within 50 km
+                score += 5
+        
         # Profile completeness bonus (photos, bio, interests) - encourage complete profiles
         if profile.get('photos') and len(profile.get('photos', [])) >= 3:
             score += 5

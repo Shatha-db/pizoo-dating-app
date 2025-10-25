@@ -43,6 +43,11 @@ export const WebSocketProvider = ({ children }) => {
       return;
     }
 
+    if (!WS_URL) {
+      console.error('❌ Cannot connect WebSocket - REACT_APP_BACKEND_URL not configured');
+      return;
+    }
+
     try {
       // Only connect if we have a valid user
       const wsEndpoint = `${WS_URL}/ws/${user.id}`;

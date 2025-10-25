@@ -177,36 +177,48 @@ const ProfileSetup = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Check file size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      setError('حجم الصورة يجب أن يكون أقل من 10MB');
-      return;
-    }
-
     setPhotoUploading(true);
     setError('');
+    setUploadProgress(0);
+    setUploadRetrying(false);
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('is_primary', photos.length === 0 ? 'true' : 'false');
+      const isPrimary = photos.length === 0;
 
-      const response = await axios.post(`${API}/profile/photo/upload`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
+      const result = await uploadImage(
+        file,
+        token,
+        isPrimary,
+        // Progress callback
+        (progress) => {
+          setUploadProgress(progress);
+        },
+        // Retry callback
+        (attempt, maxAttempts) => {
+          setUploadRetrying(true);
+          setError(`محاولة ${attempt} من ${maxAttempts}...`);
         }
-      });
+      );
 
-      setPhotos([...photos, response.data.photo.url]);
+      if (result.success) {
+        setPhotos([...photos, result.url]);
+        setUploadProgress(100);
+        
+        // Show success message briefly
+        setTimeout(() => {
+          setUploadProgress(0);
+        }, 1000);
+      }
       
       // Clear file input
       e.target.value = null;
     } catch (error) {
       console.error('Error uploading photo:', error);
-      setError(error.response?.data?.detail || 'فشل رفع الصورة. حاول مرة أخرى');
+      setError(error.message || 'فشل رفع الصورة. حاول مرة أخرى');
+      setUploadProgress(0);
     } finally {
       setPhotoUploading(false);
+      setUploadRetrying(false);
     }
   };
 

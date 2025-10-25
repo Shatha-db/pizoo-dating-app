@@ -343,6 +343,53 @@ const Profile = () => {
         </Card>
       </main>
 
+      {/* Photo Modal */}
+      {showPhotoModal && profile?.photos && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+          onClick={() => setShowPhotoModal(false)}
+        >
+          <div className="relative max-w-4xl w-full">
+            <button
+              onClick={() => setShowPhotoModal(false)}
+              className="absolute top-4 right-4 bg-white rounded-full p-2 hover:bg-gray-100 z-10"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            
+            <img
+              src={profile.photos[selectedPhotoIndex]}
+              alt={`صورة ${selectedPhotoIndex + 1}`}
+              className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()}
+            />
+            
+            {profile.photos.length > 1 && (
+              <div className="flex gap-2 justify-center mt-4">
+                {profile.photos.map((photo, index) => (
+                  <button
+                    key={index}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedPhotoIndex(index);
+                    }}
+                    className={`w-16 h-16 rounded-lg overflow-hidden border-2 ${
+                      index === selectedPhotoIndex ? 'border-pink-500' : 'border-gray-500'
+                    }`}
+                  >
+                    <img
+                      src={photo}
+                      alt={`صورة ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <BottomNav />
     </div>
   );

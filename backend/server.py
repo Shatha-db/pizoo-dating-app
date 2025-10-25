@@ -86,6 +86,31 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
 # Security
 security = HTTPBearer()
 
+
+# ===== Utility Functions =====
+
+def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """
+    Calculate distance between two points using Haversine formula
+    Returns distance in kilometers
+    """
+    from math import radians, sin, cos, asin, sqrt
+    
+    # Convert to radians
+    lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+    
+    # Haversine formula
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * asin(sqrt(a))
+    
+    # Earth radius in kilometers
+    r = 6371
+    
+    return c * r
+
+
 # Create the main app without a prefix
 app = FastAPI()
 

@@ -326,7 +326,14 @@ const Home = () => {
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
                 <h2 className="text-3xl font-bold">{currentProfile.display_name}</h2>
                 <p className="text-lg opacity-90">{currentProfile.occupation || 'Professional'}</p>
-                <p className="text-sm opacity-80 mt-1">📍 {currentProfile.location}</p>
+                <div className="flex items-center gap-2 text-sm opacity-80 mt-1">
+                  <span>📍 {currentProfile.location}</span>
+                  {currentProfile.distance && (
+                    <span className="bg-white/20 px-2 py-1 rounded-full text-xs font-semibold">
+                      {currentProfile.distance} km
+                    </span>
+                  )}
+                </div>
                 {currentProfile.bio && (
                   <p className="text-sm mt-2 opacity-90">{currentProfile.bio}</p>
                 )}

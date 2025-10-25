@@ -439,6 +439,8 @@ class ProfileUpdateRequest(BaseModel):
     looking_for: Optional[str] = None
     interests: Optional[List[str]] = None
     location: Optional[str] = None
+    latitude: Optional[float] = None  # GPS latitude coordinate
+    longitude: Optional[float] = None  # GPS longitude coordinate
     occupation: Optional[str] = None
     education: Optional[str] = None
     relationship_goals: Optional[str] = None

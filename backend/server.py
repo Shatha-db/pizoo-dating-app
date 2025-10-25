@@ -1154,6 +1154,36 @@ async def discover_profiles(
     # Get filtered profiles
     profiles = await db.profiles.find(query, {"_id": 0}).limit(limit * 2).to_list(length=limit * 2)
     
+    # Filter by distance if user has location coordinates
+    if max_distance and my_profile.get('latitude') and my_profile.get('longitude'):
+        filtered_by_distance = []
+        for profile in profiles:
+            if profile.get('latitude') and profile.get('longitude'):
+                distance = calculate_distance(
+                    my_profile['latitude'], my_profile['longitude'],
+                    profile['latitude'], profile['longitude']
+                )
+                if distance <= max_distance:
+                    profile['distance'] = round(distance, 1)  # Add distance to profile
+                    filtered_by_distance.append(profile)
+            else:
+                # Include profiles without location data
+                profile['distance'] = None
+                filtered_by_distance.append(profile)
+        profiles = filtered_by_distance
+    else:
+        # Add distance to all profiles if coordinates available
+        for profile in profiles:
+            if (my_profile.get('latitude') and my_profile.get('longitude') and 
+                profile.get('latitude') and profile.get('longitude')):
+                distance = calculate_distance(
+                    my_profile['latitude'], my_profile['longitude'],
+                    profile['latitude'], profile['longitude']
+                )
+                profile['distance'] = round(distance, 1)
+            else:
+                profile['distance'] = None
+    
     # Score and sort profiles by compatibility
     scored_profiles = []
     for profile in profiles:

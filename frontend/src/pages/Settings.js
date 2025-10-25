@@ -238,10 +238,10 @@ const Settings = () => {
               className={`w-full p-4 rounded-lg text-right flex items-center justify-between transition-all ${
                 i18n.language === 'ar' 
                   ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white shadow-lg' 
-                  : 'bg-gray-100 hover:bg-gray-200'
+                  : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-300 dark:hover:bg-gray-400'
               }`}
             >
-              <span className="font-medium">العربية</span>
+              <span className="font-medium">العربية 🇸🇦</span>
               {i18n.language === 'ar' && (
                 <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
                   <span className="text-pink-500 text-xl">✓</span>
@@ -254,11 +254,43 @@ const Settings = () => {
               className={`w-full p-4 rounded-lg text-left flex items-center justify-between transition-all ${
                 i18n.language === 'en' 
                   ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white shadow-lg' 
-                  : 'bg-gray-100 hover:bg-gray-200'
+                  : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-300 dark:hover:bg-gray-400'
               }`}
             >
-              <span className="font-medium">English</span>
+              <span className="font-medium">🇬🇧 English</span>
               {i18n.language === 'en' && (
+                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-pink-500 text-xl">✓</span>
+                </div>
+              )}
+            </button>
+
+            <button
+              onClick={() => changeLanguage('fr')}
+              className={`w-full p-4 rounded-lg text-left flex items-center justify-between transition-all ${
+                i18n.language === 'fr' 
+                  ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white shadow-lg' 
+                  : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-300 dark:hover:bg-gray-400'
+              }`}
+            >
+              <span className="font-medium">🇫🇷 Français</span>
+              {i18n.language === 'fr' && (
+                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-pink-500 text-xl">✓</span>
+                </div>
+              )}
+            </button>
+
+            <button
+              onClick={() => changeLanguage('es')}
+              className={`w-full p-4 rounded-lg text-left flex items-center justify-between transition-all ${
+                i18n.language === 'es' 
+                  ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white shadow-lg' 
+                  : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-300 dark:hover:bg-gray-400'
+              }`}
+            >
+              <span className="font-medium">🇪🇸 Español</span>
+              {i18n.language === 'es' && (
                 <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
                   <span className="text-pink-500 text-xl">✓</span>
                 </div>

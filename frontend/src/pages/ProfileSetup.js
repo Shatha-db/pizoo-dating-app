@@ -44,6 +44,8 @@ const ProfileSetup = () => {
   const [newLanguage, setNewLanguage] = useState('');
   const [photos, setPhotos] = useState([]);
   const [photoUploading, setPhotoUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadRetrying, setUploadRetrying] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);

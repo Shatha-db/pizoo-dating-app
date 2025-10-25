@@ -4,6 +4,8 @@ Handles image uploads, compression, folder organization, and error recovery
 """
 
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
@@ -12,6 +14,10 @@ import io
 import base64
 from typing import Optional, Tuple, Dict
 import logging
+
+# Load environment variables
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

@@ -521,14 +521,44 @@ const ProfileSetup = () => {
                     htmlFor="photo-upload"
                     className="cursor-pointer flex flex-col items-center gap-3"
                   >
-                    <Camera className="w-12 h-12 text-pink-500" />
-                    <span className="text-lg font-medium text-gray-900">
-                      {photoUploading ? 'جاري رفع الصورة...' : 'اضغط لإضافة صورة'}
-                    </span>
+                    {photoUploading ? (
+                      <>
+                        <Upload className="w-12 h-12 text-pink-500 animate-bounce" />
+                        <span className="text-lg font-medium text-gray-900">
+                          {uploadRetrying ? 'إعادة المحاولة...' : 'جاري رفع الصورة...'}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <Camera className="w-12 h-12 text-pink-500" />
+                        <span className="text-lg font-medium text-gray-900">
+                          اضغط لإضافة صورة
+                        </span>
+                      </>
+                    )}
                     <span className="text-sm text-gray-600">
-                      الحد الأقصى: 5MB • يمكنك إضافة حتى 6 صور
+                      الحد الأقصى: 10MB • يمكنك إضافة حتى 9 صور
                     </span>
                   </label>
+                  
+                  {/* Progress Bar */}
+                  {photoUploading && uploadProgress > 0 && (
+                    <div className="mt-4">
+                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div 
+                          className="bg-gradient-to-r from-pink-500 to-purple-500 h-full transition-all duration-300 ease-out flex items-center justify-center"
+                          style={{ width: `${uploadProgress}%` }}
+                        >
+                          {uploadProgress === 100 && (
+                            <CheckCircle2 className="w-4 h-4 text-white" />
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-2">
+                        {uploadProgress}% مكتمل
+                      </p>
+                    </div>
+                  )}
                 </div>
                 
                 {photos.length > 0 && (

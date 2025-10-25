@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// Cloudinary configuration
-const CLOUD_NAME = 'dpm7hliv6';
-const UPLOAD_PRESET = 'pizoo_profiles';
+// Cloudinary configuration from environment variables
+const CLOUD_NAME = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME || 'dpm7hliv6';
+const UPLOAD_PRESET = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET || 'pizoo_profiles';
 
 /**
  * Upload image to Cloudinary

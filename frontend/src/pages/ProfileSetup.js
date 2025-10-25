@@ -218,7 +218,7 @@ const ProfileSetup = () => {
         <CardHeader className="text-center">
           <CardTitle className="text-3xl">أكمل ملفك الشخصي</CardTitle>
           <CardDescription>
-            خطوة {step} من 3 - أخبرنا عن نفسك لنساعدك في إيجاد التطابق المثالي
+            خطوة {step} من 4 - أخبرنا عن نفسك لنساعدك في إيجاد التطابق المثالي
           </CardDescription>
           <div className="flex gap-2 mt-4">
             <div className={`h-2 flex-1 rounded-full ${step >= 1 ? 'bg-pink-500' : 'bg-gray-200'}`} />

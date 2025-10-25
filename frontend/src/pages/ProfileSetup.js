@@ -158,6 +158,42 @@ const ProfileSetup = () => {
     }
   };
 
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('حجم الصورة يجب أن يكون أقل من 5MB');
+      return;
+    }
+
+    setPhotoUploading(true);
+    setError('');
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await axios.post(`${API}/profile/photo/upload`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      setPhotos([...photos, response.data.photo_url]);
+    } catch (error) {
+      setError('فشل رفع الصورة. حاول مرة أخرى');
+    } finally {
+      setPhotoUploading(false);
+    }
+  };
+
+  const removePhoto = (index) => {
+    setPhotos(photos.filter((_, i) => i !== index));
+  };
+
   const nextStep = () => {
     if (step === 1 && !formData.display_name) {
       setError('يرجى إدخال اسم العرض');

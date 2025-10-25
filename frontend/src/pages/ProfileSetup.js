@@ -109,11 +109,21 @@ const ProfileSetup = () => {
           const country = data.address.country;
           const locationStr = `${city}, ${country}`;
           
-          setFormData(prev => ({ ...prev, location: locationStr }));
+          setFormData(prev => ({ 
+            ...prev, 
+            location: locationStr,
+            latitude: latitude,
+            longitude: longitude
+          }));
         } catch (error) {
           console.error('Error getting location name:', error);
           // Fallback to coordinates
-          setFormData(prev => ({ ...prev, location: `${latitude.toFixed(2)}, ${longitude.toFixed(2)}` }));
+          setFormData(prev => ({ 
+            ...prev, 
+            location: `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`,
+            latitude: latitude,
+            longitude: longitude
+          }));
         } finally {
           setLocationLoading(false);
         }

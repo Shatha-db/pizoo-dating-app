@@ -103,6 +103,7 @@ class User(BaseModel):
     email: EmailStr
     phone_number: str
     password_hash: str
+    email_verified: bool = False
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     trial_end_date: datetime
     subscription_status: str = "trial"  # trial, active, cancelled, expired

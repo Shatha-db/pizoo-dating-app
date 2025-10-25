@@ -414,6 +414,7 @@ class ProfileCreateRequest(BaseModel):
     display_name: str
     bio: Optional[str] = None
     date_of_birth: Optional[str] = None
+    age: Optional[int] = None
     gender: Optional[str] = None
     height: Optional[int] = None
     looking_for: Optional[str] = None

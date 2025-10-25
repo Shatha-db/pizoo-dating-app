@@ -27,6 +27,8 @@ const ProfileSetup = () => {
     height: '',
     looking_for: '',
     location: '',
+    latitude: null,
+    longitude: null,
     occupation: '',
     education: '',
     relationship_goals: '',

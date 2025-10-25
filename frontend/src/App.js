@@ -42,7 +42,7 @@ function App() {
           <WebSocketProvider>
             <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/register" replace />} />
+          <Route path="/" element={<LanguageSelection />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/terms" element={<TermsNew />} />

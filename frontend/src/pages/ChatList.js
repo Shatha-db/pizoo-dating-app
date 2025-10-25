@@ -7,6 +7,7 @@ import { Button } from '../components/ui/button';
 import BottomNav from '../components/BottomNav';
 import { Shield, Flag, Settings as SettingsIcon, Heart, Camera } from 'lucide-react';
 import axios from 'axios';
+import { uploadImage } from '../utils/imageUpload';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;

@@ -9,8 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Badge } from '../components/ui/badge';
-import { X, Plus, Camera } from 'lucide-react';
+import { X, Plus, Camera, Upload, CheckCircle2 } from 'lucide-react';
 import axios from 'axios';
+import { uploadImage } from '../utils/imageUpload';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;

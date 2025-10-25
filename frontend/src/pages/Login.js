@@ -7,12 +7,14 @@ import { Label } from '../components/ui/label';
 import { Checkbox } from '../components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Alert, AlertDescription } from '../components/ui/alert';
-import { LogIn } from 'lucide-react';
+import { LogIn, Globe } from 'lucide-react';
 import CustomLogo from '../components/CustomLogo';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { t, i18n } = useTranslation();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -20,6 +22,16 @@ const Login = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showLanguages, setShowLanguages] = useState(false);
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    localStorage.setItem('preferred_language', lng);
+    const rtlLanguages = ['ar', 'he', 'fa', 'ur'];
+    document.documentElement.dir = rtlLanguages.includes(lng) ? 'rtl' : 'ltr';
+    document.documentElement.lang = lng;
+    setShowLanguages(false);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,7 +62,56 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-red-500 to-orange-500 dark:from-gray-300 dark:via-gray-400 dark:to-gray-500 flex items-center justify-center p-4" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-red-500 to-orange-500 dark:from-gray-300 dark:via-gray-400 dark:to-gray-500 flex items-center justify-center p-4" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
+      {/* Language Selector - Floating Button */}
+      <div className="fixed top-4 right-4 z-50">
+        <Button
+          onClick={() => setShowLanguages(!showLanguages)}
+          variant="outline"
+          size="icon"
+          className="bg-white/90 hover:bg-white shadow-lg"
+        >
+          <Globe className="w-5 h-5" />
+        </Button>
+        
+        {showLanguages && (
+          <div className="absolute top-12 right-0 bg-white rounded-lg shadow-xl p-2 min-w-[150px] space-y-1">
+            <button
+              onClick={() => changeLanguage('ar')}
+              className={`w-full text-right px-4 py-2 rounded-lg transition-colors ${
+                i18n.language === 'ar' ? 'bg-pink-500 text-white' : 'hover:bg-gray-100'
+              }`}
+            >
+              🇸🇦 العربية
+            </button>
+            <button
+              onClick={() => changeLanguage('en')}
+              className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                i18n.language === 'en' ? 'bg-pink-500 text-white' : 'hover:bg-gray-100'
+              }`}
+            >
+              🇬🇧 English
+            </button>
+            <button
+              onClick={() => changeLanguage('fr')}
+              className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                i18n.language === 'fr' ? 'bg-pink-500 text-white' : 'hover:bg-gray-100'
+              }`}
+            >
+              🇫🇷 Français
+            </button>
+            <button
+              onClick={() => changeLanguage('es')}
+              className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                i18n.language === 'es' ? 'bg-pink-500 text-white' : 'hover:bg-gray-100'
+              }`}
+            >
+              🇪🇸 Español
+            </button>
+          </div>
+        )}
+      </div>
+
       {/* Logo/Brand */}
       <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
         <CustomLogo size="xl" />

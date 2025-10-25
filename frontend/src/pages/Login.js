@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { t, i18n } = useTranslation();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -21,6 +22,16 @@ const Login = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showLanguages, setShowLanguages] = useState(false);
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    localStorage.setItem('preferred_language', lng);
+    const rtlLanguages = ['ar', 'he', 'fa', 'ur'];
+    document.documentElement.dir = rtlLanguages.includes(lng) ? 'rtl' : 'ltr';
+    document.documentElement.lang = lng;
+    setShowLanguages(false);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;

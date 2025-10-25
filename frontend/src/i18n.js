@@ -40,8 +40,14 @@ i18n
 
 // Listen for language changes to update document direction
 i18n.on('languageChanged', (lng) => {
-  document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
+  const rtlLanguages = ['ar', 'he', 'fa', 'ur'];
+  document.documentElement.dir = rtlLanguages.includes(lng) ? 'rtl' : 'ltr';
   document.documentElement.lang = lng;
+  
+  // Also save to localStorage when changed
+  localStorage.setItem('preferred_language', lng);
+  
+  console.log(`🌐 Language changed to: ${lng}, Direction: ${document.documentElement.dir}`);
 });
 
 export default i18n;

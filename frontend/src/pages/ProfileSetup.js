@@ -468,6 +468,57 @@ const ProfileSetup = () => {
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <Label>صورك الشخصية</Label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                    id="photo-upload"
+                    disabled={photoUploading}
+                  />
+                  <label
+                    htmlFor="photo-upload"
+                    className="cursor-pointer flex flex-col items-center gap-2"
+                  >
+                    <Camera className="w-8 h-8 text-gray-400" />
+                    <span className="text-sm text-gray-600">
+                      {photoUploading ? 'جاري رفع الصورة...' : 'اضغط لإضافة صورة'}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      الحد الأقصى: 5MB
+                    </span>
+                  </label>
+                </div>
+                
+                {photos.length > 0 && (
+                  <div className="grid grid-cols-3 gap-2 mt-4">
+                    {photos.map((photo, index) => (
+                      <div key={index} className="relative">
+                        <img
+                          src={photo}
+                          alt={`صورة ${index + 1}`}
+                          className="w-full h-24 object-cover rounded-lg"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removePhoto(index)}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                <p className="text-xs text-gray-500">
+                  📸 أضف صورة واحدة على الأقل لإكمال ملفك الشخصي
+                </p>
+              </div>
+
               <div className="bg-pink-50 border border-pink-200 rounded-lg p-4 mt-4">
                 <p className="text-sm text-pink-900">
                   💡 نصيحة: كلما أضفت معلومات أكثر، كلما ساعدنا ذلك في إيجاد التطابق المثالي لك!

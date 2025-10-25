@@ -31,7 +31,7 @@ i18n
     },
     
     // Available languages
-    supportedLngs: ['en', 'ar'],
+    supportedLngs: ['en', 'ar', 'fr', 'es'],
     
     react: {
       useSuspense: true,

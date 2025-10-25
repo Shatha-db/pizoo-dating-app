@@ -415,7 +415,7 @@ const ProfileSetup = () => {
             </div>
           )}
 
-          {/* Step 3: الهوايات واللغات والصور */}
+          {/* Step 3: الهوايات واللغات */}
           {step === 3 && (
             <div className="space-y-4">
               <div className="space-y-2">
@@ -463,10 +463,20 @@ const ProfileSetup = () => {
                   ))}
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Step 4: الصور - الجميع هنا ليروك */}
+          {step === 4 && (
+            <div className="space-y-4">
+              <div className="text-center mb-6">
+                <h3 className="text-2xl font-bold mb-2">الجميع هنا ليروك 📸</h3>
+                <p className="text-gray-600">أضف صورك لجذب التطابقات المثالية</p>
+              </div>
 
               <div className="space-y-2">
                 <Label>صورك الشخصية</Label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                <div className="border-2 border-dashed border-pink-300 rounded-lg p-8 text-center bg-pink-50 hover:bg-pink-100 transition-colors">
                   <input
                     type="file"
                     accept="image/*"
@@ -477,48 +487,55 @@ const ProfileSetup = () => {
                   />
                   <label
                     htmlFor="photo-upload"
-                    className="cursor-pointer flex flex-col items-center gap-2"
+                    className="cursor-pointer flex flex-col items-center gap-3"
                   >
-                    <Camera className="w-8 h-8 text-gray-400" />
-                    <span className="text-sm text-gray-600">
+                    <Camera className="w-12 h-12 text-pink-500" />
+                    <span className="text-lg font-medium text-gray-900">
                       {photoUploading ? 'جاري رفع الصورة...' : 'اضغط لإضافة صورة'}
                     </span>
-                    <span className="text-xs text-gray-500">
-                      الحد الأقصى: 5MB
+                    <span className="text-sm text-gray-600">
+                      الحد الأقصى: 5MB • يمكنك إضافة حتى 6 صور
                     </span>
                   </label>
                 </div>
                 
                 {photos.length > 0 && (
-                  <div className="grid grid-cols-3 gap-2 mt-4">
+                  <div className="grid grid-cols-3 gap-3 mt-6">
                     {photos.map((photo, index) => (
-                      <div key={index} className="relative">
+                      <div key={index} className="relative group">
                         <img
                           src={photo}
                           alt={`صورة ${index + 1}`}
-                          className="w-full h-24 object-cover rounded-lg"
+                          className="w-full h-32 object-cover rounded-lg shadow-md"
                         />
                         <button
                           type="button"
                           onClick={() => removePhoto(index)}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
                         >
-                          <X className="w-3 h-3" />
+                          <X className="w-4 h-4" />
                         </button>
+                        {index === 0 && (
+                          <div className="absolute bottom-2 left-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-full">
+                            الصورة الرئيسية
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
                 )}
                 
-                <p className="text-xs text-gray-500">
-                  📸 أضف صورة واحدة على الأقل لإكمال ملفك الشخصي
-                </p>
-              </div>
-
-              <div className="bg-pink-50 border border-pink-200 rounded-lg p-4 mt-4">
-                <p className="text-sm text-pink-900">
-                  💡 نصيحة: كلما أضفت معلومات أكثر، كلما ساعدنا ذلك في إيجاد التطابق المثالي لك!
-                </p>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+                  <p className="text-sm text-blue-900">
+                    💡 <strong>نصيحة:</strong> الملفات الشخصية التي تحتوي على 3+ صور تحصل على تطابقات أكثر بنسبة 70%!
+                  </p>
+                </div>
+                
+                {photos.length === 0 && (
+                  <p className="text-sm text-red-500 text-center mt-2">
+                    ⚠️ يرجى إضافة صورة واحدة على الأقل للمتابعة
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -530,12 +547,17 @@ const ProfileSetup = () => {
                 السابق
               </Button>
             )}
-            {step < 3 ? (
+            {step < 4 ? (
               <Button type="button" onClick={nextStep} className="flex-1">
                 التالي
               </Button>
             ) : (
-              <Button type="button" onClick={handleSubmit} disabled={loading} className="flex-1">
+              <Button 
+                type="button" 
+                onClick={handleSubmit} 
+                disabled={loading || photos.length === 0} 
+                className="flex-1"
+              >
                 {loading ? 'جاري الحفظ...' : 'إنهاء وابدأ الاكتشاف'}
               </Button>
             )}

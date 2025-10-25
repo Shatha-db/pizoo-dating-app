@@ -41,12 +41,71 @@ const DiscoverySettings = () => {
     show_new_profiles_only: false,
     show_verified_only: false
   });
+  const [userLocation, setUserLocation] = useState({ lat: 47.5596, lng: 7.5886 }); // Default: Basel
+  const [locationLoading, setLocationLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetchSettings();
+    getUserLocation();
   }, []);
+
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+        }
+      );
+    }
+  };
+
+  const detectLocation = () => {
+    setLocationLoading(true);
+    if (!navigator.geolocation) {
+      alert('المتصفح لا يدعم تحديد الموقع');
+      setLocationLoading(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setUserLocation({ lat: latitude, lng: longitude });
+        
+        try {
+          // Use Nominatim (OpenStreetMap) for reverse geocoding
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=ar`
+          );
+          const data = await response.json();
+          
+          const city = data.address.city || data.address.town || data.address.village || data.address.state;
+          const country = data.address.country;
+          const locationStr = `${city}, ${country}`;
+          
+          setSettings(prev => ({ ...prev, location: locationStr }));
+        } catch (error) {
+          console.error('Error getting location name:', error);
+          setSettings(prev => ({ ...prev, location: `${latitude.toFixed(2)}, ${longitude.toFixed(2)}` }));
+        } finally {
+          setLocationLoading(false);
+        }
+      },
+      (error) => {
+        console.error('Error getting location:', error);
+        alert('لم نتمكن من الحصول على موقعك');
+        setLocationLoading(false);
+      }
+    );
+  };
 
   const fetchSettings = async () => {
     try {

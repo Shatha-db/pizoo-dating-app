@@ -1050,31 +1050,90 @@ async def update_profile(request: ProfileUpdateRequest, current_user: dict = Dep
 
 
 @api_router.post("/profile/photo/upload")
-async def upload_photo(request: PhotoUploadRequest, current_user: dict = Depends(get_current_user)):
-    profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})
-    
-    if not profile:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="الملف الشخصي غير موجود"
+async def upload_profile_photo(
+    file: UploadFile = File(...),
+    is_primary: bool = False,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Upload photo with Cloudinary integration
+    - Automatic compression and optimization
+    - Organized folder structure: pizoo/users/profiles/{user_id}
+    - Support for primary/avatar photo
+    - Maximum 9 photos per profile
+    """
+    try:
+        # Get current profile
+        profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})
+        
+        if not profile:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="الملف الشخصي غير موجود"
+            )
+        
+        # Read file content
+        file_content = await file.read()
+        
+        # Upload to Cloudinary using ImageUploadService
+        upload_result = ImageUploadService.upload_image(
+            file_bytes=file_content,
+            user_id=current_user['id'],
+            upload_type="profile",
+            filename=file.filename,
+            is_primary=is_primary
         )
-    
-    # For now, store base64 data directly (in production, upload to cloud storage)
-    photos = profile.get('photos', [])
-    if len(photos) >= 6:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="الحد الأقصى 6 صور"
+        
+        # Check if upload was successful
+        if not upload_result.get("success"):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=upload_result.get("error", "فشل رفع الصورة")
+            )
+        
+        # Get current photos
+        photos = profile.get('photos', [])
+        
+        # If this is the first photo or marked as primary, insert at beginning
+        if is_primary or len(photos) == 0:
+            photos.insert(0, upload_result['url'])
+        else:
+            photos.append(upload_result['url'])
+        
+        # Limit to 9 photos (Tinder/Bumble standard)
+        if len(photos) > 9:
+            photos = photos[:9]
+        
+        # Update profile with new photo
+        await db.profiles.update_one(
+            {"user_id": current_user['id']},
+            {"$set": {
+                "photos": photos,
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }}
         )
-    
-    photos.append(request.photo_data)
-    
-    await db.profiles.update_one(
-        {"user_id": current_user['id']},
-        {"$set": {"photos": photos, "updated_at": datetime.now(timezone.utc).isoformat()}}
-    )
-    
-    return {"message": "تم رفع الصورة بنجاح", "photo_count": len(photos)}
+        
+        return {
+            "success": True,
+            "message": "تم رفع الصورة بنجاح",
+            "photo": {
+                "url": upload_result['url'],
+                "public_id": upload_result.get('public_id'),
+                "width": upload_result.get('width'),
+                "height": upload_result.get('height'),
+                "is_primary": is_primary or len(photos) == 1
+            },
+            "total_photos": len(photos)
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Photo upload error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="حدث خطأ أثناء رفع الصورة"
+        )
 
 
 @api_router.delete("/profile/photo/{index}")

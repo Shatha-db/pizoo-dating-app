@@ -3154,3 +3154,154 @@ async def test_email_notification(
     
     return {"success": success, "type": notification_type}
 
+
+
+
+# ===== Advanced Photo/Video Upload System =====
+
+from fastapi import File, UploadFile
+from photo_service import photo_service
+
+@api_router.post("/profile/photo/upload")
+async def upload_profile_photo(
+    file: UploadFile = File(...),
+    is_primary: bool = False,
+    current_user: dict = Depends(get_current_user)
+):
+    """Upload photo with automatic optimization (Tinder/Bumble standard)"""
+    
+    # Upload photo
+    photo_data = await photo_service.upload_photo(file, current_user['id'], is_primary)
+    
+    # Get current profile
+    profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})
+    
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    # Update profile photos
+    photos = profile.get('photos', [])
+    
+    # If this is the first photo or marked as primary, insert at beginning
+    if is_primary or len(photos) == 0:
+        photos.insert(0, photo_data['url'])
+    else:
+        photos.append(photo_data['url'])
+    
+    # Limit to 9 photos (Tinder standard)
+    photos = photos[:9]
+    
+    # Update profile
+    await db.profiles.update_one(
+        {"user_id": current_user['id']},
+        {"$set": {"photos": photos}}
+    )
+    
+    return {
+        "message": "Photo uploaded successfully",
+        "photo": photo_data,
+        "total_photos": len(photos)
+    }
+
+@api_router.post("/profile/video/upload")
+async def upload_profile_video(
+    file: UploadFile = File(...),
+    current_user: dict = Depends(get_current_user)
+):
+    """Upload video (max 30 seconds)"""
+    
+    # Upload video
+    video_data = await photo_service.upload_video(file, current_user['id'])
+    
+    # Get current profile
+    profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})
+    
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    # Update profile with video URL
+    videos = profile.get('videos', [])
+    videos.append(video_data['url'])
+    
+    # Limit to 3 videos
+    videos = videos[:3]
+    
+    await db.profiles.update_one(
+        {"user_id": current_user['id']},
+        {"$set": {"videos": videos}}
+    )
+    
+    return {
+        "message": "Video uploaded successfully",
+        "video": video_data,
+        "total_videos": len(videos)
+    }
+
+@api_router.put("/profile/photo/set-primary")
+async def set_primary_photo(
+    photo_url: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Set a photo as primary (move to first position)"""
+    
+    profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})
+    
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    photos = profile.get('photos', [])
+    
+    if photo_url not in photos:
+        raise HTTPException(status_code=404, detail="Photo not found in profile")
+    
+    # Remove photo from current position
+    photos.remove(photo_url)
+    
+    # Insert at beginning
+    photos.insert(0, photo_url)
+    
+    # Update profile
+    await db.profiles.update_one(
+        {"user_id": current_user['id']},
+        {"$set": {"photos": photos}}
+    )
+    
+    return {
+        "message": "Primary photo updated successfully",
+        "photos": photos
+    }
+
+@api_router.delete("/profile/photo/delete")
+async def delete_profile_photo(
+    photo_url: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Delete a photo from profile"""
+    
+    profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})
+    
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    photos = profile.get('photos', [])
+    
+    if photo_url not in photos:
+        raise HTTPException(status_code=404, detail="Photo not found in profile")
+    
+    # Remove photo
+    photos.remove(photo_url)
+    
+    # Delete from Cloudinary
+    await photo_service.delete_photo(photo_url)
+    
+    # Update profile
+    await db.profiles.update_one(
+        {"user_id": current_user['id']},
+        {"$set": {"photos": photos}}
+    )
+    
+    return {
+        "message": "Photo deleted successfully",
+        "remaining_photos": len(photos)
+    }
+

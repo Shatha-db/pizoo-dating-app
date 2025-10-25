@@ -4,8 +4,14 @@ import { useAuth } from './AuthContext';
 const WebSocketContext = createContext(null);
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-// Fix WebSocket URL to use correct backend URL without replacing the full domain
-const WS_URL = BACKEND_URL ? BACKEND_URL.replace('https://', 'wss://').replace('http://', 'ws://') : 'ws://localhost:8001';
+
+// Validate backend URL
+if (!BACKEND_URL) {
+  console.error('❌ REACT_APP_BACKEND_URL is not set! WebSocket will not work.');
+}
+
+// Fix WebSocket URL
+const WS_URL = BACKEND_URL ? BACKEND_URL.replace('https://', 'wss://').replace('http://', 'ws://') : null;
 
 export const WebSocketProvider = ({ children }) => {
   const { user } = useAuth();

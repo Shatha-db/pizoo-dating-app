@@ -418,6 +418,8 @@ class ProfileCreateRequest(BaseModel):
     looking_for: Optional[str] = None
     interests: List[str] = []
     location: Optional[str] = None
+    latitude: Optional[float] = None  # GPS latitude coordinate
+    longitude: Optional[float] = None  # GPS longitude coordinate
     occupation: Optional[str] = None
     education: Optional[str] = None
     relationship_goals: Optional[str] = None

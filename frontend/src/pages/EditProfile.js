@@ -9,6 +9,7 @@ import { Select } from '../components/ui/select';
 import { ArrowRight, Camera, X, Plus, Check, AlertCircle, Loader2, Star } from 'lucide-react';
 import axios from 'axios';
 import { uploadImageToCloudinary, compressImage } from '../utils/cloudinaryUpload';
+import { uploadImage } from '../utils/imageUpload';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;

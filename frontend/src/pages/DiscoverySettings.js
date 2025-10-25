@@ -177,14 +177,54 @@ const DiscoverySettings = () => {
             <MapPin className="w-6 h-6 text-pink-500" />
             <h2 className="text-lg font-bold">الموقع</h2>
           </div>
-          <input
-            type="text"
-            value={settings.location}
-            onChange={(e) => setSettings({ ...settings, location: e.target.value })}
-            placeholder="غير الموقع للعثور على مُعجبين في أي مكان"
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-          />
-          <p className="text-sm text-gray-500 mt-2">مثال: Basel, BS</p>
+          
+          {/* Map View */}
+          <div className="mb-4 rounded-lg overflow-hidden border-2 border-gray-200" style={{ height: '300px' }}>
+            <MapContainer 
+              center={[userLocation.lat, userLocation.lng]} 
+              zoom={10} 
+              style={{ height: '100%', width: '100%' }}
+              zoomControl={true}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={[userLocation.lat, userLocation.lng]}>
+                <Popup>موقعك الحالي</Popup>
+              </Marker>
+              {/* Distance radius circle */}
+              <Circle
+                center={[userLocation.lat, userLocation.lng]}
+                radius={settings.max_distance * 1000} // Convert km to meters
+                pathOptions={{ 
+                  color: '#ec4899', 
+                  fillColor: '#ec4899',
+                  fillOpacity: 0.1,
+                  weight: 2
+                }}
+              />
+              <MapUpdater center={[userLocation.lat, userLocation.lng]} zoom={10} />
+            </MapContainer>
+          </div>
+
+          <div className="flex gap-2 mb-3">
+            <input
+              type="text"
+              value={settings.location}
+              onChange={(e) => setSettings({ ...settings, location: e.target.value })}
+              placeholder="غير الموقع للعثور على مُعجبين في أي مكان"
+              className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+            />
+            <Button
+              onClick={detectLocation}
+              disabled={locationLoading}
+              className="bg-pink-500 hover:bg-pink-600 text-white px-4"
+            >
+              <Navigation className="w-5 h-5" />
+            </Button>
+          </div>
+          <p className="text-sm text-gray-500">مثال: Basel, BS</p>
         </Card>
 
         {/* Maximum Distance */}
@@ -192,6 +232,7 @@ const DiscoverySettings = () => {
           <h2 className="text-lg font-bold mb-2">أقصى مسافة</h2>
           <div className="flex items-center justify-between mb-4">
             <span className="text-3xl font-bold text-pink-500">{settings.max_distance} km</span>
+            <span className="text-sm text-gray-600">نطاق البحث</span>
           </div>
           <input
             type="range"
@@ -201,6 +242,10 @@ const DiscoverySettings = () => {
             onChange={(e) => setSettings({ ...settings, max_distance: parseInt(e.target.value) })}
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-pink-500"
           />
+          <div className="flex justify-between text-xs text-gray-500 mt-2">
+            <span>1 km</span>
+            <span>150 km</span>
+          </div>
         </Card>
 
         {/* Interested In */}

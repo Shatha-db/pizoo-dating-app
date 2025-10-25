@@ -162,9 +162,9 @@ const ProfileSetup = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Check file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setError('حجم الصورة يجب أن يكون أقل من 5MB');
+    // Check file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setError('حجم الصورة يجب أن يكون أقل من 10MB');
       return;
     }
 
@@ -174,6 +174,7 @@ const ProfileSetup = () => {
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('is_primary', photos.length === 0 ? 'true' : 'false');
 
       const response = await axios.post(`${API}/profile/photo/upload`, formData, {
         headers: {
@@ -182,9 +183,13 @@ const ProfileSetup = () => {
         }
       });
 
-      setPhotos([...photos, response.data.photo_url]);
+      setPhotos([...photos, response.data.photo.url]);
+      
+      // Clear file input
+      e.target.value = null;
     } catch (error) {
-      setError('فشل رفع الصورة. حاول مرة أخرى');
+      console.error('Error uploading photo:', error);
+      setError(error.response?.data?.detail || 'فشل رفع الصورة. حاول مرة أخرى');
     } finally {
       setPhotoUploading(false);
     }

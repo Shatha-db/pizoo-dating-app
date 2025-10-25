@@ -264,6 +264,21 @@ backend:
         agent: "testing"
         comment: "✅ TESTED: Profile mood field working correctly. Backend Profile model includes 'current_mood' field that accepts values: serious, casual, fun, romantic. Field is successfully updated via /api/profile/update endpoint when mood buttons are clicked in frontend. Integration between frontend mood selection and backend profile storage working perfectly."
 
+  - task: "GPS/Maps Integration Backend (NEW)"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: Complete GPS/Maps integration for location-based discovery. Added latitude/longitude fields to Profile model, implemented Haversine distance calculation, updated discovery endpoint with distance filtering and proximity scoring. Supports max_distance parameter and returns distance field for each profile."
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE TESTING COMPLETE: GPS/Maps integration fully functional. RESULTS: 1) Profile GPS Coordinates - ✅ Working: latitude/longitude fields save/retrieve correctly via /api/profile/create and /api/profile/update, 2) Distance Calculation - ✅ Working: Haversine formula 100% accurate (tested Basel to various locations: 1.2km, 6.4km, 74.5km, 304.8km), 3) Distance Filtering - ✅ Working: max_distance parameter correctly filters profiles (tested 50km limit), 4) Proximity Scoring - ✅ Working: profiles sorted by distance with compatibility factors, 5) Discovery API - ✅ Working: /api/profiles/discover returns distance field for each profile. Fixed critical issues: added missing latitude/longitude to request models, added missing age field to Profile model. All GPS features ready for production."
+
 frontend:
   - task: "Home Page with Card Swipe"
     implemented: true

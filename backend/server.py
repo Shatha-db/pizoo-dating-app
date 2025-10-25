@@ -893,6 +893,7 @@ async def create_profile(request: ProfileCreateRequest, current_user: dict = Dep
         display_name=request.display_name,
         bio=request.bio,
         date_of_birth=request.date_of_birth,
+        age=request.age,
         gender=request.gender,
         height=request.height,
         looking_for=request.looking_for,

@@ -3057,3 +3057,99 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str):
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+
+
+# ===== Email Verification System =====
+
+from email_service import email_service
+
+class EmailVerificationRequest(BaseModel):
+    email: EmailStr
+
+class VerifyOTPRequest(BaseModel):
+    email: EmailStr
+    code: str
+
+@api_router.post("/auth/send-verification-otp")
+async def send_verification_otp(request: EmailVerificationRequest):
+    """Send OTP to email for verification"""
+    try:
+        success = email_service.send_verification_otp(request.email)
+        
+        if success:
+            return {
+                "message": "تم إرسال رمز التحقق إلى بريدك الإلكتروني",
+                "email": request.email
+            }
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="فشل إرسال رمز التحقق"
+            )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"خطأ في إرسال البريد: {str(e)}"
+        )
+
+@api_router.post("/auth/verify-otp")
+async def verify_email_otp(request: VerifyOTPRequest):
+    """Verify OTP code"""
+    is_valid = email_service.verify_otp(request.email, request.code)
+    
+    if is_valid:
+        # Update user's email verification status
+        await db.users.update_one(
+            {"email": request.email},
+            {"$set": {"email_verified": True}}
+        )
+        
+        return {
+            "message": "تم تأكيد بريدك الإلكتروني بنجاح",
+            "verified": True
+        }
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="رمز التحقق غير صحيح أو منتهي الصلاحية"
+        )
+
+@api_router.post("/notifications/email/test")
+async def test_email_notification(
+    notification_type: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Test email notifications (for development)"""
+    profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})
+    user_email = current_user.get('email')
+    
+    if not user_email:
+        raise HTTPException(status_code=400, detail="No email found")
+    
+    if notification_type == "match":
+        success = email_service.send_new_match_notification(
+            user_email,
+            "أحمد محمد",
+            "https://randomuser.me/api/portraits/men/1.jpg"
+        )
+    elif notification_type == "message":
+        success = email_service.send_new_message_notification(
+            user_email,
+            "سارة أحمد",
+            "مرحباً! كيف حالك؟ 😊"
+        )
+    elif notification_type == "like":
+        success = email_service.send_new_like_notification(
+            user_email,
+            "فاطمة علي"
+        )
+    elif notification_type == "reengagement":
+        success = email_service.send_reengagement_email(
+            user_email,
+            profile.get('display_name', 'المستخدم') if profile else "المستخدم"
+        )
+    else:
+        raise HTTPException(status_code=400, detail="Invalid notification type")
+    
+    return {"success": success, "type": notification_type}
+

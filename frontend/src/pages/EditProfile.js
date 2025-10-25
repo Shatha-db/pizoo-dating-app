@@ -8,7 +8,7 @@ import { Textarea } from '../components/ui/textarea';
 import { Select } from '../components/ui/select';
 import { ArrowRight, Camera, X, Plus, Check, AlertCircle, Loader2, Star } from 'lucide-react';
 import axios from 'axios';
-import { uploadImageToCloudinary, compressImage } from '../utils/cloudinaryUpload';
+import { uploadImage } from '../utils/imageUpload';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -139,28 +139,34 @@ const EditProfile = () => {
       setUploadingPhotos(true);
       setUploadProgress({ ...uploadProgress, [index]: 0 });
 
-      // Compress image first
-      showToast('جاري ضغط الصورة...', 'info');
-      const compressedFile = await compressImage(file);
-
-      // Upload to Cloudinary
       showToast('جاري رفع الصورة...', 'info');
-      const imageUrl = await uploadImageToCloudinary(compressedFile, (progress) => {
-        setUploadProgress({ ...uploadProgress, [index]: progress });
-      });
-
-      // Update photos array
-      const newPhotos = [...photos];
-      newPhotos[index] = imageUrl;
-      setPhotos(newPhotos);
       
-      // If this is the first photo, make it primary automatically
-      const filledPhotos = newPhotos.filter(p => p !== null);
-      if (filledPhotos.length === 1) {
-        setPrimaryPhotoIndex(index);
-        showToast('تم رفع الصورة بنجاح! ✅ هذه الآن صورة البروفايل الرئيسية', 'success');
-      } else {
-        showToast('تم رفع الصورة بنجاح! ✅', 'success');
+      // Use new backend upload system
+      const isPrimary = index === 0 || photos.filter(p => p).length === 0;
+      const result = await uploadImage(
+        file,
+        token,
+        isPrimary,
+        // Progress callback
+        (progress) => {
+          setUploadProgress({ ...uploadProgress, [index]: progress });
+        }
+      );
+
+      if (result.success) {
+        // Update photos array
+        const newPhotos = [...photos];
+        newPhotos[index] = result.url;
+        setPhotos(newPhotos);
+        
+        // If this is the first photo, make it primary automatically
+        const filledPhotos = newPhotos.filter(p => p !== null);
+        if (filledPhotos.length === 1 || isPrimary) {
+          setPrimaryPhotoIndex(index);
+          showToast('تم رفع الصورة بنجاح! ✅ هذه الآن صورة البروفايل الرئيسية', 'success');
+        } else {
+          showToast('تم رفع الصورة بنجاح! ✅', 'success');
+        }
       }
     } catch (error) {
       console.error('Error uploading photo:', error);

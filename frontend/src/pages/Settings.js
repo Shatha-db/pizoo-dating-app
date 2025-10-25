@@ -57,7 +57,19 @@ const Settings = () => {
   };
 
   const changeLanguage = (lng) => {
+    // Change language
     i18n.changeLanguage(lng);
+    
+    // Save to localStorage
+    localStorage.setItem('preferred_language', lng);
+    
+    // Update document direction for RTL/LTR
+    const rtlLanguages = ['ar', 'he', 'fa', 'ur'];
+    document.documentElement.dir = rtlLanguages.includes(lng) ? 'rtl' : 'ltr';
+    document.documentElement.lang = lng;
+    
+    // Show success toast
+    console.log(`✅ Language changed to: ${lng}`);
   };
 
   if (loading) {

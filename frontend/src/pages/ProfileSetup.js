@@ -199,10 +199,6 @@ const ProfileSetup = () => {
       setError('يرجى إدخال اسم العرض');
       return;
     }
-    if (step === 3 && photos.length === 0) {
-      setError('يرجى إضافة صورة واحدة على الأقل');
-      return;
-    }
     setError('');
     setStep(step + 1);
   };

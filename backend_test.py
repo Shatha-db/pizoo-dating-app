@@ -11,7 +11,7 @@ from datetime import datetime
 import uuid
 
 # Configuration
-BASE_URL = "https://datingpizoo-app.preview.emergentagent.com/api"
+BASE_URL = "https://swipe-heartbeat.preview.emergentagent.com/api"
 HEADERS = {"Content-Type": "application/json"}
 
 class DatingAppTester:

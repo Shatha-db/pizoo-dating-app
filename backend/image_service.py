@@ -26,8 +26,24 @@ logger = logging.getLogger(__name__)
 # Initialize Cloudinary from environment variable
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 if CLOUDINARY_URL:
-    cloudinary.config(cloudinary_url=CLOUDINARY_URL)
-    logger.info("✅ Cloudinary configured successfully")
+    try:
+        # Parse CLOUDINARY_URL manually for better compatibility
+        # Format: cloudinary://api_key:api_secret@cloud_name
+        import re
+        match = re.match(r'cloudinary://([^:]+):([^@]+)@(.+)', CLOUDINARY_URL)
+        if match:
+            api_key, api_secret, cloud_name = match.groups()
+            cloudinary.config(
+                cloud_name=cloud_name,
+                api_key=api_key,
+                api_secret=api_secret,
+                secure=True
+            )
+            logger.info(f"✅ Cloudinary configured successfully (cloud: {cloud_name})")
+        else:
+            logger.error("❌ Invalid CLOUDINARY_URL format. Expected: cloudinary://api_key:api_secret@cloud_name")
+    except Exception as e:
+        logger.error(f"❌ Cloudinary configuration error: {str(e)}")
 else:
     logger.warning("⚠️ CLOUDINARY_URL not found in environment variables")
 

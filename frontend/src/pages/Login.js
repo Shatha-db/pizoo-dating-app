@@ -7,8 +7,9 @@ import { Label } from '../components/ui/label';
 import { Checkbox } from '../components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Alert, AlertDescription } from '../components/ui/alert';
-import { LogIn } from 'lucide-react';
+import { LogIn, Globe } from 'lucide-react';
 import CustomLogo from '../components/CustomLogo';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
   const navigate = useNavigate();

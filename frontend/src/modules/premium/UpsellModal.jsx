@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
 
 export default function UpsellModal({ open, onClose, onChoose, reason = 'daily_limit' }) {
-  const { t } = useTranslation(['premium']);
+  const { t } = useTranslation('premium');
 
   const messages = {
     daily_limit: {

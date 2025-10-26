@@ -535,6 +535,14 @@ const Home = () => {
         </div>
       )}
 
+      {/* Location Permission Request */}
+      {showLocationRequest && (
+        <LocationPermissionRequest
+          onClose={() => setShowLocationRequest(false)}
+          token={token}
+        />
+      )}
+
       <BottomNav />
     </div>
   );

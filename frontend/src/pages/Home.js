@@ -7,8 +7,16 @@ import { Card } from '../components/ui/card';
 import BottomNav from '../components/BottomNav';
 import CustomLogo from '../components/CustomLogo';
 import LocationPermissionRequest from '../components/LocationPermissionRequest';
+import GeoPermissionModal from '../components/GeoPermissionModal';
 import { Heart, X, Star, RotateCcw, Zap, Info, Bell } from 'lucide-react';
 import axios from 'axios';
+import { 
+  getCurrentPosition, 
+  reverseGeocode, 
+  getCountryFromIP, 
+  getDefaultRadius,
+  validateCoordinates
+} from '../utils/geoUtils';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;

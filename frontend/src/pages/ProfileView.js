@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { ArrowRight, MapPin, Briefcase, Heart, X, MessageCircle, Star, MoreVertical, Flag, Ban } from 'lucide-react';
+import ImageLightbox from '../components/ImageLightbox';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

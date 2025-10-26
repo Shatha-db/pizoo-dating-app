@@ -36,7 +36,20 @@ const Home = () => {
     checkNewLikes();
     checkBoostStatus();
     fetchUsageStats();
+    checkLocationPermission();
   }, []);
+
+  const checkLocationPermission = () => {
+    const hasLocation = localStorage.getItem('location_granted');
+    const skipped = localStorage.getItem('location_skipped');
+    
+    if (!hasLocation && !skipped) {
+      // Show location request after 2 seconds
+      setTimeout(() => {
+        setShowLocationRequest(true);
+      }, 2000);
+    }
+  };
 
   const fetchUsageStats = async () => {
     try {

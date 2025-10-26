@@ -46,25 +46,25 @@
             }
             
             // Force reload if version mismatch
-            const APP_VERSION = '2.0.1'; // Update this when you make changes
+            const APP_VERSION = '2.1.0'; // Updated for chat fix
             const storedVersion = localStorage.getItem('app_version');
             
             if (storedVersion !== APP_VERSION) {
-                console.log('New version detected, clearing cache...');
-                localStorage.setItem('app_version', APP_VERSION);
+                console.log('🔄 New version detected, clearing ALL cache...');
                 
-                // Clear everything except user token
+                // Clear everything in localStorage except auth tokens
                 const token = localStorage.getItem('token');
                 const refreshToken = localStorage.getItem('refreshToken');
                 localStorage.clear();
                 if (token) localStorage.setItem('token', token);
                 if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+                localStorage.setItem('app_version', APP_VERSION);
                 
-                // Force hard reload (only once)
-                if (!sessionStorage.getItem('reloaded')) {
-                    sessionStorage.setItem('reloaded', 'true');
-                    window.location.reload(true);
-                }
+                // Clear sessionStorage completely
+                sessionStorage.clear();
+                
+                // Force hard reload
+                window.location.href = window.location.href + '?v=' + APP_VERSION;
             }
         </script>
         

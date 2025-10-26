@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 const Tab = ({ to, icon, label, badge }) => {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation('common');
   
   return (
     <NavLink 

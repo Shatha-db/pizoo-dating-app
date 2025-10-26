@@ -3,59 +3,42 @@ import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 
+const SUPPORTED = ['ar','en','fr','es','de','tr','it','pt-BR','ru'];
+
+function setHtmlDirLang(lng) {
+  const lang = lng || 'en';
+  const dir = ['ar','fa','ur','he'].includes(lang.split('-')[0]) ? 'rtl' : 'ltr';
+  document.documentElement.dir = dir;
+  document.documentElement.lang = lang;
+}
+
 i18n
-  // Load translation using http backend
   .use(Backend)
-  // Detect user language
   .use(LanguageDetector)
-  // Pass the i18n instance to react-i18next
   .use(initReactI18next)
-  // Init i18next
   .init({
-    fallbackLng: 'en', // Default language is English
-    debug: false,
-    
-    // Namespaces configuration for lazy loading
-    ns: ['common', 'auth', 'profile', 'chat', 'map', 'notifications', 'settings'],
+    supportedLngs: SUPPORTED,
+    fallbackLng: 'en',
+    ns: ['common','auth','profile','chat','map','notifications','settings'],
     defaultNS: 'common',
     fallbackNS: 'common',
-    
-    // Prevent dot notation interpretation (use explicit namespace:key)
     keySeparator: false,
-    
-    // Detection options
     detection: {
-      order: ['localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
+      order: ['localStorage','querystring','cookie','navigator','htmlTag'],
+      lookupLocalStorage: 'i18nextLng',
       caches: ['localStorage'],
-      lookupLocalStorage: 'preferred_language', // Match with Settings.js
     },
-    
-    interpolation: {
-      escapeValue: false, // React already escapes values
-    },
-    
     backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json', // Support namespaces with fallback to translation.json
+      loadPath: '/locales/{{lng}}/{{ns}}.json',
     },
-    
-    // Available languages (BCP-47 compliant)
-    supportedLngs: ['en', 'ar', 'fr', 'es', 'de', 'tr', 'it', 'pt-BR', 'ru'],
-    
-    react: {
-      useSuspense: true,
-    },
+    interpolation: { escapeValue: false },
+    react: { useSuspense: true }
   });
 
-// Listen for language changes to update document direction
+i18n.on('initialized', () => setHtmlDirLang(i18n.language));
 i18n.on('languageChanged', (lng) => {
-  const rtlLanguages = ['ar', 'he', 'fa', 'ur'];
-  document.documentElement.dir = rtlLanguages.includes(lng) ? 'rtl' : 'ltr';
-  document.documentElement.lang = lng;
-  
-  // Also save to localStorage when changed
-  localStorage.setItem('preferred_language', lng);
-  
-  console.log(`🌐 Language changed to: ${lng}, Direction: ${document.documentElement.dir}`);
+  setHtmlDirLang(lng);
+  try { localStorage.setItem('i18nextLng', lng); } catch(e){}
 });
 
 export default i18n;

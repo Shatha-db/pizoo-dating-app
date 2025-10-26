@@ -3371,6 +3371,9 @@ async def get_current_user_info(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
+    # Get profile for location data
+    profile = await db.profiles.find_one({"user_id": current_user["id"]})
+    
     return {
         "id": user["id"],
         "name": user["name"],
@@ -3378,8 +3381,94 @@ async def get_current_user_info(
         "language": user.get("language", "en"),
         "country": user.get("country"),
         "premium_tier": user.get("premium_tier", "free"),
-        "profile_completed": user.get("profile_completed", False)
+        "profile_completed": user.get("profile_completed", False),
+        "latitude": profile.get("latitude") if profile else None,
+        "longitude": profile.get("longitude") if profile else None,
+        "radiusKm": profile.get("radiusKm", 25) if profile else 25
     }
+
+
+@api_router.put("/user/location")
+async def update_user_location(
+    location_data: dict,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Update user location (GPS or GeoIP fallback)
+    Accepts: country, latitude, longitude, radiusKm
+    """
+    try:
+        # Extract and validate data
+        country = location_data.get("country")
+        latitude = location_data.get("latitude")
+        longitude = location_data.get("longitude")
+        radius_km = location_data.get("radiusKm", 25)
+        
+        # Validate radius (guard against NaN/invalid)
+        radius_km = float(radius_km) if radius_km is not None else 25
+        if not (0 < radius_km <= 1000):  # Max 1000km
+            radius_km = 25
+        
+        # Validate coordinates if provided
+        if latitude is not None and longitude is not None:
+            latitude = float(latitude)
+            longitude = float(longitude)
+            
+            # Basic range validation
+            if not (-90 <= latitude <= 90):
+                raise HTTPException(status_code=400, detail="Invalid latitude")
+            if not (-180 <= longitude <= 180):
+                raise HTTPException(status_code=400, detail="Invalid longitude")
+        
+        # Update user country
+        if country:
+            await db.users.update_one(
+                {"id": current_user["id"]},
+                {"$set": {"country": country.upper()}}
+            )
+        
+        # Update profile location
+        profile = await db.profiles.find_one({"user_id": current_user["id"]})
+        
+        if profile:
+            update_data = {
+                "radiusKm": radius_km,
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }
+            
+            if latitude is not None and longitude is not None:
+                update_data["latitude"] = latitude
+                update_data["longitude"] = longitude
+            
+            await db.profiles.update_one(
+                {"user_id": current_user["id"]},
+                {"$set": update_data}
+            )
+        else:
+            # Create profile if doesn't exist (edge case)
+            new_profile = {
+                "id": str(uuid.uuid4()),
+                "user_id": current_user["id"],
+                "display_name": current_user.get("name", "User"),
+                "latitude": latitude,
+                "longitude": longitude,
+                "radiusKm": radius_km,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.profiles.insert_one(new_profile)
+        
+        return {
+            "message": "Location updated successfully",
+            "country": country,
+            "hasCoordinates": latitude is not None and longitude is not None,
+            "radiusKm": radius_km
+        }
+        
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid number format: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update location: {str(e)}")
 
 
 # Mount the API router

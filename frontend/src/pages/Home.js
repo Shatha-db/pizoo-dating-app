@@ -99,34 +99,48 @@ const Home = () => {
       const position = await getCurrentPosition();
       console.log('✅ GPS coordinates obtained:', position);
       
-      // Validate coordinates
-      if (!validateCoordinates(position.latitude, position.longitude)) {
-        throw new Error('Invalid coordinates');
+      // Safe number guards
+      const safeLat = Number(position.latitude);
+      const safeLng = Number(position.longitude);
+      
+      // Validate coordinates with safe checks
+      if (!Number.isFinite(safeLat) || !Number.isFinite(safeLng)) {
+        throw new Error('Invalid coordinates - NaN detected');
+      }
+      
+      if (!validateCoordinates(safeLat, safeLng)) {
+        throw new Error('Invalid coordinates - out of range');
       }
       
       // Reverse geocode to get country
-      const geoData = await reverseGeocode(position.latitude, position.longitude);
+      const geoData = await reverseGeocode(safeLat, safeLng);
       console.log('✅ Reverse geocoding complete:', geoData);
       
       // Get default radius for country
       const defaultRadius = getDefaultRadius(geoData.countryCode);
-      console.log(`📍 Default radius for ${geoData.countryCode}: ${defaultRadius}km`);
+      const safeRadius = Number(defaultRadius);
+      console.log(`📍 Default radius for ${geoData.countryCode}: ${safeRadius}km`);
       
-      // Save to backend
-      await axios.put(`${API}/user/location`, {
-        country: geoData.countryCode,
-        latitude: position.latitude,
-        longitude: position.longitude,
-        radiusKm: defaultRadius
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Save to backend with try-catch
+      try {
+        await axios.put(`${API}/user/location`, {
+          country: geoData.countryCode,
+          latitude: safeLat,
+          longitude: safeLng,
+          radiusKm: Number.isFinite(safeRadius) && safeRadius > 0 ? safeRadius : 25
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } catch (apiError) {
+        console.error('API error saving location:', apiError);
+        throw apiError;
+      }
       
       // Save to localStorage
       localStorage.setItem('location_granted', 'true');
-      localStorage.setItem('user_country', geoData.countryCode);
-      localStorage.setItem('user_latitude', position.latitude.toString());
-      localStorage.setItem('user_longitude', position.longitude.toString());
+      localStorage.setItem('user_country', geoData.countryCode || '');
+      localStorage.setItem('user_latitude', safeLat.toString());
+      localStorage.setItem('user_longitude', safeLng.toString());
       
       console.log('✅ Location saved successfully');
       setShowGeoModal(false);

@@ -74,6 +74,9 @@ const currentUserIcon = L.divIcon({
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// Default radius constant
+const DEFAULT_RADIUS = 25;
+
 // Component to update map view when settings change
 function MapUpdater({ center, zoom }) {
   const map = useMap();
@@ -110,7 +113,7 @@ const DiscoverySettings = () => {
   const { token } = useAuth();
   const [settings, setSettings] = useState({
     location: '',
-    max_distance: 50,
+    max_distance: DEFAULT_RADIUS, // Use constant
     interested_in: 'all',
     min_age: 18,
     max_age: 100,
@@ -282,7 +285,15 @@ const DiscoverySettings = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data) {
-        setSettings(response.data);
+        // Guard against NaN radius with Number coercion
+        const rawRadius = response.data.max_distance;
+        const radius = Number(rawRadius);
+        const safeRadius = Number.isFinite(radius) && radius > 0 ? radius : DEFAULT_RADIUS;
+        
+        setSettings({
+          ...response.data,
+          max_distance: safeRadius
+        });
       }
     } catch (error) {
       console.error('Error fetching settings:', error);
@@ -294,10 +305,16 @@ const DiscoverySettings = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
+      // Guard radius before saving - coerce to Number and validate
+      const rawRadius = settings.max_distance;
+      const radius = Number(rawRadius);
+      const safeRadius = Number.isFinite(radius) && radius > 0 ? radius : DEFAULT_RADIUS;
+      
       await axios.put(
         `${API}/discovery-settings`,
         {
           ...settings,
+          max_distance: safeRadius, // Always save valid number
           latitude: userLocation.lat,
           longitude: userLocation.lng
         },
@@ -463,7 +480,11 @@ const DiscoverySettings = () => {
               {/* Distance radius circle */}
               <Circle
                 center={[userLocation.lat, userLocation.lng]}
-                radius={settings.max_distance * 1000} // Convert km to meters
+                radius={(() => {
+                  // Guard: ensure radius is a valid finite number > 0
+                  const r = Number(settings.max_distance);
+                  return (Number.isFinite(r) && r > 0 ? r : DEFAULT_RADIUS) * 1000; // km to meters
+                })()}
                 pathOptions={{ 
                   color: '#ec4899', 
                   fillColor: '#ec4899',
@@ -566,7 +587,13 @@ const DiscoverySettings = () => {
         <Card className="p-6">
           <h2 className="text-lg font-bold mb-2">أقصى مسافة</h2>
           <div className="flex items-center justify-between mb-4">
-            <span className="text-3xl font-bold text-pink-500">{settings.max_distance} km</span>
+            <span className="text-3xl font-bold text-pink-500">
+              {(() => {
+                // Display guard
+                const r = Number(settings.max_distance);
+                return Number.isFinite(r) && r > 0 ? r : DEFAULT_RADIUS;
+              })()} km
+            </span>
             <span className="text-sm text-gray-600">نطاق البحث</span>
           </div>
           <input

@@ -42,6 +42,15 @@ function AppRoot() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    let done = false;
+    // ⚠️ Timeout guard: prevent infinite white screen if /api/me hangs
+    const timer = setTimeout(() => {
+      if (!done) {
+        console.warn('⏱️ App init timeout - forcing ready state');
+        setReady(true);
+      }
+    }, 2000);
+
     (async () => {
       try {
         const token = localStorage.getItem('token');
@@ -60,9 +69,13 @@ function AppRoot() {
       } catch (e) {
         console.warn('me fetch failed', e);
       } finally {
+        done = true;
         setReady(true);
+        clearTimeout(timer);
       }
     })();
+
+    return () => clearTimeout(timer);
   }, [i18n]);
 
   if (!ready) {

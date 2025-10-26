@@ -29,6 +29,7 @@ const Home = () => {
   const [boostTimeRemaining, setBoostTimeRemaining] = useState(0);
   const [usageStats, setUsageStats] = useState(null);
   const [showLimitWarning, setShowLimitWarning] = useState(false);
+  const [showLocationRequest, setShowLocationRequest] = useState(false);
 
   useEffect(() => {
     fetchProfiles();

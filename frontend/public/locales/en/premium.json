@@ -5,19 +5,24 @@
     "unlimited_likes": "Unlimited Likes",
     "see_who_likes_you": "See who likes you",
     "boost_monthly": "1 free Boost every month",
-    "super_likes_weekly": "2 Super Likes every week",
+    "super_likes_weekly": "5 Super Likes every week",
     "passport": "Passport to swipe around the world",
     "top_profiles": "Top Profiles picked for you",
     "ad_free": "Ad-free experience",
     "control_who_sees_you": "Control who sees you",
     "control_who_you_see": "Control who you see",
     "read_receipts": "Read receipts (coming soon)",
-    "priority_support": "Priority support"
+    "priority_support": "Priority support",
+    "rewind": "Unlimited Rewind",
+    "all_gold_features": "All Gold features",
+    "priority_likes": "Priority Likes",
+    "message_before_match": "Message before matching",
+    "hide_ads": "Ad-free experience"
   },
   "plans": {
     "label": "Choose a plan",
     "best_value": "Best value",
-    "popular": "Popular",
+    "popular": "Most Popular",
     "save": "Save {{percent}}",
     "plan_6m": "6 months",
     "plan_1m": "1 month",
@@ -26,12 +31,21 @@
   "pricing": {
     "per_week": "CHF {{price}}/week",
     "total": "Total",
-    "continue": "Continue"
+    "continue": "Continue",
+    "start_now": "Start Now"
   },
   "upsell": {
     "unlock_likes": "Unlock people who liked you",
     "upgrade_to_see": "Upgrade to see all likes",
-    "get_gold": "Get Gold"
+    "get_gold": "Get Gold",
+    "daily_limit_title": "You've reached your daily limit",
+    "daily_limit_subtitle": "Upgrade to Gold for unlimited swipes and see who likes you!",
+    "unlock_likes_title": "See Who Likes You",
+    "unlock_likes_subtitle": "Upgrade to instantly see everyone who's liked you and match faster.",
+    "super_like_title": "Out of Super Likes",
+    "super_like_subtitle": "Get 5 Super Likes every week with Gold to stand out from the crowd.",
+    "maybe_later": "Maybe later",
+    "limited_time": "Limited time offer — upgrade now!"
   },
   "legal": {
     "auto_renew": "By continuing, you agree to auto-renewal. You can cancel anytime in App Store settings.",

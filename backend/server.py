@@ -3298,6 +3298,90 @@ async def test_email_notification(
     return {"success": success, "type": notification_type}
 
 
+# ============================================================================
+# i18n & Geo Endpoints
+# ============================================================================
+
+SUPPORTED_LANGUAGES = ["ar", "en", "fr", "es", "de", "tr", "it", "pt-BR", "ru"]
+
+@api_router.put("/user/language")
+async def update_user_language(
+    request: dict,
+    current_user: dict = Depends(get_current_user)
+):
+    """Update user's preferred language (BCP-47)"""
+    lang = request.get("language")
+    
+    if not lang or lang not in SUPPORTED_LANGUAGES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported language. Must be one of: {', '.join(SUPPORTED_LANGUAGES)}"
+        )
+    
+    # Update user language
+    await db.users.update_one(
+        {"id": current_user["id"]},
+        {"$set": {"language": lang}}
+    )
+    
+    return {"success": True, "language": lang}
+
+
+@api_router.put("/user/location")
+async def update_user_location(
+    request: dict,
+    current_user: dict = Depends(get_current_user)
+):
+    """Update user's location and country"""
+    latitude = request.get("latitude")
+    longitude = request.get("longitude")
+    country = request.get("country")  # ISO 3166-1 alpha-2
+    
+    update_data = {}
+    
+    if country:
+        update_data["country"] = country.upper()
+    
+    if latitude is not None and longitude is not None:
+        # Also update in profile for discovery
+        await db.profiles.update_one(
+            {"user_id": current_user["id"]},
+            {"$set": {
+                "latitude": float(latitude),
+                "longitude": float(longitude)
+            }}
+        )
+    
+    if update_data:
+        await db.users.update_one(
+            {"id": current_user["id"]},
+            {"$set": update_data}
+        )
+    
+    return {"success": True, **update_data}
+
+
+@api_router.get("/me")
+async def get_current_user_info(
+    current_user: dict = Depends(get_current_user)
+):
+    """Get current user info including language preference"""
+    user = await db.users.find_one({"id": current_user["id"]})
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {
+        "id": user["id"],
+        "name": user["name"],
+        "email": user["email"],
+        "language": user.get("language", "en"),
+        "country": user.get("country"),
+        "premium_tier": user.get("premium_tier", "free"),
+        "profile_completed": user.get("profile_completed", False)
+    }
+
+
 # Mount the API router
 app.include_router(api_router)
 

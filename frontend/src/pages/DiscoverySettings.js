@@ -255,9 +255,12 @@ const DiscoverySettings = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      setNearbyUsers(response.data || []);
+      // Ensure we always set an array
+      const users = Array.isArray(response.data) ? response.data : [];
+      setNearbyUsers(users);
     } catch (error) {
       console.error('Error fetching nearby users:', error);
+      setNearbyUsers([]); // Set empty array on error
     } finally {
       setLoadingUsers(false);
     }

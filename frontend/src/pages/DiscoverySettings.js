@@ -292,9 +292,12 @@ const DiscoverySettings = () => {
   };
 
   const recenterMap = () => {
-    if (userLocation.lat && userLocation.lng) {
+    if (hasGPSLocation && userLocation && userLocation.lat && userLocation.lng) {
+      setMapCenter({ lat: userLocation.lat, lng: userLocation.lng });
+      setMapZoom(11);
       setMapKey(prev => prev + 1);
     } else {
+      // Try to get GPS location
       detectLocation();
     }
   };

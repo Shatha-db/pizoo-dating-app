@@ -1,0 +1,33 @@
+{
+  "title": "Profil",
+  "editProfile": "Modifier le profil",
+  "viewProfile": "Voir le profil",
+  "myProfile": "Mon profil",
+  "name": "Nom",
+  "age": "Âge",
+  "gender": "Genre",
+  "bio": "Bio",
+  "location": "Localisation",
+  "photos": "Photos",
+  "addPhoto": "Ajouter une photo",
+  "uploadPhoto": "Télécharger une photo",
+  "deletePhoto": "Supprimer la photo",
+  "setPrimary": "Définir comme principale",
+  "interests": "Intérêts",
+  "lookingFor": "Recherche",
+  "relationshipGoals": "Objectifs relationnels",
+  "height": "Taille",
+  "education": "Éducation",
+  "occupation": "Profession",
+  "languages": "Langues",
+  "profileSetup": "Configuration du profil",
+  "completeProfile": "Complétez votre profil",
+  "profileIncomplete": "Veuillez compléter votre profil",
+  "errors": {
+    "nameRequired": "Le nom est requis",
+    "ageRequired": "L'âge est requis",
+    "photoRequired": "Au moins une photo est requise",
+    "uploadFailed": "Échec du téléchargement de la photo",
+    "invalidAge": "L'âge doit être entre 18-99"
+  }
+}

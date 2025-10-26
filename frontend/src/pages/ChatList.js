@@ -5,6 +5,7 @@ import { useWebSocket } from '../context/WebSocketContext';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import BottomNav from '../components/BottomNav';
+import NotificationCard from '../components/NotificationCard';
 import { Shield, Flag, Settings as SettingsIcon, Heart, Camera } from 'lucide-react';
 import axios from 'axios';
 import { uploadImage } from '../utils/imageUpload';

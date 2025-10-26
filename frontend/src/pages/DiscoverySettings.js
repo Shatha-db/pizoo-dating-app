@@ -51,8 +51,6 @@ const DiscoverySettings = () => {
     fetchSettings();
     getUserLocation();
   }, []);
-    getUserLocation();
-  }, []);
 
   const getUserLocation = () => {
     if (navigator.geolocation) {

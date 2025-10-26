@@ -3392,6 +3392,35 @@ async def get_current_user_info(
     }
 
 
+@api_router.get("/geoip")
+async def get_geoip_info(request: Request):
+    """
+    Get country from IP address (GeoIP fallback)
+    For testing: returns default country (CH for Basel)
+    In production: integrate with ipapi.co or similar service
+    """
+    try:
+        client_ip = request.client.host if request.client else "0.0.0.0"
+        
+        # TODO: In production, call external GeoIP service
+        # Example: requests.get(f"https://ipapi.co/{client_ip}/json/")
+        # For now, return default for testing
+        default_country = "CH"  # Basel, Switzerland for testing
+        
+        return {
+            "ip": client_ip,
+            "country": default_country,
+            "defaultRadius": radius_for_country(default_country)
+        }
+    except Exception as e:
+        # Fallback to global default
+        return {
+            "ip": "unknown",
+            "country": None,
+            "defaultRadius": GLOBAL_DEFAULT_RADIUS
+        }
+
+
 @api_router.put("/user/location")
 async def update_user_location(
     location_data: dict,

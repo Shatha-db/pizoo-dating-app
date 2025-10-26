@@ -18,7 +18,51 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-        <title>تطبيق الاشتراكات</title>
+        <title>Pizoo - تطبيق المواعدة</title>
+        
+        <!-- Cache Busting & Service Worker Clear -->
+        <script>
+            // Clear old cache and service workers
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+            }
+            
+            // Clear old caches
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        caches.delete(name);
+                    }
+                });
+            }
+            
+            // Force reload if version mismatch
+            const APP_VERSION = '2.0.1'; // Update this when you make changes
+            const storedVersion = localStorage.getItem('app_version');
+            
+            if (storedVersion !== APP_VERSION) {
+                console.log('New version detected, clearing cache...');
+                localStorage.setItem('app_version', APP_VERSION);
+                
+                // Clear everything except user token
+                const token = localStorage.getItem('token');
+                const refreshToken = localStorage.getItem('refreshToken');
+                localStorage.clear();
+                if (token) localStorage.setItem('token', token);
+                if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+                
+                // Force hard reload (only once)
+                if (!sessionStorage.getItem('reloaded')) {
+                    sessionStorage.setItem('reloaded', 'true');
+                    window.location.reload(true);
+                }
+            }
+        </script>
+        
         <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
         <!--
         These two scripts have been added for the testing, please do not edit or remove them

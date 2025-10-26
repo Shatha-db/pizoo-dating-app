@@ -53,7 +53,7 @@ class PhotoUploadService:
                         status_code=400,
                         detail=f"Unsupported format. Use: {', '.join(PhotoUploadService.SUPPORTED_IMAGE_FORMATS)}"
                     )
-            except Exception as e:
+            except Exception:
                 raise HTTPException(status_code=400, detail="Invalid image file")
             
             # Generate unique filename

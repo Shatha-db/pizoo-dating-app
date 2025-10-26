@@ -488,9 +488,8 @@ const DiscoverySettings = () => {
               <Circle
                 center={[userLocation.lat, userLocation.lng]}
                 radius={(() => {
-                  // Guard: ensure radius is a valid finite number > 0
-                  const r = Number(settings.max_distance);
-                  return (Number.isFinite(r) && r > 0 ? r : DEFAULT_RADIUS) * 1000; // km to meters
+                  // Guard: use parseRadius helper
+                  return parseRadius(settings.max_distance) * 1000; // km to meters
                 })()}
                 pathOptions={{ 
                   color: '#ec4899', 

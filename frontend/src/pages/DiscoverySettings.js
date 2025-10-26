@@ -113,7 +113,7 @@ const DiscoverySettings = () => {
   const { token } = useAuth();
   const [settings, setSettings] = useState({
     location: '',
-    max_distance: 50,
+    max_distance: DEFAULT_RADIUS, // Use constant
     interested_in: 'all',
     min_age: 18,
     max_age: 100,

@@ -137,6 +137,10 @@ class User(BaseModel):
     terms_accepted_at: Optional[datetime] = None
     profile_completed: bool = False
     
+    # i18n & Geo
+    language: Optional[str] = "en"  # BCP-47: ar, en, fr, es, de, tr, it, pt-BR, ru
+    country: Optional[str] = None  # ISO 3166-1 alpha-2: SA, US, FR, etc.
+    
     # Premium tier (free, gold, platinum)
     premium_tier: str = "free"
     

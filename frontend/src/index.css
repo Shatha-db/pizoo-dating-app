@@ -151,3 +151,30 @@ code {
         border-bottom-color: inherit;
     }
 }
+
+/* Profile Card Layout Unification - Always stacked vertically */
+.profile-card {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.profile-media {
+  order: 1;
+}
+
+.profile-meta {
+  order: 2;
+  text-align: start;
+}
+
+:root[dir="rtl"] .profile-meta {
+  text-align: right;
+}
+
+/* Spinner animation for loading states */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+

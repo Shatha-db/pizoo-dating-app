@@ -109,6 +109,12 @@ export default function SwipeDeck({ users = [], onSwipe, onCardLeftScreen, class
   };
   
   const swipe = async (dir) => {
+    // Check if gated
+    if (gatingState.gated) {
+      onGate?.('daily_limit');
+      return;
+    }
+    
     if (canSwipe && currentIndex < users.length) {
       await childRefs[currentIndex].current.swipe(dir);
     }

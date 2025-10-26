@@ -480,7 +480,11 @@ const DiscoverySettings = () => {
               {/* Distance radius circle */}
               <Circle
                 center={[userLocation.lat, userLocation.lng]}
-                radius={settings.max_distance * 1000} // Convert km to meters
+                radius={(() => {
+                  // Guard: ensure radius is a valid finite number > 0
+                  const r = Number(settings.max_distance);
+                  return (Number.isFinite(r) && r > 0 ? r : DEFAULT_RADIUS) * 1000; // km to meters
+                })()}
                 pathOptions={{ 
                   color: '#ec4899', 
                   fillColor: '#ec4899',

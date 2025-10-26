@@ -50,7 +50,7 @@
             const storedVersion = localStorage.getItem('app_version');
             
             if (storedVersion !== APP_VERSION) {
-                console.log('🔄 New version detected, clearing ALL cache...');
+                console.log('🔄 New version detected, clearing cache...');
                 
                 // Clear everything in localStorage except auth tokens
                 const token = localStorage.getItem('token');
@@ -63,8 +63,8 @@
                 // Clear sessionStorage completely
                 sessionStorage.clear();
                 
-                // Force hard reload
-                window.location.href = window.location.href + '?v=' + APP_VERSION;
+                // ⚠️ Disabled aggressive redirect to prevent bundle load abortion
+                // window.location.href = window.location.href + '?v=' + APP_VERSION;
             }
         </script>
         

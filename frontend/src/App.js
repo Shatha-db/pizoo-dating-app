@@ -144,7 +144,9 @@ function AppRoot() {
                     path="/swipe"
                     element={
                       <ProtectedRoute>
-                        <SwipePage />
+                        <Suspense fallback={<Loader />}>
+                          <SwipePage />
+                        </Suspense>
                       </ProtectedRoute>
                     }
                   />

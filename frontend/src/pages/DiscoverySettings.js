@@ -74,6 +74,9 @@ const currentUserIcon = L.divIcon({
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// Default radius constant
+const DEFAULT_RADIUS = 25;
+
 // Component to update map view when settings change
 function MapUpdater({ center, zoom }) {
   const map = useMap();

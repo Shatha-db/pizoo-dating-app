@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { WebSocketProvider } from './context/WebSocketContext';
@@ -31,9 +31,40 @@ import Settings from './pages/Settings';
 import TermsNew from './pages/TermsNew';
 import CustomLogoPage from './pages/CustomLogoPage';
 import { Toaster } from './components/ui/sonner';
+import i18n from './i18n';
+import axios from 'axios';
 import './App.css';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 function App() {
+  // i18n persistence from /me API on app boot
+  useEffect(() => {
+    const initializeLanguage = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await axios.get(`${BACKEND_URL}/api/me`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          
+          if (response.data && response.data.language) {
+            const userLang = response.data.language;
+            await i18n.changeLanguage(userLang);
+            console.log('✅ Language loaded from /me API:', userLang);
+          } else {
+            // Fallback to browser detector
+            console.log('ℹ️ No user language found, using browser/localStorage detector');
+          }
+        } catch (error) {
+          console.error('Error fetching user language:', error);
+          // Fallback to browser detector (already configured in i18n.js)
+        }
+      }
+    };
+    
+    initializeLanguage();
+  }, []);
   return (
     <AuthProvider>
       <ThemeProvider>

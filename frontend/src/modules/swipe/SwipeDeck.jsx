@@ -51,7 +51,7 @@ const SwipeIndicator = ({ direction, opacity }) => {
 };
 
 export default function SwipeDeck({ users = [], onSwipe, onCardLeftScreen, className, gating, onGate }) {
-  const { t } = useTranslation(['swipe', 'common']);
+  const { t } = useTranslation('swipe');
   const [currentIndex, setCurrentIndex] = useState(users.length - 1);
   const [swipeDirection, setSwipeDirection] = useState(null);
   const [swipeOpacity, setSwipeOpacity] = useState(0);

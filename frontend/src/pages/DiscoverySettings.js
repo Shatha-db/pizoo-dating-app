@@ -81,9 +81,10 @@ const getCurrentUserIcon = () => {
       50% { transform: scale(1.1); }
     }
   </style>`,
-  iconSize: [48, 48],
-  iconAnchor: [24, 24],
-});
+    iconSize: [48, 48],
+    iconAnchor: [24, 24],
+  });
+};
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;

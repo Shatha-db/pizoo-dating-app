@@ -1,11 +1,10 @@
-import React from 'react';
-
-export default function Loader({ text = 'جاري التحميل…' }) {
+export default function Loader({ text = 'Loading...' }) {
   return (
     <div style={{
-      display: 'grid',
-      placeItems: 'center',
-      height: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '100vh',
       backgroundColor: '#fafafa'
     }}>
       <div style={{ textAlign: 'center' }}>
@@ -18,7 +17,7 @@ export default function Loader({ text = 'جاري التحميل…' }) {
           borderRadius: '50%',
           animation: 'spin 1s linear infinite'
         }}></div>
-        <div className="animate-pulse text-gray-500" style={{ color: '#6b7280', fontSize: '1rem' }}>
+        <div style={{ color: '#6b7280', fontSize: '1rem' }}>
           {text}
         </div>
       </div>

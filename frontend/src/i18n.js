@@ -31,8 +31,8 @@ function setHtmlDirLang(lng) {
 }
 
 i18n
-  .use(Backend)
-  .use(LanguageDetector)
+  .use(Backend)              // تحميل JSON من /public/locales/{{lng}}/{{ns}}.json
+  .use(LanguageDetector)     // يقرأ i18nextLng من localStorage أولاً
   .use(initReactI18next)
   .init({
     supportedLngs: SUPPORTED,
@@ -43,7 +43,7 @@ i18n
     ],
     defaultNS: 'common',
     fallbackNS: 'common',
-    keySeparator: false,
+    keySeparator: false,     // استعمل ns:key بدل ns.key
     detection: {
       order: ['localStorage', 'querystring', 'cookie', 'navigator', 'htmlTag'],
       lookupLocalStorage: 'i18nextLng',

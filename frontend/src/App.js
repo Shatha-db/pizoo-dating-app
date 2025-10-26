@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { WebSocketProvider } from './context/WebSocketContext';
@@ -22,7 +22,8 @@ import ProfileNew from './pages/ProfileNew';
 import ProfileView from './pages/ProfileView';
 import EditProfile from './pages/EditProfile';
 import TopPicks from './pages/TopPicks';
-import DiscoverySettings from './pages/DiscoverySettings';
+// ⚠️ Lazy load DiscoverySettings to prevent Leaflet loading on every page
+const DiscoverySettings = React.lazy(() => import('./pages/DiscoverySettings'));
 import DoubleDating from './pages/DoubleDating';
 import DoubleDatingInfo from './pages/DoubleDatingInfo';
 import Notifications from './pages/Notifications';
@@ -33,6 +34,7 @@ import CustomLogoPage from './pages/CustomLogoPage';
 import SwipePage from './pages/SwipePage';
 import { Toaster } from './components/ui/sonner';
 import { useTranslation } from 'react-i18next';
+import Loader from './components/Loader';
 import './App.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

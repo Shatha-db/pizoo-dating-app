@@ -6,6 +6,7 @@ import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import BottomNav from '../components/BottomNav';
 import CustomLogo from '../components/CustomLogo';
+import LocationPermissionRequest from '../components/LocationPermissionRequest';
 import { Heart, X, Star, RotateCcw, Zap, Info, Bell } from 'lucide-react';
 import axios from 'axios';
 

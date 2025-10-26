@@ -3365,40 +3365,6 @@ async def update_user_language(
     return {"success": True, "language": lang}
 
 
-@api_router.put("/user/location")
-async def update_user_location(
-    request: dict,
-    current_user: dict = Depends(get_current_user)
-):
-    """Update user's location and country"""
-    latitude = request.get("latitude")
-    longitude = request.get("longitude")
-    country = request.get("country")  # ISO 3166-1 alpha-2
-    
-    update_data = {}
-    
-    if country:
-        update_data["country"] = country.upper()
-    
-    if latitude is not None and longitude is not None:
-        # Also update in profile for discovery
-        await db.profiles.update_one(
-            {"user_id": current_user["id"]},
-            {"$set": {
-                "latitude": float(latitude),
-                "longitude": float(longitude)
-            }}
-        )
-    
-    if update_data:
-        await db.users.update_one(
-            {"id": current_user["id"]},
-            {"$set": update_data}
-        )
-    
-    return {"success": True, **update_data}
-
-
 @api_router.get("/me")
 async def get_current_user_info(
     current_user: dict = Depends(get_current_user)

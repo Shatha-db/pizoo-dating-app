@@ -124,14 +124,17 @@ const DiscoverySettings = () => {
   const { token } = useAuth();
   const [settings, setSettings] = useState({
     location: '',
-    max_distance: DEFAULT_RADIUS, // Use constant
+    max_distance: DEFAULT_RADIUS,
     interested_in: 'all',
     min_age: 18,
     max_age: 100,
     show_new_profiles_only: false,
     show_verified_only: false
   });
-  const [userLocation, setUserLocation] = useState({ lat: 47.5596, lng: 7.5886 }); // Default: Basel
+  const [userLocation, setUserLocation] = useState(null); // Will be set from GPS or country
+  const [userCountry, setUserCountry] = useState(null); // Country code from /me API
+  const [mapCenter, setMapCenter] = useState(DEFAULT_CENTER);
+  const [mapZoom, setMapZoom] = useState(DEFAULT_CENTER.zoom);
   const [locationLoading, setLocationLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -139,7 +142,8 @@ const DiscoverySettings = () => {
   const [nearbyUsers, setNearbyUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [locationPermission, setLocationPermission] = useState('prompt'); // 'granted', 'denied', 'prompt'
+  const [locationPermission, setLocationPermission] = useState('prompt');
+  const [hasGPSLocation, setHasGPSLocation] = useState(false);
   const mapRef = useRef(null);
 
   useEffect(() => {

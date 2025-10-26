@@ -672,6 +672,16 @@ const Home = () => {
         />
       )}
 
+      {/* Geo Permission Modal (Phase 5) */}
+      {showGeoModal && (
+        <GeoPermissionModal
+          onAllow={handleAllowGPS}
+          onDeny={handleDenyGPS}
+          onManual={handleManualEntry}
+          onClose={() => setShowGeoModal(false)}
+        />
+      )}
+
       <BottomNav />
     </div>
   );

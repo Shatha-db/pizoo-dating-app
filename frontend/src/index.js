@@ -10,11 +10,9 @@ import Loader from "./components/Loader";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <Suspense fallback={<Loader text="Loading..." />}>
-      <AppErrorBoundary>
-        <App />
-      </AppErrorBoundary>
-    </Suspense>
-  </React.StrictMode>,
+  <Suspense fallback={<Loader text="Loading..." />}>
+    <AppErrorBoundary>
+      <App />
+    </AppErrorBoundary>
+  </Suspense>
 );

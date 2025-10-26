@@ -147,15 +147,57 @@ const DiscoverySettings = () => {
   const mapRef = useRef(null);
 
   useEffect(() => {
-    fetchSettings();
-    checkLocationPermission();
+    const initializeLocation = async () => {
+      await fetchSettings();
+      await fetchUserData();
+      checkLocationPermission();
+    };
+    initializeLocation();
   }, []);
 
   useEffect(() => {
-    if (userLocation.lat && userLocation.lng) {
+    if (userLocation && userLocation.lat && userLocation.lng) {
       fetchNearbyUsers();
     }
   }, [userLocation, settings.max_distance]);
+
+  // Fetch user data to get country
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (response.data) {
+        const user = response.data;
+        
+        // Check if user has precise location
+        if (user.location && user.location.coordinates) {
+          const [lng, lat] = user.location.coordinates;
+          setUserLocation({ lat, lng });
+          setMapCenter({ lat, lng });
+          setMapZoom(11);
+          setHasGPSLocation(true);
+        } else if (user.country) {
+          // Use country centroid
+          setUserCountry(user.country);
+          const countryData = COUNTRY_CENTERS[user.country] || DEFAULT_CENTER;
+          setMapCenter({ lat: countryData.lat, lng: countryData.lng });
+          setMapZoom(countryData.zoom);
+          setHasGPSLocation(false);
+        } else {
+          // Use global fallback
+          setMapCenter(DEFAULT_CENTER);
+          setMapZoom(DEFAULT_CENTER.zoom);
+          setHasGPSLocation(false);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      setMapCenter(DEFAULT_CENTER);
+      setMapZoom(DEFAULT_CENTER.zoom);
+    }
+  };
 
   const checkLocationPermission = async () => {
     if (!navigator.permissions) {

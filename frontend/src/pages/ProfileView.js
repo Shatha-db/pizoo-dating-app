@@ -519,6 +519,24 @@ const ProfileView = () => {
           </Card>
         </div>
       )}
+      
+      {/* Image Lightbox */}
+      <ImageLightbox
+        open={lightboxOpen}
+        images={profile?.photos || []}
+        index={lightboxIndex}
+        onClose={() => setLightboxOpen(false)}
+        onNext={(toIndex) => {
+          if (typeof toIndex === 'number') {
+            setLightboxIndex(toIndex);
+          } else {
+            setLightboxIndex((lightboxIndex + 1) % (profile?.photos?.length || 1));
+          }
+        }}
+        onPrev={() => {
+          setLightboxIndex((lightboxIndex - 1 + (profile?.photos?.length || 1)) % (profile?.photos?.length || 1));
+        }}
+      />
     </div>
   );
 };

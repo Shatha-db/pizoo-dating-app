@@ -70,12 +70,32 @@ export default function SwipeDeck({ users = [], onSwipe, onCardLeftScreen, class
     [users.length]
   );
   
+  // Update local gating state
+  useEffect(() => {
+    if (!gating) {
+      setLocalGating(getGatingState());
+    }
+  }, [gating, currentIndex]);
+  
   const updateCurrentIndex = (val) => {
     setCurrentIndex(val);
     currentIndexRef.current = val;
   };
   
   const swiped = (direction, userId, index) => {
+    // Check if gated before allowing swipe
+    if (gatingState.gated) {
+      onGate?.('daily_limit');
+      return;
+    }
+    
+    // Increment view counter
+    incView();
+    setLocalGating(getGatingState());
+    
+    // Record swipe to backend
+    recordSwipe(userId, direction);
+    
     updateCurrentIndex(index - 1);
     setSwipeDirection(null);
     setSwipeOpacity(0);

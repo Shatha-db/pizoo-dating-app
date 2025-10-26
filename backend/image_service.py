@@ -188,7 +188,7 @@ class ImageUploadService:
                 }
             
             # Compress image
-            logger.info(f"🗜️ Compressing image before upload...")
+            logger.info("🗜️ Compressing image before upload...")
             compressed_bytes = cls.compress_image(file_bytes)
             
             # Determine folder

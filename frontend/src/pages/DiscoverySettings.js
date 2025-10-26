@@ -229,11 +229,12 @@ const DiscoverySettings = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ lat: latitude, lng: longitude });
+          setMapCenter({ lat: latitude, lng: longitude });
+          setMapZoom(11);
           setLocationPermission('granted');
+          setHasGPSLocation(true);
         },
         (error) => {
           console.error('Error getting location:', error);

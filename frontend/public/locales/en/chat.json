@@ -1,0 +1,25 @@
+{
+  "title": "Chat",
+  "messages": "Messages",
+  "sendMessage": "Send Message",
+  "typeMessage": "Type a message...",
+  "noMessages": "No messages yet",
+  "startConversation": "Start a conversation",
+  "online": "Online",
+  "offline": "Offline",
+  "typing": "typing...",
+  "seen": "Seen",
+  "delivered": "Delivered",
+  "sent": "Sent",
+  "safetyConsent": "Safety Guidelines",
+  "agreeToSafety": "I agree to follow safety guidelines",
+  "reportUser": "Report User",
+  "blockUser": "Block User",
+  "unblockUser": "Unblock User",
+  "deleteConversation": "Delete Conversation",
+  "errors": {
+    "messageFailed": "Failed to send message",
+    "connectionLost": "Connection lost",
+    "userBlocked": "User is blocked"
+  }
+}

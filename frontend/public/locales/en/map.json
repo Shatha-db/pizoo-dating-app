@@ -1,0 +1,21 @@
+{
+  "title": "Discover",
+  "nearbyUsers": "Nearby Users",
+  "searchRadius": "Search Radius",
+  "recenterMap": "Recenter Map",
+  "locationPermission": "Location Permission",
+  "needLocation": "We need your location",
+  "locationDescription": "To show you nearby users and help you find people in your area",
+  "allowNow": "Allow Now",
+  "maybeLater": "Maybe Later",
+  "locationDenied": "Location access denied",
+  "locationDeniedDescription": "Enable location in settings to see nearby users",
+  "distance": "Distance",
+  "away": "away",
+  "km": "km",
+  "viewProfile": "View Profile",
+  "errors": {
+    "locationFailed": "Failed to get location",
+    "mapLoadFailed": "Failed to load map"
+  }
+}

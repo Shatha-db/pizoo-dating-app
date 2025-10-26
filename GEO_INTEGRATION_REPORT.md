@@ -80,7 +80,7 @@ Successfully implemented complete Geo Integration system for Pizoo with:
 
 **Test Results:**
 ```bash
-$ curl https://pizoo-dating-2.preview.emergentagent.com/api/geoip
+$ curl https://pizoo-multilingual.preview.emergentagent.com/api/geoip
 {
   "ip": "10.64.144.139",
   "country": "CH",

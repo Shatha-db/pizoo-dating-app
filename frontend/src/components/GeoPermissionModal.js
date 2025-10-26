@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import { X, MapPin, Globe } from 'lucide-react';
 import { Button } from './ui/button';
 
+// Safe number guard to prevent NaN
+const safeNumber = (v, fallback = 0) => {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+};
+
 const GeoPermissionModal = ({ onAllow, onDeny, onManual, onClose }) => {
   const [isOpen, setIsOpen] = useState(true);
 

@@ -66,10 +66,24 @@ const Home = () => {
         return;
       }
       
-      // Show geo modal after 2 seconds
-      setTimeout(() => {
-        setShowGeoModal(true);
-      }, 2000);
+      // Fetch user data first to check if location is already set
+      try {
+        const res = await axios.get(`${API}/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        const user = res.data;
+        
+        // Only show modal if user doesn't have location or country
+        if (user && !user.latitude && !user.longitude && !user.country) {
+          // Show geo modal after 2 seconds
+          setTimeout(() => {
+            setShowGeoModal(true);
+          }, 2000);
+        }
+      } catch (error) {
+        console.error('Error fetching user data for geo check:', error);
+      }
       
     } catch (error) {
       console.error('Error checking geo permission:', error);
@@ -85,34 +99,48 @@ const Home = () => {
       const position = await getCurrentPosition();
       console.log('✅ GPS coordinates obtained:', position);
       
-      // Validate coordinates
-      if (!validateCoordinates(position.latitude, position.longitude)) {
-        throw new Error('Invalid coordinates');
+      // Safe number guards
+      const safeLat = Number(position.latitude);
+      const safeLng = Number(position.longitude);
+      
+      // Validate coordinates with safe checks
+      if (!Number.isFinite(safeLat) || !Number.isFinite(safeLng)) {
+        throw new Error('Invalid coordinates - NaN detected');
+      }
+      
+      if (!validateCoordinates(safeLat, safeLng)) {
+        throw new Error('Invalid coordinates - out of range');
       }
       
       // Reverse geocode to get country
-      const geoData = await reverseGeocode(position.latitude, position.longitude);
+      const geoData = await reverseGeocode(safeLat, safeLng);
       console.log('✅ Reverse geocoding complete:', geoData);
       
       // Get default radius for country
       const defaultRadius = getDefaultRadius(geoData.countryCode);
-      console.log(`📍 Default radius for ${geoData.countryCode}: ${defaultRadius}km`);
+      const safeRadius = Number(defaultRadius);
+      console.log(`📍 Default radius for ${geoData.countryCode}: ${safeRadius}km`);
       
-      // Save to backend
-      await axios.put(`${API}/user/location`, {
-        country: geoData.countryCode,
-        latitude: position.latitude,
-        longitude: position.longitude,
-        radiusKm: defaultRadius
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Save to backend with try-catch
+      try {
+        await axios.put(`${API}/user/location`, {
+          country: geoData.countryCode,
+          latitude: safeLat,
+          longitude: safeLng,
+          radiusKm: Number.isFinite(safeRadius) && safeRadius > 0 ? safeRadius : 25
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } catch (apiError) {
+        console.error('API error saving location:', apiError);
+        throw apiError;
+      }
       
       // Save to localStorage
       localStorage.setItem('location_granted', 'true');
-      localStorage.setItem('user_country', geoData.countryCode);
-      localStorage.setItem('user_latitude', position.latitude.toString());
-      localStorage.setItem('user_longitude', position.longitude.toString());
+      localStorage.setItem('user_country', geoData.countryCode || '');
+      localStorage.setItem('user_latitude', safeLat.toString());
+      localStorage.setItem('user_longitude', safeLng.toString());
       
       console.log('✅ Location saved successfully');
       setShowGeoModal(false);
@@ -158,18 +186,24 @@ const Home = () => {
       console.log('✅ GeoIP data obtained:', geoData);
       
       const defaultRadius = getDefaultRadius(geoData.countryCode);
+      const safeRadius = Number(defaultRadius);
       
-      // Save country only (no precise coordinates)
-      await axios.put(`${API}/user/location`, {
-        country: geoData.countryCode,
-        latitude: null,
-        longitude: null,
-        radiusKm: defaultRadius
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Save country only (no precise coordinates) with try-catch
+      try {
+        await axios.put(`${API}/user/location`, {
+          country: geoData.countryCode,
+          latitude: null,
+          longitude: null,
+          radiusKm: Number.isFinite(safeRadius) && safeRadius > 0 ? safeRadius : 25
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } catch (apiError) {
+        console.error('API error in GeoIP fallback:', apiError);
+        // Continue anyway - not critical
+      }
       
-      localStorage.setItem('user_country', geoData.countryCode);
+      localStorage.setItem('user_country', geoData.countryCode || '');
       console.log(`✅ GeoIP fallback complete: ${geoData.countryCode}`);
       
     } catch (error) {

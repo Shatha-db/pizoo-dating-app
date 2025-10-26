@@ -78,6 +78,16 @@ const API = `${BACKEND_URL}/api`;
 // Default radius constant
 const DEFAULT_RADIUS = 25;
 
+// Safe radius parser to prevent NaN
+const parseRadius = (val) => {
+  try {
+    const n = Number(val);
+    return Number.isFinite(n) && n > 0 ? n : DEFAULT_RADIUS;
+  } catch {
+    return DEFAULT_RADIUS;
+  }
+};
+
 // Component to update map view when settings change
 function MapUpdater({ center, zoom }) {
   const map = useMap();
@@ -286,10 +296,8 @@ const DiscoverySettings = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data) {
-        // Guard against NaN radius with Number coercion
-        const rawRadius = response.data.max_distance;
-        const radius = Number(rawRadius);
-        const safeRadius = Number.isFinite(radius) && radius > 0 ? radius : DEFAULT_RADIUS;
+        // Guard against NaN radius with parseRadius helper
+        const safeRadius = parseRadius(response.data.max_distance);
         
         setSettings({
           ...response.data,
@@ -306,10 +314,8 @@ const DiscoverySettings = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Guard radius before saving - coerce to Number and validate
-      const rawRadius = settings.max_distance;
-      const radius = Number(rawRadius);
-      const safeRadius = Number.isFinite(radius) && radius > 0 ? radius : DEFAULT_RADIUS;
+      // Guard radius before saving - use parseRadius helper
+      const safeRadius = parseRadius(settings.max_distance);
       
       await axios.put(
         `${API}/discovery-settings`,
@@ -482,9 +488,8 @@ const DiscoverySettings = () => {
               <Circle
                 center={[userLocation.lat, userLocation.lng]}
                 radius={(() => {
-                  // Guard: ensure radius is a valid finite number > 0
-                  const r = Number(settings.max_distance);
-                  return (Number.isFinite(r) && r > 0 ? r : DEFAULT_RADIUS) * 1000; // km to meters
+                  // Guard: use parseRadius helper
+                  return parseRadius(settings.max_distance) * 1000; // km to meters
                 })()}
                 pathOptions={{ 
                   color: '#ec4899', 
@@ -589,11 +594,7 @@ const DiscoverySettings = () => {
           <h2 className="text-lg font-bold mb-2">أقصى مسافة</h2>
           <div className="flex items-center justify-between mb-4">
             <span className="text-3xl font-bold text-pink-500">
-              {(() => {
-                // Display guard
-                const r = Number(settings.max_distance);
-                return Number.isFinite(r) && r > 0 ? r : DEFAULT_RADIUS;
-              })()} km
+              {parseRadius(settings.max_distance)} km
             </span>
             <span className="text-sm text-gray-600">نطاق البحث</span>
           </div>

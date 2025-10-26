@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
-import SwipeDeck from '../../modules/swipe/SwipeDeck';
+import SwipeDeck from '../modules/swipe/SwipeDeck';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

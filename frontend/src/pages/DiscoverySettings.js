@@ -585,6 +585,9 @@ const DiscoverySettings = () => {
                   maxClusterRadius={60}
                   iconCreateFunction={(cluster) => {
                     const count = cluster.getChildCount();
+                    if (typeof L === 'undefined' || !L.divIcon) {
+                      return null;
+                    }
                     return L.divIcon({
                       html: `<div style="
                         background: linear-gradient(135deg, #ec4899 0%, #ef4444 100%);

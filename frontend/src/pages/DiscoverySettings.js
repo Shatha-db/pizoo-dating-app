@@ -14,40 +14,53 @@ import { COUNTRY_CENTERS, DEFAULT_CENTER, DEFAULT_RADIUS } from '../utils/countr
 import UserBottomSheet from '../components/UserBottomSheet';
 
 // Fix for default marker icon in React Leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
+if (typeof L !== 'undefined' && L.Icon && L.Icon.Default) {
+  delete L.Icon.Default.prototype._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+  });
+}
 
-// Custom user marker icon (pink heart)
-const userMarkerIcon = L.divIcon({
-  className: 'custom-marker',
-  html: `<div style="
-    background: linear-gradient(135deg, #ec4899 0%, #ef4444 100%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
-    border: 3px solid white;
-  ">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-    </svg>
-  </div>`,
-  iconSize: [40, 40],
-  iconAnchor: [20, 20],
-});
+// Custom user marker icon (pink heart) - created lazily to avoid undefined L
+const getUserMarkerIcon = () => {
+  if (typeof L === 'undefined' || !L.divIcon) {
+    console.warn('Leaflet not loaded yet');
+    return null;
+  }
+  return L.divIcon({
+    className: 'custom-marker',
+    html: `<div style="
+      background: linear-gradient(135deg, #ec4899 0%, #ef4444 100%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+      border: 3px solid white;
+    ">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    </div>`,
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
+  });
+};
 
-// Current user marker icon (blue)
-const currentUserIcon = L.divIcon({
-  className: 'custom-marker',
-  html: `<div style="
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+// Current user marker icon (blue) - created lazily
+const getCurrentUserIcon = () => {
+  if (typeof L === 'undefined' || !L.divIcon) {
+    console.warn('Leaflet not loaded yet');
+    return null;
+  }
+  return L.divIcon({
+    className: 'custom-marker',
+    html: `<div style="
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     width: 48px;
     height: 48px;
     border-radius: 50%;

@@ -108,7 +108,7 @@ const ProfileNew = () => {
             
             {/* Edit Button Overlay */}
             <Button
-              onClick={() => navigate('/edit-profile')}
+              onClick={() => navigate('/profile/edit')}
               className="absolute bottom-4 right-4 bg-white text-pink-600 hover:bg-gray-100 rounded-full shadow-lg"
             >
               <Edit className="w-4 h-4 ml-2" />

@@ -563,64 +563,69 @@ const DiscoverySettings = () => {
                   </>
                 )}
 
-              {/* Clustered User Markers */}
-              <MarkerClusterGroup
-                chunkedLoading
-                showCoverageOnHover={false}
-                spiderfyOnMaxZoom={true}
-                maxClusterRadius={60}
-                iconCreateFunction={(cluster) => {
-                  const count = cluster.getChildCount();
-                  return L.divIcon({
-                    html: `<div style="
-                      background: linear-gradient(135deg, #ec4899 0%, #ef4444 100%);
-                      border-radius: 50%;
-                      width: 50px;
-                      height: 50px;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      color: white;
-                      font-weight: bold;
-                      font-size: 18px;
-                      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.5);
-                      border: 3px solid white;
-                    ">${count}</div>`,
-                    className: 'custom-cluster-icon',
-                    iconSize: [50, 50]
-                  });
-                }}
-              >
-                {Array.isArray(nearbyUsers) && nearbyUsers.map((user) => {
-                  if (!user.latitude || !user.longitude) return null;
-                  
-                  return (
-                    <Marker
-                      key={user.id}
-                      position={[user.latitude, user.longitude]}
-                      icon={userMarkerIcon}
-                      eventHandlers={{
-                        click: () => setSelectedUser(user)
-                      }}
-                    >
-                      <Popup>
-                        <div className="text-center min-w-[150px]" dir="rtl">
-                          <strong>{user.name}, {user.age}</strong>
-                          {user.distance && (
-                            <p className="text-xs text-gray-600 mt-1">
-                              {user.distance < 1 ? '< 1' : Math.round(user.distance)} كم
-                            </p>
-                          )}
-                        </div>
-                      </Popup>
-                    </Marker>
-                  );
-                })}
-              </MarkerClusterGroup>
+                {/* Clustered User Markers */}
+                <MarkerClusterGroup
+                  chunkedLoading
+                  showCoverageOnHover={false}
+                  spiderfyOnMaxZoom={true}
+                  maxClusterRadius={60}
+                  iconCreateFunction={(cluster) => {
+                    const count = cluster.getChildCount();
+                    return L.divIcon({
+                      html: `<div style="
+                        background: linear-gradient(135deg, #ec4899 0%, #ef4444 100%);
+                        border-radius: 50%;
+                        width: 50px;
+                        height: 50px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white;
+                        font-weight: bold;
+                        font-size: 18px;
+                        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.5);
+                        border: 3px solid white;
+                      ">${count}</div>`,
+                      className: 'custom-cluster-icon',
+                      iconSize: [50, 50]
+                    });
+                  }}
+                >
+                  {Array.isArray(nearbyUsers) && nearbyUsers.map((user) => {
+                    if (!user.latitude || !user.longitude) return null;
+                    
+                    return (
+                      <Marker
+                        key={user.id}
+                        position={[user.latitude, user.longitude]}
+                        icon={userMarkerIcon}
+                        eventHandlers={{
+                          click: () => setSelectedUser(user)
+                        }}
+                      >
+                        <Popup>
+                          <div className="text-center min-w-[150px]" dir="rtl">
+                            <strong>{user.name}, {user.age}</strong>
+                            {user.distance && (
+                              <p className="text-xs text-gray-600 mt-1">
+                                {user.distance < 1 ? '< 1' : Math.round(user.distance)} كم
+                              </p>
+                            )}
+                          </div>
+                        </Popup>
+                      </Marker>
+                    );
+                  })}
+                </MarkerClusterGroup>
 
-              <MapUpdater center={[userLocation.lat, userLocation.lng]} zoom={11} />
-              <MapEventHandler onMapMove={debouncedMapMove} />
-            </MapContainer>
+                {hasGPSLocation && userLocation && (
+                  <>
+                    <MapUpdater center={[userLocation.lat, userLocation.lng]} zoom={11} />
+                    <MapEventHandler onMapMove={debouncedMapMove} />
+                  </>
+                )}
+              </MapContainer>
+            )}
           </div>
 
           {/* Users Count */}

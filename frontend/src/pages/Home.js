@@ -66,10 +66,24 @@ const Home = () => {
         return;
       }
       
-      // Show geo modal after 2 seconds
-      setTimeout(() => {
-        setShowGeoModal(true);
-      }, 2000);
+      // Fetch user data first to check if location is already set
+      try {
+        const res = await axios.get(`${API}/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        const user = res.data;
+        
+        // Only show modal if user doesn't have location or country
+        if (user && !user.latitude && !user.longitude && !user.country) {
+          // Show geo modal after 2 seconds
+          setTimeout(() => {
+            setShowGeoModal(true);
+          }, 2000);
+        }
+      } catch (error) {
+        console.error('Error fetching user data for geo check:', error);
+      }
       
     } catch (error) {
       console.error('Error checking geo permission:', error);

@@ -6,6 +6,7 @@ import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import BottomNav from '../components/BottomNav';
 import CustomLogo from '../components/CustomLogo';
+import LocationPermissionRequest from '../components/LocationPermissionRequest';
 import { Heart, X, Star, RotateCcw, Zap, Info, Bell } from 'lucide-react';
 import axios from 'axios';
 
@@ -28,13 +29,27 @@ const Home = () => {
   const [boostTimeRemaining, setBoostTimeRemaining] = useState(0);
   const [usageStats, setUsageStats] = useState(null);
   const [showLimitWarning, setShowLimitWarning] = useState(false);
+  const [showLocationRequest, setShowLocationRequest] = useState(false);
 
   useEffect(() => {
     fetchProfiles();
     checkNewLikes();
     checkBoostStatus();
     fetchUsageStats();
+    checkLocationPermission();
   }, []);
+
+  const checkLocationPermission = () => {
+    const hasLocation = localStorage.getItem('location_granted');
+    const skipped = localStorage.getItem('location_skipped');
+    
+    if (!hasLocation && !skipped) {
+      // Show location request after 2 seconds
+      setTimeout(() => {
+        setShowLocationRequest(true);
+      }, 2000);
+    }
+  };
 
   const fetchUsageStats = async () => {
     try {
@@ -518,6 +533,14 @@ const Home = () => {
             </div>
           </Card>
         </div>
+      )}
+
+      {/* Location Permission Request */}
+      {showLocationRequest && (
+        <LocationPermissionRequest
+          onClose={() => setShowLocationRequest(false)}
+          token={token}
+        />
       )}
 
       <BottomNav />

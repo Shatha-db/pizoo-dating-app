@@ -29,7 +29,12 @@ const ChatRoom = () => {
   useEffect(() => {
     fetchMessages();
     const agreed = localStorage.getItem(`safety_consent_${user?.id}`);
-    setHasAgreedToSafety(agreed === 'true');
+    if (agreed === 'true') {
+      setHasAgreedToSafety(true);
+    } else {
+      // Show safety consent on first message
+      setShowSafetyConsent(false); // Don't block initially, show when they try to send
+    }
   }, [matchId]);
 
   // Listen to WebSocket messages

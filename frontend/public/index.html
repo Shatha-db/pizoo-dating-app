@@ -3,8 +3,13 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="description" content="Subscription Service Application" />
+        <meta name="theme-color" content="#ec4899" />
+        <meta name="description" content="Pizoo - Dating App" />
+        
+        <!-- Prevent Caching -->
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
         <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -18,7 +23,51 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-        <title>تطبيق الاشتراكات</title>
+        <title>Pizoo - تطبيق المواعدة</title>
+        
+        <!-- Cache Busting & Service Worker Clear -->
+        <script>
+            // Clear old cache and service workers
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+            }
+            
+            // Clear old caches
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        caches.delete(name);
+                    }
+                });
+            }
+            
+            // Force reload if version mismatch
+            const APP_VERSION = '2.1.0'; // Updated for chat fix
+            const storedVersion = localStorage.getItem('app_version');
+            
+            if (storedVersion !== APP_VERSION) {
+                console.log('🔄 New version detected, clearing ALL cache...');
+                
+                // Clear everything in localStorage except auth tokens
+                const token = localStorage.getItem('token');
+                const refreshToken = localStorage.getItem('refreshToken');
+                localStorage.clear();
+                if (token) localStorage.setItem('token', token);
+                if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+                localStorage.setItem('app_version', APP_VERSION);
+                
+                // Clear sessionStorage completely
+                sessionStorage.clear();
+                
+                // Force hard reload
+                window.location.href = window.location.href + '?v=' + APP_VERSION;
+            }
+        </script>
+        
         <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
         <!--
         These two scripts have been added for the testing, please do not edit or remove them

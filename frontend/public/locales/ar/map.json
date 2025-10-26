@@ -1,0 +1,21 @@
+{
+  "title": "الاكتشاف",
+  "nearbyUsers": "المستخدمون القريبون",
+  "searchRadius": "نطاق البحث",
+  "recenterMap": "إعادة توسيط الخريطة",
+  "locationPermission": "إذن الموقع",
+  "needLocation": "نحتاج إلى موقعك",
+  "locationDescription": "لعرض المستخدمين القريبين منك ومساعدتك في العثور على أشخاص في منطقتك",
+  "allowNow": "السماح الآن",
+  "maybeLater": "ربما لاحقاً",
+  "locationDenied": "تم رفض الوصول إلى الموقع",
+  "locationDeniedDescription": "قم بتمكين الموقع في الإعدادات لرؤية المستخدمين القريبين",
+  "distance": "المسافة",
+  "away": "بعيد",
+  "km": "كم",
+  "viewProfile": "عرض الملف الشخصي",
+  "errors": {
+    "locationFailed": "فشل الحصول على الموقع",
+    "mapLoadFailed": "فشل تحميل الخريطة"
+  }
+}

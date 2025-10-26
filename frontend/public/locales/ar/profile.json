@@ -1,0 +1,33 @@
+{
+  "title": "الملف الشخصي",
+  "editProfile": "تعديل الملف الشخصي",
+  "viewProfile": "عرض الملف الشخصي",
+  "myProfile": "ملفي الشخصي",
+  "name": "الاسم",
+  "age": "العمر",
+  "gender": "الجنس",
+  "bio": "نبذة عني",
+  "location": "الموقع",
+  "photos": "الصور",
+  "addPhoto": "إضافة صورة",
+  "uploadPhoto": "رفع صورة",
+  "deletePhoto": "حذف الصورة",
+  "setPrimary": "تعيين كصورة رئيسية",
+  "interests": "الاهتمامات",
+  "lookingFor": "أبحث عن",
+  "relationshipGoals": "أهداف العلاقة",
+  "height": "الطول",
+  "education": "التعليم",
+  "occupation": "المهنة",
+  "languages": "اللغات",
+  "profileSetup": "إعداد الملف الشخصي",
+  "completeProfile": "أكمل ملفك الشخصي",
+  "profileIncomplete": "يرجى إكمال ملفك الشخصي",
+  "errors": {
+    "nameRequired": "الاسم مطلوب",
+    "ageRequired": "العمر مطلوب",
+    "photoRequired": "مطلوب صورة واحدة على الأقل",
+    "uploadFailed": "فشل رفع الصورة",
+    "invalidAge": "يجب أن يكون العمر بين 18-99"
+  }
+}

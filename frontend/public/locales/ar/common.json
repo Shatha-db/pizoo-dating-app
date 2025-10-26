@@ -1,72 +1,24 @@
 {
-  "appName": "Pizoo",
-  "actions": {
-    "save": "حفظ",
-    "cancel": "إلغاء",
-    "continue": "متابعة",
-    "back": "رجوع",
-    "change": "تغيير",
-    "ok": "حسناً",
-    "retry": "إعادة المحاولة",
-    "enable": "تفعيل",
-    "disable": "تعطيل"
-  },
-  "auth": {
-    "login": "تسجيل الدخول",
-    "logout": "تسجيل الخروج",
-    "signup": "إنشاء حساب",
-    "email": "البريد الإلكتروني",
-    "password": "كلمة المرور",
-    "forgotPassword": "هل نسيت كلمة المرور؟"
-  },
-  "onboarding": {
-    "welcomeTitle": "مرحباً بك في {{app}}",
-    "chooseLanguage": "اختر لغتك",
-    "allowLocation": "اسمح لنا بالوصول إلى موقعك لنعرض لك الأقرب."
-  },
-  "profile": {
-    "myProfile": "ملفي الشخصي",
-    "editProfile": "تعديل الملف",
-    "verified": "موثق",
-    "age": "العمر",
-    "distance": "{{value}} كم"
-  },
-  "discovery": {
-    "nearby": "المستخدمون القريبون",
-    "noMore": "لا توجد المزيد من الملفات",
-    "refresh": "تحديث"
-  },
-  "map": {
-    "openMap": "فتح الخريطة",
-    "recenter": "إعادة التمركز",
-    "radius": "نطاق البحث: {{km}} كم",
-    "locationDenied": "تم رفض إذن الموقع. يمكنك تفعيله من الإعدادات."
-  },
-  "notifications": {
-    "newMatch": "لديك تطابق جديد!",
-    "likes": "إعجابات",
-    "messages": "رسائل"
-  },
-  "settings": {
-    "title": "الإعدادات",
-    "language": "اللغة",
-    "theme": "الوضع",
-    "privacy": "الخصوصية"
-  },
-  "errors": {
-    "network": "خطأ في الشبكة",
-    "unknown": "حدث خطأ غير متوقع",
-    "unsupportedLang": "اللغة غير مدعومة"
-  },
-  "langNames": {
-    "ar": "العربية",
-    "en": "English",
-    "fr": "Français",
-    "es": "Español",
-    "de": "Deutsch",
-    "tr": "Türkçe",
-    "it": "Italiano",
-    "pt-BR": "Português (Brasil)",
-    "ru": "Русский"
-  }
+  "appName": "بيزو",
+  "welcome": "مرحباً",
+  "loading": "جاري التحميل...",
+  "save": "حفظ",
+  "cancel": "إلغاء",
+  "delete": "حذف",
+  "edit": "تعديل",
+  "continue": "متابعة",
+  "back": "رجوع",
+  "next": "التالي",
+  "submit": "إرسال",
+  "close": "إغلاق",
+  "confirm": "تأكيد",
+  "search": "بحث",
+  "filter": "تصفية",
+  "settings": "الإعدادات",
+  "profile": "الملف الشخصي",
+  "logout": "تسجيل الخروج",
+  "yes": "نعم",
+  "no": "لا",
+  "error": "خطأ",
+  "success": "نجح"
 }

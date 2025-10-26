@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import BottomNav from '../components/BottomNav';
+import ImageLightbox from '../components/ImageLightbox';
 import { Settings, Edit, Shield, Crown, Zap, Camera, MapPin, Briefcase, Heart, Star, Check } from 'lucide-react';
 import axios from 'axios';
 

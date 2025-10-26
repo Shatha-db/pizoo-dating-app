@@ -1,23 +1,46 @@
 {
-  "upgrade_to_gold": "Обновиться до Gold",
-  "unlimited_likes": "Безлимитные лайки",
-  "see_who_likes_you": "Посмотреть, кому вы понравились",
-  "boost": "Бесплатный ежемесячный Boost",
-  "super_likes": "2 Супер лайка в неделю",
-  "travel_anywhere": "Паспорт в любую точку",
-  "top_profiles": "Лучшие профили",
-  "ad_free": "Без рекламы",
-  "subscribe_now": "Подписаться сейчас",
-  "plan_1w": "1 неделя",
-  "plan_1m": "1 месяц",
-  "plan_6m": "6 месяцев",
-  "total": "Итого",
-  "continue": "Продолжить",
-  "per_week": "/неделю",
-  "save": "Сэкономьте",
-  "most_popular": "Самый популярный",
-  "best_value": "Лучшая цена",
-  "unlock_all_features": "Разблокировать все функции",
-  "rewind_last_swipe": "Отменить последний свайп",
-  "unlimited_rewinds": "Безлимитные отмены"
+  "title": "Перейти на Gold",
+  "subtitle": "Умножьте шансы на совпадение — откройте премиум-функции.",
+  "benefits": {
+    "unlimited_likes": "Безлимитные лайки",
+    "see_who_likes_you": "Смотрите, кто поставил вам лайк",
+    "boost_monthly": "1 бесплатный Boost в месяц",
+    "super_likes_weekly": "2 Super Likes в неделю",
+    "passport": "Passport — свайп по всему миру",
+    "top_profiles": "Лучшие профили для вас",
+    "ad_free": "Без рекламы",
+    "control_who_sees_you": "Контролируйте, кто вас видит",
+    "control_who_you_see": "Контролируйте, кого видите вы",
+    "read_receipts": "Отметки о прочтении (скоро)",
+    "priority_support": "Приоритетная поддержка"
+  },
+  "plans": {
+    "label": "Выберите план",
+    "best_value": "Лучшая цена",
+    "popular": "Популярно",
+    "save": "Экономия {{percent}}",
+    "plan_6m": "6 месяцев",
+    "plan_1m": "1 месяц",
+    "plan_1w": "1 неделя"
+  },
+  "pricing": {
+    "per_week": "CHF {{price}}/неделю",
+    "total": "Итого",
+    "continue": "Продолжить"
+  },
+  "upsell": {
+    "unlock_likes": "Разблокировать тех, кто лайкнул",
+    "upgrade_to_see": "Оформите Gold, чтобы увидеть всех",
+    "get_gold": "Получить Gold"
+  },
+  "legal": {
+    "auto_renew": "Продолжая, вы соглашаетесь на авто-продление. Отменить можно в настройках App Store.",
+    "terms": "Условия",
+    "privacy": "Конфиденциальность"
+  },
+  "status": {
+    "checkout_ready": "Оплата готова",
+    "restoring": "Восстановление покупок…",
+    "error": "Что-то пошло не так. Попробуйте снова."
+  }
 }

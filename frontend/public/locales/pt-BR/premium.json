@@ -1,23 +1,46 @@
 {
-  "upgrade_to_gold": "Atualizar para Gold",
-  "unlimited_likes": "Curtidas ilimitadas",
-  "see_who_likes_you": "Veja quem curtiu você",
-  "boost": "Boost mensal grátis",
-  "super_likes": "2 Super Likes semanais",
-  "travel_anywhere": "Passaporte para qualquer lugar",
-  "top_profiles": "Melhores perfis",
-  "ad_free": "Sem anúncios",
-  "subscribe_now": "Assinar agora",
-  "plan_1w": "1 semana",
-  "plan_1m": "1 mês",
-  "plan_6m": "6 meses",
-  "total": "Total",
-  "continue": "Continuar",
-  "per_week": "/semana",
-  "save": "Economize",
-  "most_popular": "Mais popular",
-  "best_value": "Melhor valor",
-  "unlock_all_features": "Desbloquear todos os recursos",
-  "rewind_last_swipe": "Voltar último deslize",
-  "unlimited_rewinds": "Voltar ilimitado"
+  "title": "Atualize para Gold",
+  "subtitle": "Multiplique suas chances de match — desbloqueie recursos premium.",
+  "benefits": {
+    "unlimited_likes": "Curtidas ilimitadas",
+    "see_who_likes_you": "Veja quem curtiu você",
+    "boost_monthly": "1 Boost grátis por mês",
+    "super_likes_weekly": "2 Super Likes por semana",
+    "passport": "Passport — dê swipe no mundo todo",
+    "top_profiles": "Melhores perfis para você",
+    "ad_free": "Sem anúncios",
+    "control_who_sees_you": "Controle quem te vê",
+    "control_who_you_see": "Controle quem você vê",
+    "read_receipts": "Confirmação de leitura (em breve)",
+    "priority_support": "Suporte prioritário"
+  },
+  "plans": {
+    "label": "Escolha um plano",
+    "best_value": "Melhor preço",
+    "popular": "Popular",
+    "save": "Economize {{percent}}",
+    "plan_6m": "6 meses",
+    "plan_1m": "1 mês",
+    "plan_1w": "1 semana"
+  },
+  "pricing": {
+    "per_week": "CHF {{price}}/semana",
+    "total": "Total",
+    "continue": "Continuar"
+  },
+  "upsell": {
+    "unlock_likes": "Desbloqueie quem curtiu você",
+    "upgrade_to_see": "Faça upgrade para ver tudo",
+    "get_gold": "Obter Gold"
+  },
+  "legal": {
+    "auto_renew": "Ao continuar, você concorda com a renovação automática. Cancele a qualquer momento nas configurações da App Store.",
+    "terms": "Termos",
+    "privacy": "Privacidade"
+  },
+  "status": {
+    "checkout_ready": "Checkout pronto",
+    "restoring": "Restaurando compras…",
+    "error": "Algo deu errado. Tente novamente."
+  }
 }

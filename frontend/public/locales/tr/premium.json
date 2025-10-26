@@ -1,23 +1,46 @@
 {
-  "upgrade_to_gold": "Gold'a yükselt",
-  "unlimited_likes": "Sınırsız beğeniler",
-  "see_who_likes_you": "Seni beğenenleri gör",
-  "boost": "Ücretsiz aylık Boost",
-  "super_likes": "Haftalık 2 Süper Beğeni",
-  "travel_anywhere": "Her yere pasaport",
-  "top_profiles": "En iyi profiller",
-  "ad_free": "Reklamlar olmadan",
-  "subscribe_now": "Şimdi abone ol",
-  "plan_1w": "1 hafta",
-  "plan_1m": "1 ay",
-  "plan_6m": "6 ay",
-  "total": "Toplam",
-  "continue": "Devam et",
-  "per_week": "/hafta",
-  "save": "Tasarruf",
-  "most_popular": "En popüler",
-  "best_value": "En iyi değer",
-  "unlock_all_features": "Tüm özelliklerin kilidiniki aç",
-  "rewind_last_swipe": "Son kaydırmayı geri al",
-  "unlimited_rewinds": "Sınırsız geri alma"
+  "title": "Gold'a yükselt",
+  "subtitle": "Eşleşme şansını artır — premium özellikleri aç.",
+  "benefits": {
+    "unlimited_likes": "Sınırsız Beğeni",
+    "see_who_likes_you": "Seni beğenenleri gör",
+    "boost_monthly": "Ayda 1 ücretsiz Boost",
+    "super_likes_weekly": "Haftada 2 Super Like",
+    "passport": "Passport — dünyada her yerde kaydır",
+    "top_profiles": "Senin için seçilen en iyi profiller",
+    "ad_free": "Reklamsız deneyim",
+    "control_who_sees_you": "Seni kimin gördüğünü kontrol et",
+    "control_who_you_see": "Kimi gördüğünü kontrol et",
+    "read_receipts": "Okundu bilgisi (yakında)",
+    "priority_support": "Öncelikli destek"
+  },
+  "plans": {
+    "label": "Bir plan seç",
+    "best_value": "En iyi değer",
+    "popular": "Popüler",
+    "save": "%{{percent}} tasarruf",
+    "plan_6m": "6 ay",
+    "plan_1m": "1 ay",
+    "plan_1w": "1 hafta"
+  },
+  "pricing": {
+    "per_week": "Haftalık CHF {{price}}",
+    "total": "Toplam",
+    "continue": "Devam et"
+  },
+  "upsell": {
+    "unlock_likes": "Seni beğenenleri aç",
+    "upgrade_to_see": "Hepsini görmek için yükselt",
+    "get_gold": "Gold al"
+  },
+  "legal": {
+    "auto_renew": "Devam ederek otomatik yenilemeyi kabul edersin. İstediğin zaman App Store'dan iptal edebilirsin.",
+    "terms": "Şartlar",
+    "privacy": "Gizlilik"
+  },
+  "status": {
+    "checkout_ready": "Ödeme hazır",
+    "restoring": "Satın alımlar geri yükleniyor…",
+    "error": "Bir hata oluştu. Lütfen tekrar dene."
+  }
 }

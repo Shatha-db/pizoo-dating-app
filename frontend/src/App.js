@@ -125,6 +125,14 @@ function AppRoot() {
                     }
                   />
                   <Route
+                    path="/swipe"
+                    element={
+                      <ProtectedRoute>
+                        <SwipePage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
                     path="/explore"
                     element={
                       <ProtectedRoute>

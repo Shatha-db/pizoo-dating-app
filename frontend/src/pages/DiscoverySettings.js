@@ -296,10 +296,8 @@ const DiscoverySettings = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data) {
-        // Guard against NaN radius with Number coercion
-        const rawRadius = response.data.max_distance;
-        const radius = Number(rawRadius);
-        const safeRadius = Number.isFinite(radius) && radius > 0 ? radius : DEFAULT_RADIUS;
+        // Guard against NaN radius with parseRadius helper
+        const safeRadius = parseRadius(response.data.max_distance);
         
         setSettings({
           ...response.data,

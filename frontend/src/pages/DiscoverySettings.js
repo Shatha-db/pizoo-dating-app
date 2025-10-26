@@ -314,10 +314,8 @@ const DiscoverySettings = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Guard radius before saving - coerce to Number and validate
-      const rawRadius = settings.max_distance;
-      const radius = Number(rawRadius);
-      const safeRadius = Number.isFinite(radius) && radius > 0 ? radius : DEFAULT_RADIUS;
+      // Guard radius before saving - use parseRadius helper
+      const safeRadius = parseRadius(settings.max_distance);
       
       await axios.put(
         `${API}/discovery-settings`,

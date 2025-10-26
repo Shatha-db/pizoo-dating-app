@@ -1,0 +1,10 @@
+{
+  "language": "Language",
+  "theme": "Theme",
+  "notifications": "Notifications",
+  "privacy": "Privacy & Safety",
+  "account": "Account Settings",
+  "help": "Help & Support",
+  "logout": "Logout",
+  "version": "Version"
+}

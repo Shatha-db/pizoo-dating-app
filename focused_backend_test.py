@@ -14,7 +14,7 @@ from PIL import Image
 import uuid
 
 # Configuration
-BASE_URL = "https://swipe-heartbeat.preview.emergentagent.com/api"
+BASE_URL = "https://pizoo-dating-1.preview.emergentagent.com/api"
 HEADERS = {"Content-Type": "application/json"}
 
 class FocusedTester:

@@ -16,7 +16,7 @@ import uuid
 import time
 
 # Configuration - Using REACT_APP_BACKEND_URL from frontend/.env
-BASE_URL = "https://swipe-heartbeat.preview.emergentagent.com/api"
+BASE_URL = "https://pizoo-dating-1.preview.emergentagent.com/api"
 HEADERS = {"Content-Type": "application/json"}
 
 class PizooTester:

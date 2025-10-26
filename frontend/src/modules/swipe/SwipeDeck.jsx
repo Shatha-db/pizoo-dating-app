@@ -194,9 +194,35 @@ export default function SwipeDeck({ users = [], onSwipe, onCardLeftScreen, class
                     <img
                       src={user.photos?.[0]?.url || user.photos?.[0] || user.primary_photo || '/placeholder-profile.jpg'}
                       alt={user.display_name || user.name}
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full object-cover ${gatingState.gated ? 'blur-xl scale-105' : ''}`}
                       draggable={false}
                     />
+                    
+                    {/* Gating Overlay */}
+                    {gatingState.gated && index === currentIndex && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center pointer-events-none"
+                      >
+                        <div className="pointer-events-auto">
+                          <div className="text-6xl mb-4">🔒</div>
+                          <h3 className="text-2xl font-bold text-white mb-2">
+                            {t('swipe:daily_limit_reached')}
+                          </h3>
+                          <p className="text-white/80 mb-4 text-sm">
+                            {t('swipe:upgrade_to_continue', { remaining: gatingState.remaining })}
+                          </p>
+                          <motion.button
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => onGate?.('daily_limit')}
+                            className="px-8 py-3 rounded-full bg-gradient-to-r from-[#F59E0B] to-[#EA580C] text-white font-semibold shadow-xl hover:brightness-110 transition-all"
+                          >
+                            {t('swipe:upgrade_now')}
+                          </motion.button>
+                        </div>
+                      </motion.div>
+                    )}
                     
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />

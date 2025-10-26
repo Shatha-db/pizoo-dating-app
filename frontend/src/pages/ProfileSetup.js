@@ -49,11 +49,41 @@ const ProfileSetup = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);
+  const [checkingProfile, setCheckingProfile] = useState(true);
+
+  // التحقق من وجود الـ profile عند تحميل الصفحة
+  useEffect(() => {
+    checkExistingProfile();
+  }, []);
 
   // طلب الموقع تلقائياً عند تحميل الصفحة
   useEffect(() => {
-    getLocation();
-  }, []);
+    if (!checkingProfile) {
+      getLocation();
+    }
+  }, [checkingProfile]);
+
+  const checkExistingProfile = async () => {
+    try {
+      const response = await axios.get(`${API}/profile/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      // إذا كان الـ profile موجود بالفعل، انتقل إلى الصفحة الرئيسية
+      if (response.data && response.data.display_name) {
+        console.log('Profile already exists, redirecting to home...');
+        navigate('/home', { replace: true });
+      } else {
+        setCheckingProfile(false);
+      }
+    } catch (error) {
+      // إذا لم يكن الـ profile موجود (404)، استمر في الإعداد
+      console.log('No profile found, continuing setup...');
+      setCheckingProfile(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;

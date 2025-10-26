@@ -186,18 +186,24 @@ const Home = () => {
       console.log('✅ GeoIP data obtained:', geoData);
       
       const defaultRadius = getDefaultRadius(geoData.countryCode);
+      const safeRadius = Number(defaultRadius);
       
-      // Save country only (no precise coordinates)
-      await axios.put(`${API}/user/location`, {
-        country: geoData.countryCode,
-        latitude: null,
-        longitude: null,
-        radiusKm: defaultRadius
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Save country only (no precise coordinates) with try-catch
+      try {
+        await axios.put(`${API}/user/location`, {
+          country: geoData.countryCode,
+          latitude: null,
+          longitude: null,
+          radiusKm: Number.isFinite(safeRadius) && safeRadius > 0 ? safeRadius : 25
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } catch (apiError) {
+        console.error('API error in GeoIP fallback:', apiError);
+        // Continue anyway - not critical
+      }
       
-      localStorage.setItem('user_country', geoData.countryCode);
+      localStorage.setItem('user_country', geoData.countryCode || '');
       console.log(`✅ GeoIP fallback complete: ${geoData.countryCode}`);
       
     } catch (error) {

@@ -1,10 +1,18 @@
 {
   "like": "Curtir",
   "superLike": "Super Like",
+  "super_like": "Super Like",
   "reject": "Passar",
+  "nope": "Não",
+  "rewind": "Voltar",
   "noMoreCards": "Sem mais perfis",
   "checkBackLater": "Volte mais tarde para novos matches!",
   "matched": "É um Match!",
+  "its_a_match": "É um Match!",
   "keepSwiping": "Continue deslizando",
-  "sendMessage": "Enviar mensagem"
+  "sendMessage": "Enviar mensagem",
+  "send_message": "Enviar mensagem",
+  "swipe_left": "Deslize para a esquerda para passar",
+  "swipe_right": "Deslize para a direita para curtir",
+  "swipe_up": "Deslize para cima para Super Like"
 }

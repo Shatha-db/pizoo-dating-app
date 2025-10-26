@@ -1,10 +1,18 @@
 {
   "like": "Mi piace",
   "superLike": "Super Like",
+  "super_like": "Super Like",
   "reject": "Passa",
+  "nope": "No",
+  "rewind": "Indietro",
   "noMoreCards": "Niente più profili",
   "checkBackLater": "Torna più tardi per nuovi match!",
   "matched": "È un Match!",
+  "its_a_match": "È un Match!",
   "keepSwiping": "Continua a scorrere",
-  "sendMessage": "Invia messaggio"
+  "sendMessage": "Invia messaggio",
+  "send_message": "Invia messaggio",
+  "swipe_left": "Scorri a sinistra per passare",
+  "swipe_right": "Scorri a destra per mettere mi piace",
+  "swipe_up": "Scorri in alto per Super Like"
 }

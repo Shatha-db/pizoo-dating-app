@@ -1,10 +1,18 @@
 {
   "like": "Gefällt mir",
   "superLike": "Super Like",
+  "super_like": "Super Like",
   "reject": "Weiter",
+  "nope": "Nein",
+  "rewind": "Zurückspulen",
   "noMoreCards": "Keine Profile mehr",
   "checkBackLater": "Schau später für neue Matches vorbei!",
   "matched": "Es ist ein Match!",
+  "its_a_match": "Es ist ein Match!",
   "keepSwiping": "Weiter swipen",
-  "sendMessage": "Nachricht senden"
+  "sendMessage": "Nachricht senden",
+  "send_message": "Nachricht senden",
+  "swipe_left": "Nach links wischen, um zu überspringen",
+  "swipe_right": "Nach rechts wischen, um zu liken",
+  "swipe_up": "Nach oben wischen für Super Like"
 }

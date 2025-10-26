@@ -26,6 +26,13 @@ import TopPicks from './pages/TopPicks';
 const DiscoverySettings = React.lazy(() => import('./pages/DiscoverySettings'));
 // ⚠️ Lazy load SwipePage to prevent framer-motion issues
 const SwipePage = React.lazy(() => import('./pages/SwipePage'));
+import DoubleDating from './pages/DoubleDating';
+import DoubleDatingInfo from './pages/DoubleDatingInfo';
+import Notifications from './pages/Notifications';
+import Premium from './pages/Premium';
+import Settings from './pages/Settings';
+import TermsNew from './pages/TermsNew';
+import CustomLogoPage from './pages/CustomLogoPage';
 import { Toaster } from './components/ui/sonner';
 import { useTranslation } from 'react-i18next';
 import Loader from './components/Loader';

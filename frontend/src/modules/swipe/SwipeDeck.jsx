@@ -156,6 +156,17 @@ export default function SwipeDeck({ users = [], onSwipe, onCardLeftScreen, class
   
   return (
     <div className={`w-full h-full flex flex-col items-center justify-between ${className}`}>
+      {/* Gating Counter (top banner) */}
+      {!gatingState.gated && gatingState.remaining <= 3 && (
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white px-4 py-2 text-center text-sm font-semibold shadow-lg"
+        >
+          {t('swipe:profiles_remaining', { count: gatingState.remaining })}
+        </motion.div>
+      )}
+      
       {/* Card Stack */}
       <div className="relative w-full flex-1 flex items-center justify-center px-4 py-4">
         <div className="relative w-full max-w-md" style={{ height: 'min(70vh, 600px)' }}>

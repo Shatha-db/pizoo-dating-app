@@ -257,7 +257,10 @@ const DiscoverySettings = () => {
       async (position) => {
         const { latitude, longitude } = position.coords;
         setUserLocation({ lat: latitude, lng: longitude });
+        setMapCenter({ lat: latitude, lng: longitude });
+        setMapZoom(11);
         setLocationPermission('granted');
+        setHasGPSLocation(true);
         
         try {
           // Use Nominatim (OpenStreetMap) for reverse geocoding

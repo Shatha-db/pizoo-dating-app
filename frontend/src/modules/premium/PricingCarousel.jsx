@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import PricingCard from './PricingCard';
 
 export default function PricingCarousel({ onSelect }) {
-  const { t } = useTranslation(['premium']);
+  const { t } = useTranslation('premium');
   const [activeIndex, setActiveIndex] = useState(0);
 
   const cards = [

@@ -75,9 +75,6 @@ const currentUserIcon = L.divIcon({
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-// Default radius constant
-const DEFAULT_RADIUS = 25;
-
 // Safe radius parser to prevent NaN
 const parseRadius = (val) => {
   try {

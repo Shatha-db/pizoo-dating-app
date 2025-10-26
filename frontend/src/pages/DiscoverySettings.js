@@ -351,15 +351,27 @@ const DiscoverySettings = () => {
             <MapPin className="w-20 h-20 mx-auto text-pink-500" />
           </div>
           <h2 className="text-2xl font-bold mb-4">نحتاج إلى موقعك</h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 mb-4">
             لعرض المستخدمين القريبين منك، نحتاج إلى إذن الوصول إلى موقعك الجغرافي
           </p>
+          
+          {/* Instructions Card */}
+          <div className="bg-pink-50 border border-pink-200 rounded-lg p-4 mb-6 text-right">
+            <h3 className="font-bold text-pink-700 mb-3">كيفية تفعيل الموقع:</h3>
+            <ol className="text-sm text-gray-700 space-y-2 list-decimal list-inside">
+              <li>اضغط على أيقونة القفل 🔒 أو الإعدادات بجانب عنوان الموقع في المتصفح</li>
+              <li>ابحث عن "الموقع" أو "Location"</li>
+              <li>اختر "السماح" أو "Allow"</li>
+              <li>قم بتحديث الصفحة</li>
+            </ol>
+          </div>
+
           <Button
             onClick={detectLocation}
             className="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-semibold py-3 rounded-xl mb-3"
           >
             <MapPin className="w-5 h-5 ml-2" />
-            تفعيل الموقع
+            المحاولة مرة أخرى
           </Button>
           <Button
             onClick={() => navigate('/home')}

@@ -5,6 +5,7 @@ import { useWebSocket } from '../context/WebSocketContext';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import BottomNav from '../components/BottomNav';
+import NotificationCard from '../components/NotificationCard';
 import { Shield, Flag, Settings as SettingsIcon, Heart, Camera } from 'lucide-react';
 import axios from 'axios';
 import { uploadImage } from '../utils/imageUpload';
@@ -72,7 +73,7 @@ const ChatList = () => {
       
       alert('تم رفع الصور بنجاح! ✅');
       // Navigate to edit profile to see and manage photos
-      navigate('/edit-profile');
+      navigate('/profile/edit');
     } catch (error) {
       console.error('Error uploading photos:', error);
       alert(error.message || 'حدث خطأ أثناء رفع الصور');
@@ -149,54 +150,34 @@ const ChatList = () => {
 
       <main className="max-w-2xl mx-auto">
         {/* Welcome Message from Team Pizoo */}
-        {showWelcomeMessage && (
-          <div className="px-4 py-4 border-b border-gray-100">
-            <div className="flex gap-3">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-red-500 rounded-full flex items-center justify-center">
-                  <Heart className="w-6 h-6 text-white" />
-                </div>
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className="font-bold text-gray-800">Team Pizoo</h3>
-                  <button
-                    onClick={dismissWelcomeMessage}
-                    className="text-gray-400 hover:text-gray-600"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-                <div className="bg-gray-100 rounded-2xl rounded-tr-none p-3 mb-2">
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    مرحباً بك في Pizoo! 🎉 عُد لدينا لنشاركك معك نصائح للتأكد من حصولك على أفضل تجربة ممكنة. وعندما تشعر بالخيرة؟ اسحب لليمين.
-                  </p>
-                </div>
-                <div className="bg-gray-100 rounded-2xl rounded-tr-none p-3">
-                  <p className="text-gray-700 text-sm mb-2">
-                    <span className="font-bold">الجميع هنا ليروك:</span> أضف المزيد من الصور لزيادة فرصك في تبادل الإعجاب.
-                  </p>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                  <Button
-                    onClick={handleAddPhotos}
-                    className="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white text-sm py-2 mt-2"
-                  >
-                    <Camera className="w-4 h-4 ml-2" />
-                    إضافة صور
-                  </Button>
-                </div>
-                <p className="text-xs text-gray-400 mt-2">اليوم 9:16 ص</p>
-              </div>
-            </div>
+        {showWelcomeMessage && conversations.length === 0 && (
+          <div className="p-4">
+            {/* Welcome Notification */}
+            <NotificationCard
+              title="مرحباً بك في Pizoo! 🎉"
+              message="عُد لدينا لنشاركك معك نصائح للتأكد من حصولك على أفضل تجربة ممكنة. وعندما تشعر بالخيرة؟ اسحب لليمين."
+              icon="💬"
+              onDismiss={() => setShowWelcomeMessage(false)}
+            />
+            
+            {/* Add Photos Notification */}
+            <NotificationCard
+              title="الجميع هنا ليروك 📸"
+              message="أضف المزيد من الصور لزيادة فرصك في تبادل الإعجاب."
+              icon="📷"
+              actionLabel="إضافة صور"
+              onAction={handleAddPhotos}
+              onDismiss={() => {}}
+            />
+            
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileChange}
+              className="hidden"
+            />
           </div>
         )}
 

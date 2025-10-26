@@ -137,6 +137,14 @@ function App() {
             }
           />
           <Route
+            path="/discovery"
+            element={
+              <ProtectedRoute>
+                <DiscoverySettings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/double-dating"
             element={
               <ProtectedRoute>

@@ -7,7 +7,7 @@ import requests
 import json
 import uuid
 
-BASE_URL = "https://pizoo-multilingual.preview.emergentagent.com/api"
+BASE_URL = "https://dating-ui-refresh.preview.emergentagent.com/api"
 HEADERS = {"Content-Type": "application/json"}
 
 def test_with_age():

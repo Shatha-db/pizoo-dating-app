@@ -545,7 +545,7 @@ Collections: 6
 ## 🌐 البيئة والنشر
 
 ### البيئة الحالية
-- **URL:** https://pizoo-multilingual.preview.emergentagent.com
+- **URL:** https://dating-ui-refresh.preview.emergentagent.com
 - **Backend:** Port 8001 (مخفي خلف proxy)
 - **Frontend:** Port 3000
 - **Database:** MongoDB (محلي)

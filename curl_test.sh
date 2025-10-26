@@ -3,7 +3,7 @@
 echo "🚀 اختبار Backend APIs باستخدام curl"
 echo "=================================="
 
-BASE_URL="https://pizoo-multilingual.preview.emergentagent.com/api"
+BASE_URL="https://dating-ui-refresh.preview.emergentagent.com/api"
 
 # 1. اختبار الاتصال الأساسي
 echo "1. اختبار الاتصال الأساسي..."

@@ -8,7 +8,7 @@ import json
 import uuid
 import math
 
-BASE_URL = "https://pizoo-multilingual.preview.emergentagent.com/api"
+BASE_URL = "https://dating-ui-refresh.preview.emergentagent.com/api"
 HEADERS = {"Content-Type": "application/json"}
 
 def calculate_distance(lat1, lon1, lat2, lon2):

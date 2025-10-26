@@ -41,7 +41,7 @@ Latest Commits:
 
 ### Frontend Environment (/app/frontend/.env)
 ```properties
-✓ REACT_APP_BACKEND_URL                    → https://pizoo-multilingual.preview.emergentagent.com
+✓ REACT_APP_BACKEND_URL                    → https://dating-ui-refresh.preview.emergentagent.com
 ✓ WDS_SOCKET_PORT                          → 443
 ✓ REACT_APP_CLOUDINARY_CLOUD_NAME          → dpm7hliv6
 ✓ REACT_APP_CLOUDINARY_API_KEY             → 613829485736883
@@ -115,7 +115,7 @@ INFO: Application startup complete.
 ```
 ✓ React Development Server running
 ✓ Hot Module Replacement (HMR) active
-✓ Accessible at: https://pizoo-multilingual.preview.emergentagent.com
+✓ Accessible at: https://dating-ui-refresh.preview.emergentagent.com
 ```
 
 **النتيجة:** جميع الخدمات تعمل بشكل مثالي ✓
@@ -127,7 +127,7 @@ INFO: Application startup complete.
 ### API Endpoints
 ```bash
 Test 1: Root Endpoint (/)
-curl https://pizoo-multilingual.preview.emergentagent.com/api/
+curl https://dating-ui-refresh.preview.emergentagent.com/api/
 Response: {"message":"Welcome to Subscription API"}
 Status: ✓ يعمل
 

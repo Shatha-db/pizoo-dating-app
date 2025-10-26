@@ -206,147 +206,180 @@ const ProfileView = () => {
       </header>
 
       <main className="max-w-2xl mx-auto">
-        {/* Photo Gallery */}
-        <div className="relative">
-          <div className="aspect-[3/4] relative bg-gray-200">
-            {profile.photos && profile.photos.length > 0 ? (
-              <>
-                <img
-                  src={profile.photos[currentPhotoIndex]}
-                  alt={profile.display_name}
-                  className="w-full h-full object-cover"
-                />
-                
-                {/* Photo Navigation */}
-                {profile.photos.length > 1 && (
+        {/* Photo Gallery - Unified Layout: Always media on top */}
+        <section className="profile-card flex flex-col gap-3">
+          {/* Profile Media */}
+          <div className="profile-media w-full">
+            <div className="relative">
+              <div className="aspect-[3/4] relative bg-gray-200">
+                {profile.photos && profile.photos.length > 0 ? (
                   <>
-                    {/* Click areas for navigation */}
-                    <div 
-                      className="absolute left-0 top-0 w-1/3 h-full cursor-pointer"
-                      onClick={nextPhoto}
-                    />
-                    <div 
-                      className="absolute right-0 top-0 w-1/3 h-full cursor-pointer"
-                      onClick={prevPhoto}
+                    <img
+                      src={profile.photos[currentPhotoIndex]}
+                      alt={profile.display_name}
+                      className="w-full h-full object-cover cursor-pointer"
+                      onClick={() => {
+                        setLightboxIndex(currentPhotoIndex);
+                        setLightboxOpen(true);
+                      }}
                     />
                     
-                    {/* Dots indicator */}
-                    <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-1">
-                      {profile.photos.map((_, index) => (
-                        <div
-                          key={index}
-                          className={`h-1 rounded-full transition-all ${
-                            index === currentPhotoIndex
-                              ? 'bg-white w-8'
-                              : 'bg-white/50 w-1'
-                          }`}
+                    {/* Photo Navigation */}
+                    {profile.photos.length > 1 && (
+                      <>
+                        {/* Click areas for navigation */}
+                        <div 
+                          className="absolute left-0 top-0 w-1/3 h-full cursor-pointer z-10"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            nextPhoto();
+                          }}
                         />
-                      ))}
-                    </div>
+                        <div 
+                          className="absolute right-0 top-0 w-1/3 h-full cursor-pointer z-10"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            prevPhoto();
+                          }}
+                        />
+                        
+                        {/* Dots indicator */}
+                        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-1 z-20">
+                          {profile.photos.map((_, index) => (
+                            <div
+                              key={index}
+                              className={`h-1 rounded-full transition-all ${
+                                index === currentPhotoIndex
+                                  ? 'bg-white w-8'
+                                  : 'bg-white/50 w-1'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </>
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-pink-300 to-purple-300 flex items-center justify-center text-8xl">
+                    ❤️
+                  </div>
                 )}
-              </>
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-pink-300 to-purple-300 flex items-center justify-center text-8xl">
-                ❤️
+              </div>
+            </div>
+            
+            {/* Photo Grid Thumbnails */}
+            {profile.photos && profile.photos.length > 1 && (
+              <div className="grid grid-cols-3 gap-2 mt-3 px-3">
+                {profile.photos.slice(0, 6).map((photo, i) => (
+                  <img
+                    key={i}
+                    src={photo}
+                    alt={`Photo ${i + 1}`}
+                    onClick={() => {
+                      setLightboxIndex(i);
+                      setLightboxOpen(true);
+                    }}
+                    className="w-full aspect-square object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity"
+                  />
+                ))}
               </div>
             )}
           </div>
-        </div>
 
-        {/* Profile Info */}
-        <div className="p-6 space-y-6">
-          {/* Name and Age */}
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2">
-              {profile.display_name}
-              {profile.age && <span className="text-2xl font-normal text-gray-600">{profile.age}</span>}
-            </h1>
-          </div>
-
-          {/* Location */}
-          {profile.location && (
-            <div className="flex items-center gap-2 text-gray-600">
-              <MapPin className="w-5 h-5" />
-              <span>{profile.location}</span>
+          {/* Profile Meta - Always below media */}
+          <div className="profile-meta w-full p-6 space-y-6">
+            {/* Name and Age */}
+            <div>
+              <h1 className="text-3xl font-bold flex items-center gap-2">
+                {profile.display_name}
+                {profile.age && <span className="text-2xl font-normal text-gray-600">{profile.age}</span>}
+              </h1>
             </div>
-          )}
 
-          {/* Occupation */}
-          {profile.occupation && (
-            <div className="flex items-center gap-2 text-gray-600">
-              <Briefcase className="w-5 h-5" />
-              <span>{profile.occupation}</span>
-            </div>
-          )}
+            {/* Location */}
+            {profile.location && (
+              <div className="flex items-center gap-2 text-gray-600">
+                <MapPin className="w-5 h-5" />
+                <span>{profile.location}</span>
+              </div>
+            )}
 
-          {/* Bio */}
-          {profile.bio && (
-            <Card className="p-4 bg-gray-50">
-              <p className="text-gray-700 leading-relaxed">{profile.bio}</p>
-            </Card>
-          )}
+            {/* Occupation */}
+            {profile.occupation && (
+              <div className="flex items-center gap-2 text-gray-600">
+                <Briefcase className="w-5 h-5" />
+                <span>{profile.occupation}</span>
+              </div>
+            )}
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4">
-            {profile.height && (
-              <Card className="p-4 text-center">
-                <div className="text-2xl font-bold text-pink-500">{profile.height}</div>
-                <div className="text-sm text-gray-600">الطول (سم)</div>
+            {/* Bio */}
+            {profile.bio && (
+              <Card className="p-4 bg-gray-50">
+                <p className="text-gray-700 leading-relaxed">{profile.bio}</p>
               </Card>
             )}
-            {profile.gender && (
-              <Card className="p-4 text-center">
-                <div className="text-2xl font-bold text-pink-500">
-                  {profile.gender === 'male' ? '👨' : profile.gender === 'female' ? '👩' : '🧑'}
+
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-4">
+              {profile.height && (
+                <Card className="p-4 text-center">
+                  <div className="text-2xl font-bold text-pink-500">{profile.height}</div>
+                  <div className="text-sm text-gray-600">الطول (سم)</div>
+                </Card>
+              )}
+              {profile.gender && (
+                <Card className="p-4 text-center">
+                  <div className="text-2xl font-bold text-pink-500">
+                    {profile.gender === 'male' ? '👨' : profile.gender === 'female' ? '👩' : '🧑'}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    {profile.gender === 'male' ? 'ذكر' : profile.gender === 'female' ? 'أنثى' : 'آخر'}
+                  </div>
+                </Card>
+              )}
+              {profile.languages && profile.languages.length > 0 && (
+                <Card className="p-4 text-center">
+                  <div className="text-2xl font-bold text-pink-500">{profile.languages.length}</div>
+                  <div className="text-sm text-gray-600">لغات</div>
+                </Card>
+              )}
+            </div>
+
+            {/* Interests */}
+            {profile.interests && profile.interests.length > 0 && (
+              <div>
+                <h3 className="font-bold text-lg mb-3">الاهتمامات</h3>
+                <div className="flex flex-wrap gap-2">
+                  {profile.interests.map((interest, index) => (
+                    <span
+                      key={index}
+                      className="bg-gradient-to-r from-pink-100 to-purple-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium"
+                    >
+                      {interest}
+                    </span>
+                  ))}
                 </div>
-                <div className="text-sm text-gray-600">
-                  {profile.gender === 'male' ? 'ذكر' : profile.gender === 'female' ? 'أنثى' : 'آخر'}
-                </div>
-              </Card>
+              </div>
             )}
+
+            {/* Languages */}
             {profile.languages && profile.languages.length > 0 && (
-              <Card className="p-4 text-center">
-                <div className="text-2xl font-bold text-pink-500">{profile.languages.length}</div>
-                <div className="text-sm text-gray-600">لغات</div>
-              </Card>
+              <div>
+                <h3 className="font-bold text-lg mb-3">اللغات</h3>
+                <div className="flex flex-wrap gap-2">
+                  {profile.languages.map((language, index) => (
+                    <span
+                      key={index}
+                      className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium"
+                    >
+                      {language}
+                    </span>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
-
-          {/* Interests */}
-          {profile.interests && profile.interests.length > 0 && (
-            <div>
-              <h3 className="font-bold text-lg mb-3">الاهتمامات</h3>
-              <div className="flex flex-wrap gap-2">
-                {profile.interests.map((interest, index) => (
-                  <span
-                    key={index}
-                    className="bg-gradient-to-r from-pink-100 to-purple-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium"
-                  >
-                    {interest}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Languages */}
-          {profile.languages && profile.languages.length > 0 && (
-            <div>
-              <h3 className="font-bold text-lg mb-3">اللغات</h3>
-              <div className="flex flex-wrap gap-2">
-                {profile.languages.map((language, index) => (
-                  <span
-                    key={index}
-                    className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium"
-                  >
-                    {language}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        </section>
 
         {/* Action Buttons */}
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">

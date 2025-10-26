@@ -73,7 +73,7 @@ const ChatList = () => {
       
       alert('تم رفع الصور بنجاح! ✅');
       // Navigate to edit profile to see and manage photos
-      navigate('/edit-profile');
+      navigate('/profile/edit');
     } catch (error) {
       console.error('Error uploading photos:', error);
       alert(error.message || 'حدث خطأ أثناء رفع الصور');

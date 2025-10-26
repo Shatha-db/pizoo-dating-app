@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
-import { X, MapPin, Users, Calendar, Navigation, Heart } from 'lucide-react';
+import { X, MapPin, Users, Calendar, Navigation, Heart, Info } from 'lucide-react';
 import { MapContainer, TileLayer, Circle, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import axios from 'axios';
 import { debounce } from 'lodash';
-import { getDefaultRadius, getCountryInfo } from '../utils/geoUtils';
+import { COUNTRY_CENTERS, DEFAULT_CENTER, DEFAULT_RADIUS } from '../utils/countryCenters';
 import UserBottomSheet from '../components/UserBottomSheet';
 
 // Fix for default marker icon in React Leaflet
@@ -75,9 +75,6 @@ const currentUserIcon = L.divIcon({
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-// Default radius constant
-const DEFAULT_RADIUS = 25;
-
 // Safe radius parser to prevent NaN
 const parseRadius = (val) => {
   try {
@@ -124,14 +121,17 @@ const DiscoverySettings = () => {
   const { token } = useAuth();
   const [settings, setSettings] = useState({
     location: '',
-    max_distance: DEFAULT_RADIUS, // Use constant
+    max_distance: DEFAULT_RADIUS,
     interested_in: 'all',
     min_age: 18,
     max_age: 100,
     show_new_profiles_only: false,
     show_verified_only: false
   });
-  const [userLocation, setUserLocation] = useState({ lat: 47.5596, lng: 7.5886 }); // Default: Basel
+  const [userLocation, setUserLocation] = useState(null); // Will be set from GPS or country
+  const [userCountry, setUserCountry] = useState(null); // Country code from /me API
+  const [mapCenter, setMapCenter] = useState(DEFAULT_CENTER);
+  const [mapZoom, setMapZoom] = useState(DEFAULT_CENTER.zoom);
   const [locationLoading, setLocationLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -139,19 +139,62 @@ const DiscoverySettings = () => {
   const [nearbyUsers, setNearbyUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [locationPermission, setLocationPermission] = useState('prompt'); // 'granted', 'denied', 'prompt'
+  const [locationPermission, setLocationPermission] = useState('prompt');
+  const [hasGPSLocation, setHasGPSLocation] = useState(false);
   const mapRef = useRef(null);
 
   useEffect(() => {
-    fetchSettings();
-    checkLocationPermission();
+    const initializeLocation = async () => {
+      await fetchSettings();
+      await fetchUserData();
+      checkLocationPermission();
+    };
+    initializeLocation();
   }, []);
 
   useEffect(() => {
-    if (userLocation.lat && userLocation.lng) {
+    if (userLocation && userLocation.lat && userLocation.lng) {
       fetchNearbyUsers();
     }
   }, [userLocation, settings.max_distance]);
+
+  // Fetch user data to get country
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (response.data) {
+        const user = response.data;
+        
+        // Check if user has precise location
+        if (user.location && user.location.coordinates) {
+          const [lng, lat] = user.location.coordinates;
+          setUserLocation({ lat, lng });
+          setMapCenter({ lat, lng });
+          setMapZoom(11);
+          setHasGPSLocation(true);
+        } else if (user.country) {
+          // Use country centroid
+          setUserCountry(user.country);
+          const countryData = COUNTRY_CENTERS[user.country] || DEFAULT_CENTER;
+          setMapCenter({ lat: countryData.lat, lng: countryData.lng });
+          setMapZoom(countryData.zoom);
+          setHasGPSLocation(false);
+        } else {
+          // Use global fallback
+          setMapCenter(DEFAULT_CENTER);
+          setMapZoom(DEFAULT_CENTER.zoom);
+          setHasGPSLocation(false);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      setMapCenter(DEFAULT_CENTER);
+      setMapZoom(DEFAULT_CENTER.zoom);
+    }
+  };
 
   const checkLocationPermission = async () => {
     if (!navigator.permissions) {
@@ -183,11 +226,12 @@ const DiscoverySettings = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ lat: latitude, lng: longitude });
+          setMapCenter({ lat: latitude, lng: longitude });
+          setMapZoom(11);
           setLocationPermission('granted');
+          setHasGPSLocation(true);
         },
         (error) => {
           console.error('Error getting location:', error);
@@ -211,7 +255,10 @@ const DiscoverySettings = () => {
       async (position) => {
         const { latitude, longitude } = position.coords;
         setUserLocation({ lat: latitude, lng: longitude });
+        setMapCenter({ lat: latitude, lng: longitude });
+        setMapZoom(11);
         setLocationPermission('granted');
+        setHasGPSLocation(true);
         
         try {
           // Use Nominatim (OpenStreetMap) for reverse geocoding
@@ -246,22 +293,26 @@ const DiscoverySettings = () => {
   };
 
   const recenterMap = () => {
-    if (userLocation.lat && userLocation.lng) {
+    if (hasGPSLocation && userLocation && userLocation.lat && userLocation.lng) {
+      setMapCenter({ lat: userLocation.lat, lng: userLocation.lng });
+      setMapZoom(11);
       setMapKey(prev => prev + 1);
     } else {
+      // Try to get GPS location
       detectLocation();
     }
   };
 
   // Fetch nearby users with viewport-based pagination
   const fetchNearbyUsers = useCallback(async () => {
-    if (!userLocation.lat || !userLocation.lng) return;
+    if (!userLocation || !userLocation.lat || !userLocation.lng) return;
     
     setLoadingUsers(true);
     try {
+      const safeRadius = parseRadius(settings.max_distance);
       const response = await axios.get(`${API}/profiles/discover`, {
         params: {
-          max_distance: settings.max_distance,
+          max_distance: safeRadius,
           latitude: userLocation.lat,
           longitude: userLocation.lng,
           limit: 50 // Fetch more for clustering
@@ -439,7 +490,17 @@ const DiscoverySettings = () => {
           </div>
           
           {/* Map View with Clustering */}
-          <div className="mb-4 rounded-lg overflow-hidden border-2 border-gray-200 relative" style={{ height: '400px' }}>
+          <div className="map-container mb-4 rounded-lg overflow-hidden border-2 border-gray-200 relative" style={{ height: '400px' }}>
+            {/* GPS Hint Banner when using country approximation */}
+            {!hasGPSLocation && userCountry && (
+              <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-[1000] max-w-md text-center text-sm flex items-center gap-2">
+                <Info className="w-4 h-4 flex-shrink-0" />
+                <span>
+                  تم استخدام موقعك التقريبي ({userCountry}). يمكنك تفعيل GPS للحصول على موقع دقيق.
+                </span>
+              </div>
+            )}
+            
             {loadingUsers && (
               <div className="absolute top-4 right-4 bg-white rounded-lg px-4 py-2 shadow-lg z-[1000]">
                 <div className="flex items-center gap-2">
@@ -458,106 +519,113 @@ const DiscoverySettings = () => {
               <Navigation className="w-5 h-5 text-pink-500" />
             </button>
 
-            <MapContainer 
-              key={mapKey}
-              ref={mapRef}
-              center={[userLocation.lat, userLocation.lng]} 
-              zoom={11} 
-              style={{ height: '100%', width: '100%' }}
-              zoomControl={true}
-              scrollWheelZoom={true}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              
-              {/* Current User Marker */}
-              <Marker 
-                position={[userLocation.lat, userLocation.lng]}
-                icon={currentUserIcon}
+            {mapCenter && mapCenter.lat && mapCenter.lng && (
+              <MapContainer 
+                key={mapKey}
+                ref={mapRef}
+                center={[mapCenter.lat, mapCenter.lng]} 
+                zoom={mapZoom} 
+                style={{ height: '100%', width: '100%' }}
+                zoomControl={true}
+                scrollWheelZoom={true}
               >
-                <Popup>
-                  <div className="text-center" dir="rtl">
-                    <strong>موقعك الحالي</strong>
-                  </div>
-                </Popup>
-              </Marker>
-              
-              {/* Distance radius circle */}
-              <Circle
-                center={[userLocation.lat, userLocation.lng]}
-                radius={(() => {
-                  // Guard: use parseRadius helper
-                  return parseRadius(settings.max_distance) * 1000; // km to meters
-                })()}
-                pathOptions={{ 
-                  color: '#ec4899', 
-                  fillColor: '#ec4899',
-                  fillOpacity: 0.1,
-                  weight: 2,
-                  dashArray: '10, 10'
-                }}
-              />
-
-              {/* Clustered User Markers */}
-              <MarkerClusterGroup
-                chunkedLoading
-                showCoverageOnHover={false}
-                spiderfyOnMaxZoom={true}
-                maxClusterRadius={60}
-                iconCreateFunction={(cluster) => {
-                  const count = cluster.getChildCount();
-                  return L.divIcon({
-                    html: `<div style="
-                      background: linear-gradient(135deg, #ec4899 0%, #ef4444 100%);
-                      border-radius: 50%;
-                      width: 50px;
-                      height: 50px;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      color: white;
-                      font-weight: bold;
-                      font-size: 18px;
-                      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.5);
-                      border: 3px solid white;
-                    ">${count}</div>`,
-                    className: 'custom-cluster-icon',
-                    iconSize: [50, 50]
-                  });
-                }}
-              >
-                {Array.isArray(nearbyUsers) && nearbyUsers.map((user) => {
-                  if (!user.latitude || !user.longitude) return null;
-                  
-                  return (
-                    <Marker
-                      key={user.id}
-                      position={[user.latitude, user.longitude]}
-                      icon={userMarkerIcon}
-                      eventHandlers={{
-                        click: () => setSelectedUser(user)
-                      }}
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                
+                {/* Current User Marker - Only show if we have GPS location */}
+                {hasGPSLocation && userLocation && (
+                  <>
+                    <Marker 
+                      position={[userLocation.lat, userLocation.lng]}
+                      icon={currentUserIcon}
                     >
                       <Popup>
-                        <div className="text-center min-w-[150px]" dir="rtl">
-                          <strong>{user.name}, {user.age}</strong>
-                          {user.distance && (
-                            <p className="text-xs text-gray-600 mt-1">
-                              {user.distance < 1 ? '< 1' : Math.round(user.distance)} كم
-                            </p>
-                          )}
+                        <div className="text-center" dir="rtl">
+                          <strong>موقعك الحالي</strong>
                         </div>
                       </Popup>
                     </Marker>
-                  );
-                })}
-              </MarkerClusterGroup>
+                    
+                    {/* Distance radius circle */}
+                    <Circle
+                      center={[userLocation.lat, userLocation.lng]}
+                      radius={parseRadius(settings.max_distance) * 1000}
+                      pathOptions={{ 
+                        color: '#ec4899', 
+                        fillColor: '#ec4899',
+                        fillOpacity: 0.1,
+                        weight: 2,
+                        dashArray: '10, 10'
+                      }}
+                    />
+                  </>
+                )}
 
-              <MapUpdater center={[userLocation.lat, userLocation.lng]} zoom={11} />
-              <MapEventHandler onMapMove={debouncedMapMove} />
-            </MapContainer>
+                {/* Clustered User Markers */}
+                <MarkerClusterGroup
+                  chunkedLoading
+                  showCoverageOnHover={false}
+                  spiderfyOnMaxZoom={true}
+                  maxClusterRadius={60}
+                  iconCreateFunction={(cluster) => {
+                    const count = cluster.getChildCount();
+                    return L.divIcon({
+                      html: `<div style="
+                        background: linear-gradient(135deg, #ec4899 0%, #ef4444 100%);
+                        border-radius: 50%;
+                        width: 50px;
+                        height: 50px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white;
+                        font-weight: bold;
+                        font-size: 18px;
+                        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.5);
+                        border: 3px solid white;
+                      ">${count}</div>`,
+                      className: 'custom-cluster-icon',
+                      iconSize: [50, 50]
+                    });
+                  }}
+                >
+                  {Array.isArray(nearbyUsers) && nearbyUsers.map((user) => {
+                    if (!user.latitude || !user.longitude) return null;
+                    
+                    return (
+                      <Marker
+                        key={user.id}
+                        position={[user.latitude, user.longitude]}
+                        icon={userMarkerIcon}
+                        eventHandlers={{
+                          click: () => setSelectedUser(user)
+                        }}
+                      >
+                        <Popup>
+                          <div className="text-center min-w-[150px]" dir="rtl">
+                            <strong>{user.name}, {user.age}</strong>
+                            {user.distance && (
+                              <p className="text-xs text-gray-600 mt-1">
+                                {user.distance < 1 ? '< 1' : Math.round(user.distance)} كم
+                              </p>
+                            )}
+                          </div>
+                        </Popup>
+                      </Marker>
+                    );
+                  })}
+                </MarkerClusterGroup>
+
+                {hasGPSLocation && userLocation && (
+                  <>
+                    <MapUpdater center={[userLocation.lat, userLocation.lng]} zoom={11} />
+                    <MapEventHandler onMapMove={debouncedMapMove} />
+                  </>
+                )}
+              </MapContainer>
+            )}
           </div>
 
           {/* Users Count */}

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { WebSocketProvider } from './context/WebSocketContext';
@@ -31,240 +31,252 @@ import Settings from './pages/Settings';
 import TermsNew from './pages/TermsNew';
 import CustomLogoPage from './pages/CustomLogoPage';
 import { Toaster } from './components/ui/sonner';
-import i18n from './i18n';
-import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import './App.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-function App() {
-  // i18n persistence from /me API on app boot
-  useEffect(() => {
-    const initializeLanguage = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const response = await axios.get(`${BACKEND_URL}/api/me`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          
-          if (response.data && response.data.language) {
-            const userLang = response.data.language;
-            await i18n.changeLanguage(userLang);
-            console.log('✅ Language loaded from /me API:', userLang);
-          } else {
-            // Fallback to browser detector
-            console.log('ℹ️ No user language found, using browser/localStorage detector');
-          }
-        } catch (error) {
-          console.error('Error fetching user language:', error);
-          // Fallback to browser detector (already configured in i18n.js)
-        }
-      }
-    };
-    
-    initializeLanguage();
-  }, []);
-  return (
-    <AuthProvider>
-      <ThemeProvider>
-        <NotificationProvider>
-          <WebSocketProvider>
-            <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/terms" element={<TermsNew />} />
-          <Route path="/privacy" element={<TermsNew />} />
-          <Route path="/cookies" element={<TermsNew />} />
-          <Route path="/custom-logo" element={<CustomLogoPage />} />
-          <Route path="/dashboard" element={<Navigate to="/home" replace />} />
-          <Route
-            path="/add-payment"
-            element={
-              <ProtectedRoute>
-                <AddPayment />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile/setup"
-            element={
-              <ProtectedRoute>
-                <ProfileSetup />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/discover"
-            element={
-              <ProtectedRoute>
-                <Discover />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/explore"
-            element={
-              <ProtectedRoute>
-                <Explore />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/top-picks"
-            element={
-              <ProtectedRoute>
-                <TopPicks />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/discovery-settings"
-            element={
-              <ProtectedRoute>
-                <DiscoverySettings />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/discovery"
-            element={
-              <ProtectedRoute>
-                <DiscoverySettings />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/double-dating"
-            element={
-              <ProtectedRoute>
-                <DoubleDating />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/double-dating-info"
-            element={
-              <ProtectedRoute>
-                <DoubleDatingInfo />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/likes"
-            element={
-              <ProtectedRoute>
-                <Likes />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/matches"
-            element={
-              <ProtectedRoute>
-                <Matches />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <ProfileNew />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile/old"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile/edit"
-            element={
-              <ProtectedRoute>
-                <EditProfile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile/:userId"
-            element={
-              <ProtectedRoute>
-                <ProfileView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/likes-you"
-            element={
-              <ProtectedRoute>
-                <LikesYou />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/notifications"
-            element={
-              <ProtectedRoute>
-                <Notifications />
-              </ProtectedRoute>
-            }
-          />
+function AppRoot() {
+  const { i18n } = useTranslation();
+  const [ready, setReady] = useState(false);
 
-          <Route
-            path="/premium"
-            element={
-              <ProtectedRoute>
-                <Premium />
-              </ProtectedRoute>
+  useEffect(() => {
+    (async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (token) {
+          const r = await fetch(`${BACKEND_URL}/api/me`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (r.ok) {
+            const me = await r.json();
+            if (me?.language && i18n.language !== me.language) {
+              await i18n.changeLanguage(me.language);
+              console.log('✅ Language loaded from /me API:', me.language);
             }
-          />
-          <Route
-            path="/chat"
-            element={
-              <ProtectedRoute>
-                <ChatList />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/chat/:matchId"
-            element={
-              <ProtectedRoute>
-                <ChatRoom />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-        <Toaster />
-      </BrowserRouter>
-      </WebSocketProvider>
-      </NotificationProvider>
-      </ThemeProvider>
-    </AuthProvider>
+          }
+        }
+      } catch (e) {
+        console.warn('me fetch failed', e);
+      } finally {
+        setReady(true);
+      }
+    })();
+  }, [i18n]);
+
+  if (!ready) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ width: '64px', height: '64px', margin: '0 auto 1rem', border: '4px solid #ec4899', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div key={i18n.language}>
+      <AuthProvider>
+        <ThemeProvider>
+          <NotificationProvider>
+            <WebSocketProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Navigate to="/login" replace />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/terms" element={<TermsNew />} />
+                  <Route path="/privacy" element={<TermsNew />} />
+                  <Route path="/cookies" element={<TermsNew />} />
+                  <Route path="/custom-logo" element={<CustomLogoPage />} />
+                  <Route path="/dashboard" element={<Navigate to="/home" replace />} />
+                  <Route
+                    path="/add-payment"
+                    element={
+                      <ProtectedRoute>
+                        <AddPayment />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile/setup"
+                    element={
+                      <ProtectedRoute>
+                        <ProfileSetup />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/discover"
+                    element={
+                      <ProtectedRoute>
+                        <Discover />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/home"
+                    element={
+                      <ProtectedRoute>
+                        <Home />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/explore"
+                    element={
+                      <ProtectedRoute>
+                        <Explore />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/top-picks"
+                    element={
+                      <ProtectedRoute>
+                        <TopPicks />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/discovery-settings"
+                    element={
+                      <ProtectedRoute>
+                        <DiscoverySettings />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/discovery"
+                    element={
+                      <ProtectedRoute>
+                        <DiscoverySettings />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/double-dating"
+                    element={
+                      <ProtectedRoute>
+                        <DoubleDating />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/double-dating-info"
+                    element={
+                      <ProtectedRoute>
+                        <DoubleDatingInfo />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/likes"
+                    element={
+                      <ProtectedRoute>
+                        <Likes />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/matches"
+                    element={
+                      <ProtectedRoute>
+                        <Matches />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute>
+                        <ProfileNew />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile/old"
+                    element={
+                      <ProtectedRoute>
+                        <Profile />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile/edit"
+                    element={
+                      <ProtectedRoute>
+                        <EditProfile />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile/:userId"
+                    element={
+                      <ProtectedRoute>
+                        <ProfileView />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/likes-you"
+                    element={
+                      <ProtectedRoute>
+                        <LikesYou />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/notifications"
+                    element={
+                      <ProtectedRoute>
+                        <Notifications />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  <Route
+                    path="/premium"
+                    element={
+                      <ProtectedRoute>
+                        <Premium />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/chat"
+                    element={
+                      <ProtectedRoute>
+                        <ChatList />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/chat/:matchId"
+                    element={
+                      <ProtectedRoute>
+                        <ChatRoom />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/settings"
+                    element={
+                      <ProtectedRoute>
+                        <Settings />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+                <Toaster />
+              </BrowserRouter>
+            </WebSocketProvider>
+          </NotificationProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </div>
   );
 }
 
-export default App;
+export default AppRoot;

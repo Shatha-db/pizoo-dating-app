@@ -56,20 +56,24 @@ const Settings = () => {
     navigate('/login');
   };
 
-  const changeLanguage = (lng) => {
-    // Change language
-    i18n.changeLanguage(lng);
-    
-    // Save to localStorage
-    localStorage.setItem('preferred_language', lng);
-    
-    // Update document direction for RTL/LTR
-    const rtlLanguages = ['ar', 'he', 'fa', 'ur'];
-    document.documentElement.dir = rtlLanguages.includes(lng) ? 'rtl' : 'ltr';
-    document.documentElement.lang = lng;
-    
-    // Show success toast
-    console.log(`✅ Language changed to: ${lng}`);
+  const changeLanguage = async (lng) => {
+    try {
+      // Change language in i18n
+      await i18n.changeLanguage(lng);
+      
+      // Persist to backend
+      await axios.put(
+        `${API}/user/language`,
+        { language: lng },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      console.log(`✅ Language changed to: ${lng}`);
+    } catch (error) {
+      console.error('Error changing language:', error);
+      // Still change locally even if backend fails
+      await i18n.changeLanguage(lng);
+    }
   };
 
   if (loading) {

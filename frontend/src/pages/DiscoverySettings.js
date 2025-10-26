@@ -301,13 +301,14 @@ const DiscoverySettings = () => {
 
   // Fetch nearby users with viewport-based pagination
   const fetchNearbyUsers = useCallback(async () => {
-    if (!userLocation.lat || !userLocation.lng) return;
+    if (!userLocation || !userLocation.lat || !userLocation.lng) return;
     
     setLoadingUsers(true);
     try {
+      const safeRadius = parseRadius(settings.max_distance);
       const response = await axios.get(`${API}/profiles/discover`, {
         params: {
-          max_distance: settings.max_distance,
+          max_distance: safeRadius,
           latitude: userLocation.lat,
           longitude: userLocation.lng,
           limit: 50 // Fetch more for clustering

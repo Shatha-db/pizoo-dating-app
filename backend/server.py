@@ -118,6 +118,44 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Country-based default radius mapping (in km)
+COUNTRY_DEFAULT_RADIUS = {
+    "BH": 10,  # Bahrain (small)
+    "QA": 15,  # Qatar (small)
+    "KW": 20,  # Kuwait (small)
+    "AE": 25,  # UAE (medium)
+    "OM": 30,  # Oman (medium)
+    "LB": 20,  # Lebanon (medium)
+    "JO": 25,  # Jordan (medium)
+    "SA": 50,  # Saudi Arabia (large)
+    "EG": 50,  # Egypt (large)
+    "IQ": 50,  # Iraq (large)
+    "MA": 50,  # Morocco (large)
+    "DZ": 75,  # Algeria (very large)
+    "FR": 50,  # France
+    "DE": 40,  # Germany
+    "ES": 50,  # Spain
+    "IT": 40,  # Italy
+    "GB": 40,  # United Kingdom
+    "TR": 50,  # Turkey
+    "US": 100, # United States (very large)
+    "CA": 100, # Canada (very large)
+    "BR": 100, # Brazil (very large)
+    "MX": 75,  # Mexico (large)
+    "RU": 100, # Russia (very large)
+    "CH": 25,  # Switzerland (for Basel testing)
+}
+GLOBAL_DEFAULT_RADIUS = 25  # Default fallback
+
+
+def radius_for_country(country: Optional[str], fallback: float = GLOBAL_DEFAULT_RADIUS) -> float:
+    """Get default radius for a country code"""
+    if country:
+        r = COUNTRY_DEFAULT_RADIUS.get(country.upper())
+        if r:
+            return float(r)
+    return float(fallback)
+
 
 # ===== Models =====
 

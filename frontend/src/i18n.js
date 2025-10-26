@@ -16,9 +16,12 @@ i18n
     debug: false,
     
     // Namespaces configuration for lazy loading
-    ns: ['common', 'auth', 'profile', 'chat', 'map'],
+    ns: ['common', 'auth', 'profile', 'chat', 'map', 'notifications', 'settings'],
     defaultNS: 'common',
     fallbackNS: 'common',
+    
+    // Prevent dot notation interpretation (use explicit namespace:key)
+    keySeparator: false,
     
     // Detection options
     detection: {

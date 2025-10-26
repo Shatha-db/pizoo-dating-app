@@ -594,11 +594,7 @@ const DiscoverySettings = () => {
           <h2 className="text-lg font-bold mb-2">أقصى مسافة</h2>
           <div className="flex items-center justify-between mb-4">
             <span className="text-3xl font-bold text-pink-500">
-              {(() => {
-                // Display guard
-                const r = Number(settings.max_distance);
-                return Number.isFinite(r) && r > 0 ? r : DEFAULT_RADIUS;
-              })()} km
+              {parseRadius(settings.max_distance)} km
             </span>
             <span className="text-sm text-gray-600">نطاق البحث</span>
           </div>

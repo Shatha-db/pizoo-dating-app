@@ -30,8 +30,8 @@ i18n
       loadPath: '/locales/{{lng}}/translation.json',
     },
     
-    // Available languages
-    supportedLngs: ['en', 'ar', 'fr', 'es'],
+    // Available languages (BCP-47 compliant)
+    supportedLngs: ['en', 'ar', 'fr', 'es', 'de', 'tr', 'it', 'pt-BR', 'ru'],
     
     react: {
       useSuspense: true,

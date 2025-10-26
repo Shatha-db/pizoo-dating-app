@@ -7,7 +7,7 @@ import requests
 import json
 import uuid
 
-BASE_URL = "https://pizoo-dating-1.preview.emergentagent.com/api"
+BASE_URL = "https://pizoo-dating-2.preview.emergentagent.com/api"
 HEADERS = {"Content-Type": "application/json"}
 
 def test_single_endpoint():

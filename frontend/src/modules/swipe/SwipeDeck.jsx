@@ -1,8 +1,9 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import TinderCard from 'react-tinder-card';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { heartBurst, shake, hapticFeedback } from '../../utils/animations';
+import { getGatingState, incView, recordSwipe } from '../premium/gating';
 
 const ActionButton = ({ color, icon, onClick, size = 'md', label }) => {
   const sizes = {

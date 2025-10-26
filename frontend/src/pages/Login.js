@@ -10,6 +10,9 @@ import { Alert, AlertDescription } from '../components/ui/alert';
 import { LogIn, Globe } from 'lucide-react';
 import CustomLogo from '../components/CustomLogo';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Login = () => {
   const navigate = useNavigate();

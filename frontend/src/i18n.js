@@ -38,7 +38,7 @@ i18n
   .init({
     supportedLngs: SUPPORTED,
     fallbackLng: 'en',
-    ns: ['common','auth','profile','chat','map','notifications','settings','premium','swipe','likes'],
+    ns: ['common','auth','profile','chat','map','notifications','settings','swipe','likes','premium'],
     defaultNS: 'common',
     fallbackNS: 'common',
     keySeparator: false,     // استعمل ns:key بدل ns.key

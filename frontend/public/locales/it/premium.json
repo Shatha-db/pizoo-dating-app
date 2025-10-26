@@ -1,0 +1,46 @@
+{
+  "title": "Passa a Gold",
+  "subtitle": "Moltiplica le possibilità di match — sblocca le funzioni premium.",
+  "benefits": {
+    "unlimited_likes": "Like illimitati",
+    "see_who_likes_you": "Vedi chi ti ha messo Like",
+    "boost_monthly": "1 Boost gratuito al mese",
+    "super_likes_weekly": "2 Super Likes a settimana",
+    "passport": "Passport — swipe in tutto il mondo",
+    "top_profiles": "Migliori profili per te",
+    "ad_free": "Senza pubblicità",
+    "control_who_sees_you": "Controlla chi ti vede",
+    "control_who_you_see": "Controlla chi vedi",
+    "read_receipts": "Conferme di lettura (presto)",
+    "priority_support": "Supporto prioritario"
+  },
+  "plans": {
+    "label": "Scegli un piano",
+    "best_value": "Miglior offerta",
+    "popular": "Popolare",
+    "save": "Risparmia {{percent}}",
+    "plan_6m": "6 mesi",
+    "plan_1m": "1 mese",
+    "plan_1w": "1 settimana"
+  },
+  "pricing": {
+    "per_week": "CHF {{price}}/settimana",
+    "total": "Totale",
+    "continue": "Continua"
+  },
+  "upsell": {
+    "unlock_likes": "Sblocca chi ti ha messo Like",
+    "upgrade_to_see": "Fai l'upgrade per vedere tutto",
+    "get_gold": "Ottieni Gold"
+  },
+  "legal": {
+    "auto_renew": "Continuando, accetti il rinnovo automatico. Puoi annullare in qualsiasi momento dalle impostazioni dell'App Store.",
+    "terms": "Termini",
+    "privacy": "Privacy"
+  },
+  "status": {
+    "checkout_ready": "Checkout pronto",
+    "restoring": "Ripristino acquisti…",
+    "error": "Qualcosa è andato storto. Riprova."
+  }
+}

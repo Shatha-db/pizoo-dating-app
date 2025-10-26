@@ -1,0 +1,46 @@
+{
+  "title": "الترقية إلى Gold",
+  "subtitle": "ضاعِف فرصك في التطابق — افتح الميزات المميّزة.",
+  "benefits": {
+    "unlimited_likes": "إعجابات غير محدودة",
+    "see_who_likes_you": "شاهد من أعجب بك",
+    "boost_monthly": "Boost مجاني شهريًا",
+    "super_likes_weekly": "٢ Super Likes أسبوعيًا",
+    "passport": "جواز سفر — تَواصل مع العالم",
+    "top_profiles": "أفضل الحسابات المختارة لك",
+    "ad_free": "تجربة بدون إعلانات",
+    "control_who_sees_you": "تحكّم بمن يراك",
+    "control_who_you_see": "تحكّم بمن تراه",
+    "read_receipts": "إثبات قراءة الرسائل (قريبًا)",
+    "priority_support": "دعم أولوية"
+  },
+  "plans": {
+    "label": "اختر الخطة",
+    "best_value": "أفضل قيمة",
+    "popular": "الأكثر شيوعًا",
+    "save": "وفّر {{percent}}",
+    "plan_6m": "٦ أشهر",
+    "plan_1m": "شهر ١",
+    "plan_1w": "أسبوع ١"
+  },
+  "pricing": {
+    "per_week": "CHF {{price}}/أسبوع",
+    "total": "المجموع",
+    "continue": "متابعة"
+  },
+  "upsell": {
+    "unlock_likes": "افتح قائمة من أعجبوا بك",
+    "upgrade_to_see": "قم بالترقية لعرض كل الإعجابات",
+    "get_gold": "احصل على Gold"
+  },
+  "legal": {
+    "auto_renew": "بالمتابعة، توافق على التجديد التلقائي. يمكنك الإلغاء في إعدادات المتجر في أي وقت.",
+    "terms": "الشروط",
+    "privacy": "الخصوصية"
+  },
+  "status": {
+    "checkout_ready": "الدفع جاهز",
+    "restoring": "استعادة المشتريات…",
+    "error": "حدث خطأ ما. حاول لاحقًا."
+  }
+}

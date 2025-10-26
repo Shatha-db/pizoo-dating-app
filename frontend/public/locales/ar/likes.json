@@ -1,0 +1,13 @@
+{
+  "you_got_likes": "لديك إعجابات جديدة!",
+  "view_who_liked_you": "انظر من أعجب بك",
+  "liked_you": "أعجب بك",
+  "mutual_like": "تطابق متبادل",
+  "no_likes_yet": "لا توجد إعجابات حتى الآن",
+  "refresh": "تحديث",
+  "see_who_likes_you": "شاهد من أعجب بك",
+  "unlock_with_gold": "فك القفل بـ Gold",
+  "people_liked_you": "{{count}} شخص أعجب بك",
+  "start_matching": "ابدأ في إيجاد التطابقات",
+  "keep_swiping": "استمر في التصفح"
+}

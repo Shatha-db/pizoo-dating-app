@@ -1,0 +1,46 @@
+{
+  "title": "Passez à Gold",
+  "subtitle": "Multipliez vos chances de match — débloquez les fonctionnalités premium.",
+  "benefits": {
+    "unlimited_likes": "Likes illimités",
+    "see_who_likes_you": "Voyez qui vous aime",
+    "boost_monthly": "1 Boost gratuit par mois",
+    "super_likes_weekly": "2 Super Likes par semaine",
+    "passport": "Passeport — swiper partout dans le monde",
+    "top_profiles": "Meilleurs profils pour vous",
+    "ad_free": "Sans publicités",
+    "control_who_sees_you": "Contrôlez qui vous voit",
+    "control_who_you_see": "Contrôlez qui vous voyez",
+    "read_receipts": "Accusés de lecture (bientôt)",
+    "priority_support": "Support prioritaire"
+  },
+  "plans": {
+    "label": "Choisir une offre",
+    "best_value": "Meilleur rapport",
+    "popular": "Populaire",
+    "save": "Économisez {{percent}}",
+    "plan_6m": "6 mois",
+    "plan_1m": "1 mois",
+    "plan_1w": "1 semaine"
+  },
+  "pricing": {
+    "per_week": "CHF {{price}}/semaine",
+    "total": "Total",
+    "continue": "Continuer"
+  },
+  "upsell": {
+    "unlock_likes": "Débloquez ceux qui vous aiment",
+    "upgrade_to_see": "Passez à l'offre Gold pour tout voir",
+    "get_gold": "Obtenir Gold"
+  },
+  "legal": {
+    "auto_renew": "En continuant, vous acceptez le renouvellement automatique. Annulable à tout moment dans les réglages de l'App Store.",
+    "terms": "Conditions",
+    "privacy": "Confidentialité"
+  },
+  "status": {
+    "checkout_ready": "Paiement prêt",
+    "restoring": "Restauration des achats…",
+    "error": "Un problème est survenu. Réessayez."
+  }
+}

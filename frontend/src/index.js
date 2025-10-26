@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "@/index.css";
+import "@/styles/theme.css";
 import "leaflet/dist/leaflet.css";
 import App from "@/App";
 import "./i18n"; // Initialize i18n

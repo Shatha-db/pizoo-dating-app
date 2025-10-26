@@ -1,0 +1,46 @@
+{
+  "title": "Upgrade auf Gold",
+  "subtitle": "Erhöhe deine Match-Chance – Premium-Features freischalten.",
+  "benefits": {
+    "unlimited_likes": "Unbegrenzte Likes",
+    "see_who_likes_you": "Sieh, wer dich geliked hat",
+    "boost_monthly": "1 kostenloser Boost pro Monat",
+    "super_likes_weekly": "2 Super Likes pro Woche",
+    "passport": "Passport – weltweit swipen",
+    "top_profiles": "Top-Profile für dich",
+    "ad_free": "Werbefrei",
+    "control_who_sees_you": "Steuere, wer dich sieht",
+    "control_who_you_see": "Steuere, wen du siehst",
+    "read_receipts": "Lesebestätigungen (bald)",
+    "priority_support": "Priorisierter Support"
+  },
+  "plans": {
+    "label": "Plan wählen",
+    "best_value": "Bestes Angebot",
+    "popular": "Beliebt",
+    "save": "{{percent}} sparen",
+    "plan_6m": "6 Monate",
+    "plan_1m": "1 Monat",
+    "plan_1w": "1 Woche"
+  },
+  "pricing": {
+    "per_week": "CHF {{price}}/Woche",
+    "total": "Gesamt",
+    "continue": "Weiter"
+  },
+  "upsell": {
+    "unlock_likes": "Likes freischalten",
+    "upgrade_to_see": "Upgrade, um alle zu sehen",
+    "get_gold": "Gold holen"
+  },
+  "legal": {
+    "auto_renew": "Mit der Fortsetzung stimmst du der automatischen Verlängerung zu. Kündigung jederzeit in den App-Store-Einstellungen.",
+    "terms": "Bedingungen",
+    "privacy": "Datenschutz"
+  },
+  "status": {
+    "checkout_ready": "Bezahlung bereit",
+    "restoring": "Käufe werden wiederhergestellt…",
+    "error": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
+  }
+}

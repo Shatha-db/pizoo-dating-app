@@ -1,0 +1,46 @@
+{
+  "title": "Upgrade to Gold",
+  "subtitle": "Multiply your chances to match — unlock premium features.",
+  "benefits": {
+    "unlimited_likes": "Unlimited Likes",
+    "see_who_likes_you": "See who likes you",
+    "boost_monthly": "1 free Boost every month",
+    "super_likes_weekly": "2 Super Likes every week",
+    "passport": "Passport to swipe around the world",
+    "top_profiles": "Top Profiles picked for you",
+    "ad_free": "Ad-free experience",
+    "control_who_sees_you": "Control who sees you",
+    "control_who_you_see": "Control who you see",
+    "read_receipts": "Read receipts (coming soon)",
+    "priority_support": "Priority support"
+  },
+  "plans": {
+    "label": "Choose a plan",
+    "best_value": "Best value",
+    "popular": "Popular",
+    "save": "Save {{percent}}",
+    "plan_6m": "6 months",
+    "plan_1m": "1 month",
+    "plan_1w": "1 week"
+  },
+  "pricing": {
+    "per_week": "CHF {{price}}/week",
+    "total": "Total",
+    "continue": "Continue"
+  },
+  "upsell": {
+    "unlock_likes": "Unlock people who liked you",
+    "upgrade_to_see": "Upgrade to see all likes",
+    "get_gold": "Get Gold"
+  },
+  "legal": {
+    "auto_renew": "By continuing, you agree to auto-renewal. You can cancel anytime in App Store settings.",
+    "terms": "Terms",
+    "privacy": "Privacy"
+  },
+  "status": {
+    "checkout_ready": "Checkout is ready",
+    "restoring": "Restoring purchases…",
+    "error": "Something went wrong. Please try again."
+  }
+}

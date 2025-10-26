@@ -30,6 +30,7 @@ import Premium from './pages/Premium';
 import Settings from './pages/Settings';
 import TermsNew from './pages/TermsNew';
 import CustomLogoPage from './pages/CustomLogoPage';
+import SwipePage from './pages/SwipePage';
 import { Toaster } from './components/ui/sonner';
 import { useTranslation } from 'react-i18next';
 import './App.css';
@@ -120,6 +121,14 @@ function AppRoot() {
                     element={
                       <ProtectedRoute>
                         <Home />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/swipe"
+                    element={
+                      <ProtectedRoute>
+                        <SwipePage />
                       </ProtectedRoute>
                     }
                   />

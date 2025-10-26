@@ -146,7 +146,7 @@ const ProfileNew = () => {
             </div>
 
             {/* Profile Meta - Always below media */}
-            <div className="profile-meta w-full p-6">.
+            <div className="profile-meta w-full p-6">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">

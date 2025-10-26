@@ -22,8 +22,8 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 
 i18n
-  .use(Backend)
-  .use(LanguageDetector)
+  .use(Backend)              // تحميل JSON من /public/locales/{{lng}}/{{ns}}.json
+  .use(LanguageDetector)     // يقرأ i18nextLng من localStorage أولاً
   .use(initReactI18next)
   .init({
     fallbackLng: 'en',

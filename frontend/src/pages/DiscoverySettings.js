@@ -611,7 +611,7 @@ const DiscoverySettings = () => {
                       <Marker
                         key={user.id}
                         position={[user.latitude, user.longitude]}
-                        icon={userMarkerIcon}
+                        icon={getUserMarkerIcon()}
                         eventHandlers={{
                           click: () => setSelectedUser(user)
                         }}

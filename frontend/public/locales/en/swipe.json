@@ -14,5 +14,9 @@
   "send_message": "Send Message",
   "swipe_left": "Swipe left to pass",
   "swipe_right": "Swipe right to like",
-  "swipe_up": "Swipe up to Super Like"
+  "swipe_up": "Swipe up to Super Like",
+  "daily_limit_reached": "Daily Limit Reached",
+  "upgrade_to_continue": "Upgrade to keep swiping!",
+  "upgrade_now": "Upgrade Now",
+  "profiles_remaining": "{{count}} swipes remaining today"
 }

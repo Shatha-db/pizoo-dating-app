@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, WebSocket, WebSocketDisconnect, File, UploadFile
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, WebSocket, WebSocketDisconnect, File, UploadFile, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -117,6 +117,44 @@ app = FastAPI()
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
+
+# Country-based default radius mapping (in km)
+COUNTRY_DEFAULT_RADIUS = {
+    "BH": 10,  # Bahrain (small)
+    "QA": 15,  # Qatar (small)
+    "KW": 20,  # Kuwait (small)
+    "AE": 25,  # UAE (medium)
+    "OM": 30,  # Oman (medium)
+    "LB": 20,  # Lebanon (medium)
+    "JO": 25,  # Jordan (medium)
+    "SA": 50,  # Saudi Arabia (large)
+    "EG": 50,  # Egypt (large)
+    "IQ": 50,  # Iraq (large)
+    "MA": 50,  # Morocco (large)
+    "DZ": 75,  # Algeria (very large)
+    "FR": 50,  # France
+    "DE": 40,  # Germany
+    "ES": 50,  # Spain
+    "IT": 40,  # Italy
+    "GB": 40,  # United Kingdom
+    "TR": 50,  # Turkey
+    "US": 100, # United States (very large)
+    "CA": 100, # Canada (very large)
+    "BR": 100, # Brazil (very large)
+    "MX": 75,  # Mexico (large)
+    "RU": 100, # Russia (very large)
+    "CH": 25,  # Switzerland (for Basel testing)
+}
+GLOBAL_DEFAULT_RADIUS = 25  # Default fallback
+
+
+def radius_for_country(country: Optional[str], fallback: float = GLOBAL_DEFAULT_RADIUS) -> float:
+    """Get default radius for a country code"""
+    if country:
+        r = COUNTRY_DEFAULT_RADIUS.get(country.upper())
+        if r:
+            return float(r)
+    return float(fallback)
 
 
 # ===== Models =====
@@ -3327,40 +3365,6 @@ async def update_user_language(
     return {"success": True, "language": lang}
 
 
-@api_router.put("/user/location")
-async def update_user_location(
-    request: dict,
-    current_user: dict = Depends(get_current_user)
-):
-    """Update user's location and country"""
-    latitude = request.get("latitude")
-    longitude = request.get("longitude")
-    country = request.get("country")  # ISO 3166-1 alpha-2
-    
-    update_data = {}
-    
-    if country:
-        update_data["country"] = country.upper()
-    
-    if latitude is not None and longitude is not None:
-        # Also update in profile for discovery
-        await db.profiles.update_one(
-            {"user_id": current_user["id"]},
-            {"$set": {
-                "latitude": float(latitude),
-                "longitude": float(longitude)
-            }}
-        )
-    
-    if update_data:
-        await db.users.update_one(
-            {"id": current_user["id"]},
-            {"$set": update_data}
-        )
-    
-    return {"success": True, **update_data}
-
-
 @api_router.get("/me")
 async def get_current_user_info(
     current_user: dict = Depends(get_current_user)
@@ -3371,6 +3375,9 @@ async def get_current_user_info(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
+    # Get profile for location data
+    profile = await db.profiles.find_one({"user_id": current_user["id"]})
+    
     return {
         "id": user["id"],
         "name": user["name"],
@@ -3378,8 +3385,123 @@ async def get_current_user_info(
         "language": user.get("language", "en"),
         "country": user.get("country"),
         "premium_tier": user.get("premium_tier", "free"),
-        "profile_completed": user.get("profile_completed", False)
+        "profile_completed": user.get("profile_completed", False),
+        "latitude": profile.get("latitude") if profile else None,
+        "longitude": profile.get("longitude") if profile else None,
+        "radiusKm": profile.get("radiusKm", 25) if profile else 25
     }
+
+
+@api_router.get("/geoip")
+async def get_geoip_info(request: Request):
+    """
+    Get country from IP address (GeoIP fallback)
+    For testing: returns default country (CH for Basel)
+    In production: integrate with ipapi.co or similar service
+    """
+    try:
+        client_ip = request.client.host if request.client else "0.0.0.0"
+        
+        # TODO: In production, call external GeoIP service
+        # Example: requests.get(f"https://ipapi.co/{client_ip}/json/")
+        # For now, return default for testing
+        default_country = "CH"  # Basel, Switzerland for testing
+        
+        return {
+            "ip": client_ip,
+            "country": default_country,
+            "defaultRadius": radius_for_country(default_country)
+        }
+    except Exception as e:
+        # Fallback to global default
+        return {
+            "ip": "unknown",
+            "country": None,
+            "defaultRadius": GLOBAL_DEFAULT_RADIUS
+        }
+
+
+@api_router.put("/user/location")
+async def update_user_location(
+    location_data: dict,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Update user location (GPS or GeoIP fallback)
+    Accepts: country, latitude, longitude, radiusKm
+    """
+    try:
+        # Extract and validate data
+        country = location_data.get("country")
+        latitude = location_data.get("latitude")
+        longitude = location_data.get("longitude")
+        radius_km = location_data.get("radiusKm", 25)
+        
+        # Validate radius (guard against NaN/invalid)
+        radius_km = float(radius_km) if radius_km is not None else 25
+        if not (0 < radius_km <= 1000):  # Max 1000km
+            radius_km = 25
+        
+        # Validate coordinates if provided
+        if latitude is not None and longitude is not None:
+            latitude = float(latitude)
+            longitude = float(longitude)
+            
+            # Basic range validation
+            if not (-90 <= latitude <= 90):
+                raise HTTPException(status_code=400, detail="Invalid latitude")
+            if not (-180 <= longitude <= 180):
+                raise HTTPException(status_code=400, detail="Invalid longitude")
+        
+        # Update user country
+        if country:
+            await db.users.update_one(
+                {"id": current_user["id"]},
+                {"$set": {"country": country.upper()}}
+            )
+        
+        # Update profile location
+        profile = await db.profiles.find_one({"user_id": current_user["id"]})
+        
+        if profile:
+            update_data = {
+                "radiusKm": radius_km,
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }
+            
+            if latitude is not None and longitude is not None:
+                update_data["latitude"] = latitude
+                update_data["longitude"] = longitude
+            
+            await db.profiles.update_one(
+                {"user_id": current_user["id"]},
+                {"$set": update_data}
+            )
+        else:
+            # Create profile if doesn't exist (edge case)
+            new_profile = {
+                "id": str(uuid.uuid4()),
+                "user_id": current_user["id"],
+                "display_name": current_user.get("name", "User"),
+                "latitude": latitude,
+                "longitude": longitude,
+                "radiusKm": radius_km,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.profiles.insert_one(new_profile)
+        
+        return {
+            "message": "Location updated successfully",
+            "country": country,
+            "hasCoordinates": latitude is not None and longitude is not None,
+            "radiusKm": radius_km
+        }
+        
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid number format: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update location: {str(e)}")
 
 
 # Mount the API router

@@ -7,8 +7,16 @@ import { Card } from '../components/ui/card';
 import BottomNav from '../components/BottomNav';
 import CustomLogo from '../components/CustomLogo';
 import LocationPermissionRequest from '../components/LocationPermissionRequest';
+import GeoPermissionModal from '../components/GeoPermissionModal';
 import { Heart, X, Star, RotateCcw, Zap, Info, Bell } from 'lucide-react';
 import axios from 'axios';
+import { 
+  getCurrentPosition, 
+  reverseGeocode, 
+  getCountryFromIP, 
+  getDefaultRadius,
+  validateCoordinates
+} from '../utils/geoUtils';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -30,24 +38,143 @@ const Home = () => {
   const [usageStats, setUsageStats] = useState(null);
   const [showLimitWarning, setShowLimitWarning] = useState(false);
   const [showLocationRequest, setShowLocationRequest] = useState(false);
+  const [showGeoModal, setShowGeoModal] = useState(false);
+  const [geoLoading, setGeoLoading] = useState(false);
 
   useEffect(() => {
     fetchProfiles();
     checkNewLikes();
     checkBoostStatus();
     fetchUsageStats();
-    checkLocationPermission();
+    checkGeoPermission();
   }, []);
 
-  const checkLocationPermission = () => {
-    const hasLocation = localStorage.getItem('location_granted');
-    const skipped = localStorage.getItem('location_skipped');
-    
-    if (!hasLocation && !skipped) {
-      // Show location request after 2 seconds
+  const checkGeoPermission = async () => {
+    try {
+      // Check if location already granted
+      const hasLocation = localStorage.getItem('location_granted');
+      const locationDenied = localStorage.getItem('location_denied');
+      
+      if (hasLocation) {
+        console.log('✅ Location already granted');
+        return;
+      }
+      
+      if (locationDenied) {
+        console.log('ℹ️ Location previously denied, using GeoIP fallback');
+        await handleGeoIPFallback();
+        return;
+      }
+      
+      // Show geo modal after 2 seconds
       setTimeout(() => {
-        setShowLocationRequest(true);
+        setShowGeoModal(true);
       }, 2000);
+      
+    } catch (error) {
+      console.error('Error checking geo permission:', error);
+    }
+  };
+
+  const handleAllowGPS = async () => {
+    setGeoLoading(true);
+    try {
+      console.log('📍 Requesting GPS permission...');
+      
+      // Get GPS coordinates
+      const position = await getCurrentPosition();
+      console.log('✅ GPS coordinates obtained:', position);
+      
+      // Validate coordinates
+      if (!validateCoordinates(position.latitude, position.longitude)) {
+        throw new Error('Invalid coordinates');
+      }
+      
+      // Reverse geocode to get country
+      const geoData = await reverseGeocode(position.latitude, position.longitude);
+      console.log('✅ Reverse geocoding complete:', geoData);
+      
+      // Get default radius for country
+      const defaultRadius = getDefaultRadius(geoData.countryCode);
+      console.log(`📍 Default radius for ${geoData.countryCode}: ${defaultRadius}km`);
+      
+      // Save to backend
+      await axios.put(`${API}/user/location`, {
+        country: geoData.countryCode,
+        latitude: position.latitude,
+        longitude: position.longitude,
+        radiusKm: defaultRadius
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      // Save to localStorage
+      localStorage.setItem('location_granted', 'true');
+      localStorage.setItem('user_country', geoData.countryCode);
+      localStorage.setItem('user_latitude', position.latitude.toString());
+      localStorage.setItem('user_longitude', position.longitude.toString());
+      
+      console.log('✅ Location saved successfully');
+      setShowGeoModal(false);
+      
+    } catch (error) {
+      console.error('❌ GPS permission error:', error);
+      
+      // Fallback to GeoIP if GPS fails
+      if (error.code === 1) {
+        // User denied permission
+        localStorage.setItem('location_denied', 'true');
+        await handleGeoIPFallback();
+      } else {
+        alert('حدث خطأ في الحصول على موقعك. سنستخدم موقعك التقريبي.');
+        await handleGeoIPFallback();
+      }
+      
+      setShowGeoModal(false);
+    } finally {
+      setGeoLoading(false);
+    }
+  };
+
+  const handleDenyGPS = async () => {
+    console.log('ℹ️ User denied GPS, using GeoIP fallback');
+    localStorage.setItem('location_denied', 'true');
+    setShowGeoModal(false);
+    await handleGeoIPFallback();
+  };
+
+  const handleManualEntry = () => {
+    console.log('ℹ️ User chose manual entry');
+    setShowGeoModal(false);
+    // Navigate to discovery settings for manual city entry
+    navigate('/discovery-settings');
+  };
+
+  const handleGeoIPFallback = async () => {
+    try {
+      console.log('🌐 Using GeoIP fallback...');
+      
+      const geoData = await getCountryFromIP();
+      console.log('✅ GeoIP data obtained:', geoData);
+      
+      const defaultRadius = getDefaultRadius(geoData.countryCode);
+      
+      // Save country only (no precise coordinates)
+      await axios.put(`${API}/user/location`, {
+        country: geoData.countryCode,
+        latitude: null,
+        longitude: null,
+        radiusKm: defaultRadius
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      localStorage.setItem('user_country', geoData.countryCode);
+      console.log(`✅ GeoIP fallback complete: ${geoData.countryCode}`);
+      
+    } catch (error) {
+      console.error('❌ GeoIP fallback error:', error);
+      // Silent fail - user can still use app without location
     }
   };
 
@@ -540,6 +667,16 @@ const Home = () => {
         <LocationPermissionRequest
           onClose={() => setShowLocationRequest(false)}
           token={token}
+        />
+      )}
+
+      {/* Geo Permission Modal (Phase 5) */}
+      {showGeoModal && (
+        <GeoPermissionModal
+          onAllow={handleAllowGPS}
+          onDeny={handleDenyGPS}
+          onManual={handleManualEntry}
+          onClose={() => setShowGeoModal(false)}
         />
       )}
 

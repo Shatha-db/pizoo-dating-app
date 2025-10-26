@@ -167,7 +167,9 @@ function AppRoot() {
                     path="/discovery-settings"
                     element={
                       <ProtectedRoute>
-                        <DiscoverySettings />
+                        <Suspense fallback={<Loader />}>
+                          <DiscoverySettings />
+                        </Suspense>
                       </ProtectedRoute>
                     }
                   />
@@ -175,7 +177,9 @@ function AppRoot() {
                     path="/discovery"
                     element={
                       <ProtectedRoute>
-                        <DiscoverySettings />
+                        <Suspense fallback={<Loader />}>
+                          <DiscoverySettings />
+                        </Suspense>
                       </ProtectedRoute>
                     }
                   />

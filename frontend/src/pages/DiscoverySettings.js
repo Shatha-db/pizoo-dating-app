@@ -78,6 +78,16 @@ const API = `${BACKEND_URL}/api`;
 // Default radius constant
 const DEFAULT_RADIUS = 25;
 
+// Safe radius parser to prevent NaN
+const parseRadius = (val) => {
+  try {
+    const n = Number(val);
+    return Number.isFinite(n) && n > 0 ? n : DEFAULT_RADIUS;
+  } catch {
+    return DEFAULT_RADIUS;
+  }
+};
+
 // Component to update map view when settings change
 function MapUpdater({ center, zoom }) {
   const map = useMap();

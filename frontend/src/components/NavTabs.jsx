@@ -58,7 +58,7 @@ const Tab = ({ to, icon, label, badge }) => {
 };
 
 export default function NavTabs({ likesCount = 0, messagesCount = 0 }) {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation('common');
   
   return (
     <motion.nav

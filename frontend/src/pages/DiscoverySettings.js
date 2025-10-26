@@ -489,7 +489,7 @@ const DiscoverySettings = () => {
                   });
                 }}
               >
-                {nearbyUsers.map((user) => {
+                {Array.isArray(nearbyUsers) && nearbyUsers.map((user) => {
                   if (!user.latitude || !user.longitude) return null;
                   
                   return (

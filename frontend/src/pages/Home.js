@@ -177,8 +177,6 @@ const Home = () => {
       // Silent fail - user can still use app without location
     }
   };
-    }
-  };
 
   const fetchUsageStats = async () => {
     try {

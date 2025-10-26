@@ -3597,6 +3597,104 @@ async def update_user_location(
         raise HTTPException(status_code=500, detail=f"Failed to update location: {str(e)}")
 
 
+# ==========================================
+# Premium Gating & Upsell Endpoints
+# ==========================================
+
+@api_router.get("/upsell/context")
+async def get_upsell_context(current_user: dict = Depends(get_current_user)):
+    """
+    Get current user's premium status and limits for gating
+    """
+    try:
+        # Check if user has premium subscription
+        subscription = await db.subscriptions.find_one({"user_id": current_user["id"]})
+        is_premium = False
+        
+        if subscription:
+            # Check if subscription is active
+            if subscription.get("status") == "active":
+                is_premium = True
+        
+        # Get today's swipe count (stub - can be tracked in DB)
+        viewed_today = 0
+        
+        # Super likes (stub - can be from subscription tier)
+        super_like_left = 5 if is_premium else 1
+        
+        return {
+            "isPremium": is_premium,
+            "dailyLimit": 10,  # Free users get 10 swipes/day
+            "viewedToday": viewed_today,
+            "superLikeLeft": super_like_left,
+            "tier": subscription.get("plan_id", "free") if subscription else "free"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get upsell context: {str(e)}")
+
+
+@api_router.get("/premium/eligibility")
+async def get_premium_eligibility(current_user: dict = Depends(get_current_user)):
+    """
+    Check if user can upgrade and return available plans
+    """
+    try:
+        # Check current subscription
+        subscription = await db.subscriptions.find_one({"user_id": current_user["id"]})
+        current_tier = subscription.get("plan_id", "free") if subscription else "free"
+        
+        # Define available plans
+        plans = [
+            {
+                "id": "gold",
+                "name": "Pizoo Gold",
+                "price": 9.99,
+                "currency": "USD",
+                "interval": "month",
+                "features": [
+                    "unlimited_likes",
+                    "see_who_likes_you",
+                    "super_likes_weekly",
+                    "rewind"
+                ]
+            },
+            {
+                "id": "platinum",
+                "name": "Pizoo Platinum",
+                "price": 19.99,
+                "currency": "USD",
+                "interval": "month",
+                "features": [
+                    "all_gold_features",
+                    "priority_likes",
+                    "top_profiles",
+                    "message_before_match"
+                ]
+            },
+            {
+                "id": "plus",
+                "name": "Pizoo Plus",
+                "price": 7.99,
+                "currency": "USD",
+                "interval": "month",
+                "features": [
+                    "unlimited_likes",
+                    "passport",
+                    "rewind",
+                    "hide_ads"
+                ]
+            }
+        ]
+        
+        return {
+            "canUpgrade": current_tier == "free",
+            "currentTier": current_tier,
+            "plans": plans
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get eligibility: {str(e)}")
+
+
 # Mount the API router
 app.include_router(api_router)
 

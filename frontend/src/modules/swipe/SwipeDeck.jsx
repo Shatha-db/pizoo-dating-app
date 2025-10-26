@@ -50,13 +50,17 @@ const SwipeIndicator = ({ direction, opacity }) => {
   );
 };
 
-export default function SwipeDeck({ users = [], onSwipe, onCardLeftScreen, className }) {
+export default function SwipeDeck({ users = [], onSwipe, onCardLeftScreen, className, gating, onGate }) {
   const { t } = useTranslation(['swipe', 'common']);
   const [currentIndex, setCurrentIndex] = useState(users.length - 1);
   const [swipeDirection, setSwipeDirection] = useState(null);
   const [swipeOpacity, setSwipeOpacity] = useState(0);
+  const [localGating, setLocalGating] = useState(null);
   const currentIndexRef = useRef(currentIndex);
-  const canSwipe = currentIndex >= 0;
+  
+  // Use prop gating or local state
+  const gatingState = gating || localGating || getGatingState();
+  const canSwipe = currentIndex >= 0 && !gatingState.gated;
   
   const childRefs = useMemo(
     () =>

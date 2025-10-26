@@ -485,7 +485,17 @@ const DiscoverySettings = () => {
           </div>
           
           {/* Map View with Clustering */}
-          <div className="mb-4 rounded-lg overflow-hidden border-2 border-gray-200 relative" style={{ height: '400px' }}>
+          <div className="map-container mb-4 rounded-lg overflow-hidden border-2 border-gray-200 relative" style={{ height: '400px' }}>
+            {/* GPS Hint Banner when using country approximation */}
+            {!hasGPSLocation && userCountry && (
+              <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-[1000] max-w-md text-center text-sm flex items-center gap-2">
+                <Info className="w-4 h-4 flex-shrink-0" />
+                <span>
+                  تم استخدام موقعك التقريبي ({userCountry}). يمكنك تفعيل GPS للحصول على موقع دقيق.
+                </span>
+              </div>
+            )}
+            
             {loadingUsers && (
               <div className="absolute top-4 right-4 bg-white rounded-lg px-4 py-2 shadow-lg z-[1000]">
                 <div className="flex items-center gap-2">
@@ -504,47 +514,49 @@ const DiscoverySettings = () => {
               <Navigation className="w-5 h-5 text-pink-500" />
             </button>
 
-            <MapContainer 
-              key={mapKey}
-              ref={mapRef}
-              center={[userLocation.lat, userLocation.lng]} 
-              zoom={11} 
-              style={{ height: '100%', width: '100%' }}
-              zoomControl={true}
-              scrollWheelZoom={true}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              
-              {/* Current User Marker */}
-              <Marker 
-                position={[userLocation.lat, userLocation.lng]}
-                icon={currentUserIcon}
+            {mapCenter && mapCenter.lat && mapCenter.lng && (
+              <MapContainer 
+                key={mapKey}
+                ref={mapRef}
+                center={[mapCenter.lat, mapCenter.lng]} 
+                zoom={mapZoom} 
+                style={{ height: '100%', width: '100%' }}
+                zoomControl={true}
+                scrollWheelZoom={true}
               >
-                <Popup>
-                  <div className="text-center" dir="rtl">
-                    <strong>موقعك الحالي</strong>
-                  </div>
-                </Popup>
-              </Marker>
-              
-              {/* Distance radius circle */}
-              <Circle
-                center={[userLocation.lat, userLocation.lng]}
-                radius={(() => {
-                  // Guard: use parseRadius helper
-                  return parseRadius(settings.max_distance) * 1000; // km to meters
-                })()}
-                pathOptions={{ 
-                  color: '#ec4899', 
-                  fillColor: '#ec4899',
-                  fillOpacity: 0.1,
-                  weight: 2,
-                  dashArray: '10, 10'
-                }}
-              />
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                
+                {/* Current User Marker - Only show if we have GPS location */}
+                {hasGPSLocation && userLocation && (
+                  <>
+                    <Marker 
+                      position={[userLocation.lat, userLocation.lng]}
+                      icon={currentUserIcon}
+                    >
+                      <Popup>
+                        <div className="text-center" dir="rtl">
+                          <strong>موقعك الحالي</strong>
+                        </div>
+                      </Popup>
+                    </Marker>
+                    
+                    {/* Distance radius circle */}
+                    <Circle
+                      center={[userLocation.lat, userLocation.lng]}
+                      radius={parseRadius(settings.max_distance) * 1000}
+                      pathOptions={{ 
+                        color: '#ec4899', 
+                        fillColor: '#ec4899',
+                        fillOpacity: 0.1,
+                        weight: 2,
+                        dashArray: '10, 10'
+                      }}
+                    />
+                  </>
+                )}
 
               {/* Clustered User Markers */}
               <MarkerClusterGroup

@@ -27,6 +27,9 @@
         
         <!-- Cache Busting & Service Worker Clear -->
         <script>
+            // ✅ UPDATED VERSION - Forces cache clear on new version
+            const APP_VERSION = '2.3.0'; // Premium UI + Gating System
+            
             // Clear old cache and service workers
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.getRegistrations().then(function(registrations) {
@@ -45,14 +48,12 @@
                 });
             }
             
-            // ⚠️ TEMPORARILY DISABLED - Causing bundle abortion
-            /*
-            // Force reload if version mismatch
-            const APP_VERSION = '2.2.0'; // Updated for React 18 downgrade + white screen fix
+            // Check version and force reload ONCE
             const storedVersion = localStorage.getItem('app_version');
+            const hasReloaded = sessionStorage.getItem('has_reloaded_for_' + APP_VERSION);
             
-            if (storedVersion !== APP_VERSION) {
-                console.log('🔄 New version detected, clearing cache...');
+            if (storedVersion !== APP_VERSION && !hasReloaded) {
+                console.log('🔄 New version ' + APP_VERSION + ' detected, forcing reload...');
                 
                 // Clear everything in localStorage except auth tokens
                 const token = localStorage.getItem('token');
@@ -62,13 +63,18 @@
                 if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
                 localStorage.setItem('app_version', APP_VERSION);
                 
-                // Clear sessionStorage completely
+                // Clear sessionStorage
                 sessionStorage.clear();
                 
-                // ⚠️ Disabled aggressive redirect to prevent bundle load abortion
-                // window.location.href = window.location.href + '?v=' + APP_VERSION;
+                // Mark that we've reloaded for this version
+                sessionStorage.setItem('has_reloaded_for_' + APP_VERSION, 'true');
+                
+                // Force hard reload with cache bypass
+                window.location.reload(true);
+            } else if (storedVersion !== APP_VERSION) {
+                // First visit or cleared session - just set version
+                localStorage.setItem('app_version', APP_VERSION);
             }
-            */
         </script>
         
         <script async src="https://assets.emergent.sh/scripts/emergent-main.js"></script>

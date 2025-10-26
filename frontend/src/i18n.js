@@ -19,7 +19,7 @@ i18n
   .init({
     supportedLngs: SUPPORTED,
     fallbackLng: 'en',
-    ns: ['common','auth','profile','chat','map','notifications','settings'],
+    ns: ['common','auth','profile','chat','map','notifications','settings','swipe'],
     defaultNS: 'common',
     fallbackNS: 'common',
     keySeparator: false,

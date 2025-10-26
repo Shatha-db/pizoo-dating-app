@@ -229,7 +229,7 @@ const Settings = () => {
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-4">
             <Globe className="w-5 h-5 text-blue-500" />
-            <h2 className="font-bold text-lg">{t('settings.language')}</h2>
+            <h2 className="font-bold text-lg">{t('settings:language')}</h2>
           </div>
           
           <div className="space-y-2">

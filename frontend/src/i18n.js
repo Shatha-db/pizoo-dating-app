@@ -15,6 +15,11 @@ i18n
     fallbackLng: 'en', // Default language is English
     debug: false,
     
+    // Namespaces configuration for lazy loading
+    ns: ['common', 'auth', 'profile', 'chat', 'map'],
+    defaultNS: 'common',
+    fallbackNS: 'common',
+    
     // Detection options
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
@@ -27,7 +32,7 @@ i18n
     },
     
     backend: {
-      loadPath: '/locales/{{lng}}/translation.json',
+      loadPath: '/locales/{{lng}}/{{ns}}.json', // Support namespaces with fallback to translation.json
     },
     
     // Available languages (BCP-47 compliant)

@@ -1,0 +1,22 @@
+{
+  "_todo": "Machine translation seed. Needs human review.",
+  "title": "Scopri",
+  "nearbyUsers": "Utenti vicini",
+  "searchRadius": "Raggio di ricerca",
+  "recenterMap": "Ricentra mappa",
+  "locationPermission": "Permesso di posizione",
+  "needLocation": "Abbiamo bisogno della tua posizione",
+  "locationDescription": "Per mostrarti gli utenti vicini e aiutarti a trovare persone nella tua zona",
+  "allowNow": "Consenti ora",
+  "maybeLater": "Forse più tardi",
+  "locationDenied": "Accesso alla posizione negato",
+  "locationDeniedDescription": "Abilita la posizione nelle impostazioni per vedere gli utenti vicini",
+  "distance": "Distanza",
+  "away": "lontano",
+  "km": "km",
+  "viewProfile": "Visualizza profilo",
+  "errors": {
+    "locationFailed": "Impossibile ottenere la posizione",
+    "mapLoadFailed": "Caricamento mappa fallito"
+  }
+}

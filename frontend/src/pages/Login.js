@@ -17,7 +17,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['auth', 'common']); // Load auth and common namespaces
   const [formData, setFormData] = useState({
     email: '',
     password: '',

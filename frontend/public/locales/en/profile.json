@@ -1,0 +1,33 @@
+{
+  "title": "Profile",
+  "editProfile": "Edit Profile",
+  "viewProfile": "View Profile",
+  "myProfile": "My Profile",
+  "name": "Name",
+  "age": "Age",
+  "gender": "Gender",
+  "bio": "Bio",
+  "location": "Location",
+  "photos": "Photos",
+  "addPhoto": "Add Photo",
+  "uploadPhoto": "Upload Photo",
+  "deletePhoto": "Delete Photo",
+  "setPrimary": "Set as Primary",
+  "interests": "Interests",
+  "lookingFor": "Looking For",
+  "relationshipGoals": "Relationship Goals",
+  "height": "Height",
+  "education": "Education",
+  "occupation": "Occupation",
+  "languages": "Languages",
+  "profileSetup": "Profile Setup",
+  "completeProfile": "Complete Your Profile",
+  "profileIncomplete": "Please complete your profile",
+  "errors": {
+    "nameRequired": "Name is required",
+    "ageRequired": "Age is required",
+    "photoRequired": "At least one photo is required",
+    "uploadFailed": "Photo upload failed",
+    "invalidAge": "Age must be between 18-99"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "title": "الدردشة",
+  "messages": "الرسائل",
+  "sendMessage": "إرسال رسالة",
+  "typeMessage": "اكتب رسالة...",
+  "noMessages": "لا توجد رسائل بعد",
+  "startConversation": "ابدأ محادثة",
+  "online": "متصل",
+  "offline": "غير متصل",
+  "typing": "يكتب...",
+  "seen": "تم المشاهدة",
+  "delivered": "تم التسليم",
+  "sent": "تم الإرسال",
+  "safetyConsent": "إرشادات السلامة",
+  "agreeToSafety": "أوافق على اتباع إرشادات السلامة",
+  "reportUser": "الإبلاغ عن المستخدم",
+  "blockUser": "حظر المستخدم",
+  "unblockUser": "إلغاء الحظر",
+  "deleteConversation": "حذف المحادثة",
+  "errors": {
+    "messageFailed": "فشل إرسال الرسالة",
+    "connectionLost": "تم فقد الاتصال",
+    "userBlocked": "المستخدم محظور"
+  }
+}

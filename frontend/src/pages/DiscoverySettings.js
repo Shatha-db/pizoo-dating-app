@@ -552,7 +552,7 @@ const DiscoverySettings = () => {
                   <>
                     <Marker 
                       position={[userLocation.lat, userLocation.lng]}
-                      icon={currentUserIcon}
+                      icon={getCurrentUserIcon()}
                     >
                       <Popup>
                         <div className="text-center" dir="rtl">

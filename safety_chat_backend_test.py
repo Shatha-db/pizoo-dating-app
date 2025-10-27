@@ -238,7 +238,7 @@ class SafetyChatTester:
             if response.status_code in [200, 404]:
                 if response.status_code == 200:
                     data = response.json()
-                    if data.get("can") == False:
+                    if data.get("canChat") == False:
                         self.log_test("Chat Gating - Invalid UserId", True, 
                                     f"Correctly handled invalid user: {data}")
                     else:

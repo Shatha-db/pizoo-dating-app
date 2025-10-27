@@ -217,8 +217,7 @@ class SafetyChatTester:
                 data = response.json()
                 # Expected: Should allow chat (current logic checks if current user liked target)
                 # Expected: {canChat: true}
-                # Implementation returns: {can: true}
-                if data.get("can") == True:
+                if data.get("canChat") == True:
                     self.log_test("Chat Gating - One-Way Like", True, 
                                 f"Correctly allowed chat after like: {data}")
                 else:

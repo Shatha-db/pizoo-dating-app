@@ -18,5 +18,11 @@
   "back": "Back",
   "next": "Next",
   "done": "Done",
-  "settings": "Settings"
+  "settings": "Settings",
+  "tab_home": "Home",
+  "tab_explore": "Explore",
+  "tab_likes": "Likes",
+  "tab_chats": "Chats",
+  "tab_account": "Account",
+  "brand": "Pizoo"
 }

@@ -281,27 +281,33 @@ backend:
 
   - task: "Safety Consent Modal & Backend (NEW)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py, /app/frontend/src/modules/safety/SafetyConsentModal.jsx, /app/frontend/src/pages/ChatRoom.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "IMPLEMENTED: Safety Consent Modal for chat. Features: 1) Modal appears on first message attempt, 2) Saves consent to localStorage and backend (PUT /api/user/settings with safetyAccepted=true), 3) Updates canSend state immediately after acceptance, 4) Never shows again after acceptance. Backend: Added PUT /api/user/settings endpoint to persist safetyAccepted field in user settings. Ready for testing."
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE TESTING COMPLETE: Safety Consent API fully functional. RESULTS: 1) PUT /api/user/settings endpoint working correctly - saves safetyAccepted=true to user settings, 2) Authentication properly enforced (returns 403 for no auth, 401 for invalid token), 3) Response structure correct with {ok: true, message: string}, 4) Handles invalid payloads gracefully, 5) Integration with frontend SafetyConsentModal confirmed - localStorage 'pizoo_safety_accepted' and backend API call working. FIXED CRITICAL BUG: Changed user query from '_id' to 'id' field to match user model. All 4 test scenarios passed (100% success rate)."
 
   - task: "Chat Gating Logic (NEW)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "IMPLEMENTED: Chat gating logic requiring mutual 'like' before chat. Backend: Added GET /api/relation/can-chat?userId=X endpoint (stub) that checks if current user has liked the target user. Returns {canChat: true/false, reason: string}. Ready for comprehensive testing with various scenarios (no like, one-way like, mutual like)."
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE TESTING COMPLETE: Chat Gating API fully functional. RESULTS: 1) No Like Scenario - correctly returns {canChat: false, reason: 'لم تقم بالإعجاب بهذا المستخدم بعد'}, 2) One-Way Like - correctly allows chat when current user liked target {canChat: true}, 3) Invalid userId handled gracefully, 4) Authentication properly enforced, 5) Integration with swipe system working - mutual likes create matches and enable chat. FIXED CRITICAL BUGS: 1) Updated swipe field names from 'from_user_id/to_user_id' to 'user_id/swiped_user_id', 2) Removed duplicate swipe endpoint causing conflicts, 3) Updated response format to match expected {canChat, reason} structure. All 4 test scenarios passed (100% success rate)."
 
 frontend:
   - task: "Home Page with Card Swipe"

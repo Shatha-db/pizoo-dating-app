@@ -16,7 +16,7 @@ export const useNotifications = () => {
 };
 
 export const NotificationProvider = ({ children }) => {
-  const { token } = useAuth();
+  const { token, user } = useAuth(); // ✅ Import user from useAuth
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);

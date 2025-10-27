@@ -43,8 +43,16 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 function AppRoot() {
   const { i18n } = useTranslation();
   const [ready, setReady] = useState(false);
+  const initRef = useRef(false); // ✅ Prevent double initialization in React 18 strict mode
 
   useEffect(() => {
+    // ✅ Guard against React 18 strict mode double-render
+    if (initRef.current) {
+      console.log('🛡️ i18n already initialized, skipping');
+      return;
+    }
+    initRef.current = true;
+
     let done = false;
     // ⚠️ Timeout guard: prevent infinite white screen if /api/me hangs
     const timer = setTimeout(() => {
@@ -78,8 +86,10 @@ function AppRoot() {
       }
     })();
 
-    return () => clearTimeout(timer);
-  }, [i18n]);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []); // ✅ Empty deps - only run once
 
   if (!ready) {
     return (

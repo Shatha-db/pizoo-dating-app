@@ -6,6 +6,7 @@ import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { ArrowRight, MoreVertical, Video, Send, Smile, Mic, Star } from 'lucide-react';
 import axios from 'axios';
+import SafetyConsentModal from '../modules/safety/SafetyConsentModal';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;

@@ -127,7 +127,7 @@ const Login = () => {
 
             <div className="space-y-2">
               <Label htmlFor="password" className="text-sm font-medium">
-                كلمة المرور
+                {t('password')}
               </Label>
               <Input
                 id="password"
@@ -136,7 +136,7 @@ const Login = () => {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="أدخل كلمة المرور"
+                placeholder={t('placeholder_password')}
                 className="h-12 rounded-lg"
                 data-testid="password-input"
               />

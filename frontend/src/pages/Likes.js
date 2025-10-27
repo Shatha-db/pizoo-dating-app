@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import BottomNav from '../components/BottomNav';
 import { Eye, MessageCircle } from 'lucide-react';
 import axios from 'axios';
+import { fetchUsage, incUsage } from '../modules/premium/usage';
+import UpsellModal from '../modules/premium/UpsellModal';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;

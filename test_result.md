@@ -309,6 +309,18 @@ backend:
         agent: "testing"
         comment: "✅ COMPREHENSIVE TESTING COMPLETE: Chat Gating API fully functional. RESULTS: 1) No Like Scenario - correctly returns {canChat: false, reason: 'لم تقم بالإعجاب بهذا المستخدم بعد'}, 2) One-Way Like - correctly allows chat when current user liked target {canChat: true}, 3) Invalid userId handled gracefully, 4) Authentication properly enforced, 5) Integration with swipe system working - mutual likes create matches and enable chat. FIXED CRITICAL BUGS: 1) Updated swipe field names from 'from_user_id/to_user_id' to 'user_id/swiped_user_id', 2) Removed duplicate swipe endpoint causing conflicts, 3) Updated response format to match expected {canChat, reason} structure. All 4 test scenarios passed (100% success rate)."
 
+  - task: "Phone OTP Authentication (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py, /app/backend/sms_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: Complete phone-based OTP authentication system. Backend: 1) sms_service.py created with generate_and_send() and verify() functions supporting mock mode (console logs) and Twilio integration, 2) POST /api/auth/phone/send-otp - generates 6-digit OTP, hashes with SHA-256, stores in user_otp MongoDB collection with phone, otp_hash, expiry (5min), attempts (0), sends SMS via service, 3) POST /api/auth/phone/verify-otp - verifies OTP against stored hash, checks expiry & max attempts (3), increments attempts, returns JWT token for existing users or auto-registers new user with phone number. Environment: Using SMS_PROVIDER=mock by default (logs OTP to console). Supports Twilio with TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER env vars. Ready for testing: OTP generation, SMS sending, verification flow, expiry handling, attempt limiting, new user auto-registration."
+
 frontend:
   - task: "Home Page with Card Swipe"
     implemented: true

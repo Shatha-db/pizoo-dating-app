@@ -56,19 +56,21 @@ class PhoneOTPTester:
         except requests.exceptions.RequestException as e:
             return None, str(e)
     
-    def extract_otp_from_logs(self):
+    def extract_otp_from_logs(self, phone_number=None):
         """Extract OTP from backend logs (mock mode)"""
         try:
             import subprocess
             result = subprocess.run(
-                ["tail", "-n", "20", "/var/log/supervisor/backend.out.log"],
+                ["tail", "-n", "50", "/var/log/supervisor/backend.out.log"],
                 capture_output=True, text=True, timeout=10
             )
+            
+            target_phone = phone_number or self.test_phone
             
             # Look for mock SMS pattern
             lines = result.stdout.split('\n')
             for line in reversed(lines):  # Check most recent first
-                if "[MOCK SMS]" in line and self.test_phone in line:
+                if "[MOCK SMS]" in line and target_phone in line:
                     # Extract OTP from message like "Pizoo verification code: 123456"
                     match = re.search(r'verification code: (\d{6})', line)
                     if match:
@@ -77,7 +79,7 @@ class PhoneOTPTester:
             # Also check stderr
             lines = result.stderr.split('\n')
             for line in reversed(lines):
-                if "[MOCK SMS]" in line and self.test_phone in line:
+                if "[MOCK SMS]" in line and target_phone in line:
                     match = re.search(r'verification code: (\d{6})', line)
                     if match:
                         return match.group(1)

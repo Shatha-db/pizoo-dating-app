@@ -536,9 +536,7 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "Safety Consent Modal & Backend (NEW)"
-    - "Chat Gating Logic (NEW)"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "safety_chat_first"
@@ -548,7 +546,8 @@ test_plan:
   new_features_success_rate: "100%"
   gps_integration_testing_complete: true
   gps_integration_success_rate: "100%"
-  safety_chat_testing_pending: true
+  safety_chat_testing_complete: true
+  safety_chat_testing_success_rate: "100%"
 
 agent_communication:
   - agent: "main"

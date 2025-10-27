@@ -78,7 +78,7 @@ FEMALE_PHOTOS = [
 async def generate_dummy_profiles(count=50):
     """Generate dummy profiles"""
     client = AsyncIOMotorClient(MONGO_URL)
-    db = client.dating_app
+    db = client[DB_NAME]  # Use environment variable for database name
     
     print(f"Generating {count} dummy profiles...")
     

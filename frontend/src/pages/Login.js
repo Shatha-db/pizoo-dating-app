@@ -153,7 +153,7 @@ const Login = () => {
                 htmlFor="rememberMe"
                 className="text-sm text-gray-700 cursor-pointer"
               >
-                حفظ تسجيل الدخول
+                {t('remember_me')}
               </label>
             </div>
 

@@ -213,8 +213,9 @@ class PhoneOTPTester:
     def test_verify_otp_wrong_code(self):
         """Test verifying OTP with wrong code (test attempts limiting)"""
         # First, send a new OTP for this test
-        unique_id = str(uuid.uuid4())[:8]
-        test_phone = f"+19876543210{unique_id[:3]}"
+        import random
+        unique_digits = ''.join([str(random.randint(0, 9)) for _ in range(3)])
+        test_phone = f"+19876543210{unique_digits}"
         
         # Send OTP
         data = {"phone": test_phone}

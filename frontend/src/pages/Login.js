@@ -110,7 +110,7 @@ const Login = () => {
 
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium">
-                البريد الإلكتروني أو رقم الهاتف
+                {t('email_or_phone')}
               </Label>
               <Input
                 id="email"

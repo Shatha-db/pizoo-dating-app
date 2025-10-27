@@ -25,14 +25,23 @@ export const AuthProvider = ({ children }) => {
           console.error('Error parsing stored user:', e);
         }
       }
-      // Verify token is still valid
-      fetchUserProfile(storedToken);
+      // Verify token is still valid - wrapped in try-catch
+      fetchUserProfile(storedToken).catch(err => {
+        console.warn('Token validation failed on init:', err);
+        setLoading(false);
+      });
     } else {
       setLoading(false);
     }
   }, []);
 
   const fetchUserProfile = async (authToken = token) => {
+    if (!authToken) {
+      setLoading(false);
+      return;
+    }
+    
+    try {
     if (!authToken) {
       setLoading(false);
       return;

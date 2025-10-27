@@ -7,6 +7,7 @@ import { NotificationProvider } from './context/NotificationContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import PhoneLogin from './pages/PhoneLogin';
 import AddPayment from './pages/AddPayment';
 import ProfileSetup from './pages/ProfileSetup';
 import Discover from './pages/Discover';

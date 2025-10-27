@@ -173,14 +173,14 @@ const Login = () => {
             to="/forgot-password"
             className="text-gray-600 hover:text-gray-800"
           >
-            هل نسيت كلمة المرور؟
+            {t('forgot_password')}
           </Link>
           <Link
             to="/register"
             className="text-pink-600 hover:text-pink-700 font-medium"
             data-testid="register-link"
           >
-            ليس لديك حساب؟ سجّل الآن 💕
+            {t('no_account')} {t('register_now')} 💕
           </Link>
         </CardFooter>
       </Card>

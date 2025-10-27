@@ -3772,6 +3772,32 @@ async def usage_increment(payload: UsageIncrementPayload, current_user: dict = D
         raise HTTPException(status_code=500, detail=f"Failed to increment usage: {str(e)}")
 
 
+# ============================================================================
+# USER LANGUAGE PREFERENCE
+# ============================================================================
+
+class LanguagePayload(BaseModel):
+    language: str = 'en'
+
+@api_router.put("/user/language")
+async def update_user_language(payload: LanguagePayload, current_user: dict = Depends(get_current_user)):
+    """Update user's preferred language"""
+    try:
+        # Validate language code
+        supported_languages = ['en', 'ar', 'fr', 'es', 'de', 'tr', 'it', 'pt-BR', 'ru']
+        lang = payload.language if payload.language in supported_languages else 'en'
+        
+        # Update user's language preference
+        await db.users.update_one(
+            {"id": current_user["id"]},
+            {"$set": {"language": lang}}
+        )
+        
+        return {"ok": True, "language": lang}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update language: {str(e)}")
+
+
 # Mount the API router
 app.include_router(api_router)
 

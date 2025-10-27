@@ -281,7 +281,7 @@ class PhoneOTPTester:
             try:
                 error_data = response.json()
                 if error_data.get("detail") == "OTP_LOCKED":
-                    self.log_result("4th Attempt (Should be blocked)", True, "Correctly blocked after max attempts")
+                    self.log_result("6th Attempt (Should be blocked)", True, "Correctly blocked after max attempts")
                     success_count += 1
                 else:
                     self.log_result("4th Attempt (Should be blocked)", False, f"Wrong error: {error_data.get('detail')}")

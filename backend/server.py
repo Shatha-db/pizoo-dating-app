@@ -3709,8 +3709,8 @@ async def update_user_settings(payload: dict, current_user: dict = Depends(get_c
         
         if safety_accepted is not None:
             await db.users.update_one(
-                {"_id": current_user["_id"]},
-                {"$set": {"user_settings.safetyAccepted": bool(safety_accepted)}}
+                {"id": current_user["id"]},
+                {"$set": {"safetyAccepted": bool(safety_accepted)}}
             )
         
         return {"ok": True, "message": "Settings updated successfully"}

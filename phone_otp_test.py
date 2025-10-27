@@ -284,7 +284,7 @@ class PhoneOTPTester:
                     self.log_result("6th Attempt (Should be blocked)", True, "Correctly blocked after max attempts")
                     success_count += 1
                 else:
-                    self.log_result("4th Attempt (Should be blocked)", False, f"Wrong error: {error_data.get('detail')}")
+                    self.log_result("6th Attempt (Should be blocked)", False, f"Wrong error: {error_data.get('detail')}")
             except:
                 self.log_result("4th Attempt (Should be blocked)", False, f"Invalid JSON response: {response.text}")
         else:

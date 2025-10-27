@@ -113,16 +113,20 @@ export const NotificationProvider = ({ children }) => {
 
   // Poll for new notifications every 30 seconds
   useEffect(() => {
-    if (token) {
-      fetchUnreadCount();
+    if (token && user) { // ✅ Check both token AND user
+      fetchUnreadCount().catch(err => {
+        console.warn('Failed to fetch unread count:', err);
+      });
       
       const interval = setInterval(() => {
-        fetchUnreadCount();
+        fetchUnreadCount().catch(err => {
+          console.warn('Polling unread count failed:', err);
+        });
       }, 30000); // Poll every 30 seconds
       
       return () => clearInterval(interval);
     }
-  }, [token]);
+  }, [token, user]); // ✅ Add user to deps
 
   const value = {
     notifications,

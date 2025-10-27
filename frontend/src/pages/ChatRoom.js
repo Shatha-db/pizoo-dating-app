@@ -290,37 +290,11 @@ const ChatRoom = () => {
       </footer>
 
       {/* Safety Consent Modal */}
-      {showSafetyConsent && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card className="max-w-md w-full p-6">
-            <div className="text-center mb-6">
-              <div className="text-6xl mb-4">🛡️</div>
-              <h2 className="text-2xl font-bold mb-4">السلامة أولاً</h2>
-              <p className="text-sm text-gray-700 mb-4">
-                نستخدم أنظمة آلية ويدوية لمراقبة الدردشات ومقاطع الفيديو للكشف عن النشاط غير القانوني.
-              </p>
-              <p className="text-sm text-gray-700 mb-6">
-                للحفاظ على Pizoo آمناً، فإنك توافق على المواعدة بأمان واستخدامنا لأدوات معالجة الرسائل.
-              </p>
-            </div>
-
-            <Button
-              onClick={handleAgreeSafety}
-              className="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white mb-3"
-            >
-              أوافق
-            </Button>
-
-            <Button
-              onClick={() => setShowSafetyConsent(false)}
-              variant="ghost"
-              className="w-full"
-            >
-              لا ترسل الرسالة
-            </Button>
-          </Card>
-        </div>
-      )}
+      <SafetyConsentModal 
+        open={showSafetyConsent}
+        onAccept={handleAgreeSafety}
+        onClose={() => setShowSafetyConsent(false)}
+      />
 
       {/* Message Limit Warning Modal */}
       {showMessageLimitWarning && (

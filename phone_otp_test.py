@@ -365,7 +365,7 @@ class PhoneOTPTester:
         
         # Wait for logs and extract OTP
         time.sleep(2)
-        generated_otp = self.extract_otp_from_logs()
+        generated_otp = self.extract_otp_from_logs(phone)
         
         if not generated_otp:
             self.log_result("Existing User Flow (Extract OTP)", False, "Could not extract OTP from logs")

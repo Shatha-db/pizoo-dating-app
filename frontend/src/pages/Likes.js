@@ -85,7 +85,16 @@ const Likes = () => {
         // Match exists, go to chat
         navigate(`/chat/${match.match_id}`);
       } else {
-        // No match, send like
+        // Check like limit before sending like
+        const usage = await fetchUsage();
+        
+        if (!usage.isPremium && usage.remainingLikes <= 0) {
+          setUpsellReason('like');
+          setShowUpsell(true);
+          return;
+        }
+        
+        // Send like
         await axios.post(`${API}/swipe`, {
           swiped_user_id: profile.user_id,
           action: 'like'
@@ -93,11 +102,19 @@ const Likes = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         
+        // Increment like counter
+        await incUsage('like');
+        
         showToast('تم الإعجاب! 💕 انتظر إعجاب الطرف الآخر لفتح الدردشة');
       }
     } catch (error) {
       console.error('Error:', error);
-      showToast('حدث خطأ، حاول مرة أخرى');
+      if (error.message.includes('429') || error.message.includes('limit')) {
+        setUpsellReason('like');
+        setShowUpsell(true);
+      } else {
+        showToast('حدث خطأ، حاول مرة أخرى');
+      }
     }
   };
 

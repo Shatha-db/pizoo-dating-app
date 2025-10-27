@@ -541,6 +541,18 @@ frontend:
         agent: "testing"
         comment: "✅ COMPREHENSIVE TESTING COMPLETE: Dark/Light mode theme toggle working perfectly. RESULTS: 1) Theme section 'الوضع الذكي' found in Settings page, 2) Theme dropdown with 3 options working correctly (استخدام إعدادات النظام, الوضع المضيء, الوضع الداكن), 3) Theme indicators show correct emojis (⚙️ system, ☀️ light, 🌙 dark), 4) Dark mode applies 'dark' class to HTML/body elements, 5) Light mode removes 'dark' class from HTML/body elements, 6) Theme changes apply immediately across the app, 7) Theme persists after page refresh, 8) API integration working with backend settings endpoint. All requirements met with Arabic RTL layout support."
 
+  - task: "Phone OTP Login Page (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/PhoneLogin.jsx, /app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: Complete Phone OTP authentication UI created. PhoneLogin.jsx features: 1) Two-step flow (phone input → OTP verification), 2) Phone number input with international format support, 3) 'Send Code' button triggers POST /api/auth/phone/send-otp, 4) OTP input field (6-digit code), 5) 'Verify' button triggers POST /api/auth/phone/verify-otp, 6) Toast notifications for success/error states, 7) Loading states for both API calls, 8) i18n support (EN/AR) with keys: phone_login, enter_phone, send_code, enter_otp, verify, otp_sent, otp_verified, otp_invalid, otp_expired, 9) Auto-login on successful verification (stores JWT token), 10) Responsive design with gradient background. Route added to App.js at /phone-login. Ready for E2E testing: phone input validation, OTP send flow, OTP verification flow, error handling, i18n RTL layout."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"

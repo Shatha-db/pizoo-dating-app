@@ -324,7 +324,7 @@ class PhoneOTPTester:
         # First register a user via email
         unique_id = str(uuid.uuid4())[:8]
         email = f"testuser{unique_id}@example.com"
-        phone = f"+1555123{unique_id[:4]}"
+        phone = f"+15551234567{unique_id[:3]}"
         
         register_data = {
             "name": f"Test User {unique_id}",

@@ -234,8 +234,8 @@ class PhoneOTPTester:
             self.log_result("Verify OTP (Wrong Code)", False, "No OTP ID received")
             return False
         
-        # Try wrong codes multiple times
-        wrong_codes = ["000000", "111111", "999999"]
+        # Try wrong codes multiple times (5 attempts max)
+        wrong_codes = ["000000", "111111", "999999", "444444", "555555"]
         success_count = 0
         
         for i, wrong_code in enumerate(wrong_codes):

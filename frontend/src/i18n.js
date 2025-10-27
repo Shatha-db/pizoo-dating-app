@@ -1,17 +1,13 @@
 // ✅ إعداد اتجاه الصفحة ولغة <html> قبل تحميل i18n
+// DEFAULT: English (en) unless user explicitly chose another language
 const savedLang = (
   typeof localStorage !== 'undefined' && localStorage.getItem('i18nextLng')
-) || null;
+) || 'en'; // ✅ Changed default from null to 'en'
 
-if (savedLang) {
-  const baseLang = savedLang.split('-')[0];
-  const isRTL = ['ar', 'fa', 'ur', 'he'].includes(baseLang);
-  document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
-  document.documentElement.lang = savedLang;
-} else {
-  document.documentElement.dir = 'ltr';
-  document.documentElement.lang = 'en';
-}
+const baseLang = savedLang.split('-')[0];
+const isRTL = ['ar', 'fa', 'ur', 'he'].includes(baseLang);
+document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+document.documentElement.lang = savedLang;
 
 // ---------------------------
 // 🧠 تهيئة i18next الفعلية
@@ -20,7 +16,7 @@ import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 
-const SUPPORTED = ['ar', 'en', 'fr', 'es', 'de', 'tr', 'it', 'pt-BR', 'ru'];
+const SUPPORTED = ['en', 'ar', 'fr', 'es', 'de', 'tr', 'it', 'pt-BR', 'ru']; // en first
 
 function setHtmlDirLang(lng) {
   const lang = lng || 'en';

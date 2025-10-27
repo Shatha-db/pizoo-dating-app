@@ -119,7 +119,7 @@ const Login = () => {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="example@email.com أو +966XXXXXXXX"
+                placeholder={t('placeholder_email_phone')}
                 className="h-12 rounded-lg"
                 data-testid="email-input"
               />

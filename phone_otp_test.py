@@ -89,9 +89,9 @@ class PhoneOTPTester:
     
     def test_send_otp_valid_phone(self):
         """Test sending OTP to valid phone number"""
-        # Generate unique test phone
+        # Generate unique test phone (must be 8-15 digits after country code)
         unique_id = str(uuid.uuid4())[:8]
-        self.test_phone = f"+1234567{unique_id[:4]}"
+        self.test_phone = f"+12345678901{unique_id[:3]}"
         
         data = {"phone": self.test_phone}
         response = self.make_request("POST", "/auth/phone/send-otp", data)

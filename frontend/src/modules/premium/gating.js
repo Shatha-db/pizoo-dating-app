@@ -46,7 +46,8 @@ export function getGatingState() {
  */
 export function incView() {
   const { day, viewedToday } = getGatingState();
-  const next = { day, viewedToday: viewedToday + 1 };
+  const currentViews = parseInt(viewedToday) || 0;
+  const next = { day, viewedToday: currentViews + 1 };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
 }
 

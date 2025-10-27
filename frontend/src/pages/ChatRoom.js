@@ -77,46 +77,78 @@ const ChatRoom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleSendMessage = async () => {
-    if (!newMessage.trim()) return;
+  const [sending, setSending] = useState(false);
 
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || sending) return;
+
+    // Check safety consent
     if (!hasAgreedToSafety) {
       setShowSafetyConsent(true);
       return;
     }
 
-    // Send via WebSocket for real-time delivery
-    if (isConnected && otherUser) {
-      const success = wsSendMessage(matchId, otherUser.id, newMessage);
-      if (success) {
-        // Add message to local state immediately
-        const newMsg = {
-          id: Date.now().toString(),
-          sender_id: user.id,
-          content: newMessage,
-          created_at: new Date().toISOString(),
-          status: 'sent'
-        };
-        setMessages(prev => [...prev, newMsg]);
-        setNewMessage('');
-      }
-    } else {
-      // Fallback to HTTP if WebSocket not connected
-      try {
-        await axios.post(
-          `${API}/conversations/${matchId}/messages?content=${encodeURIComponent(newMessage)}`,
-          {},
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setNewMessage('');
-        fetchMessages();
-      } catch (error) {
-        console.error('Error sending message:', error);
-        // Check if it's a 403 error (message limit reached)
-        if (error.response && error.response.status === 403) {
-          setShowMessageLimitWarning(true);
+    setSending(true);
+    
+    try {
+      // Send via WebSocket for real-time delivery
+      if (isConnected && otherUser) {
+        const success = wsSendMessage(matchId, otherUser.id, newMessage);
+        if (success) {
+          // Add message to local state immediately
+          const newMsg = {
+            id: Date.now().toString(),
+            sender_id: user.id,
+            content: newMessage,
+            created_at: new Date().toISOString(),
+            status: 'sent'
+          };
+          setMessages(prev => [...prev, newMsg]);
+          setNewMessage('');
         }
+      } else {
+        // Fallback to HTTP if WebSocket not connected
+        const response = await axios.post(
+          `${API}/conversations/${matchId}/messages`,
+          { content: newMessage },
+          { 
+            headers: { 
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            withCredentials: true
+          }
+        );
+        
+        // Add sent message to local state
+        if (response.data) {
+          const newMsg = {
+            id: response.data.id || Date.now().toString(),
+            sender_id: user.id,
+            content: newMessage,
+            created_at: new Date().toISOString(),
+            status: 'sent'
+          };
+          setMessages(prev => [...prev, newMsg]);
+        }
+        
+        setNewMessage('');
       }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      
+      // Check if it's a 403 error (message limit reached)
+      if (error.response && error.response.status === 403) {
+        setShowMessageLimitWarning(true);
+      } else if (error.response && error.response.status === 401) {
+        // Session expired
+        navigate('/login');
+      } else {
+        // Show error toast
+        alert('تعذّر إرسال الرسالة، حاول مرة أخرى');
+      }
+    } finally {
+      setSending(false);
     }
   };
 

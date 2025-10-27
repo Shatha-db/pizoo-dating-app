@@ -177,6 +177,11 @@ const ChatRoom = () => {
     handleSendMessage();
   };
 
+  const insertEmoji = (emoji) => {
+    setNewMessage(prev => (prev || '') + emoji);
+    setShowEmojiPicker(false);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">

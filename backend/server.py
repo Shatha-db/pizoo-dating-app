@@ -867,8 +867,8 @@ class VerifyPayload(BaseModel):
     otpId: str
 
 @api_router.post("/auth/phone/send-otp")
-async def send_phone_otp(payload: PhonePayload, request: Request):
-    """Send OTP code to phone number"""
+async def send_phone_otp(payload: PhonePayload, request: Request, current_user: dict = Depends(optional_auth)):
+    """Send OTP code to phone number with language-aware message"""
     phone = payload.phone.strip()
     
     # Validate phone format
@@ -881,8 +881,21 @@ async def send_phone_otp(payload: PhonePayload, request: Request):
     if last and (now - last.get("created_at", 0) < 30):
         raise HTTPException(status_code=429, detail="TOO_MANY_REQUESTS")
     
-    # Generate and send OTP
-    pack = generate_and_send(phone)
+    # Detect user language (if authenticated) or default to 'en'
+    user_lang = 'en'
+    if current_user:
+        user = await db.users.find_one({"id": current_user.get("id")}, {"language": 1})
+        if user and user.get("language"):
+            user_lang = user["language"]
+    
+    # Check if phone exists in users and get their language preference
+    if not current_user:
+        existing_user = await db.users.find_one({"phone": phone}, {"language": 1})
+        if existing_user and existing_user.get("language"):
+            user_lang = existing_user["language"]
+    
+    # Generate and send OTP with language-aware message
+    pack = generate_and_send(phone, user_lang)
     if not pack:
         raise HTTPException(status_code=500, detail="SMS_FAILED")
     
@@ -893,7 +906,8 @@ async def send_phone_otp(payload: PhonePayload, request: Request):
         "expires_at": pack["expires_at"],
         "attempts_left": pack["attempts_left"],
         "verified": False,
-        "created_at": now
+        "created_at": now,
+        "language": user_lang  # Store language for reference
     }
     ins = await db.user_otp.insert_one(doc)
     

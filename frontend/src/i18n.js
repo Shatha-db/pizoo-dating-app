@@ -37,7 +37,7 @@ i18n
   .init({
     supportedLngs: SUPPORTED,
     fallbackLng: 'en',
-    ns: 'common',
+    ns: ['common', 'auth', 'profile', 'chat', 'map', 'notifications', 'settings', 'swipe', 'likes', 'premium'],
     defaultNS: 'common',
     fallbackNS: 'common',
     keySeparator: false,
@@ -50,7 +50,7 @@ i18n
       loadPath: '/locales/{{lng}}/{{ns}}.json'
     },
     interpolation: { escapeValue: false },
-    react: { useSuspense: false } // ⚠️ Temporarily disabled to prevent white screen
+    react: { useSuspense: false }
   });
 
 i18n.on('initialized', () => setHtmlDirLang(i18n.language));

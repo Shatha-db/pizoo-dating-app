@@ -201,7 +201,10 @@ const ChatRoom = () => {
                 <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
               )}
             </div>
-            <div>
+            <div 
+              className="cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => otherUser && navigate(`/profile/${otherUser.id}`)}
+            >
               <h2 className="font-bold">{otherUser?.name || 'المستخدم'}</h2>
               <span className="text-xs text-gray-500">
                 {otherUser && isUserOnline(otherUser.id) ? (

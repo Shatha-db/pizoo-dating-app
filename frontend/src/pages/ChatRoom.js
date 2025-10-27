@@ -137,7 +137,7 @@ const ChatRoom = () => {
   };
 
   const handleAgreeSafety = () => {
-    localStorage.setItem(`safety_consent_${user?.id}`, 'true');
+    localStorage.setItem('pizoo_safety_accepted', '1');
     setHasAgreedToSafety(true);
     setShowSafetyConsent(false);
     handleSendMessage();

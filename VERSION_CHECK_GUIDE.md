@@ -25,7 +25,7 @@
 #### الخيار الأول: صفحة التحديث التلقائي
 **اضغط على هذا الرابط:**
 ```
-https://datemaps.preview.emergentagent.com/force-update.html
+https://phone-auth-2.preview.emergentagent.com/force-update.html
 ```
 
 **ماذا سيحدث؟**
@@ -37,7 +37,7 @@ https://datemaps.preview.emergentagent.com/force-update.html
 #### Option 1: Auto-Update Page
 **Click this link:**
 ```
-https://datemaps.preview.emergentagent.com/force-update.html
+https://phone-auth-2.preview.emergentagent.com/force-update.html
 ```
 
 **What will happen?**

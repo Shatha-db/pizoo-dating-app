@@ -590,7 +590,7 @@ await db.swipes.find_one({
 
 **Frontend (.env):**
 ```bash
-REACT_APP_BACKEND_URL=https://datemaps.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://phone-auth-2.preview.emergentagent.com
 GENERATE_SOURCEMAP=true
 ```
 

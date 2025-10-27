@@ -216,13 +216,13 @@ Version: v3.0.0-beta
 Branch: main
 Public: true
 Region: eu
-Expected URL: https://pizoo-v3-beta.preview.emergentagent.com
+Expected URL: https://phone-auth-2.preview.emergentagent.com
 ```
 
 ### Environment Variables:
 ```
 # Frontend
-REACT_APP_BACKEND_URL=https://pizoo-v3-beta.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://phone-auth-2.preview.emergentagent.com
 
 # Backend
 MONGO_URL=<MongoDB Atlas Connection String>

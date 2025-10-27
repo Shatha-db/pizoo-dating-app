@@ -25,7 +25,7 @@ import uuid
 import threading
 
 # Configuration
-BASE_URL = "https://datemaps.preview.emergentagent.com/api"
+BASE_URL = "https://phone-auth-2.preview.emergentagent.com/api"
 HEADERS = {"Content-Type": "application/json"}
 
 class DeepStabilityTester:

@@ -300,7 +300,7 @@ class SafetyChatTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if data.get("can") == True:
+                if data.get("canChat") == True:
                     self.log_test("Integration - Chat After Mutual Like", True, 
                                 f"Chat allowed after mutual like: {data}")
                 else:

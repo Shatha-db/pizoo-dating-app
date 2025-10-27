@@ -961,7 +961,7 @@ async def verify_phone_otp(payload: VerifyPayload):
         "phone": payload.phone,
         "exp": datetime.now(timezone.utc) + timedelta(days=30)
     }
-    token = jwt.encode(token_data, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    token = jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
     
     return {
         "ok": True,

@@ -1,45 +1,82 @@
 """
 Email Service for Pizoo Dating App
 Handles email verification, notifications, and marketing emails
+Supports SendGrid and mock mode
 """
 import os
 import random
 import string
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from sendgrid.helpers.mail import Mail, Email, To, Content
 from typing import Optional
 from datetime import datetime, timezone, timedelta
+
+# Configuration
+EMAIL_PROVIDER = os.getenv('EMAIL_PROVIDER', 'mock')  # sendgrid | mock
+SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+EMAIL_FROM = os.getenv('EMAIL_FROM', 'noreply@pizoo.app')
+EMAIL_FROM_NAME = os.getenv('EMAIL_FROM_NAME', 'Pizoo')
 
 # Store OTP codes temporarily (in production, use Redis or database)
 otp_storage = {}
 
 class EmailService:
     def __init__(self):
-        self.api_key = os.getenv('SENDGRID_API_KEY')
-        self.sender_email = os.getenv('SENDER_EMAIL', 'noreply@pizoo.app')
-        self.sg = SendGridAPIClient(self.api_key) if self.api_key else None
+        self.provider = EMAIL_PROVIDER
+        self.api_key = SENDGRID_API_KEY
+        self.sender_email = EMAIL_FROM
+        self.sender_name = EMAIL_FROM_NAME
+        self.sg = SendGridAPIClient(self.api_key) if self.api_key and self.provider == 'sendgrid' else None
+        
+        if self.provider == 'sendgrid' and not self.sg:
+            print("⚠️  SendGrid API key not configured. Using mock mode.")
+            self.provider = 'mock'
+        
+        print(f"✅ Email service initialized: Provider={self.provider}, From={self.sender_email}")
     
     def generate_otp(self, length=6):
         """Generate random OTP code"""
         return ''.join(random.choices(string.digits, k=length))
     
     def send_email(self, to_email: str, subject: str, html_content: str, plain_text_content: Optional[str] = None):
-        """Send email via SendGrid"""
-        if not self.sg:
-            print(f"⚠️  SendGrid not configured. Would send email to {to_email}: {subject}")
+        """Send email via configured provider"""
+        
+        # Mock mode
+        if self.provider == 'mock':
+            print(f"[MOCK EMAIL]")
+            print(f"  From: {self.sender_email}")
+            print(f"  To: {to_email}")
+            print(f"  Subject: {subject}")
+            print(f"  Content: {plain_text_content or html_content[:100]}...")
             return True
         
+        # SendGrid mode
         try:
+            from_email = Email(self.sender_email, self.sender_name)
+            to_email_obj = To(to_email)
+            
             message = Mail(
-                from_email=self.sender_email,
-                to_emails=to_email,
+                from_email=from_email,
+                to_emails=to_email_obj,
                 subject=subject,
-                html_content=html_content,
-                plain_text_content=plain_text_content
+                html_content=html_content
             )
             
+            if plain_text_content:
+                message.content = [
+                    Content("text/plain", plain_text_content),
+                    Content("text/html", html_content)
+                ]
+            
             response = self.sg.send(message)
-            return response.status_code == 202
+            
+            if response.status_code == 202:
+                print(f"✅ Email sent successfully to {to_email}")
+                return True
+            else:
+                print(f"⚠️  Email sent with status code: {response.status_code}")
+                return False
+                
         except Exception as e:
             print(f"❌ Error sending email: {str(e)}")
             return False

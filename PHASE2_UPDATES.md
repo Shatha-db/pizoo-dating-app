@@ -281,7 +281,7 @@
 
 ## 🔗 الروابط
 
-- **التطبيق الحالي:** https://dating-ui-refresh.preview.emergentagent.com
+- **التطبيق الحالي:** https://datemaps.preview.emergentagent.com
 - **Github Repo:** https://github.com/Shatha-db/pizoo-dating-app
 - **Documentation:** /app/COMPREHENSIVE_REPORT.md
 

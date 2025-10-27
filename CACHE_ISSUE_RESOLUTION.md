@@ -84,14 +84,14 @@ const APP_VERSION = '2.3.0'; // Premium UI + Gating System
 - One-click cache clearing
 - Automatic redirect to login after clearing
 
-**URL:** `https://dating-ui-refresh.preview.emergentagent.com/force-update.html`
+**URL:** `https://datemaps.preview.emergentagent.com/force-update.html`
 
 **Usage:**
 Share this link with users who report version issues:
 ```
 افتح هذا الرابط لتحديث التطبيق:
 Open this link to update the app:
-https://dating-ui-refresh.preview.emergentagent.com/force-update.html
+https://datemaps.preview.emergentagent.com/force-update.html
 ```
 
 ### 3. Meta Tags for Cache Control
@@ -172,7 +172,7 @@ These tell browsers to always check for new versions.
 **Option 1: Share Force Update Link**
 ```
 Send users this link via email/SMS:
-https://dating-ui-refresh.preview.emergentagent.com/force-update.html
+https://datemaps.preview.emergentagent.com/force-update.html
 
 Text in Arabic:
 نسخة جديدة من Pizoo متوفرة! افتح هذا الرابط للتحديث:
@@ -427,4 +427,4 @@ The cache issue has been **fully resolved** with a smart cache-busting system th
 
 **Current Version:** 2.3.0 (Premium UI + Gating System)  
 **Next Version:** Will increment when new features added  
-**Force Update Page:** https://dating-ui-refresh.preview.emergentagent.com/force-update.html
+**Force Update Page:** https://datemaps.preview.emergentagent.com/force-update.html

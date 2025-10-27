@@ -3718,6 +3718,27 @@ async def update_user_settings(payload: dict, current_user: dict = Depends(get_c
         raise HTTPException(status_code=500, detail=f"Failed to update settings: {str(e)}")
 
 
+@api_router.get("/relation/can-chat")
+async def can_chat(userId: str, current_user: dict = Depends(get_current_user)):
+    """
+    Check if current user can chat with target user (requires like/match)
+    """
+    try:
+        # Check if current user has liked the target user
+        liked = await db.swipes.find_one({
+            "from_user_id": current_user["id"],
+            "to_user_id": userId,
+            "action": "like"
+        })
+        
+        if not liked:
+            return {"can": False, "reason": "like_first"}
+        
+        return {"can": True, "reason": None}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to check chat eligibility: {str(e)}")
+
+
 # Mount the API router
 app.include_router(api_router)
 

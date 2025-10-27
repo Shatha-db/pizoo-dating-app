@@ -183,8 +183,7 @@ class SafetyChatTester:
             if response.status_code == 200:
                 data = response.json()
                 # Expected: {canChat: false, reason: "لم تقم بالإعجاب بهذا المستخدم بعد"}
-                # But implementation returns: {can: false, reason: "like_first"}
-                if data.get("can") == False and data.get("reason") == "like_first":
+                if data.get("canChat") == False and "لم تقم بالإعجاب" in data.get("reason", ""):
                     self.log_test("Chat Gating - No Like Scenario", True, 
                                 f"Correctly blocked chat without like: {data}")
                 else:

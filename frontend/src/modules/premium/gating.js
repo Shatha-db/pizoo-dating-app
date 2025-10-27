@@ -20,18 +20,25 @@ export function getGatingState() {
     try {
       const data = JSON.parse(raw);
       if (data.day === today) {
-        viewedToday = data.viewedToday || 0;
+        viewedToday = parseInt(data.viewedToday) || 0;
       }
     } catch (e) {
       console.warn('Failed to parse gating state:', e);
     }
   }
 
-  const limit = DEFAULT_LIMIT;
-  const gated = viewedToday >= limit;
-  const remaining = Math.max(0, limit - viewedToday);
+  const limit = parseInt(DEFAULT_LIMIT) || 10;
+  const viewed = parseInt(viewedToday) || 0;
+  const gated = viewed >= limit;
+  const remaining = Math.max(0, limit - viewed);
 
-  return { day, viewedToday, limit, gated, remaining };
+  return { 
+    day, 
+    viewedToday: viewed, 
+    limit, 
+    gated, 
+    remaining: isNaN(remaining) ? limit : remaining 
+  };
 }
 
 /**

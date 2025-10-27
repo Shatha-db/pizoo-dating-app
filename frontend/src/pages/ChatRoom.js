@@ -226,9 +226,12 @@ const ChatRoom = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <button className="p-2 hover:bg-gray-100 rounded-full">
-            <Video className="w-5 h-5 text-blue-500" />
-          </button>
+          {/* Jitsi Video & Voice Call Buttons */}
+          <JitsiButtons 
+            roomName={`pizoo-match-${matchId}`}
+            displayName={user?.name || 'User'}
+          />
+          
           <button className="p-2 hover:bg-gray-100 rounded-full">
             <MoreVertical className="w-5 h-5" />
           </button>

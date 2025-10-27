@@ -1,18 +1,20 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from './ui/button';
 import { Home, Search, Heart, MessageCircle, User } from 'lucide-react';
 
 const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation('common');
 
   const tabs = [
-    { path: '/home', icon: Home, label: 'الرئيسية', emoji: '❤️‍🔥' },
-    { path: '/explore', icon: Search, label: 'استكشاف', emoji: '🔍' },
-    { path: '/likes', icon: Heart, label: 'إعجابات', emoji: '💕' },
-    { path: '/chat', icon: MessageCircle, label: 'محادثات', emoji: '💬' },
-    { path: '/profile', icon: User, label: 'الحساب', emoji: '👤' }
+    { path: '/home', icon: Home, label: t('tab_home') || 'Home', emoji: '❤️‍🔥' },
+    { path: '/explore', icon: Search, label: t('tab_explore') || 'Explore', emoji: '🔍' },
+    { path: '/likes', icon: Heart, label: t('tab_likes') || 'Likes', emoji: '💕' },
+    { path: '/chat', icon: MessageCircle, label: t('tab_chats') || 'Chats', emoji: '💬' },
+    { path: '/profile', icon: User, label: t('tab_account') || 'Account', emoji: '👤' }
   ];
 
   return (

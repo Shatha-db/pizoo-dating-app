@@ -1110,6 +1110,29 @@ async def get_my_profile(current_user: dict = Depends(get_current_user)):
     return profile
 
 
+
+@api_router.get("/me")
+async def get_current_user_info(current_user: dict = Depends(get_current_user)):
+    """Get current user information including language preference"""
+    user = await db.users.find_one({"id": current_user['id']}, {"_id": 0})
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    # Return essential user info including language
+    return {
+        "id": user.get('id'),
+        "email": user.get('email'),
+        "phone": user.get('phone'),
+        "name": user.get('name'),
+        "language": user.get('language', 'en'),  # Default to 'en'
+        "premium_tier": user.get('premium_tier', 'free')
+    }
+
+
 @api_router.get("/usage-stats")
 async def get_usage_stats(current_user: dict = Depends(get_current_user)):
     """Get current usage statistics for free users"""

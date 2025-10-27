@@ -3695,6 +3695,29 @@ async def get_premium_eligibility(current_user: dict = Depends(get_current_user)
         raise HTTPException(status_code=500, detail=f"Failed to get eligibility: {str(e)}")
 
 
+# ==========================================
+# User Settings Endpoints
+# ==========================================
+
+@api_router.put("/user/settings")
+async def update_user_settings(payload: dict, current_user: dict = Depends(get_current_user)):
+    """
+    Update user settings (safety consent, preferences, etc.)
+    """
+    try:
+        safety_accepted = payload.get("safetyAccepted")
+        
+        if safety_accepted is not None:
+            await db.users.update_one(
+                {"_id": current_user["_id"]},
+                {"$set": {"user_settings.safetyAccepted": bool(safety_accepted)}}
+            )
+        
+        return {"ok": True, "message": "Settings updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update settings: {str(e)}")
+
+
 # Mount the API router
 app.include_router(api_router)
 

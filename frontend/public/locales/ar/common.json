@@ -18,5 +18,11 @@
   "back": "رجوع",
   "next": "التالي",
   "done": "تم",
-  "settings": "الإعدادات"
+  "settings": "الإعدادات",
+  "tab_home": "الرئيسية",
+  "tab_explore": "استكشاف",
+  "tab_likes": "إعجابات",
+  "tab_chats": "محادثات",
+  "tab_account": "الحساب",
+  "brand": "Pizoo"
 }

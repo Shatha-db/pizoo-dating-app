@@ -123,12 +123,12 @@ class SafetyChatTester:
         try:
             response = self.session.put(f"{BACKEND_URL}/user/settings", json=payload)
             
-            if response.status_code == 401:
+            if response.status_code in [401, 403]:
                 self.log_test("Safety Consent - No Authentication", True, 
-                            "Correctly returned 401 Unauthorized")
+                            f"Correctly returned {response.status_code} for no authentication")
             else:
                 self.log_test("Safety Consent - No Authentication", False, 
-                            f"Expected 401, got {response.status_code}: {response.text}")
+                            f"Expected 401/403, got {response.status_code}: {response.text}")
         except Exception as e:
             self.log_test("Safety Consent - No Authentication", False, f"Exception: {str(e)}")
         

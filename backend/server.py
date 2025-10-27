@@ -3415,6 +3415,16 @@ async def get_terms():
 # Include the router in the main app
 app.include_router(api_router)
 
+
+# Import and include admin router
+try:
+    from admin_tools import admin_router
+    app.include_router(admin_router)
+    print("✅ Admin router loaded")
+except ImportError as e:
+    print(f"⚠️  Admin router not loaded: {e}")
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,

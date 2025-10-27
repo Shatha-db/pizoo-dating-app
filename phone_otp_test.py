@@ -264,7 +264,7 @@ class PhoneOTPTester:
             else:
                 self.log_result(f"Wrong Code Attempt {i+1}", False, f"Expected 400, got {response.status_code}")
         
-        # Test 4th attempt (should be blocked)
+        # Test 6th attempt (should be blocked)
         data = {
             "phone": test_phone,
             "code": "123456",

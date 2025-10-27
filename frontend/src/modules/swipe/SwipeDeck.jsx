@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { getGatingState, incView, recordSwipe } from '../premium/gating';
+import PhotoLightbox from '../media/PhotoLightbox';
 
 export default function SwipeDeck({ users = [], onSwipe, className, gating, onGate }) {
   const { t } = useTranslation('swipe');
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [localGating, setLocalGating] = useState(null);
+  const [showLightbox, setShowLightbox] = useState(false);
+  const [startAt, setStartAt] = useState(0);
   
   // Use prop gating or local state
   const gatingState = gating || localGating || getGatingState();

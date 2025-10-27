@@ -211,7 +211,7 @@ class PhoneOTPTester:
         """Test verifying OTP with wrong code (test attempts limiting)"""
         # First, send a new OTP for this test
         unique_id = str(uuid.uuid4())[:8]
-        test_phone = f"+1987654{unique_id[:4]}"
+        test_phone = f"+19876543210{unique_id[:3]}"
         
         # Send OTP
         data = {"phone": test_phone}

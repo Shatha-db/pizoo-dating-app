@@ -208,6 +208,14 @@ const Likes = () => {
       </main>
 
       <BottomNav />
+      
+      {/* Upsell Modal */}
+      {showUpsell && (
+        <UpsellModal 
+          reason={upsellReason}
+          onClose={() => setShowUpsell(false)}
+        />
+      )}
     </div>
   );
 };

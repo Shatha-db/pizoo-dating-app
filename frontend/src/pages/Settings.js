@@ -236,6 +236,10 @@ const Settings = () => {
             <h2 className="font-bold text-lg">{t('settings:language')}</h2>
           </div>
           
+          <p className="text-sm text-gray-500 dark:text-gray-600 mb-4">
+            {t('settings:language_note')}
+          </p>
+          
           <div className="space-y-2">
             <button
               onClick={() => changeLanguage('ar')}

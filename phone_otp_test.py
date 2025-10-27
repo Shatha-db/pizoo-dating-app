@@ -328,7 +328,9 @@ class PhoneOTPTester:
         # First register a user via email
         unique_id = str(uuid.uuid4())[:8]
         email = f"testuser{unique_id}@example.com"
-        phone = f"+15551234567{unique_id[:3]}"
+        import random
+        unique_digits = ''.join([str(random.randint(0, 9)) for _ in range(3)])
+        phone = f"+15551234567{unique_digits}"
         
         register_data = {
             "name": f"Test User {unique_id}",

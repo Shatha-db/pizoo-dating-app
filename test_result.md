@@ -560,18 +560,16 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Phone OTP Authentication (NEW)"
+    - "Phone OTP Login Page (NEW)"
   stuck_tasks: []
   test_all: false
-  test_priority: "safety_chat_first"
-  backend_testing_complete: true
-  backend_success_rate: "100%"
-  new_features_testing_complete: true
-  new_features_success_rate: "100%"
-  gps_integration_testing_complete: true
-  gps_integration_success_rate: "100%"
-  safety_chat_testing_complete: true
-  safety_chat_testing_success_rate: "100%"
+  test_priority: "phone_otp_backend_first"
+  backend_testing_complete: false
+  phone_otp_testing_phase: "backend_testing_pending"
+  frontend_testing_pending: true
+  testing_notes: "Phase 1: Test backend OTP endpoints (send-otp, verify-otp). Phase 2: After backend pass, test frontend Phone Login UI and E2E flow."
 
 agent_communication:
   - agent: "main"

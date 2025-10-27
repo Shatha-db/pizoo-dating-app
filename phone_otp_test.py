@@ -274,7 +274,7 @@ class PhoneOTPTester:
         response = self.make_request("POST", "/auth/phone/verify-otp", data)
         
         if response is None:
-            self.log_result("4th Attempt (Should be blocked)", False, "Connection failed")
+            self.log_result("6th Attempt (Should be blocked)", False, "Connection failed")
             return success_count == len(wrong_codes)
         
         if response.status_code == 429:

@@ -3588,6 +3588,116 @@ async def send_verification_otp(request: EmailVerificationRequest):
 async def verify_email_otp(request: VerifyOTPRequest):
     """Verify OTP code"""
     is_valid = email_service.verify_otp(request.email, request.code)
+
+
+# ========================================
+# Email Service Diagnostics & Testing
+# ========================================
+
+class EmailTestRequest(BaseModel):
+    to_email: EmailStr
+    test_type: str = "verification"  # verification | welcome | notification
+
+@api_router.post("/admin/test-email")
+async def test_email_service(request: EmailTestRequest):
+    """
+    Test email service configuration
+    
+    Test types:
+    - verification: Send test verification email
+    - welcome: Send welcome email
+    - notification: Send test notification
+    """
+    try:
+        if request.test_type == "verification":
+            html_content = f"""
+            <html>
+                <body style="font-family: Arial, sans-serif; padding: 20px; background-color: #f5f5f5;">
+                    <div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px;">
+                        <h1 style="color: #e91e63; text-align: center;">Pizoo Email Test</h1>
+                        <p>This is a test email from Pizoo's SendGrid integration.</p>
+                        <p>If you received this email, your SendGrid configuration is working correctly! ✅</p>
+                        <hr style="margin: 20px 0;">
+                        <p style="color: #666; font-size: 12px;">
+                            Provider: SendGrid<br>
+                            From: {email_service.sender_email}<br>
+                            Time: {datetime.now(timezone.utc).isoformat()}
+                        </p>
+                    </div>
+                </body>
+            </html>
+            """
+            
+            plain_text = "This is a test email from Pizoo's SendGrid integration. If you received this, your configuration is working!"
+            
+            success = email_service.send_email(
+                to_email=request.to_email,
+                subject="[Pizoo] Email Service Test",
+                html_content=html_content,
+                plain_text_content=plain_text
+            )
+        
+        elif request.test_type == "welcome":
+            html_content = f"""
+            <html>
+                <body style="font-family: Arial, sans-serif; padding: 20px; background-color: #f5f5f5;">
+                    <div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px;">
+                        <h1 style="color: #e91e63; text-align: center;">Welcome to Pizoo! 💕</h1>
+                        <p>Thank you for joining Pizoo, the dating app that helps you find meaningful connections.</p>
+                        <p>Get started by completing your profile and start swiping!</p>
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a href="https://pizoo.app" style="background: linear-gradient(to right, #e91e63, #f06292); color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px;">Complete Your Profile</a>
+                        </div>
+                    </div>
+                </body>
+            </html>
+            """
+            
+            success = email_service.send_email(
+                to_email=request.to_email,
+                subject="Welcome to Pizoo! 💕",
+                html_content=html_content
+            )
+        
+        else:
+            html_content = "<html><body><h1>Test Notification</h1><p>This is a test notification from Pizoo.</p></body></html>"
+            success = email_service.send_email(
+                to_email=request.to_email,
+                subject="[Pizoo] Test Notification",
+                html_content=html_content
+            )
+        
+        if success:
+            return {
+                "ok": True,
+                "message": "Test email sent successfully",
+                "provider": email_service.provider,
+                "to": request.to_email
+            }
+        else:
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to send test email"
+            )
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Email service error: {str(e)}"
+        )
+
+@api_router.get("/admin/email-status")
+async def get_email_service_status():
+    """Get current email service configuration status"""
+    return {
+        "provider": email_service.provider,
+        "configured": email_service.sg is not None if email_service.provider == 'sendgrid' else True,
+        "from_email": email_service.sender_email,
+        "from_name": email_service.sender_name,
+        "api_key_set": bool(email_service.api_key),
+        "api_key_prefix": email_service.api_key[:8] + "..." if email_service.api_key else None
+    }
+
     
     if is_valid:
         # Update user's email verification status

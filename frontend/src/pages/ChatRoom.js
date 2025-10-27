@@ -8,6 +8,7 @@ import { ArrowRight, MoreVertical, Video, Send, Smile, Mic, Star } from 'lucide-
 import axios from 'axios';
 import SafetyConsentModal from '../modules/safety/SafetyConsentModal';
 import EmojiPicker from '../modules/chat/EmojiPicker';
+import JitsiButtons from '../modules/call/JitsiButtons';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;

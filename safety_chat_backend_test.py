@@ -321,10 +321,19 @@ class SafetyChatTester:
         try:
             response = self.session.get(f"{BACKEND_URL}/relation/can-chat?userId=", headers=headers)
             
-            # Should handle gracefully
-            if response.status_code in [400, 422, 500]:
-                self.log_test("Edge Case - Empty UserId", True, 
-                            f"Correctly handled empty userId with status {response.status_code}")
+            # Should handle gracefully - 200 with canChat=false is acceptable
+            if response.status_code in [200, 400, 422]:
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("canChat") == False:
+                        self.log_test("Edge Case - Empty UserId", True, 
+                                    f"Gracefully handled empty userId: {data}")
+                    else:
+                        self.log_test("Edge Case - Empty UserId", False, 
+                                    f"Should return canChat=false for empty userId: {data}")
+                else:
+                    self.log_test("Edge Case - Empty UserId", True, 
+                                f"Correctly handled empty userId with status {response.status_code}")
             else:
                 self.log_test("Edge Case - Empty UserId", False, 
                             f"Unexpected handling of empty userId: {response.status_code} - {response.text}")

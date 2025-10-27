@@ -1,5 +1,6 @@
 {
   "language": "Language",
+  "language_note": "Your app will always open in your selected language.",
   "theme": "Theme",
   "notifications": "Notifications",
   "privacy": "Privacy & Safety",

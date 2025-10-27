@@ -314,9 +314,16 @@ const ChatRoom = () => {
 
           <button
             onClick={handleSendMessage}
-            className="p-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full hover:shadow-lg"
+            disabled={sending || !newMessage.trim()}
+            className={`p-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full hover:shadow-lg transition-all ${
+              sending || !newMessage.trim() ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
-            <Send className="w-5 h-5" />
+            {sending ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <Send className="w-5 h-5" />
+            )}
           </button>
         </div>
       </footer>

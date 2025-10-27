@@ -286,7 +286,7 @@ class PhoneOTPTester:
                 else:
                     self.log_result("6th Attempt (Should be blocked)", False, f"Wrong error: {error_data.get('detail')}")
             except:
-                self.log_result("4th Attempt (Should be blocked)", False, f"Invalid JSON response: {response.text}")
+                self.log_result("6th Attempt (Should be blocked)", False, f"Invalid JSON response: {response.text}")
         else:
             self.log_result("4th Attempt (Should be blocked)", False, f"Expected 429, got {response.status_code}")
         

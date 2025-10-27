@@ -94,9 +94,9 @@ const Login = () => {
 
       <Card className="w-full max-w-md mt-20 dark:bg-gray-200" data-testid="login-card">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold dark:text-gray-900">تسجيل الدخول</CardTitle>
+          <CardTitle className="text-2xl font-bold dark:text-gray-900">{t('login_title')}</CardTitle>
           <CardDescription className="text-gray-600 dark:text-gray-700">
-            أهلاً بعودتك! نحن سعداء برؤيتك مجدداً
+            {t('welcome_back')}
           </CardDescription>
         </CardHeader>
         

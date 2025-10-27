@@ -42,8 +42,32 @@ const Likes = () => {
     }
   };
 
-  const handleViewProfile = (profile) => {
-    navigate(`/profile/${profile.user_id}`);
+  const handleViewProfile = async (profile) => {
+    try {
+      // Check usage limit
+      const usage = await fetchUsage();
+      
+      // Premium users bypass limits
+      if (!usage.isPremium && usage.remainingViews <= 0) {
+        setUpsellReason('view');
+        setShowUpsell(true);
+        return;
+      }
+      
+      // Increment view counter
+      await incUsage('view');
+      
+      // Navigate to profile
+      navigate(`/profile/${profile.user_id}`);
+    } catch (error) {
+      console.error('Error viewing profile:', error);
+      if (error.message.includes('429') || error.message.includes('limit')) {
+        setUpsellReason('view');
+        setShowUpsell(true);
+      } else {
+        showToast('حدث خطأ، حاول مرة أخرى');
+      }
+    }
   };
 
   const handleMessage = async (profile) => {

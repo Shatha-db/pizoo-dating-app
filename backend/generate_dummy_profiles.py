@@ -7,8 +7,12 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 from datetime import datetime, timezone
 import uuid
+from dotenv import load_dotenv
+
+load_dotenv()
 
 MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017/')
+DB_NAME = os.environ.get('DB_NAME', 'dating_app')
 
 # Arabic names
 MALE_NAMES = [

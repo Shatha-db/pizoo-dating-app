@@ -418,6 +418,15 @@ const ChatRoom = () => {
           </Card>
         </div>
       )}
+      
+      {/* Call Modal */}
+      {showCallModal && (
+        <CallModal
+          matchId={matchId}
+          type={callType}
+          onClose={() => setShowCallModal(false)}
+        />
+      )}
     </div>
   );
 };

@@ -7,9 +7,10 @@ import { Label } from '../components/ui/label';
 import { Checkbox } from '../components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Alert, AlertDescription } from '../components/ui/alert';
-import { LogIn, Globe } from 'lucide-react';
+import { LogIn } from 'lucide-react';
 import CustomLogo from '../components/CustomLogo';
 import { useTranslation } from 'react-i18next';
+import LanguageSelector from '../modules/i18n/LanguageSelector';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

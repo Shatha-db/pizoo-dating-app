@@ -974,6 +974,113 @@ async def verify_phone_otp(payload: VerifyPayload):
     }
 
 
+
+# ========================================
+# Twilio Voice & Video Integration
+# ========================================
+
+class VoiceTokenPayload(BaseModel):
+    identity: str
+
+@api_router.post("/twilio/voice/token")
+async def twilio_voice_token(payload: VoiceTokenPayload, current_user: dict = Depends(get_current_user)):
+    """Generate Twilio Voice token for WebRTC calls"""
+    try:
+        # Use user ID as identity
+        identity = payload.identity or current_user.get('id')
+        token = create_voice_token(identity)
+        return {"ok": True, "token": token, "identity": identity}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate voice token: {str(e)}"
+        )
+
+class VideoTokenPayload(BaseModel):
+    identity: str
+    room: str
+
+@api_router.post("/twilio/video/token")
+async def twilio_video_token(payload: VideoTokenPayload, current_user: dict = Depends(get_current_user)):
+    """Generate Twilio Video token for video calls"""
+    try:
+        identity = payload.identity or current_user.get('id')
+        token = create_video_token(identity, payload.room)
+        return {"ok": True, "token": token, "identity": identity, "room": payload.room}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate video token: {str(e)}"
+        )
+
+# Webhook for incoming PSTN calls -> route to app client
+@api_router.post("/twilio/voice/incoming", response_class=PlainTextResponse)
+async def twilio_voice_incoming(request: Request, To: str = Form(None), From: str = Form(None)):
+    """Handle incoming PSTN calls and route to app client"""
+    # TODO: Implement logic to determine which app client should receive the call
+    # For now, route to a default "support" identity
+    client_identity = "support"
+    
+    r = VoiceResponse()
+    dial = Dial(callerId=To or os.getenv("TWILIO_FROM"))
+    dial.client(client_identity)
+    r.append(dial)
+    
+    print(f"📞 Incoming call from {From} to {To} -> routing to {client_identity}")
+    return str(r)
+
+# Optional: Webhook for call status tracking
+@api_router.post("/twilio/voice/status", response_class=PlainTextResponse)
+async def twilio_voice_status(request: Request):
+    """Track call status updates"""
+    data = await request.form()
+    print(f"📊 Twilio call status: {dict(data)}")
+    return "OK"
+
+# ========================================
+# Twilio Verify (Alternative OTP System)
+# ========================================
+
+class StartVerifyPayload(BaseModel):
+    phone: str
+    channel: Optional[str] = "sms"
+
+@api_router.post("/auth/verify/start")
+async def start_verify(payload: StartVerifyPayload):
+    """Start Twilio Verify OTP verification"""
+    # Validate phone format
+    phone_re = re.compile(r'^\+[1-9]\d{7,14}$')
+    if not phone_re.match(payload.phone):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="INVALID_PHONE"
+        )
+    
+    res = verify_start(payload.phone, payload.channel or "sms")
+    
+    if res.get("mock"):
+        return {"ok": True, "mock": True, "message": "Twilio Verify not configured, using fallback"}
+    
+    return {"ok": True, "status": res.get("status"), "phone": payload.phone}
+
+class CheckVerifyPayload(BaseModel):
+    phone: str
+    code: str
+
+@api_router.post("/auth/verify/check")
+async def check_verify(payload: CheckVerifyPayload):
+    """Verify OTP code using Twilio Verify"""
+    res = verify_check(payload.phone, payload.code)
+    
+    if not res.get("valid"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="OTP_INVALID"
+        )
+    
+    return {"ok": True, "verified": True, "phone": payload.phone}
+
+
 @api_router.post("/payment/add")
 async def add_payment_method(request: AddPaymentRequest, current_user: dict = Depends(get_current_user)):
     # Check if payment method already exists

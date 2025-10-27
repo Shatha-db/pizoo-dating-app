@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
+DB_NAME = os.getenv("DB_NAME", "dating_app")
 
 async def fetch_random_users(gender, count=50):
     """Fetch random user photos from randomuser.me"""
@@ -22,9 +23,9 @@ async def fetch_random_users(gender, count=50):
 
 async def update_profiles_with_photos():
     """Update dummy profiles with real photos"""
-    # Connect to MongoDB
+    # Connect to MongoDB - Use environment variable for database name
     client = AsyncIOMotorClient(MONGO_URL)
-    db = client.dating_app
+    db = client[DB_NAME]
     
     print("🔄 Fetching random user photos...")
     

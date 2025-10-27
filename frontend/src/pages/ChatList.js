@@ -259,7 +259,13 @@ const ChatList = () => {
                     {/* Message Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-bold text-lg truncate">
+                        <h3 
+                          className="font-bold text-lg truncate cursor-pointer hover:text-pink-600 transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/profile/${conv.user.id}`);
+                          }}
+                        >
                           {conv.user.display_name}
                         </h3>
                         <span className="text-xs text-gray-500">

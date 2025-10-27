@@ -25,6 +25,7 @@ const ChatRoom = () => {
   const [hasAgreedToSafety, setHasAgreedToSafety] = useState(false);
   const [showReadReceipts, setShowReadReceipts] = useState(false);
   const [showMessageLimitWarning, setShowMessageLimitWarning] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 

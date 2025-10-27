@@ -5,14 +5,16 @@ import Backend from 'i18next-http-backend';
 
 const SUPPORTED = ['en', 'ar', 'fr', 'es', 'de', 'tr', 'it', 'pt-BR', 'ru'];
 
-function setHtml(lng) {
+function setHtml(lng = 'en') {
   const base = (lng || 'en').split('-')[0];
-  const dir = ['ar', 'fa', 'ur', 'he'].includes(base) ? 'rtl' : 'ltr';
-  document.documentElement.dir = dir;
+  const isRTL = ['ar', 'fa', 'ur', 'he'].includes(base);
+  document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
   document.documentElement.lang = lng || 'en';
+  // Optional: for tailwind-rtl support
+  document.documentElement.classList.toggle('rtl', isRTL);
 }
 
-// ✅ أول زيارة: احفظ EN إن لم توجد قيمة
+// First visit → save EN
 try {
   if (typeof localStorage !== 'undefined' && !localStorage.getItem('i18nextLng')) {
     localStorage.setItem('i18nextLng', 'en');
@@ -29,15 +31,16 @@ i18n
   .init({
     supportedLngs: SUPPORTED,
     fallbackLng: 'en',
+    ns: ['common', 'auth', 'profile', 'chat', 'map', 'notifications', 'settings', 'premium', 'likes', 'swipe'],
+    defaultNS: 'common',
+    keySeparator: false,
+    load: 'languageOnly',
     detection: {
       order: ['localStorage', 'querystring', 'cookie', 'htmlTag', 'navigator'],
       lookupLocalStorage: 'i18nextLng',
       caches: ['localStorage']
     },
     backend: { loadPath: '/locales/{{lng}}/{{ns}}.json' },
-    ns: ['common', 'auth', 'profile', 'chat', 'map', 'notifications', 'settings', 'premium', 'likes', 'swipe'],
-    defaultNS: 'common',
-    keySeparator: false,
     interpolation: { escapeValue: false },
     react: { useSuspense: false }
   });

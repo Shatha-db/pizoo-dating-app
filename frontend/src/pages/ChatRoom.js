@@ -4,11 +4,11 @@ import { useAuth } from '../context/AuthContext';
 import { useWebSocket } from '../context/WebSocketContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
-import { ArrowRight, MoreVertical, Video, Send, Smile, Mic, Star } from 'lucide-react';
+import { ArrowRight, MoreVertical, Video, Send, Smile, Mic, Star, Phone } from 'lucide-react';
 import axios from 'axios';
 import SafetyConsentModal from '../modules/safety/SafetyConsentModal';
 import EmojiPicker from '../modules/chat/EmojiPicker';
-import JitsiButtons from '../modules/call/JitsiButtons';
+import CallModal from '../modules/chat/CallModal';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;

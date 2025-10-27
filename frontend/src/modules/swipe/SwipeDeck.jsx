@@ -24,6 +24,17 @@ export default function SwipeDeck({ users = [], onSwipe, className, gating, onGa
     }
   }, [gating, currentIndex]);
   
+  const openLightbox = (index = 0) => {
+    setStartAt(index);
+    setShowLightbox(true);
+  };
+  
+  const visitProfile = () => {
+    if (currentUser?.id) {
+      navigate(`/profile/${currentUser.id}`);
+    }
+  };
+  
   const handleSwipe = (direction) => {
     // Check if gated
     if (gatingState.gated) {

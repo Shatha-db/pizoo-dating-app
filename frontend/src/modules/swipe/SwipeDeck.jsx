@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { getGatingState, incView, recordSwipe } from '../premium/gating';
 import PhotoLightbox from '../media/PhotoLightbox';
+import InlineCarousel from './InlineCarousel';
 
 export default function SwipeDeck({ users = [], onSwipe, className, gating, onGate }) {
   const { t } = useTranslation('swipe');

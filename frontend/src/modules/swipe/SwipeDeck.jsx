@@ -185,6 +185,15 @@ export default function SwipeDeck({ users = [], onSwipe, className, gating, onGa
           ❤️
         </motion.button>
       </div>
+
+      {/* Photo Lightbox */}
+      {showLightbox && currentUser?.photos && (
+        <PhotoLightbox
+          photos={currentUser.photos.map(p => p?.url || p)}
+          start={startAt}
+          onClose={() => setShowLightbox(false)}
+        />
+      )}
     </div>
   );
 }

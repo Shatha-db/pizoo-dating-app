@@ -93,6 +93,8 @@ class PhoneOTPTester:
         unique_id = str(uuid.uuid4())[:8]
         self.test_phone = f"+12345678901{unique_id[:3]}"
         
+        print(f"   📱 Testing with phone: {self.test_phone}")
+        
         data = {"phone": self.test_phone}
         response = self.make_request("POST", "/auth/phone/send-otp", data)
         

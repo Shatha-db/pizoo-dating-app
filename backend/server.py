@@ -3726,15 +3726,15 @@ async def can_chat(userId: str, current_user: dict = Depends(get_current_user)):
     try:
         # Check if current user has liked the target user
         liked = await db.swipes.find_one({
-            "from_user_id": current_user["id"],
-            "to_user_id": userId,
-            "action": "like"
+            "user_id": current_user["id"],
+            "swiped_user_id": userId,
+            "action": {"$in": ["like", "super_like"]}
         })
         
         if not liked:
-            return {"can": False, "reason": "like_first"}
+            return {"canChat": False, "reason": "لم تقم بالإعجاب بهذا المستخدم بعد"}
         
-        return {"can": True, "reason": None}
+        return {"canChat": True}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to check chat eligibility: {str(e)}")
 

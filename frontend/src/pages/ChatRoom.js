@@ -29,12 +29,10 @@ const ChatRoom = () => {
 
   useEffect(() => {
     fetchMessages();
-    const agreed = localStorage.getItem(`safety_consent_${user?.id}`);
-    if (agreed === 'true') {
+    // Check for safety consent
+    const agreed = localStorage.getItem('pizoo_safety_accepted');
+    if (agreed === '1') {
       setHasAgreedToSafety(true);
-    } else {
-      // Show safety consent on first message
-      setShowSafetyConsent(false); // Don't block initially, show when they try to send
     }
   }, [matchId]);
 

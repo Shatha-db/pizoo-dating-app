@@ -3651,6 +3651,127 @@ async def can_chat(userId: str, current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=f"Failed to check chat eligibility: {str(e)}")
 
 
+# ============================================================================
+# DAILY USAGE QUOTAS SYSTEM
+# ============================================================================
+
+def today_str():
+    """Get today's date as string in YYYY-MM-DD format"""
+    return datetime.now(timezone.utc).strftime('%Y-%m-%d')
+
+# Default limits for free users
+DEFAULT_VIEW_LIMIT = 20
+DEFAULT_LIKE_LIMIT = 10
+
+async def get_usage(user_id: str):
+    """Get or create today's usage document for user"""
+    day = today_str()
+    doc = await db.user_usage.find_one({"user_id": user_id, "day": day})
+    if not doc:
+        doc = {
+            "id": str(uuid.uuid4()),
+            "user_id": user_id,
+            "day": day,
+            "views": 0,
+            "likes": 0
+        }
+        await db.user_usage.insert_one(doc)
+    return doc
+
+@api_router.get("/usage/context")
+async def usage_context(current_user: dict = Depends(get_current_user)):
+    """Get user's daily usage statistics"""
+    try:
+        usage = await get_usage(current_user["id"])
+        
+        # Premium users have no limits
+        user = await db.users.find_one({"id": current_user["id"]}, {"_id": 0, "premium_tier": 1})
+        is_premium = user and user.get('premium_tier') in ['gold', 'platinum', 'plus']
+        
+        if is_premium:
+            return {
+                "day": usage["day"],
+                "views": usage["views"],
+                "viewLimit": -1,  # -1 means unlimited
+                "likes": usage["likes"],
+                "likeLimit": -1,
+                "remainingViews": -1,
+                "remainingLikes": -1,
+                "isPremium": True
+            }
+        
+        return {
+            "day": usage["day"],
+            "views": usage["views"],
+            "viewLimit": DEFAULT_VIEW_LIMIT,
+            "likes": usage["likes"],
+            "likeLimit": DEFAULT_LIKE_LIMIT,
+            "remainingViews": max(0, DEFAULT_VIEW_LIMIT - usage["views"]),
+            "remainingLikes": max(0, DEFAULT_LIKE_LIMIT - usage["likes"]),
+            "isPremium": False
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get usage context: {str(e)}")
+
+class UsageIncrementPayload(BaseModel):
+    kind: str  # 'view' or 'like'
+
+@api_router.post("/usage/increment")
+async def usage_increment(payload: UsageIncrementPayload, current_user: dict = Depends(get_current_user)):
+    """Increment usage counter for views or likes"""
+    try:
+        # Premium users bypass limits
+        user = await db.users.find_one({"id": current_user["id"]}, {"_id": 0, "premium_tier": 1})
+        is_premium = user and user.get('premium_tier') in ['gold', 'platinum', 'plus']
+        
+        if is_premium:
+            # Still track usage but don't enforce limits
+            usage = await get_usage(current_user["id"])
+            if payload.kind == 'view':
+                await db.user_usage.update_one(
+                    {"id": usage["id"]}, 
+                    {"$inc": {"views": 1}}
+                )
+            elif payload.kind == 'like':
+                await db.user_usage.update_one(
+                    {"id": usage["id"]}, 
+                    {"$inc": {"likes": 1}}
+                )
+            return {"ok": True, "premium": True}
+        
+        # For free users, check and enforce limits
+        usage = await get_usage(current_user["id"])
+        
+        if payload.kind == 'view':
+            if usage["views"] >= DEFAULT_VIEW_LIMIT:
+                raise HTTPException(
+                    status_code=status.HTTP_429_TOO_MANY_REQUESTS, 
+                    detail="view_limit_reached"
+                )
+            await db.user_usage.update_one(
+                {"id": usage["id"]}, 
+                {"$inc": {"views": 1}}
+            )
+        elif payload.kind == 'like':
+            if usage["likes"] >= DEFAULT_LIKE_LIMIT:
+                raise HTTPException(
+                    status_code=status.HTTP_429_TOO_MANY_REQUESTS, 
+                    detail="like_limit_reached"
+                )
+            await db.user_usage.update_one(
+                {"id": usage["id"]}, 
+                {"$inc": {"likes": 1}}
+            )
+        else:
+            raise HTTPException(status_code=400, detail="Invalid kind. Must be 'view' or 'like'")
+        
+        return {"ok": True, "premium": False}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to increment usage: {str(e)}")
+
+
 # Mount the API router
 app.include_router(api_router)
 

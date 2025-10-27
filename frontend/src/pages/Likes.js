@@ -20,6 +20,8 @@ const Likes = () => {
   const [received, setReceived] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
+  const [showUpsell, setShowUpsell] = useState(false);
+  const [upsellReason, setUpsellReason] = useState('view');
 
   useEffect(() => {
     fetchLikes();

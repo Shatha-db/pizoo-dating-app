@@ -42,12 +42,6 @@ export const AuthProvider = ({ children }) => {
     }
     
     try {
-    if (!authToken) {
-      setLoading(false);
-      return;
-    }
-    
-    try {
       const response = await axios.get(`${API}/user/profile`, {
         headers: {
           Authorization: `Bearer ${authToken}`

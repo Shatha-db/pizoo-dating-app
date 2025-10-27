@@ -279,6 +279,30 @@ backend:
         agent: "testing"
         comment: "✅ COMPREHENSIVE TESTING COMPLETE: GPS/Maps integration fully functional. RESULTS: 1) Profile GPS Coordinates - ✅ Working: latitude/longitude fields save/retrieve correctly via /api/profile/create and /api/profile/update, 2) Distance Calculation - ✅ Working: Haversine formula 100% accurate (tested Basel to various locations: 1.2km, 6.4km, 74.5km, 304.8km), 3) Distance Filtering - ✅ Working: max_distance parameter correctly filters profiles (tested 50km limit), 4) Proximity Scoring - ✅ Working: profiles sorted by distance with compatibility factors, 5) Discovery API - ✅ Working: /api/profiles/discover returns distance field for each profile. Fixed critical issues: added missing latitude/longitude to request models, added missing age field to Profile model. All GPS features ready for production."
 
+  - task: "Safety Consent Modal & Backend (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py, /app/frontend/src/modules/safety/SafetyConsentModal.jsx, /app/frontend/src/pages/ChatRoom.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: Safety Consent Modal for chat. Features: 1) Modal appears on first message attempt, 2) Saves consent to localStorage and backend (PUT /api/user/settings with safetyAccepted=true), 3) Updates canSend state immediately after acceptance, 4) Never shows again after acceptance. Backend: Added PUT /api/user/settings endpoint to persist safetyAccepted field in user settings. Ready for testing."
+
+  - task: "Chat Gating Logic (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: Chat gating logic requiring mutual 'like' before chat. Backend: Added GET /api/relation/can-chat?userId=X endpoint (stub) that checks if current user has liked the target user. Returns {canChat: true/false, reason: string}. Ready for comprehensive testing with various scenarios (no like, one-way like, mutual like)."
+
 frontend:
   - task: "Home Page with Card Swipe"
     implemented: true

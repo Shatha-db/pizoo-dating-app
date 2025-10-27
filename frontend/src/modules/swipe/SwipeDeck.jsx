@@ -100,8 +100,19 @@ export default function SwipeDeck({ users = [], onSwipe, className, gating, onGa
             <img
               src={currentUser.photos?.[0]?.url || currentUser.photos?.[0] || '/placeholder-profile.jpg'}
               alt={currentUser.display_name || currentUser.name}
-              className={`w-full h-full object-cover ${gatingState.gated ? 'blur-xl scale-105' : ''}`}
+              className={`w-full h-full object-cover cursor-pointer ${gatingState.gated ? 'blur-xl scale-105' : ''}`}
+              onClick={() => !gatingState.gated && openLightbox(0)}
             />
+            
+            {/* View Profile Button */}
+            {!gatingState.gated && (
+              <button
+                onClick={visitProfile}
+                className="absolute top-4 left-4 bg-black/40 hover:bg-black/60 backdrop-blur-sm text-white rounded-full px-4 py-2 text-sm font-medium transition-all z-10"
+              >
+                عرض
+              </button>
+            )}
             
             {/* Gating Overlay */}
             {gatingState.gated && (

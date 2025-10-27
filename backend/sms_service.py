@@ -1,6 +1,6 @@
 """
 SMS Service for Pizoo
-Supports Twilio (production) and Mock (development)
+Supports Twilio, Telnyx, and Mock modes
 """
 
 import os
@@ -8,12 +8,18 @@ import random
 import time
 import hashlib
 import hmac
+import json
+import urllib.request
 
 # Configuration
-PROVIDER = os.getenv("SMS_PROVIDER", "mock")
-SID = os.getenv("TWILIO_ACCOUNT_SID")
-TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
-SFROM = os.getenv("TWILIO_FROM", "+10000000000")
+PROVIDER = os.getenv("SMS_PROVIDER", "mock")  # mock | twilio | telnyx
+TWILIO_SID = os.getenv("TWILIO_ACCOUNT_SID")
+TWILIO_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+TWILIO_FROM = os.getenv("TWILIO_FROM", "+10000000000")
+
+TELNYX_API_KEY = os.getenv("TELNYX_API_KEY")
+TELNYX_FROM = os.getenv("TELNYX_FROM")
+
 OTP_TTL = int(os.getenv("OTP_TTL_SECONDS", "300"))  # 5 minutes
 OTP_MAX = int(os.getenv("OTP_MAX_ATTEMPTS", "5"))
 
@@ -29,24 +35,57 @@ def _hash(code, phone):
     return hmac.new(secret, f"{phone}-{code}".encode(), hashlib.sha256).hexdigest()
 
 
-def _send(phone, msg):
-    """Send SMS via configured provider"""
-    if PROVIDER != "twilio":
-        print(f"[MOCK SMS] to={phone} msg={msg}")
-        return True
-    
+def _send_twilio(phone, message):
+    """Send SMS via Twilio"""
     try:
         from twilio.rest import Client
-        client = Client(SID, TOKEN)
+        client = Client(TWILIO_SID, TWILIO_TOKEN)
         client.messages.create(
-            from_=SFROM,
+            from_=TWILIO_FROM,
             to=phone,
-            body=msg
+            body=message
         )
+        print(f"✅ Twilio SMS sent to {phone}")
         return True
     except Exception as e:
-        print(f"Twilio error: {e}")
+        print(f"❌ Twilio error: {e}")
         return False
+
+
+def _send_telnyx(phone, message):
+    """Send SMS via Telnyx"""
+    try:
+        url = "https://api.telnyx.com/v2/messages"
+        req = urllib.request.Request(url, method="POST")
+        req.add_header("Authorization", f"Bearer {TELNYX_API_KEY}")
+        req.add_header("Content-Type", "application/json")
+        
+        body = json.dumps({
+            "from": TELNYX_FROM,
+            "to": phone,
+            "text": message
+        }).encode()
+        
+        with urllib.request.urlopen(req, body) as resp:
+            success = 200 <= resp.getcode() < 300
+            if success:
+                print(f"✅ Telnyx SMS sent to {phone}")
+            return success
+    except Exception as e:
+        print(f"❌ Telnyx error: {e}")
+        return False
+
+
+def _send(phone, msg):
+    """Send SMS via configured provider"""
+    if PROVIDER == "twilio":
+        return _send_twilio(phone, msg)
+    elif PROVIDER == "telnyx":
+        return _send_telnyx(phone, msg)
+    else:
+        # Mock mode
+        print(f"[MOCK SMS] to={phone} msg={msg}")
+        return True
 
 
 def generate_and_send(phone):
@@ -73,3 +112,11 @@ def generate_and_send(phone):
 def verify(phone, code, h):
     """Verify OTP code against hash"""
     return _hash(code, phone) == h
+
+
+def send_sms(phone: str, message: str) -> bool:
+    """
+    Public function to send SMS
+    Can be used by other modules
+    """
+    return _send(phone, message)

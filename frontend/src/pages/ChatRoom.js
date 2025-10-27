@@ -301,7 +301,10 @@ const ChatRoom = () => {
       {/* Input */}
       <footer className="bg-white border-t p-4">
         <div className="flex items-center gap-2">
-          <button className="p-2 hover:bg-gray-100 rounded-full">
+          <button 
+            onClick={() => setShowEmojiPicker(prev => !prev)}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          >
             <Smile className="w-5 h-5 text-gray-600" />
           </button>
           
@@ -337,6 +340,14 @@ const ChatRoom = () => {
           </button>
         </div>
       </footer>
+
+      {/* Emoji Picker */}
+      {showEmojiPicker && (
+        <EmojiPicker 
+          onSelect={insertEmoji}
+          onClose={() => setShowEmojiPicker(false)}
+        />
+      )}
 
       {/* Safety Consent Modal */}
       <SafetyConsentModal 

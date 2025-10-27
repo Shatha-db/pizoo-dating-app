@@ -674,6 +674,28 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     return user
 
 
+async def optional_auth(credentials: Optional[HTTPAuthorizationCredentials] = Depends(HTTPBearer(auto_error=False))):
+    """
+    Optional authentication - returns user if authenticated, None otherwise
+    Used for endpoints that work both with and without authentication
+    """
+    if not credentials:
+        return None
+    
+    try:
+        token = credentials.credentials
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            return None
+        
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        return user
+    except (JWTError, Exception):
+        return None
+
+
+
 # ===== Request Models =====
 
 class RegisterRequest(BaseModel):

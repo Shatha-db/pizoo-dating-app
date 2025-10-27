@@ -114,6 +114,7 @@ function AppRoot() {
                   <Route path="/" element={<Navigate to="/login" replace />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<Login />} />
+                  <Route path="/phone-login" element={<PhoneLogin />} />
                   <Route path="/terms" element={<TermsNew />} />
                   <Route path="/privacy" element={<TermsNew />} />
                   <Route path="/cookies" element={<TermsNew />} />

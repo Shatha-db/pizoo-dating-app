@@ -849,6 +849,128 @@ class AddPaymentRequest(BaseModel):
     paypal_email: Optional[EmailStr] = None
 
 
+# ============================================================================
+# PHONE OTP AUTHENTICATION
+# ============================================================================
+
+PHONE_RE = re.compile(r"^\+[1-9]\d{7,14}$")
+
+class PhonePayload(BaseModel):
+    phone: str = Field(..., description="+41791234567")
+
+class VerifyPayload(BaseModel):
+    phone: str
+    code: str
+    otpId: str
+
+@api_router.post("/auth/phone/send-otp")
+async def send_phone_otp(payload: PhonePayload, request: Request):
+    """Send OTP code to phone number"""
+    phone = payload.phone.strip()
+    
+    # Validate phone format
+    if not PHONE_RE.match(phone):
+        raise HTTPException(status_code=400, detail="INVALID_PHONE")
+    
+    # Rate limiting: prevent spam (30 seconds between requests)
+    now = int(time.time())
+    last = await db.user_otp.find_one({"phone": phone}, sort=[("_id", -1)])
+    if last and (now - last.get("created_at", 0) < 30):
+        raise HTTPException(status_code=429, detail="TOO_MANY_REQUESTS")
+    
+    # Generate and send OTP
+    pack = generate_and_send(phone)
+    if not pack:
+        raise HTTPException(status_code=500, detail="SMS_FAILED")
+    
+    # Store OTP in database
+    doc = {
+        "phone": phone,
+        "hash": pack["hash"],
+        "expires_at": pack["expires_at"],
+        "attempts_left": pack["attempts_left"],
+        "verified": False,
+        "created_at": now
+    }
+    ins = await db.user_otp.insert_one(doc)
+    
+    return {
+        "ok": True,
+        "otpId": str(ins.inserted_id),
+        "ttl": pack["expires_at"] - now
+    }
+
+@api_router.post("/auth/phone/verify-otp")
+async def verify_phone_otp(payload: VerifyPayload):
+    """Verify OTP code and login/register user"""
+    # Find OTP document
+    try:
+        otp_doc = await db.user_otp.find_one({"_id": ObjectId(payload.otpId)})
+    except:
+        otp_doc = None
+    
+    if not otp_doc or otp_doc.get("phone") != payload.phone:
+        raise HTTPException(status_code=400, detail="OTP_NOT_FOUND")
+    
+    # Check if already verified
+    if otp_doc.get("verified"):
+        return {"ok": True, "verified": True}
+    
+    # Check expiration
+    now = int(time.time())
+    if now > int(otp_doc.get("expires_at", 0)):
+        raise HTTPException(status_code=410, detail="OTP_EXPIRED")
+    
+    # Check attempts left
+    left = int(otp_doc.get("attempts_left", 0))
+    if left <= 0:
+        raise HTTPException(status_code=429, detail="OTP_LOCKED")
+    
+    # Verify code
+    if not verify_otp(payload.phone, payload.code.strip(), otp_doc["hash"]):
+        await db.user_otp.update_one(
+            {"_id": otp_doc["_id"]},
+            {"$inc": {"attempts_left": -1}}
+        )
+        raise HTTPException(status_code=400, detail="OTP_INVALID")
+    
+    # Mark as verified
+    await db.user_otp.update_one(
+        {"_id": otp_doc["_id"]},
+        {"$set": {"verified": True}}
+    )
+    
+    # Find or create user
+    user = await db.users.find_one({"phone": payload.phone})
+    if not user:
+        # Create new user with phone
+        user_id = str(uuid.uuid4())
+        new_user = {
+            "id": user_id,
+            "phone": payload.phone,
+            "language": "en",
+            "email_verified": False,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.users.insert_one(new_user)
+        user = new_user
+    
+    # Generate JWT token
+    token_data = {
+        "sub": user.get("id") or user.get("_id"),
+        "phone": payload.phone,
+        "exp": datetime.now(timezone.utc) + timedelta(days=30)
+    }
+    token = jwt.encode(token_data, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    
+    return {
+        "ok": True,
+        "verified": True,
+        "token": token,
+        "user_id": user.get("id") or user.get("_id")
+    }
+
+
 @api_router.post("/payment/add")
 async def add_payment_method(request: AddPaymentRequest, current_user: dict = Depends(get_current_user)):
     # Check if payment method already exists

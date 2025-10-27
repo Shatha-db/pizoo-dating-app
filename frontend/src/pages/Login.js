@@ -163,7 +163,7 @@ const Login = () => {
               className="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-bold py-6 rounded-full"
               data-testid="submit-button"
             >
-              {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
+              {loading ? `${t('sign_in')}...` : t('sign_in')}
             </Button>
           </form>
         </CardContent>

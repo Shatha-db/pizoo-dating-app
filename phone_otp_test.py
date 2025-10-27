@@ -90,8 +90,9 @@ class PhoneOTPTester:
     def test_send_otp_valid_phone(self):
         """Test sending OTP to valid phone number"""
         # Generate unique test phone (must be 8-15 digits after country code)
-        unique_id = str(uuid.uuid4())[:8]
-        self.test_phone = f"+12345678901{unique_id[:3]}"
+        import random
+        unique_digits = ''.join([str(random.randint(0, 9)) for _ in range(3)])
+        self.test_phone = f"+12345678901{unique_digits}"
         
         print(f"   📱 Testing with phone: {self.test_phone}")
         

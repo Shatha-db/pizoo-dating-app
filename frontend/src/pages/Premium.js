@@ -215,7 +215,7 @@ const Premium = () => {
                           )}
                         </div>
                         <p className="text-sm text-gray-600">
-                          {perMonth} {price.currency} / شهر
+                          {perMonth} {price.currency} {t('perMonth')}
                         </p>
                       </div>
                       <div className="text-left">

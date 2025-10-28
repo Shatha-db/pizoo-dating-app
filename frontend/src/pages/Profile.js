@@ -138,7 +138,7 @@ const Profile = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-20" dir="rtl">
       {/* Header */}
       <header className="bg-white shadow-sm p-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">الحساب</h1>
+        <h1 className="text-2xl font-bold">{t('myAccount')}</h1>
         <Button variant="ghost" size="icon" onClick={() => navigate('/settings')}>
           <Settings className="w-6 h-6" />
         </Button>
@@ -148,7 +148,7 @@ const Profile = () => {
         {/* Profile Completion Card */}
         <Card className="p-4 bg-gradient-to-r from-green-50 to-blue-50">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-bold text-lg">اكتمال الملف الشخصي</h3>
+            <h3 className="font-bold text-lg">{t('profileCompletion')}</h3>
             <span className={`text-2xl font-bold ${
               completionScore >= 80 ? 'text-green-600' : 
               completionScore >= 50 ? 'text-yellow-600' : 'text-red-600'
@@ -170,7 +170,7 @@ const Profile = () => {
           
           {completionScore < 100 && (
             <div>
-              <p className="text-sm text-gray-700 mb-2 font-medium">لتحسين ملفك الشخصي:</p>
+              <p className="text-sm text-gray-700 mb-2 font-medium">{t('toImproveProfile')}</p>
               <ul className="space-y-1">
                 {getMissingFields().slice(0, 3).map((field, index) => (
                   <li key={index} className="text-sm text-gray-600 flex items-start gap-2">
@@ -181,7 +181,7 @@ const Profile = () => {
               </ul>
               {completionScore < 80 && (
                 <p className="text-xs text-gray-500 mt-2">
-                  💡 ملف كامل = المزيد من المطابقات!
+                  💡 {t('completeProfileTip')}
                 </p>
               )}
             </div>
@@ -190,7 +190,7 @@ const Profile = () => {
           {completionScore === 100 && (
             <div className="flex items-center gap-2 text-green-600">
               <Star className="w-5 h-5 fill-current" />
-              <span className="font-medium">ممتاز! ملفك الشخصي مكتمل 🎉</span>
+              <span className="font-medium">{t('excellentComplete')}</span>
             </div>
           )}
         </Card>

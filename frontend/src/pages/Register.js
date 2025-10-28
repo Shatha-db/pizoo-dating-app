@@ -224,11 +224,11 @@ const Register = () => {
           ) : registerMethod === 'phone' ? (
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="phone" className="text-sm font-medium">رقم الهاتف</Label>
+                <Label htmlFor="phone" className="text-sm font-medium">{t('phone_number')}</Label>
                 <Input
                   id="phone"
                   type="tel"
-                  placeholder="+966 XX XXX XX XX"
+                  placeholder={t('placeholder_phone_number')}
                   className="h-12 rounded-lg"
                 />
               </div>
@@ -236,7 +236,7 @@ const Register = () => {
                 type="button"
                 className="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-bold py-6 rounded-full"
               >
-                إرسال رمز التحقق
+                {t('send_verification_code')}
               </Button>
               <Button
                 type="button"
@@ -244,7 +244,7 @@ const Register = () => {
                 onClick={() => setRegisterMethod('social')}
                 className="w-full"
               >
-                العودة للطرق الأخرى
+                {t('back_to_other_methods')}
               </Button>
             </div>
           ) : (

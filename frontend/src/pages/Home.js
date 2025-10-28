@@ -682,7 +682,7 @@ const Home = () => {
                   <Heart className="w-5 h-5 text-pink-500" />
                 </li>
                 <li className="flex items-center justify-center gap-2">
-                  <span className="font-semibold">10 رسائل</span>
+                  <span className="font-semibold">10 {t('home:messagesPerWeek')}</span>
                   <span className="text-xl">💬</span>
                 </li>
                 <li className="text-sm text-gray-500">كل أسبوع</li>

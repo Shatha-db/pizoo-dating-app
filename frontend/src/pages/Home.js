@@ -569,7 +569,7 @@ const Home = () => {
               className="w-14 h-14 rounded-full bg-white shadow-lg hover:shadow-xl border-2 border-yellow-400 disabled:opacity-30 disabled:cursor-not-allowed"
               onClick={handleRewind}
               disabled={!canRewind}
-              title={canRewind ? "التراجع عن آخر إجراء" : "لا يمكن التراجع"}
+              title={canRewind ? t('home:undoLastAction') : t('home:cannotUndo')}
             >
               <RotateCcw className="w-6 h-6 text-yellow-500" />
             </Button>

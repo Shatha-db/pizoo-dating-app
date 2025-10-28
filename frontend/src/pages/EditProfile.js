@@ -296,12 +296,12 @@ const EditProfile = () => {
 
       console.log('Profile save response:', response.data);
 
-      showToast('تم حفظ التغييرات بنجاح! ✅');
+      showToast(t('savedSuccess'));
       setTimeout(() => navigate('/profile'), 1500);
     } catch (error) {
       console.error('Error saving profile:', error);
       console.error('Error details:', error.response?.data);
-      showToast('حدث خطأ أثناء الحفظ: ' + (error.response?.data?.detail || error.message), 'error');
+      showToast(t('saveError') + (error.response?.data?.detail || error.message), 'error');
     } finally {
       setSaving(false);
     }

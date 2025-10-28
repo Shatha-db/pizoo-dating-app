@@ -438,7 +438,7 @@ const EditProfile = () => {
                           disabled={uploadingPhotos}
                           className="absolute top-1 left-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 disabled:opacity-50"
                         >
-                          {t('removePhoto')}
+                          حذف
                         </button>
                       </>
                     ) : (

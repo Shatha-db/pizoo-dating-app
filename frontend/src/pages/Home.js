@@ -671,7 +671,7 @@ const Home = () => {
             <div className="text-center">
               <div className="text-6xl mb-4">⏰</div>
               <h2 className="text-2xl font-bold mb-2 text-gray-800">
-                وصلت إلى حدك الأسبوعي!
+                {t('home:weeklyLimitReached')}
               </h2>
               <p className="text-gray-600 mb-1">
                 المستخدمون المجانيون لديهم:

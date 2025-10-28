@@ -146,21 +146,21 @@ const Register = () => {
 
       <Card className="w-full max-w-md mt-20 dark:bg-gray-200 backdrop-blur-sm bg-white/90">
         <CardHeader className="text-center pb-2">
-          <CardTitle className="text-2xl font-bold dark:text-gray-900 text-pink-700">إنشاء حساب جديد</CardTitle>
+          <CardTitle className="text-2xl font-bold dark:text-gray-900 text-pink-700">{t('register_title')}</CardTitle>
           <CardDescription className="text-sm text-gray-700 dark:text-gray-700 mt-3 leading-relaxed">
-            من خلال النقر على "إنشاء حساب"، فإنك توافق على{' '}
+            {t('terms_notice')}{' '}
             <Link to="/terms" className="text-pink-600 dark:text-pink-700 hover:underline font-medium">
-              شروطنا
+              {t('our_terms')}
             </Link>
-            . تعرّف على طريقة تعاملنا مع بياناتك في{' '}
+            . {t('learn_more')}{' '}
             <Link to="/privacy" className="text-pink-600 dark:text-pink-700 hover:underline font-medium">
-              سياسة الخصوصية
+              {t('privacy_policy')}
             </Link>
-            {' '}و{' '}
+            {' '}{t('and')}{' '}
             <Link to="/cookies" className="text-pink-600 hover:underline font-medium">
-              سياسة ملفات تعريف الارتباط
+              {t('cookie_policy')}
             </Link>
-            {' '}الخاصة بنا.
+            {' '}.
           </CardDescription>
         </CardHeader>
         

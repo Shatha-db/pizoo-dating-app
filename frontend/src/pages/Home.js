@@ -613,8 +613,8 @@ const Home = () => {
         <div className="fixed inset-0 bg-gradient-to-br from-pink-500/95 to-purple-500/95 flex items-center justify-center z-50 animate-in fade-in">
           <div className="text-center text-white">
             <div className="text-8xl mb-6 animate-bounce">💕</div>
-            <h2 className="text-4xl font-bold mb-2">إنه تطابق!</h2>
-            <p className="text-xl">تم إنشاء تطابق جديد</p>
+            <h2 className="text-4xl font-bold mb-2">{t('home:itsAMatch')}</h2>
+            <p className="text-xl">{t('home:newMatchCreated')}</p>
           </div>
         </div>
       )}

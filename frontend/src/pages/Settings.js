@@ -171,13 +171,13 @@ const Settings = () => {
 
         {/* Data & Performance */}
         <Card className="p-4">
-          <h2 className="font-bold text-lg mb-4">استهلاك البيانات</h2>
+          <h2 className="font-bold text-lg mb-4">{t('data_performance')}</h2>
           
           <div className="space-y-4">
             <div className="flex items-center justify-between py-2">
               <div>
-                <div className="font-medium">تشغيل الفيديوهات تلقائياً</div>
-                <div className="text-sm text-gray-600">تشغيل الفيديو عند التمرير</div>
+                <div className="font-medium">{t('auto_play_videos')}</div>
+                <div className="text-sm text-gray-600">{t('auto_play_desc')}</div>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -192,8 +192,8 @@ const Settings = () => {
 
             <div className="flex items-center justify-between py-2">
               <div>
-                <div className="font-medium">حالة النشاط</div>
-                <div className="text-sm text-gray-600">إظهار حالة النشاط للآخرين</div>
+                <div className="font-medium">{t('activity_status')}</div>
+                <div className="text-sm text-gray-600">{t('show_activity')}</div>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input

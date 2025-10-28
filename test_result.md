@@ -621,16 +621,14 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Explore Sections API (NEW)"
-    - "Personal Moments API (NEW)"
     - "Explore New Page (NEW)"
     - "Personal Moments Page (NEW)"
   stuck_tasks: []
   test_all: false
-  test_priority: "new_explore_personal_features"
-  backend_testing_pending: true
+  test_priority: "frontend_explore_personal_features"
+  backend_testing_pending: false
   frontend_testing_pending: true
-  testing_notes: "New multilingual Explore and Personal Moments features implemented. Backend: Added GET /api/explore/sections (trending, nearby, newcomers) and GET /api/personal/list endpoints. Frontend: Created ExploreNew.jsx and PersonalMoments.jsx pages with full i18n support (9 languages), reusable components (ExploreRow, PersonalCard), custom CSS, and routes. Next: Test backend APIs first, then frontend E2E with language switching and RTL layout."
+  testing_notes: "Backend APIs for Explore and Personal Moments tested and working perfectly. Both GET /api/explore/sections and GET /api/personal/list endpoints fully functional with authentication, proper response structures, and all required features. Next: Test frontend pages (ExploreNew.jsx and PersonalMoments.jsx) with i18n support and API integration."
 
 agent_communication:
   - agent: "main"

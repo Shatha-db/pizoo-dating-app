@@ -14,15 +14,14 @@ function setHtmlAttributes(lng = 'en') {
   document.body.dir = dir;
 }
 
-// First visit → save EN
+// Set default language to English if not set
 try {
   if (typeof localStorage !== 'undefined' && !localStorage.getItem('i18nextLng')) {
     localStorage.setItem('i18nextLng', 'en');
   }
-} catch {}
-
-const saved = (typeof localStorage !== 'undefined' && localStorage.getItem('i18nextLng')) || 'en';
-updateDir(saved);
+} catch (e) {
+  console.warn('localStorage not available:', e);
+}
 
 i18n
   .use(Backend)

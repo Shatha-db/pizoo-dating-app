@@ -135,13 +135,13 @@ const Likes = () => {
             )}
             
             {/* Profile Info Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-3 pointer-events-none">
-              <h3 className="text-white font-bold text-base">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-3 overlay-no-pointer">
+              <h3 className="text-white font-bold text-base clamp-1">
                 {profile.display_name}
                 {profile.age && `, ${profile.age}`}
               </h3>
               {profile.location && (
-                <p className="text-white/90 text-xs mb-2">📍 {profile.location}</p>
+                <p className="text-white/90 text-xs mb-2 clamp-1">📍 {profile.location}</p>
               )}
             </div>
           </div>

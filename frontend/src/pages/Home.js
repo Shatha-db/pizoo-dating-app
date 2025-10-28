@@ -685,7 +685,7 @@ const Home = () => {
                   <span className="font-semibold">10 {t('home:messagesPerWeek')}</span>
                   <span className="text-xl">💬</span>
                 </li>
-                <li className="text-sm text-gray-500">كل أسبوع</li>
+                <li className="text-sm text-gray-500">{t('home:everyWeek')}</li>
               </ul>
 
               <Button

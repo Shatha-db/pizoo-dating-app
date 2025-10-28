@@ -14,6 +14,7 @@ const API = `${BACKEND_URL}/api`;
 const LikesYou = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
+  const { t } = useTranslation();
   const [receivedLikes, setReceivedLikes] = useState([]);
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);

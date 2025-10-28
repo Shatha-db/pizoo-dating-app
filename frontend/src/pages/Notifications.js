@@ -124,9 +124,9 @@ const Notifications = () => {
         {notifications.length === 0 ? (
           <Card className="p-12 text-center dark:bg-gray-200">
             <div className="text-6xl mb-4">🔔</div>
-            <h2 className="text-xl font-bold mb-2 dark:text-gray-900">لا توجد إشعارات</h2>
+            <h2 className="text-xl font-bold mb-2 dark:text-gray-900">{t('noNotifications')}</h2>
             <p className="text-gray-600 dark:text-gray-700">
-              سنخبرك عندما يكون هناك شيء جديد!
+              {t('noNotificationsDesc')}
             </p>
           </Card>
         ) : (

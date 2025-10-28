@@ -190,7 +190,7 @@ const Likes = () => {
       )}
 
       <header className="bg-white shadow-sm p-4">
-        <h1 className="text-2xl font-bold text-center">الإعجابات 💕</h1>
+        <h1 className="text-2xl font-bold text-center">{t('title')}</h1>
       </header>
 
       <main className="max-w-6xl mx-auto p-4">

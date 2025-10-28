@@ -87,7 +87,7 @@ const LikesYou = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         
-        showToast('تم الإعجاب! 💕 انتظر إعجاب الطرف الآخر لفتح الدردشة');
+        showToast(t('likeSuccess'));
       }
     } catch (error) {
       console.error('Error:', error);

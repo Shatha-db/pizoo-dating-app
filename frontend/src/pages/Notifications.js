@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../context/NotificationContext';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { ArrowRight, Check, Trash2, Heart, MessageCircle, Star, Users } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { ar } from 'date-fns/locale';
+import { ar, fr, es, de, tr, it, ptBR, ru, enUS } from 'date-fns/locale';
 
 const Notifications = () => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation('notifications');
   const {
     notifications,
     unreadCount,
@@ -22,6 +24,22 @@ const Notifications = () => {
   useEffect(() => {
     fetchNotifications();
   }, []);
+
+  // Get date-fns locale based on current language
+  const getDateLocale = () => {
+    const localeMap = {
+      'ar': ar,
+      'fr': fr,
+      'es': es,
+      'de': de,
+      'tr': tr,
+      'it': it,
+      'pt-BR': ptBR,
+      'ru': ru,
+      'en': enUS
+    };
+    return localeMap[i18n.language] || enUS;
+  };
 
   const getNotificationIcon = (type) => {
     switch (type) {

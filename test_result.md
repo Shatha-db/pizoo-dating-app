@@ -583,6 +583,30 @@ frontend:
         agent: "main"
         comment: "IMPLEMENTED: Complete Phone OTP authentication UI created. PhoneLogin.jsx features: 1) Two-step flow (phone input → OTP verification), 2) Phone number input with international format support, 3) 'Send Code' button triggers POST /api/auth/phone/send-otp, 4) OTP input field (6-digit code), 5) 'Verify' button triggers POST /api/auth/phone/verify-otp, 6) Toast notifications for success/error states, 7) Loading states for both API calls, 8) i18n support (EN/AR) with keys: phone_login, enter_phone, send_code, enter_otp, verify, otp_sent, otp_verified, otp_invalid, otp_expired, 9) Auto-login on successful verification (stores JWT token), 10) Responsive design with gradient background. Route added to App.js at /phone-login. Ready for E2E testing: phone input validation, OTP send flow, OTP verification flow, error handling, i18n RTL layout."
 
+  - task: "Explore New Page (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/ExploreNew.jsx, /app/frontend/src/modules/explore/ExploreRow.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: New Explore page with multilingual support. ExploreNew.jsx features: 1) Fetches explore sections from GET /api/explore/sections, 2) Displays 3 sections (Trending, Nearby, Newcomers) in horizontal scrolling rows, 3) Each profile card shows photo, name, age, location, distance badge, 4) Click on profile navigates to /profile/:userId, 5) Loading state with spinner, 6) Empty state with 🔍 icon, 7) i18n support for all text (title, section titles, see_all, no_profiles, loading), 8) Responsive design with gradient background, 9) Bottom navigation. ExploreRow.jsx is reusable component for horizontal profile rows with auto-scroll, hover effects, and see_all button. Translation files created for all 9 languages (en, ar, fr, es, de, tr, it, pt-BR, ru). Route added to App.js at /explore-new. Custom CSS in explore.css. Ready for testing: API integration, profile display, navigation, i18n switching, RTL layout, loading/empty states."
+
+  - task: "Personal Moments Page (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/PersonalMoments.jsx, /app/frontend/src/modules/personal/PersonalCard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: New Personal Moments page with multilingual support. PersonalMoments.jsx features: 1) Fetches moments from GET /api/personal/list, 2) Displays moments in responsive grid (1 col mobile, 2 cols tablet, 3 cols desktop), 3) Loading state with spinner, 4) Empty state with 💫 icon, 5) i18n support for all text (title, subtitle, premium_badge, new_badge, no_moments, loading, view_details), 6) Bottom navigation. PersonalCard.jsx is reusable component for opportunity cards with: image, premium/new badges, title, description, CTA button, click handling (view_profile or open_link actions), hover effects. Translation files created for all 9 languages. Route added to App.js at /personal. Custom CSS in personal.css with badge gradients and animations. Ready for testing: API integration, card display, badge rendering, action handling, i18n switching, RTL layout, responsive grid."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"

@@ -15,7 +15,7 @@ const Settings = () => {
   const navigate = useNavigate();
   const { token, logout } = useAuth();
   const { theme, updateTheme } = useTheme();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('settings');
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
 

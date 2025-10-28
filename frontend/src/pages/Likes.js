@@ -67,7 +67,7 @@ const Likes = () => {
         setUpsellReason('view');
         setShowUpsell(true);
       } else {
-        showToast('حدث خطأ، حاول مرة أخرى');
+        showToast(t('errorTryAgain'));
       }
     }
   };

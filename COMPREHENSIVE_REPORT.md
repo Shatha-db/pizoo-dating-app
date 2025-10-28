@@ -545,7 +545,7 @@ Collections: 6
 ## 🌐 البيئة والنشر
 
 ### البيئة الحالية
-- **URL:** https://phone-auth-2.preview.emergentagent.com
+- **URL:** https://pizoo-dating-3.preview.emergentagent.com
 - **Backend:** Port 8001 (مخفي خلف proxy)
 - **Frontend:** Port 3000
 - **Database:** MongoDB (محلي)

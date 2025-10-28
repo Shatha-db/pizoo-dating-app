@@ -281,7 +281,7 @@
 
 ## 🔗 الروابط
 
-- **التطبيق الحالي:** https://phone-auth-2.preview.emergentagent.com
+- **التطبيق الحالي:** https://pizoo-dating-3.preview.emergentagent.com
 - **Github Repo:** https://github.com/Shatha-db/pizoo-dating-app
 - **Documentation:** /app/COMPREHENSIVE_REPORT.md
 

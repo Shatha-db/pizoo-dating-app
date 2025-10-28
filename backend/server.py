@@ -4361,42 +4361,82 @@ def format_profile_for_explore(profile: dict, user_lat: float = None, user_lon: 
 async def get_personal_moments(current_user: dict = Depends(get_current_user)):
     """
     Get personalized moments/opportunities for the user
+    Safe categories for app stores: Flatshare, Travel, Outing, Activities
     """
     try:
-        # Mock data for personal moments
+        # Mock data for personal moments - safe categories only
         moments = [
             {
-                "id": "moment_1",
-                "title": "Special Weekend Event",
-                "description": "Join our exclusive meetup event this weekend. Meet other singles in your area!",
-                "image": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400",
+                "id": "moment_flatshare_1",
+                "title": "Looking for Flatshare",
+                "description": "Searching for a tidy, respectful roommate in the city center. Shared apartment with modern amenities.",
+                "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400",
                 "isPremium": False,
                 "isNew": True,
                 "action": "open_link",
                 "link": "#",
-                "ctaText": "Join Event"
+                "ctaText": "View Details",
+                "category": "flatshare"
             },
             {
-                "id": "moment_2",
-                "title": "Premium Upgrade - 50% Off",
-                "description": "Unlock unlimited likes, super likes, and see who liked you! Limited time offer.",
-                "image": "https://images.unsplash.com/photo-1522926193341-e9ffd686c60f?w=400",
-                "isPremium": True,
+                "id": "moment_travel_1",
+                "title": "Travel Buddy Needed",
+                "description": "Planning a weekend trip to the mountains. Tickets and accommodation ready. Looking for an adventure partner!",
+                "image": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400",
+                "isPremium": False,
                 "isNew": True,
                 "action": "open_link",
-                "link": "/premium",
-                "ctaText": "Upgrade Now"
+                "link": "#",
+                "ctaText": "Join Trip",
+                "category": "travel"
             },
             {
-                "id": "moment_3",
-                "title": "Complete Your Profile",
-                "description": "Profiles with photos get 10x more matches. Add more photos to stand out!",
-                "image": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400",
+                "id": "moment_outing_1",
+                "title": "Tonight's Elegant Dinner",
+                "description": "Reservation at a nice restaurant downtown. Great food, good atmosphere. Who wants to join?",
+                "image": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400",
                 "isPremium": False,
                 "isNew": False,
                 "action": "open_link",
-                "link": "/profile/edit",
-                "ctaText": "Add Photos"
+                "link": "#",
+                "ctaText": "Reserve Spot",
+                "category": "outing"
+            },
+            {
+                "id": "moment_activity_1",
+                "title": "Try VR Gaming Together",
+                "description": "New VR arcade opened! Let's try the latest games and have fun. Perfect for gaming enthusiasts!",
+                "image": "https://images.unsplash.com/photo-1535223289827-42f1e9919769?w=400",
+                "isPremium": True,
+                "isNew": True,
+                "action": "open_link",
+                "link": "#",
+                "ctaText": "Book Session",
+                "category": "activity"
+            },
+            {
+                "id": "moment_flatshare_2",
+                "title": "Roommate Wanted",
+                "description": "Nice 2-bedroom apartment available. Quiet neighborhood, close to public transport. Looking for a long-term roommate.",
+                "image": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
+                "isPremium": False,
+                "isNew": False,
+                "action": "open_link",
+                "link": "#",
+                "ctaText": "Contact",
+                "category": "flatshare"
+            },
+            {
+                "id": "moment_travel_2",
+                "title": "Beach Weekend Escape",
+                "description": "Coastal getaway this weekend. Relaxing by the beach, good food, and great company. Join us!",
+                "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400",
+                "isPremium": True,
+                "isNew": False,
+                "action": "open_link",
+                "link": "#",
+                "ctaText": "Join Adventure",
+                "category": "travel"
             }
         ]
         

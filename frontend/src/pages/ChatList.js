@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useWebSocket } from '../context/WebSocketContext';
+import { useTranslation } from 'react-i18next';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import BottomNav from '../components/BottomNav';
@@ -17,6 +18,7 @@ const ChatList = () => {
   const navigate = useNavigate();
   const { token, user } = useAuth();
   const { isUserOnline, isConnected } = useWebSocket();
+  const { t } = useTranslation('chat');
   const [conversations, setConversations] = useState([]);
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
@@ -16,6 +17,7 @@ const API = `${BACKEND_URL}/api`;
 const Likes = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
+  const { t } = useTranslation('likes');
   const [sent, setSent] = useState([]);
   const [received, setReceived] = useState([]);
   const [loading, setLoading] = useState(true);

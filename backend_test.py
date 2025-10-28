@@ -587,10 +587,306 @@ class DatingAppTester:
         
         return passed_tests, failed_tests, self.test_results
 
+    def test_explore_sections_api_arabic_review(self):
+        """Test Explore Sections API - Verify 8 sections exist (Arabic Review Request)"""
+        print("🔍 Testing Explore Sections API (8 sections requirement)...")
+        
+        if not self.auth_token:
+            self.log_result("Explore Sections API", False, "No auth token available")
+            return False
+        
+        response = self.make_request("GET", "/explore/sections", use_auth=True)
+        
+        if response is None:
+            self.log_result("Explore Sections API", False, "Connection failed")
+            return False
+        
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                sections = data.get("sections", [])
+                
+                # Check if we have exactly 8 sections
+                if len(sections) == 8:
+                    self.log_result("Explore Sections Count", True, f"Found {len(sections)} sections as expected")
+                    
+                    # List all section types
+                    section_types = [section.get("type", "unknown") for section in sections]
+                    self.log_result("Explore Sections Types", True, f"Section types: {', '.join(section_types)}")
+                    
+                    # Verify each section has required fields
+                    all_valid = True
+                    for i, section in enumerate(sections):
+                        required_fields = ["type", "title", "profiles"]
+                        missing_fields = [field for field in required_fields if field not in section]
+                        
+                        if missing_fields:
+                            all_valid = False
+                            self.log_result(f"Section {i+1} Structure", False, f"Missing fields: {missing_fields}")
+                        else:
+                            profiles_count = len(section.get("profiles", []))
+                            self.log_result(f"Section {i+1} ({section.get('type')})", True, f"Valid structure, {profiles_count} profiles")
+                    
+                    return all_valid
+                else:
+                    self.log_result("Explore Sections Count", False, f"Expected 8 sections, got {len(sections)}")
+                    return False
+                    
+            except json.JSONDecodeError:
+                self.log_result("Explore Sections API", False, "Invalid JSON response", response.text)
+                return False
+        else:
+            try:
+                error_data = response.json()
+                self.log_result("Explore Sections API", False, f"HTTP {response.status_code}: {error_data.get('detail', response.text)}")
+            except:
+                self.log_result("Explore Sections API", False, f"HTTP {response.status_code}: {response.text}")
+            return False
+    
+    def test_personal_moments_api_arabic_review(self):
+        """Test Personal Moments API - Verify 6+ safe opportunities (Arabic Review Request)"""
+        print("💫 Testing Personal Moments API (6+ safe opportunities)...")
+        
+        if not self.auth_token:
+            self.log_result("Personal Moments API", False, "No auth token available")
+            return False
+        
+        response = self.make_request("GET", "/personal/list", use_auth=True)
+        
+        if response is None:
+            self.log_result("Personal Moments API", False, "Connection failed")
+            return False
+        
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                moments = data.get("moments", [])
+                
+                # Check if we have 6 or more moments
+                if len(moments) >= 6:
+                    self.log_result("Personal Moments Count", True, f"Found {len(moments)} moments (≥6 required)")
+                    
+                    # Check for safe categories mentioned in requirements
+                    safe_categories = ["flatshare", "travel", "outing", "activity"]
+                    found_categories = []
+                    
+                    for moment in moments:
+                        title = moment.get("title", "").lower()
+                        description = moment.get("description", "").lower()
+                        
+                        # Check for safe category keywords
+                        for category in safe_categories:
+                            if category in title or category in description:
+                                if category not in found_categories:
+                                    found_categories.append(category)
+                        
+                        # Additional safe keywords
+                        safe_keywords = ["flatshare", "roommate", "travel", "buddy", "beach", "weekend", 
+                                       "dining", "gaming", "activity", "outing"]
+                        
+                        for keyword in safe_keywords:
+                            if keyword in title or keyword in description:
+                                if keyword not in found_categories:
+                                    found_categories.append(keyword)
+                    
+                    if len(found_categories) >= 2:  # At least 2 safe categories
+                        self.log_result("Safe Categories Found", True, f"Found safe categories: {', '.join(found_categories)}")
+                    else:
+                        self.log_result("Safe Categories Found", False, f"Only found: {', '.join(found_categories)}")
+                    
+                    # Verify each moment has required fields
+                    all_valid = True
+                    for i, moment in enumerate(moments):
+                        required_fields = ["id", "title", "description", "action", "ctaText"]
+                        missing_fields = [field for field in required_fields if field not in moment]
+                        
+                        if missing_fields:
+                            all_valid = False
+                            self.log_result(f"Moment {i+1} Structure", False, f"Missing fields: {missing_fields}")
+                        else:
+                            self.log_result(f"Moment {i+1}", True, f"Title: {moment.get('title')}")
+                    
+                    return all_valid
+                else:
+                    self.log_result("Personal Moments Count", False, f"Expected ≥6 moments, got {len(moments)}")
+                    return False
+                    
+            except json.JSONDecodeError:
+                self.log_result("Personal Moments API", False, "Invalid JSON response", response.text)
+                return False
+        else:
+            try:
+                error_data = response.json()
+                self.log_result("Personal Moments API", False, f"HTTP {response.status_code}: {error_data.get('detail', response.text)}")
+            except:
+                self.log_result("Personal Moments API", False, f"HTTP {response.status_code}: {response.text}")
+            return False
+    
+    def test_i18n_configuration_arabic_review(self):
+        """Test i18n Configuration - Verify default language is EN (Arabic Review Request)"""
+        print("🌐 Testing i18n Configuration...")
+        
+        if not self.auth_token:
+            self.log_result("i18n Configuration", False, "No auth token available")
+            return False
+        
+        response = self.make_request("GET", "/me", use_auth=True)
+        
+        if response is None:
+            self.log_result("i18n Configuration", False, "Connection failed")
+            return False
+        
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                user_language = data.get("language", "")
+                
+                if user_language == "en":
+                    self.log_result("Default Language", True, f"User language is 'en' as expected")
+                    return True
+                else:
+                    self.log_result("Default Language", False, f"Expected 'en', got '{user_language}'")
+                    return False
+                    
+            except json.JSONDecodeError:
+                self.log_result("i18n Configuration", False, "Invalid JSON response", response.text)
+                return False
+        else:
+            try:
+                error_data = response.json()
+                self.log_result("i18n Configuration", False, f"HTTP {response.status_code}: {error_data.get('detail', response.text)}")
+            except:
+                self.log_result("i18n Configuration", False, f"HTTP {response.status_code}: {response.text}")
+            return False
+    
+    def test_chat_message_sending_arabic_review(self):
+        """Test Chat Message Sending - Test message sending without duplicates (Arabic Review Request)"""
+        print("💬 Testing Chat Message Sending...")
+        
+        if not self.auth_token:
+            self.log_result("Chat Message Sending", False, "No auth token available")
+            return False
+        
+        # First, get matches to test messaging
+        matches_response = self.make_request("GET", "/matches", use_auth=True)
+        
+        if matches_response is None:
+            self.log_result("Chat Message Sending", False, "Connection failed")
+            return False
+        
+        if matches_response.status_code == 200:
+            try:
+                matches_data = matches_response.json()
+                matches = matches_data.get("matches", [])
+                
+                if matches:
+                    match_id = matches[0]["match_id"]
+                    
+                    # Test sending a message
+                    message_data = {
+                        "content": f"Test message at {datetime.now().isoformat()}",
+                        "message_type": "text"
+                    }
+                    
+                    message_response = self.make_request("POST", f"/matches/{match_id}/messages", message_data, use_auth=True)
+                    
+                    if message_response and message_response.status_code == 200:
+                        self.log_result("Message Sending", True, "Successfully sent message")
+                        
+                        # Verify no duplicates by checking message count
+                        time.sleep(1)  # Brief delay
+                        
+                        messages_response = self.make_request("GET", f"/matches/{match_id}/messages", use_auth=True)
+                        
+                        if messages_response and messages_response.status_code == 200:
+                            messages_data = messages_response.json()
+                            messages = messages_data.get("messages", [])
+                            
+                            # Check for duplicate messages (same content and timestamp close together)
+                            duplicate_found = False
+                            for i in range(len(messages) - 1):
+                                if (messages[i].get("content") == messages[i+1].get("content") and
+                                    messages[i].get("sender_id") == messages[i+1].get("sender_id")):
+                                    duplicate_found = True
+                                    break
+                            
+                            if not duplicate_found:
+                                self.log_result("No Duplicate Messages", True, f"Found {len(messages)} messages, no duplicates detected")
+                                return True
+                            else:
+                                self.log_result("No Duplicate Messages", False, "Duplicate messages detected")
+                                return False
+                        else:
+                            self.log_result("Message Retrieval", False, "Failed to retrieve messages")
+                            return False
+                    else:
+                        self.log_result("Message Sending", False, "Failed to send message")
+                        return False
+                else:
+                    self.log_result("Chat Testing", True, "No matches available for message testing (expected for new user)")
+                    return True
+                    
+            except json.JSONDecodeError:
+                self.log_result("Chat Message Sending", False, "Invalid JSON response", matches_response.text)
+                return False
+        else:
+            self.log_result("Chat Message Sending", False, f"HTTP {matches_response.status_code}")
+            return False
+    
+    def run_arabic_review_tests(self):
+        """Run specific tests for Arabic review request"""
+        print("🎯 Starting Arabic Review Request Backend Testing")
+        print("Testing: Explore Sections (8), Personal Moments (6+), i18n Config, Chat Messages")
+        print("=" * 80)
+        
+        # Authenticate first
+        if not self.test_register_user():
+            print("❌ Authentication failed. Cannot proceed with tests.")
+            return
+        
+        print("=" * 80)
+        
+        # Run specific tests
+        self.test_explore_sections_api_arabic_review()
+        self.test_personal_moments_api_arabic_review()
+        self.test_i18n_configuration_arabic_review()
+        self.test_chat_message_sending_arabic_review()
+        
+        # Summary
+        print("=" * 80)
+        print("📊 ARABIC REVIEW TEST SUMMARY")
+        print("=" * 80)
+        
+        total_tests = len(self.test_results)
+        passed_tests = sum(1 for result in self.test_results if result["success"])
+        failed_tests = total_tests - passed_tests
+        
+        print(f"Total Tests: {total_tests}")
+        print(f"✅ Passed: {passed_tests}")
+        print(f"❌ Failed: {failed_tests}")
+        print(f"Success Rate: {(passed_tests/total_tests)*100:.1f}%")
+        
+        print("\n🔍 DETAILED RESULTS:")
+        for result in self.test_results:
+            status = "✅" if result["success"] else "❌"
+            print(f"{status} {result['test']}: {result['message']}")
+        
+        if failed_tests == 0:
+            print("\n🎉 ALL ARABIC REVIEW TESTS PASSED! Backend APIs working perfectly.")
+        else:
+            print(f"\n⚠️  {failed_tests} test(s) failed. Please review the issues above.")
+        
+        return passed_tests, failed_tests
+
 def main():
     """Main function to run tests"""
     tester = DatingAppTester()
-    passed, failed, results = tester.run_all_tests()
+    
+    # Check if we should run Arabic review tests
+    if len(sys.argv) > 1 and sys.argv[1] == "arabic-review":
+        passed, failed = tester.run_arabic_review_tests()
+    else:
+        passed, failed, results = tester.run_all_tests()
     
     # Exit with error code if tests failed
     if failed > 0:

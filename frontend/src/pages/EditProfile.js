@@ -342,7 +342,7 @@ const EditProfile = () => {
           >
             <ArrowRight className="w-6 h-6" />
           </button>
-          <h1 className="text-xl font-bold">تعديل معلومات</h1>
+          <h1 className="text-xl font-bold">{t('title')}</h1>
           <Button
             onClick={handleSave}
             disabled={saving}

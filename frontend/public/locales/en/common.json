@@ -35,5 +35,9 @@
     "online": "Online",
     "icebreaker": "Try this opener",
     "view_full": "View Full"
+  },
+  "cta": {
+    "exploreNew": "Discover now ✨",
+    "personal": "Personal offers 🎯"
   }
 }

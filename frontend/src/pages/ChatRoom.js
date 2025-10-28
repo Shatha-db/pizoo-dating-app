@@ -103,7 +103,7 @@ const ChatRoom = () => {
   const [sending, setSending] = useState(false);
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || sending) return;
+    if (!newMessage.trim() || sending || !otherUser) return;
 
     // Check safety consent
     if (!hasAgreedToSafety) {
@@ -114,12 +114,12 @@ const ChatRoom = () => {
     const messageText = newMessage.trim();
     const tempId = `temp-${Date.now()}`;
     
-    // Optimistic update - add message immediately to UI
+    // Optimistic update - add message immediately to UI with UTC time
     const optimisticMessage = {
       id: tempId,
-      text: messageText,
+      content: messageText,
       sender_id: user?.id,
-      receiver_id: otherUser?.id || matchId,
+      receiver_id: otherUser.id,
       match_id: matchId,
       created_at: new Date().toISOString(),
       read: false,
@@ -131,37 +131,28 @@ const ChatRoom = () => {
     setSending(true);
     
     try {
-      // Send via WebSocket for real-time delivery
-      if (isConnected && otherUser) {
-        const success = wsSendMessage(matchId, otherUser.id, messageText);
-        if (success) {
-          // Update optimistic message to 'sent' status
-          setMessages(prev => prev.map(msg => 
-            msg.id === tempId ? { ...msg, status: 'sent' } : msg
-          ));
-        } else {
-          throw new Error('WebSocket send failed');
-        }
-      } else {
-        // Fallback to HTTP if WebSocket not connected
-        const response = await axios.post(
-          `${API}/conversations/${matchId}/messages`,
-          { content: messageText },
-          { 
-            headers: { 
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            },
-            withCredentials: true
+      // Always use HTTP API for reliability
+      const response = await axios.post(
+        `${API}/conversations/${matchId}/messages`,
+        { content: messageText },
+        { 
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
-        );
-        
-        // Replace optimistic message with actual server response
-        if (response.data) {
-          setMessages(prev => prev.map(msg => 
-            msg.id === tempId ? { ...msg, id: response.data.id, status: 'sent' } : msg
-          ));
         }
+      );
+      
+      // Replace optimistic message with actual server response
+      if (response.data && response.data.data) {
+        setMessages(prev => prev.map(msg => 
+          msg.id === tempId ? { ...response.data.data, status: 'sent' } : msg
+        ));
+      } else {
+        // Just mark as sent if no data returned
+        setMessages(prev => prev.map(msg => 
+          msg.id === tempId ? { ...msg, status: 'sent' } : msg
+        ));
       }
     } catch (error) {
       console.error('Error sending message:', error);

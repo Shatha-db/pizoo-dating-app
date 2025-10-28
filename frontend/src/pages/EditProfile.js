@@ -951,7 +951,7 @@ const EditProfile = () => {
 
             {/* Additional Details */}
             <Card className="p-6 space-y-4">
-              <h2 className="font-bold text-lg">المزيد عني</h2>
+              <h2 className="font-bold text-lg">{t('aboutMe')}</h2>
 
               <div>
                 <label className="block text-sm font-medium mb-2">⭐ البرج</label>

@@ -307,12 +307,15 @@ const ChatRoom = () => {
                     : 'bg-white text-gray-800 shadow-md'
                 }`}
               >
-                <p>{msg.content}</p>
-                {isSent && (
-                  <div className="text-xs mt-1 opacity-75">
-                    {msg.status === 'read' ? '✓✓ تم القراءة' : '✓ تم الإرسال'}
-                  </div>
-                )}
+                <p className="break-words">{msg.content}</p>
+                <div className={`text-xs mt-1 flex items-center gap-1 ${isSent ? 'opacity-75 justify-end' : 'opacity-60'}`}>
+                  <span>{formatTimeOnly(msg.created_at, 'ar')}</span>
+                  {isSent && (
+                    <span>
+                      {msg.status === 'read' ? '✓✓' : msg.status === 'sent' ? '✓' : msg.status === 'sending' ? '⏳' : '❌'}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           );

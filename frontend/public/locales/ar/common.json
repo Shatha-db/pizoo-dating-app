@@ -24,5 +24,16 @@
   "tab_likes": "إعجابات",
   "tab_chats": "محادثات",
   "tab_account": "الحساب",
-  "brand": "Pizoo"
+  "brand": "Pizoo",
+  "card": {
+    "boost": "تعزيز",
+    "favorite": "مفضلة",
+    "like": "إعجاب",
+    "pass": "تجاوز",
+    "rewind": "إعادة",
+    "verified": "موثّق",
+    "online": "متصل الآن",
+    "icebreaker": "جملة افتتاحيّة مقترحة",
+    "view_full": "عرض كامل"
+  }
 }

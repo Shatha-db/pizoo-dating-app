@@ -538,7 +538,7 @@ const EditProfile = () => {
                 <Input
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  placeholder="مثال: دبي، الإمارات"
+                  placeholder={t('locationPlaceholder')}
                 />
               </div>
             </Card>

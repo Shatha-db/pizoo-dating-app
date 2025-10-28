@@ -39,5 +39,10 @@
   "cta": {
     "exploreNew": "استكشف الآن ✨",
     "personal": "الفرص الشخصية 🎯"
-  }
+  },
+  "now": "الآن",
+  "yesterday": "أمس",
+  "minutesShort": "د",
+  "hoursShort": "س",
+  "daysShort": "ي"
 }

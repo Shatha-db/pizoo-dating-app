@@ -391,10 +391,10 @@ const Home = () => {
         });
       }, 1000);
 
-      alert('🚀 تم تفعيل Boost! سيظهر ملفك الشخصي أكثر لمدة 30 دقيقة!');
+      alert(t('home:boostActivated'));
     } catch (error) {
       console.error('Error activating boost:', error);
-      alert('حدث خطأ أثناء تفعيل Boost');
+      alert(t('home:boostError'));
     }
   };
 

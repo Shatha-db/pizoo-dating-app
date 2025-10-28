@@ -237,7 +237,7 @@ const Premium = () => {
               {currentPricing?.price} {currentPricing?.currency}
             </h3>
             <p className="text-white/90 text-sm mb-4">
-              سيتم تجديد الاشتراك تلقائياً • يمكن الإلغاء في أي وقت
+              {t('autoRenew')}
             </p>
             <Button
               onClick={handleSubscribe}

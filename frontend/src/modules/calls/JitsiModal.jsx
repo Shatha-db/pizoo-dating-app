@@ -1,129 +1,110 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 import { X } from 'lucide-react';
 
-const JitsiModal = ({ room, open, onClose, displayName = 'User' }) => {
+export default function InlineJitsi({
+  room,
+  audioOnly = false,
+  onClose,
+  leftAvatar,
+  rightAvatar,
+  title
+}) {
   const containerRef = useRef(null);
   const apiRef = useRef(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!open || !room) {
-      return;
-    }
+    if (!room) return;
 
+    // Load Jitsi External API
     const loadJitsi = async () => {
       try {
-        setLoading(true);
-        setError(null);
-
-        // Check if script is already loaded
         if (!window.JitsiMeetExternalAPI) {
           await new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = 'https://meet.jit.si/external_api.js';
+            const script = document.createElement("script");
+            script.src = "https://meet.jit.si/external_api.js";
             script.async = true;
             script.onload = resolve;
-            script.onerror = () => reject(new Error('Failed to load Jitsi script'));
+            script.onerror = reject;
             document.body.appendChild(script);
           });
         }
 
         if (!containerRef.current) return;
 
-        // Initialize Jitsi Meet
-        const domain = 'meet.jit.si';
+        const domain = "meet.jit.si";
         const options = {
-          roomName: `pizoo-${room}`,
-          width: '100%',
-          height: 520,
+          roomName: room,
           parentNode: containerRef.current,
-          userInfo: {
-            displayName: displayName || 'User',
-          },
+          width: '100%',
+          height: 420,
           configOverwrite: {
             startWithAudioMuted: false,
-            startWithVideoMuted: false,
+            startWithVideoMuted: audioOnly,
             prejoinPageEnabled: false,
-            disableDeepLinking: true,
           },
           interfaceConfigOverwrite: {
-            TOOLBAR_BUTTONS: [
-              'microphone',
-              'camera',
-              'closedcaptions',
-              'desktop',
-              'fullscreen',
-              'fodeviceselection',
-              'hangup',
-              'chat',
-              'recording',
-              'livestreaming',
-              'etherpad',
-              'settings',
-              'raisehand',
-              'videoquality',
-              'filmstrip',
-              'feedback',
-              'stats',
-              'shortcuts',
-              'tileview',
-              'download',
-              'help',
-              'mute-everyone',
-            ],
+            MOBILE_APP_PROMO: false,
             SHOW_JITSI_WATERMARK: false,
-            SHOW_WATERMARK_FOR_GUESTS: false,
           },
         };
 
-        const api = new window.JitsiMeetExternalAPI(domain, options);
+        // eslint-disable-next-line no-undef
+        const api = new JitsiMeetExternalAPI(domain, options);
         apiRef.current = api;
 
-        // Listen for ready event
         api.addEventListener('videoConferenceJoined', () => {
           setLoading(false);
         });
 
-        // Listen for close event
         api.addEventListener('readyToClose', () => {
           onClose?.();
         });
 
-        setLoading(false);
-      } catch (err) {
-        console.error('Jitsi initialization error:', err);
-        setError('فشل تحميل المكالمة. الرجاء المحاولة مرة أخرى.');
+      } catch (error) {
+        console.error('Failed to load Jitsi:', error);
         setLoading(false);
       }
     };
 
     loadJitsi();
 
-    // Cleanup
     return () => {
-      if (apiRef.current) {
-        try {
-          apiRef.current.dispose();
-        } catch (err) {
-          console.error('Error disposing Jitsi:', err);
-        }
-        apiRef.current = null;
+      try {
+        apiRef.current?.dispose();
+      } catch (e) {
+        console.error('Error disposing Jitsi:', e);
       }
     };
-  }, [open, room, displayName, onClose]);
-
-  if (!open) return null;
+  }, [room, audioOnly, onClose]);
 
   return (
-    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-5xl overflow-hidden shadow-2xl">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-pink-500 to-purple-600">
-          <h3 className="text-white font-bold text-lg">مكالمة فيديو</h3>
+    <div className="fixed inset-0 z-[999] bg-black/60 flex items-center justify-center p-4">
+      <div className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-2xl">
+        {/* Header with Avatars */}
+        <div className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {leftAvatar && (
+              <img
+                src={leftAvatar}
+                alt=""
+                className="w-9 h-9 rounded-full border-2 border-white object-cover"
+              />
+            )}
+            {rightAvatar && (
+              <img
+                src={rightAvatar}
+                alt=""
+                className="w-9 h-9 rounded-full border-2 border-white -ml-3 object-cover"
+              />
+            )}
+            <div className="font-semibold">
+              {title || (audioOnly ? "مكالمة صوتية" : "مكالمة فيديو")}
+            </div>
+          </div>
           <button
             onClick={onClose}
-            className="text-white hover:bg-white/20 p-2 rounded-full transition"
+            className="bg-white/20 hover:bg-white/30 rounded-full p-2 transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -139,27 +120,14 @@ const JitsiModal = ({ room, open, onClose, displayName = 'User' }) => {
               </div>
             </div>
           )}
-          {error && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center text-white">
-                <p className="mb-4">{error}</p>
-                <button
-                  onClick={onClose}
-                  className="px-4 py-2 bg-pink-500 hover:bg-pink-600 rounded-lg"
-                >
-                  إغلاق
-                </button>
-              </div>
-            </div>
-          )}
-          <div ref={containerRef} className="w-full" style={{ minHeight: '520px' }} />
+          <div ref={containerRef} style={{ minHeight: '420px' }} />
         </div>
 
         {/* Footer */}
-        <div className="p-3 bg-gray-100 dark:bg-gray-700 text-center">
+        <div className="p-3 bg-gray-50 dark:bg-gray-700">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full font-medium"
+            className="w-full h-11 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-semibold transition"
           >
             إنهاء المكالمة
           </button>
@@ -167,6 +135,5 @@ const JitsiModal = ({ room, open, onClose, displayName = 'User' }) => {
       </div>
     </div>
   );
-};
+}
 
-export default JitsiModal;

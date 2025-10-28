@@ -173,6 +173,22 @@ function AppRoot() {
                     }
                   />
                   <Route
+                    path="/explore-new"
+                    element={
+                      <ProtectedRoute>
+                        <ExploreNew />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/personal"
+                    element={
+                      <ProtectedRoute>
+                        <PersonalMoments />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
                     path="/top-picks"
                     element={
                       <ProtectedRoute>

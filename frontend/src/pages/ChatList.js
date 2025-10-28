@@ -129,7 +129,7 @@ const ChatList = () => {
       <header className="bg-white shadow-sm p-4 sticky top-0 z-10 border-b border-gray-100">
         <div className="flex items-center justify-between max-w-2xl mx-auto">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">الرسائل</h1>
+            <h1 className="text-2xl font-bold text-gray-800">{t('messages')}</h1>
           </div>
           <div className="flex gap-2">
             <button
@@ -156,18 +156,18 @@ const ChatList = () => {
           <div className="p-4">
             {/* Welcome Notification */}
             <NotificationCard
-              title="مرحباً بك في Pizoo! 🎉"
-              message="عُد لدينا لنشاركك معك نصائح للتأكد من حصولك على أفضل تجربة ممكنة. وعندما تشعر بالخيرة؟ اسحب لليمين."
+              title={t('welcomeTitle')}
+              message={t('welcomeMessage')}
               icon="💬"
               onDismiss={() => setShowWelcomeMessage(false)}
             />
             
             {/* Add Photos Notification */}
             <NotificationCard
-              title="الجميع هنا ليروك 📸"
-              message="أضف المزيد من الصور لزيادة فرصك في تبادل الإعجاب."
+              title={t('allHereToSee')}
+              message={t('addMorePhotosMessage')}
               icon="📷"
-              actionLabel="إضافة صور"
+              actionLabel={t('addPhotos')}
               onAction={handleAddPhotos}
               onDismiss={() => {}}
             />
@@ -187,7 +187,7 @@ const ChatList = () => {
         {matches.length > 0 && (
           <div className="py-4 border-b border-gray-100">
             <div className="px-4 mb-3">
-              <h2 className="font-bold text-base text-gray-800">المعجبون الجُدد</h2>
+              <h2 className="font-bold text-base text-gray-800">{t('newAdmirers')}</h2>
             </div>
             
             <div className="flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">

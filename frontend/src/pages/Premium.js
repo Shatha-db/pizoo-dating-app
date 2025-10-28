@@ -173,11 +173,11 @@ const Premium = () => {
             <div className="space-y-3">
               {currentPlan.pricing.map((price) => {
                 const durationLabels = {
-                  '1week': 'أسبوع واحد',
-                  '1month': 'شهر واحد',
-                  '3months': '3 أشهر',
-                  '6months': '6 أشهر',
-                  '1year': 'سنة واحدة'
+                  '1week': t('monthDuration.1week'),
+                  '1month': t('monthDuration.1month'),
+                  '3months': t('monthDuration.3months'),
+                  '6months': t('monthDuration.6months'),
+                  '1year': t('monthDuration.1year')
                 };
 
                 const perMonth = price.duration === '1week'

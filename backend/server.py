@@ -4213,6 +4213,141 @@ async def update_user_language(payload: LanguagePayload, current_user: dict = De
         raise HTTPException(status_code=500, detail=f"Failed to update language: {str(e)}")
 
 
+# ===== Explore & Personal Moments Endpoints =====
+
+@api_router.get("/explore/sections")
+async def get_explore_sections(current_user: dict = Depends(get_current_user)):
+    """
+    Get explore sections with trending, nearby, and new profiles
+    """
+    try:
+        # Get user's location for nearby calculation
+        user_profile = await db.profiles.find_one({"user_id": current_user["id"]})
+        user_lat = user_profile.get("latitude") if user_profile else None
+        user_lon = user_profile.get("longitude") if user_profile else None
+        
+        # Fetch profiles (excluding current user and already swiped)
+        all_profiles = await db.profiles.find({
+            "user_id": {"$ne": current_user["id"]}
+        }).to_list(length=50)
+        
+        # Mock data: Create 3 sections
+        sections = []
+        
+        # Section 1: Trending Profiles (mock: most photos or most likes)
+        trending_profiles = sorted(all_profiles, key=lambda p: len(p.get('photos', [])), reverse=True)[:10]
+        sections.append({
+            "type": "trending",
+            "title": "Trending Profiles",  # Frontend will translate
+            "profiles": [format_profile_for_explore(p, user_lat, user_lon) for p in trending_profiles]
+        })
+        
+        # Section 2: Nearby Users (if location available)
+        if user_lat and user_lon:
+            nearby_profiles = []
+            for profile in all_profiles:
+                if profile.get('latitude') and profile.get('longitude'):
+                    distance = calculate_distance(
+                        user_lat, user_lon,
+                        profile['latitude'], profile['longitude']
+                    )
+                    if distance <= 50:  # Within 50km
+                        profile['distance'] = round(distance, 1)
+                        nearby_profiles.append(profile)
+            
+            nearby_profiles = sorted(nearby_profiles, key=lambda p: p.get('distance', 999))[:10]
+            sections.append({
+                "type": "nearby",
+                "title": "Nearby Users",
+                "profiles": [format_profile_for_explore(p, user_lat, user_lon) for p in nearby_profiles]
+            })
+        
+        # Section 3: Newcomers (most recent profiles)
+        newcomer_profiles = sorted(
+            all_profiles,
+            key=lambda p: p.get('created_at', ''),
+            reverse=True
+        )[:10]
+        sections.append({
+            "type": "newcomers",
+            "title": "New Members",
+            "profiles": [format_profile_for_explore(p, user_lat, user_lon) for p in newcomer_profiles]
+        })
+        
+        return {"sections": sections}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch explore sections: {str(e)}")
+
+
+def format_profile_for_explore(profile: dict, user_lat: float = None, user_lon: float = None) -> dict:
+    """Format profile for explore display"""
+    formatted = {
+        "id": profile.get("user_id"),
+        "name": profile.get("name", "Unknown"),
+        "age": profile.get("age", 0),
+        "location": profile.get("location", ""),
+        "photos": profile.get("photos", [])
+    }
+    
+    # Calculate distance if coordinates available
+    if user_lat and user_lon and profile.get('latitude') and profile.get('longitude'):
+        distance = calculate_distance(
+            user_lat, user_lon,
+            profile['latitude'], profile['longitude']
+        )
+        formatted["distance"] = round(distance, 1)
+    
+    return formatted
+
+
+@api_router.get("/personal/list")
+async def get_personal_moments(current_user: dict = Depends(get_current_user)):
+    """
+    Get personalized moments/opportunities for the user
+    """
+    try:
+        # Mock data for personal moments
+        moments = [
+            {
+                "id": "moment_1",
+                "title": "Special Weekend Event",
+                "description": "Join our exclusive meetup event this weekend. Meet other singles in your area!",
+                "image": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400",
+                "isPremium": False,
+                "isNew": True,
+                "action": "open_link",
+                "link": "#",
+                "ctaText": "Join Event"
+            },
+            {
+                "id": "moment_2",
+                "title": "Premium Upgrade - 50% Off",
+                "description": "Unlock unlimited likes, super likes, and see who liked you! Limited time offer.",
+                "image": "https://images.unsplash.com/photo-1522926193341-e9ffd686c60f?w=400",
+                "isPremium": True,
+                "isNew": True,
+                "action": "open_link",
+                "link": "/premium",
+                "ctaText": "Upgrade Now"
+            },
+            {
+                "id": "moment_3",
+                "title": "Complete Your Profile",
+                "description": "Profiles with photos get 10x more matches. Add more photos to stand out!",
+                "image": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400",
+                "isPremium": False,
+                "isNew": False,
+                "action": "open_link",
+                "link": "/profile/edit",
+                "ctaText": "Add Photos"
+            }
+        ]
+        
+        return {"moments": moments}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch personal moments: {str(e)}")
+
+
 # Mount the API router
 app.include_router(api_router)
 

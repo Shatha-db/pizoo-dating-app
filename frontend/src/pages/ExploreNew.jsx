@@ -95,7 +95,7 @@ const ExploreNew = () => {
           sections.map((section, index) => (
             <ExploreRow
               key={index}
-              title={section.title}
+              title={translateSectionTitle(section.type)}
               profiles={section.profiles}
               onSeeAll={() => handleSeeAll(section.type)}
             />

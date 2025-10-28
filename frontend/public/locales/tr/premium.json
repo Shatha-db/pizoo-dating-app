@@ -1,46 +1,30 @@
 {
-  "title": "Gold'a yükselt",
-  "subtitle": "Eşleşme şansını artır — premium özellikleri aç.",
-  "benefits": {
-    "unlimited_likes": "Sınırsız Beğeni",
-    "see_who_likes_you": "Seni beğenenleri gör",
-    "boost_monthly": "Ayda 1 ücretsiz Boost",
-    "super_likes_weekly": "Haftada 2 Super Like",
-    "passport": "Passport — dünyada her yerde kaydır",
-    "top_profiles": "Senin için seçilen en iyi profiller",
-    "ad_free": "Reklamsız deneyim",
-    "control_who_sees_you": "Seni kimin gördüğünü kontrol et",
-    "control_who_you_see": "Kimi gördüğünü kontrol et",
-    "read_receipts": "Okundu bilgisi (yakında)",
-    "priority_support": "Öncelikli destek"
+  "title": "Premium Planlar",
+  "mostPopular": "En popüler",
+  "freeBoost": "✅ Ücretsiz aylık boost",
+  "hideAds": "✅ Reklamları gizle",
+  "unlimitedLikes": "✅ Sınırsız beğeni",
+  "unlimitedMessages": "✅ Sınırsız mesaj",
+  "seeWhoLikes": "✅ Sizi kimin beğendiğini görün",
+  "prioritySupport": "✅ Öncelikli destek",
+  "advancedFilters": "✅ Gelişmiş filtreler",
+  "rewindUnlimited": "✅ Sınırsız geri alma",
+  "onlineStatus": "✅ Çevrimiçi durumunu gizle",
+  "readReceipts": "✅ Okundu bilgilerini kontrol et",
+  "premiumBadge": "✅ Premium rozeti",
+  "monthDuration": {
+    "1month": "1 Ay",
+    "3months": "3 Ay",
+    "6months": "6 Ay",
+    "1year": "1 Yıl"
   },
-  "plans": {
-    "label": "Bir plan seç",
-    "best_value": "En iyi değer",
-    "popular": "Popüler",
-    "save": "%{{percent}} tasarruf",
-    "plan_6m": "6 ay",
-    "plan_1m": "1 ay",
-    "plan_1w": "1 hafta"
-  },
-  "pricing": {
-    "per_week": "Haftalık CHF {{price}}",
-    "total": "Toplam",
-    "continue": "Devam et"
-  },
-  "upsell": {
-    "unlock_likes": "Seni beğenenleri aç",
-    "upgrade_to_see": "Hepsini görmek için yükselt",
-    "get_gold": "Gold al"
-  },
-  "legal": {
-    "auto_renew": "Devam ederek otomatik yenilemeyi kabul edersin. İstediğin zaman App Store'dan iptal edebilirsin.",
-    "terms": "Şartlar",
-    "privacy": "Gizlilik"
-  },
-  "status": {
-    "checkout_ready": "Ödeme hazır",
-    "restoring": "Satın alımlar geri yükleniyor…",
-    "error": "Bir hata oluştu. Lütfen tekrar dene."
-  }
+  "perMonth": "/ ay",
+  "save": "{percent}% tasarruf edin",
+  "autoRenew": "Otomatik yenilenir • İstediğiniz zaman iptal edin",
+  "subscribeNow": "Şimdi abone ol",
+  "processing": "İşleniyor...",
+  "selectDuration": "Süre seçin",
+  "choosePlan": "Planınızı seçin",
+  "compareFeatures": "Özellikleri karşılaştır",
+  "cancelAnytime": "İstediğiniz zaman iptal edin, bağımsız"
 }

@@ -1,46 +1,30 @@
 {
-  "title": "Upgrade auf Gold",
-  "subtitle": "Erhöhe deine Match-Chance – Premium-Features freischalten.",
-  "benefits": {
-    "unlimited_likes": "Unbegrenzte Likes",
-    "see_who_likes_you": "Sieh, wer dich geliked hat",
-    "boost_monthly": "1 kostenloser Boost pro Monat",
-    "super_likes_weekly": "2 Super Likes pro Woche",
-    "passport": "Passport – weltweit swipen",
-    "top_profiles": "Top-Profile für dich",
-    "ad_free": "Werbefrei",
-    "control_who_sees_you": "Steuere, wer dich sieht",
-    "control_who_you_see": "Steuere, wen du siehst",
-    "read_receipts": "Lesebestätigungen (bald)",
-    "priority_support": "Priorisierter Support"
+  "title": "Premium-Pläne",
+  "mostPopular": "Am beliebtesten",
+  "freeBoost": "✅ Kostenloser monatlicher Boost",
+  "hideAds": "✅ Werbung ausblenden",
+  "unlimitedLikes": "✅ Unbegrenzte Likes",
+  "unlimitedMessages": "✅ Unbegrenzte Nachrichten",
+  "seeWhoLikes": "✅ Sehen Sie, wer Sie mag",
+  "prioritySupport": "✅ Vorrangiger Support",
+  "advancedFilters": "✅ Erweiterte Filter",
+  "rewindUnlimited": "✅ Unbegrenztes Zurücknehmen",
+  "onlineStatus": "✅ Online-Status ausblenden",
+  "readReceipts": "✅ Lesebestatigung steuern",
+  "premiumBadge": "✅ Premium-Abzeichen",
+  "monthDuration": {
+    "1month": "1 Monat",
+    "3months": "3 Monate",
+    "6months": "6 Monate",
+    "1year": "1 Jahr"
   },
-  "plans": {
-    "label": "Plan wählen",
-    "best_value": "Bestes Angebot",
-    "popular": "Beliebt",
-    "save": "{{percent}} sparen",
-    "plan_6m": "6 Monate",
-    "plan_1m": "1 Monat",
-    "plan_1w": "1 Woche"
-  },
-  "pricing": {
-    "per_week": "CHF {{price}}/Woche",
-    "total": "Gesamt",
-    "continue": "Weiter"
-  },
-  "upsell": {
-    "unlock_likes": "Likes freischalten",
-    "upgrade_to_see": "Upgrade, um alle zu sehen",
-    "get_gold": "Gold holen"
-  },
-  "legal": {
-    "auto_renew": "Mit der Fortsetzung stimmst du der automatischen Verlängerung zu. Kündigung jederzeit in den App-Store-Einstellungen.",
-    "terms": "Bedingungen",
-    "privacy": "Datenschutz"
-  },
-  "status": {
-    "checkout_ready": "Bezahlung bereit",
-    "restoring": "Käufe werden wiederhergestellt…",
-    "error": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
-  }
+  "perMonth": "/ Monat",
+  "save": "Sparen Sie {percent}%",
+  "autoRenew": "Verlängert sich automatisch • Jederzeit kündbar",
+  "subscribeNow": "Jetzt abonnieren",
+  "processing": "Wird verarbeitet...",
+  "selectDuration": "Dauer auswählen",
+  "choosePlan": "Wählen Sie Ihren Plan",
+  "compareFeatures": "Funktionen vergleichen",
+  "cancelAnytime": "Jederzeit kündbar, keine Verpflichtung"
 }

@@ -1,46 +1,30 @@
 {
-  "title": "الترقية إلى Gold",
-  "subtitle": "ضاعِف فرصك في التطابق — افتح الميزات المميّزة.",
-  "benefits": {
-    "unlimited_likes": "إعجابات غير محدودة",
-    "see_who_likes_you": "شاهد من أعجب بك",
-    "boost_monthly": "Boost مجاني شهريًا",
-    "super_likes_weekly": "٢ Super Likes أسبوعيًا",
-    "passport": "جواز سفر — تَواصل مع العالم",
-    "top_profiles": "أفضل الحسابات المختارة لك",
-    "ad_free": "تجربة بدون إعلانات",
-    "control_who_sees_you": "تحكّم بمن يراك",
-    "control_who_you_see": "تحكّم بمن تراه",
-    "read_receipts": "إثبات قراءة الرسائل (قريبًا)",
-    "priority_support": "دعم أولوية"
+  "title": "خطط Premium",
+  "mostPopular": "الأكثر شعبية",
+  "freeBoost": "✅ تعزيز مجاني شهرياً",
+  "hideAds": "✅ إخفاء الإعلانات",
+  "unlimitedLikes": "✅ إعجابات غير محدودة",
+  "unlimitedMessages": "✅ رسائل غير محدودة",
+  "seeWhoLikes": "✅ شاهد من أعجب بك",
+  "prioritySupport": "✅ دعم ذو أولوية",
+  "advancedFilters": "✅ فلاتر متقدمة",
+  "rewindUnlimited": "✅ تراجع غير محدود",
+  "onlineStatus": "✅ إخفاء حالة الاتصال",
+  "readReceipts": "✅ التحكم في إيصالات القراءة",
+  "premiumBadge": "✅ شارة Premium",
+  "monthDuration": {
+    "1month": "شهر واحد",
+    "3months": "3 أشهر",
+    "6months": "6 أشهر",
+    "1year": "سنة واحدة"
   },
-  "plans": {
-    "label": "اختر الخطة",
-    "best_value": "أفضل قيمة",
-    "popular": "الأكثر شيوعًا",
-    "save": "وفّر {{percent}}",
-    "plan_6m": "٦ أشهر",
-    "plan_1m": "شهر ١",
-    "plan_1w": "أسبوع ١"
-  },
-  "pricing": {
-    "per_week": "CHF {{price}}/أسبوع",
-    "total": "المجموع",
-    "continue": "متابعة"
-  },
-  "upsell": {
-    "unlock_likes": "افتح قائمة من أعجبوا بك",
-    "upgrade_to_see": "قم بالترقية لعرض كل الإعجابات",
-    "get_gold": "احصل على Gold"
-  },
-  "legal": {
-    "auto_renew": "بالمتابعة، توافق على التجديد التلقائي. يمكنك الإلغاء في إعدادات المتجر في أي وقت.",
-    "terms": "الشروط",
-    "privacy": "الخصوصية"
-  },
-  "status": {
-    "checkout_ready": "الدفع جاهز",
-    "restoring": "استعادة المشتريات…",
-    "error": "حدث خطأ ما. حاول لاحقًا."
-  }
+  "perMonth": "/ شهر",
+  "save": "وفّر {percent}%",
+  "autoRenew": "سيتم تجديد الاشتراك تلقائياً • يمكن الإلغاء في أي وقت",
+  "subscribeNow": "اشترك الآن",
+  "processing": "جاري المعالجة...",
+  "selectDuration": "اختر المدة",
+  "choosePlan": "اختر خطتك",
+  "compareFeatures": "قارن الميزات",
+  "cancelAnytime": "إلغاء في أي وقت، بدون التزام"
 }

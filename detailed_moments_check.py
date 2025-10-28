@@ -7,7 +7,7 @@ import requests
 import json
 
 # Configuration
-BACKEND_URL = "https://pizoo-dating-3.preview.emergentagent.com/api"
+BACKEND_URL = "https://pizoo-chat-fix.preview.emergentagent.com/api"
 
 def get_auth_token():
     """Get authentication token"""

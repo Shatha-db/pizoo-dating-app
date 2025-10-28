@@ -16,7 +16,7 @@ import uuid
 import time
 
 # Configuration - Using REACT_APP_BACKEND_URL from frontend/.env
-BASE_URL = "https://pizoo-dating-3.preview.emergentagent.com/api"
+BASE_URL = "https://pizoo-chat-fix.preview.emergentagent.com/api"
 HEADERS = {"Content-Type": "application/json"}
 
 class PizooTester:

@@ -590,7 +590,7 @@ await db.swipes.find_one({
 
 **Frontend (.env):**
 ```bash
-REACT_APP_BACKEND_URL=https://pizoo-dating-3.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://pizoo-chat-fix.preview.emergentagent.com
 GENERATE_SOURCEMAP=true
 ```
 

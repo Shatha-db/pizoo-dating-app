@@ -12,7 +12,7 @@ import uuid
 import math
 
 # Configuration
-BASE_URL = "https://pizoo-dating-3.preview.emergentagent.com/api"
+BASE_URL = "https://pizoo-chat-fix.preview.emergentagent.com/api"
 HEADERS = {"Content-Type": "application/json"}
 
 class GPSLocationTester:

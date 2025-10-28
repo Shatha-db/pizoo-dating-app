@@ -398,7 +398,7 @@ const insertEmoji = (emoji) => {
 
 ```bash
 # 1. Get usage context
-curl -X GET "https://pizoo-dating-3.preview.emergentagent.com/api/usage/context" \
+curl -X GET "https://pizoo-chat-fix.preview.emergentagent.com/api/usage/context" \
   -H "Authorization: Bearer YOUR_TOKEN"
 
 # Expected: 
@@ -414,7 +414,7 @@ curl -X GET "https://pizoo-dating-3.preview.emergentagent.com/api/usage/context"
 }
 
 # 2. Increment view
-curl -X POST "https://pizoo-dating-3.preview.emergentagent.com/api/usage/increment" \
+curl -X POST "https://pizoo-chat-fix.preview.emergentagent.com/api/usage/increment" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"kind":"view"}'
@@ -422,7 +422,7 @@ curl -X POST "https://pizoo-dating-3.preview.emergentagent.com/api/usage/increme
 # Expected: {"ok": true, "premium": false}
 
 # 3. Increment like
-curl -X POST "https://pizoo-dating-3.preview.emergentagent.com/api/usage/increment" \
+curl -X POST "https://pizoo-chat-fix.preview.emergentagent.com/api/usage/increment" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"kind":"like"}'

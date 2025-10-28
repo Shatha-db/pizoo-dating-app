@@ -231,7 +231,7 @@ const EditProfile = () => {
       const filteredPhotos = photos.filter(p => p !== null);
       
       if (filteredPhotos.length === 0) {
-        showToast('يرجى إضافة صورة واحدة على الأقل', 'error');
+        showToast(t('minOnePhoto'), 'error');
         setSaving(false);
         return;
       }

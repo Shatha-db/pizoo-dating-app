@@ -4,6 +4,7 @@
 
 /* Import global fixes */
 @import './styles/fixes.css';
+@import './styles/overflow-fixes.css';
 
 body {
     margin: 0;

@@ -5,5 +5,11 @@
   "new_badge": "New",
   "no_moments": "No personal moments available",
   "loading": "Loading...",
-  "view_details": "View Details"
+  "view_details": "View Details",
+  "categories": {
+    "flatshare": "Flatshare",
+    "travel": "Travel Buddy",
+    "outing": "Tonight's Outing",
+    "activity": "Try Something New"
+  }
 }

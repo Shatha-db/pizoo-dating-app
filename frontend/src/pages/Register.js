@@ -353,7 +353,7 @@ const Register = () => {
             to="/login"
             className="text-pink-600 hover:text-pink-700 font-medium"
           >
-            لديك حساب بالفعل؟ سجّل الدخول
+            {t('have_account')} {t('sign_in')}
           </Link>
         </CardFooter>
       </Card>

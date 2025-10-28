@@ -93,6 +93,23 @@ const ChatRoom = () => {
       return;
     }
 
+    const messageText = newMessage.trim();
+    const tempId = `temp-${Date.now()}`;
+    
+    // Optimistic update - add message immediately to UI
+    const optimisticMessage = {
+      id: tempId,
+      text: messageText,
+      sender_id: user?.id,
+      receiver_id: otherUser?.id || matchId,
+      match_id: matchId,
+      created_at: new Date().toISOString(),
+      read: false,
+      status: 'sending',
+    };
+    
+    setMessages(prev => [...prev, optimisticMessage]);
+    setNewMessage('');
     setSending(true);
     
     try {

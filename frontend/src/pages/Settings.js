@@ -132,13 +132,13 @@ const Settings = () => {
 
         {/* Messaging Controls */}
         <Card className="p-4">
-          <h2 className="font-bold text-lg mb-4">التحكم في من يراسلك</h2>
+          <h2 className="font-bold text-lg mb-4">{t('messaging_control')}</h2>
           
           <div className="space-y-4">
             <div className="flex items-center justify-between py-2">
               <div>
-                <div className="font-medium">دردشة مع الأعضاء المحققين فقط</div>
-                <div className="text-sm text-gray-600">رسائل من الأعضاء المحققين فقط</div>
+                <div className="font-medium">{t('verified_only_chat')}</div>
+                <div className="text-sm text-gray-600">{t('verified_only_desc')}</div>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -153,8 +153,8 @@ const Settings = () => {
 
             <div className="flex items-center justify-between py-2">
               <div>
-                <div className="font-medium">إيصالات القراءة</div>
-                <div className="text-sm text-gray-600">إرسال إيصالات قراءة الرسائل</div>
+                <div className="font-medium">{t('read_receipts')}</div>
+                <div className="text-sm text-gray-600">{t('send_read_receipts')}</div>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input

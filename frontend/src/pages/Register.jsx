@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import i18n from "../i18n";
 
 export default function Register(){
-  const { t } = useTranslation(["auth","common"]);
+  const { t, i18n } = useTranslation(["auth","common"]);
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [emailPhone, setEmailPhone] = useState("");
@@ -27,7 +26,7 @@ export default function Register(){
       <div className="absolute top-4 right-4">
         <select 
           className="rounded-lg px-3 py-2 bg-white/90 border"
-          value={i18n.resolvedLanguage || "en"}
+          value={i18n.language || "en"}
           onChange={onLangChange}
         >
           <option value="en">English</option>

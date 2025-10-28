@@ -309,13 +309,13 @@ const Settings = () => {
 
         {/* Support & Community */}
         <Card className="p-4">
-          <h2 className="font-bold text-lg mb-4">الدعم والمجتمع</h2>
+          <h2 className="font-bold text-lg mb-4">{t('support_community')}</h2>
           
           <div className="space-y-2">
             <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
                 <HelpCircle className="w-5 h-5 text-blue-500" />
-                <span>المساعدة والدعم</span>
+                <span>{t('help_support')}</span>
               </div>
               <ChevronLeft className="w-5 h-5 text-gray-400" />
             </button>
@@ -323,7 +323,7 @@ const Settings = () => {
             <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
                 <Users className="w-5 h-5 text-purple-500" />
-                <span>إرشادات التواصل الاجتماعي</span>
+                <span>{t('community_guidelines')}</span>
               </div>
               <ChevronLeft className="w-5 h-5 text-gray-400" />
             </button>
@@ -331,7 +331,7 @@ const Settings = () => {
             <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
                 <Shield className="w-5 h-5 text-green-500" />
-                <span>مركز السلامة</span>
+                <span>{t('safety_center')}</span>
               </div>
               <ChevronLeft className="w-5 h-5 text-gray-400" />
             </button>
@@ -340,7 +340,7 @@ const Settings = () => {
 
         {/* Privacy & Legal */}
         <Card className="p-4">
-          <h2 className="font-bold text-lg mb-4">الخصوصية والقانونية</h2>
+          <h2 className="font-bold text-lg mb-4">{t('privacy_legal')}</h2>
           
           <div className="space-y-2">
             <button 
@@ -349,7 +349,7 @@ const Settings = () => {
             >
               <div className="flex items-center gap-3">
                 <FileText className="w-5 h-5 text-gray-500" />
-                <span>شروط الخدمة</span>
+                <span>{t('terms_of_service')}</span>
               </div>
               <ChevronLeft className="w-5 h-5 text-gray-400" />
             </button>
@@ -357,7 +357,7 @@ const Settings = () => {
             <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
                 <Lock className="w-5 h-5 text-gray-500" />
-                <span>سياسة الخصوصية</span>
+                <span>{t('privacy_policy')}</span>
               </div>
               <ChevronLeft className="w-5 h-5 text-gray-400" />
             </button>
@@ -371,13 +371,13 @@ const Settings = () => {
             className="w-full flex items-center justify-center gap-2 p-3 text-red-600 hover:bg-red-50 rounded-lg font-medium"
           >
             <LogOut className="w-5 h-5" />
-            <span>تسجيل الخروج</span>
+            <span>{t('logout')}</span>
           </button>
         </Card>
 
         {/* Delete Account */}
         <button className="w-full text-center text-red-600 text-sm py-2">
-          حذف الحساب
+          {t('delete_account')}
         </button>
       </main>
     </div>

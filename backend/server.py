@@ -4445,6 +4445,48 @@ async def get_personal_moments(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=f"Failed to fetch personal moments: {str(e)}")
 
 
+# OTP Stubs
+@api_router.post("/auth/otp/send")
+async def otp_send(payload: dict):
+    """Send OTP to phone number"""
+    phone = payload.get("phone")
+    if not phone:
+        raise HTTPException(status_code=400, detail="phone required")
+    # TODO: Implement actual OTP sending logic
+    return {"ok": True, "message": "OTP sent successfully"}
+
+
+@api_router.post("/auth/otp/verify")
+async def otp_verify(payload: dict):
+    """Verify OTP code"""
+    phone = payload.get("phone")
+    code = payload.get("code")
+    if not code:
+        raise HTTPException(status_code=400, detail="code required")
+    # TODO: Implement actual OTP verification logic
+    return {"ok": True, "message": "OTP verified successfully"}
+
+
+@api_router.post("/messages/send")
+async def msg_send(payload: dict, current_user: dict = Depends(optional_auth)):
+    """Send a message"""
+    text = payload.get("body")
+    conversation_id = payload.get("conversationId")
+    if not text:
+        raise HTTPException(status_code=400, detail="body required")
+    
+    # Return a mock message
+    return {
+        "message": {
+            "id": f"msg-{int(time.time())}",
+            "body": text,
+            "mine": True,
+            "status": "sent",
+            "createdAt": datetime.now(timezone.utc).isoformat()
+        }
+    }
+
+
 # Mount the API router
 app.include_router(api_router)
 

@@ -39,9 +39,25 @@ const ExploreNew = () => {
     }
   };
 
-  const handleSeeAll = (sectionType) => {
-    console.log('See all clicked for:', sectionType);
-    // Navigate to filtered view or show modal
+  const translateSectionTitle = (type) => {
+    // Map section types to translation keys
+    const typeMap = {
+      'most_active': 'most_active',
+      'ready_chat': 'ready_chat',
+      'near_you': 'near_you',
+      'new_faces': 'new_faces',
+      'serious_love': 'serious_love',
+      'fun_date': 'fun_date',
+      'smart_talks': 'smart_talks',
+      'friends_only': 'friends_only',
+      // Legacy support
+      'trending': 'most_active',
+      'nearby': 'near_you',
+      'newcomers': 'new_faces'
+    };
+    
+    const key = typeMap[type] || type;
+    return t(key);
   };
 
   if (loading) {

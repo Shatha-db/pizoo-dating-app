@@ -363,7 +363,7 @@ const Profile = () => {
             
             <img
               src={profile.photos[selectedPhotoIndex]}
-              alt={`صورة ${selectedPhotoIndex + 1}`}
+              alt={`${t('photo')} ${selectedPhotoIndex + 1}`}
               className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
               onClick={(e) => e.stopPropagation()}
             />
@@ -383,7 +383,7 @@ const Profile = () => {
                   >
                     <img
                       src={photo}
-                      alt={`صورة ${index + 1}`}
+                      alt={`${t('photo')} ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
                   </button>

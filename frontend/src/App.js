@@ -13,6 +13,8 @@ import ProfileSetup from './pages/ProfileSetup';
 import Discover from './pages/Discover';
 import Home from './pages/Home';
 import Explore from './pages/Explore';
+import ExploreNew from './pages/ExploreNew';
+import PersonalMoments from './pages/PersonalMoments';
 import Likes from './pages/Likes';
 import LikesYou from './pages/LikesYou';
 import Matches from './pages/Matches';

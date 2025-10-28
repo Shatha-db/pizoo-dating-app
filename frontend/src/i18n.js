@@ -48,13 +48,17 @@ i18n
     react: { useSuspense: false }
   });
 
-// Update direction on language change
-i18n.on('initialized', () => updateDir(i18n.language));
+// Set HTML attributes on initial load
+setHtmlAttributes(i18n.resolvedLanguage || 'en');
+
+// Update HTML attributes when language changes
 i18n.on('languageChanged', (lng) => {
-  updateDir(lng);
+  setHtmlAttributes(lng);
   try {
     localStorage.setItem('i18nextLng', lng);
-  } catch {}
+  } catch (e) {
+    console.warn('Could not save language to localStorage:', e);
+  }
 });
 
 export default i18n;

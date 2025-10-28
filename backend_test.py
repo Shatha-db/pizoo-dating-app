@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
-Backend API Testing Script for Dating App
-Tests all backend endpoints according to the test sequence.
+Comprehensive Backend Testing for Arabic Review Request
+Testing: Explore Sections (8 sections), Personal Moments (6+ safe opportunities), 
+i18n Configuration, and Chat Message Sending
 """
 
 import requests
 import json
 import sys
+import time
 from datetime import datetime
 import uuid
 

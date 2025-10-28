@@ -27,6 +27,7 @@ const Home = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
   const { unreadCount } = useNotifications();
+  const { t } = useTranslation('common');
   const [profiles, setProfiles] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);

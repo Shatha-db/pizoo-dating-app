@@ -5,44 +5,44 @@ import Backend from "i18next-http-backend";
 
 const SUPPORTED = ["en","ar","fr","es","de","tr","it","pt-BR","ru"];
 
-const setHtml = (lng) => {
-  const base = (lng || 'en').split('-')[0];
-  const dir = ['ar','fa','ur','he'].includes(base)?'rtl':'ltr';
-  document.documentElement.dir = dir;
-  document.documentElement.lang = lng || 'en';
-  document.documentElement.classList.toggle("rtl", dir==='rtl');
-};
+function setHtml(lng){
+  const lang = (lng || "en").split("-")[0];
+  const dir  = ["ar","fa","ur","he"].includes(lang) ? "rtl" : "ltr";
+  document.documentElement.setAttribute("dir", dir);
+  document.documentElement.setAttribute("lang", lng || "en");
+  document.documentElement.classList.toggle("rtl", dir==="rtl");
+}
 
 try {
-  if (typeof localStorage!=='undefined' && !localStorage.getItem('i18nextLng')){
-    localStorage.setItem('i18nextLng','en');
+  if (typeof localStorage!=="undefined" && !localStorage.getItem("i18nextLng")){
+    localStorage.setItem("i18nextLng","en");
   }
-} catch {}
-
-const saved = (typeof localStorage!=='undefined' && localStorage.getItem('i18nextLng')) || 'en';
-setHtml(saved);
+} catch { /* ignore */ }
 
 i18n
-  .use(Backend)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
+ .use(Backend)
+ .use(LanguageDetector)
+ .use(initReactI18next)
+ .init({
     supportedLngs: SUPPORTED,
     fallbackLng: "en",
-    detection: {
-      order: ['localStorage','querystring','cookie','htmlTag','navigator'],
-      lookupLocalStorage: 'i18nextLng',
-      caches: ['localStorage']
-    },
-    backend: { loadPath: "/locales/{{lng}}/{{ns}}.json" },
-    ns: ["common","auth","profile","chat","map","notifications","settings","premium","likes","explore","personal"],
+    ns: ["common","auth","profile","chat","map","notifications","settings","likes","explore","personal"],
     defaultNS: "common",
     keySeparator: false,
     interpolation: { escapeValue: false },
+    detection: {
+      order: ["localStorage","querystring","cookie","htmlTag","navigator"],
+      lookupLocalStorage: "i18nextLng",
+      caches: ["localStorage"]
+    },
+    backend: { loadPath: "/locales/{{lng}}/{{ns}}.json" },
     react: { useSuspense: false }
-  });
+ });
 
-i18n.on('initialized',()=>setHtml(i18n.language));
-i18n.on('languageChanged',(lng)=>{ setHtml(lng); try{ localStorage.setItem('i18nextLng',lng);}catch{} });
+setHtml(i18n.resolvedLanguage || "en");
+i18n.on("languageChanged", (lng) => {
+  try { localStorage.setItem("i18nextLng", lng); } catch {}
+  setHtml(lng);
+});
 
 export default i18n;

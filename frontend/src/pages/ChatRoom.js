@@ -9,6 +9,7 @@ import axios from 'axios';
 import SafetyConsentModal from '../modules/safety/SafetyConsentModal';
 import EmojiPicker from '../modules/chat/EmojiPicker';
 import CallModal from '../modules/chat/CallModal';
+import PermissionsModal from '../modules/media/PermissionsModal';
 import { formatTimeOnly } from '../utils/timeFormat';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

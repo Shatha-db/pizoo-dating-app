@@ -59,18 +59,36 @@ const ChatRoom = () => {
 
   const fetchMessages = async () => {
     try {
+      // First, fetch match data to get receiver info
+      const matchResponse = await axios.get(`${API}/matches/${matchId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (matchResponse.data) {
+        const match = matchResponse.data;
+        const otherId = match.user1_id === user?.id ? match.user2_id : match.user1_id;
+        
+        // Fetch other user's profile
+        try {
+          const profileResponse = await axios.get(`${API}/profiles/${otherId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          setOtherUser({
+            id: otherId,
+            name: profileResponse.data.display_name || 'User',
+            photo: profileResponse.data.photos?.[0] || null
+          });
+        } catch (err) {
+          console.error('Error fetching other user profile:', err);
+          setOtherUser({ id: otherId, name: 'User', photo: null });
+        }
+      }
+
+      // Then fetch messages
       const response = await axios.get(`${API}/conversations/${matchId}/messages`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMessages(response.data.messages || []);
-      
-      // Get other user info from first message
-      if (response.data.messages && response.data.messages.length > 0) {
-        const firstMsg = response.data.messages[0];
-        const otherId = firstMsg.sender_id === user?.id ? firstMsg.receiver_id : firstMsg.sender_id;
-        // Fetch other user profile
-        // For now, just set basic info
-      }
     } catch (error) {
       console.error('Error fetching messages:', error);
     } finally {

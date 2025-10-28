@@ -649,7 +649,7 @@ const Home = () => {
                 className="w-full bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-black font-bold text-lg py-6 mb-3"
               >
                 <Zap className="w-5 h-5 ml-2" />
-                انظر من أبدى إعجابه بك
+                {t('home:seeLikes')}
               </Button>
               
               <Button
@@ -657,7 +657,7 @@ const Home = () => {
                 variant="ghost"
                 className="w-full"
               >
-                ربما لاحقاً
+                {t('home:maybeLater')}
               </Button>
             </div>
           </Card>

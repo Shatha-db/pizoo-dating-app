@@ -4219,6 +4219,8 @@ async def update_user_language(payload: LanguagePayload, current_user: dict = De
 async def get_explore_sections(current_user: dict = Depends(get_current_user)):
     """
     Get explore sections with trending, nearby, and new profiles
+    Enhanced with 8 sections: Most Active, Ready to Chat, Near You, New Faces, 
+    Serious Love, Fun Date Today, Smart Talks, Friends Only
     """
     try:
         # Get user's location for nearby calculation
@@ -4226,23 +4228,34 @@ async def get_explore_sections(current_user: dict = Depends(get_current_user)):
         user_lat = user_profile.get("latitude") if user_profile else None
         user_lon = user_profile.get("longitude") if user_profile else None
         
-        # Fetch profiles (excluding current user and already swiped)
+        # Fetch all profiles (excluding current user)
         all_profiles = await db.profiles.find({
             "user_id": {"$ne": current_user["id"]}
-        }).to_list(length=50)
+        }).to_list(length=100)
         
-        # Mock data: Create 3 sections
         sections = []
         
-        # Section 1: Trending Profiles (mock: most photos or most likes)
-        trending_profiles = sorted(all_profiles, key=lambda p: len(p.get('photos', [])), reverse=True)[:10]
+        # Section 1: Most Active (الأكثر تفاعلاً)
+        # Mock: profiles with most photos or most recent activity
+        active_profiles = sorted(all_profiles, key=lambda p: len(p.get('photos', [])), reverse=True)[:10]
         sections.append({
-            "type": "trending",
-            "title": "Trending Profiles",  # Frontend will translate
-            "profiles": [format_profile_for_explore(p, user_lat, user_lon) for p in trending_profiles]
+            "type": "most_active",
+            "title": "Most Active",
+            "profiles": [format_profile_for_explore(p, user_lat, user_lon) for p in active_profiles]
         })
         
-        # Section 2: Nearby Users (if location available)
+        # Section 2: Ready to Chat (متاحون الآن)
+        # Mock: online users or recently active
+        ready_profiles = [p for p in all_profiles if p.get('online', False)][:10]
+        if not ready_profiles:
+            ready_profiles = all_profiles[:10]
+        sections.append({
+            "type": "ready_chat",
+            "title": "Ready to Chat",
+            "profiles": [format_profile_for_explore(p, user_lat, user_lon) for p in ready_profiles]
+        })
+        
+        # Section 3: Near You (بالقرب منك)
         if user_lat and user_lon:
             nearby_profiles = []
             for profile in all_profiles:
@@ -4251,27 +4264,71 @@ async def get_explore_sections(current_user: dict = Depends(get_current_user)):
                         user_lat, user_lon,
                         profile['latitude'], profile['longitude']
                     )
-                    if distance <= 50:  # Within 50km
+                    if distance <= 25:  # Within 25km
                         profile['distance'] = round(distance, 1)
                         nearby_profiles.append(profile)
             
             nearby_profiles = sorted(nearby_profiles, key=lambda p: p.get('distance', 999))[:10]
             sections.append({
-                "type": "nearby",
-                "title": "Nearby Users",
+                "type": "near_you",
+                "title": "Near You",
                 "profiles": [format_profile_for_explore(p, user_lat, user_lon) for p in nearby_profiles]
             })
         
-        # Section 3: Newcomers (most recent profiles)
-        newcomer_profiles = sorted(
+        # Section 4: New Faces (وجوه جديدة)
+        newcomers = sorted(
             all_profiles,
             key=lambda p: p.get('created_at', ''),
             reverse=True
         )[:10]
         sections.append({
-            "type": "newcomers",
-            "title": "New Members",
-            "profiles": [format_profile_for_explore(p, user_lat, user_lon) for p in newcomer_profiles]
+            "type": "new_faces",
+            "title": "New Faces",
+            "profiles": [format_profile_for_explore(p, user_lat, user_lon) for p in newcomers]
+        })
+        
+        # Section 5: Serious Love (بحث جدي)
+        # Mock: profiles with "serious" interest or relationship goal
+        serious_profiles = [p for p in all_profiles if 'serious' in str(p.get('interests', [])).lower() or p.get('relationship_goal') == 'serious'][:10]
+        if not serious_profiles:
+            serious_profiles = all_profiles[10:20]
+        sections.append({
+            "type": "serious_love",
+            "title": "Serious Love",
+            "profiles": [format_profile_for_explore(p, user_lat, user_lon) for p in serious_profiles]
+        })
+        
+        # Section 6: Fun Date Today (موعد ممتع اليوم)
+        # Mock: profiles with fun interests
+        fun_profiles = [p for p in all_profiles if any(x in str(p.get('interests', [])).lower() for x in ['fun', 'party', 'music', 'dance'])][:10]
+        if not fun_profiles:
+            fun_profiles = all_profiles[20:30]
+        sections.append({
+            "type": "fun_date",
+            "title": "Fun Date Today",
+            "profiles": [format_profile_for_explore(p, user_lat, user_lon) for p in fun_profiles]
+        })
+        
+        # Section 7: Smart Talks (دردشات ذكية)
+        # Mock: profiles with intellectual interests
+        smart_profiles = [p for p in all_profiles if any(x in str(p.get('interests', [])).lower() for x in ['books', 'art', 'science', 'philosophy', 'technology'])][:10]
+        if not smart_profiles:
+            smart_profiles = all_profiles[30:40]
+        sections.append({
+            "type": "smart_talks",
+            "title": "Smart Talks",
+            "profiles": [format_profile_for_explore(p, user_lat, user_lon) for p in smart_profiles]
+        })
+        
+        # Section 8: Friends Only (أصدقاء فقط)
+        # Mock: profiles looking for friends
+        friends_profiles = [p for p in all_profiles if 'friend' in str(p.get('interests', [])).lower() or p.get('relationship_goal') == 'friends'][:10]
+        if not friends_profiles:
+            friends_profiles = all_profiles[40:50]
+        sections.append({
+            "type": "friends_only",
+            "title": "Friends Only",
+            "profiles": [format_profile_for_explore(p, user_lat, user_lon) for p in friends_profiles]
         })
         
         return {"sections": sections}

@@ -73,12 +73,12 @@ const ChatList = () => {
         }
       );
       
-      alert('تم رفع الصور بنجاح! ✅');
+      alert(t('photoUploadSuccess'));
       // Navigate to edit profile to see and manage photos
       navigate('/profile/edit');
     } catch (error) {
       console.error('Error uploading photos:', error);
-      alert(error.message || 'حدث خطأ أثناء رفع الصور');
+      alert(error.message || t('photoUploadError'));
     }
   };
 
@@ -107,12 +107,12 @@ const ChatList = () => {
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 1) return 'الآن';
-    if (diffMins < 60) return `${diffMins} د`;
-    if (diffHours < 24) return `${diffHours} س`;
-    if (diffDays === 1) return 'أمس';
-    if (diffDays < 7) return `${diffDays} يوم`;
-    return date.toLocaleDateString('ar');
+    if (diffMins < 1) return t('common:now');
+    if (diffMins < 60) return `${diffMins} ${t('common:minutesShort')}`;
+    if (diffHours < 24) return `${diffHours} ${t('common:hoursShort')}`;
+    if (diffDays === 1) return t('common:yesterday');
+    if (diffDays < 7) return t('daysAgo', { count: diffDays });
+    return date.toLocaleDateString(i18n.language);
   };
 
   if (loading) {

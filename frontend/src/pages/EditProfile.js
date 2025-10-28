@@ -442,7 +442,7 @@ const EditProfile = () => {
                         </button>
                       </>
                     ) : (
-                      <label className={`w-full h-full border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-pink-400 hover:bg-pink-50 transition-colors ${
+                      <label className={`w-full h-full border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-pink-400 hover:bg-pink-50 transition-colors ${
                         uploadingPhotos ? 'opacity-50 pointer-events-none' : ''
                       }`}>
                         <input
@@ -452,7 +452,10 @@ const EditProfile = () => {
                           onChange={(e) => handlePhotoUpload(index, e)}
                           disabled={uploadingPhotos}
                         />
-                        <Plus className="w-8 h-8 text-gray-400" />
+                        <Plus className="w-8 h-8 text-gray-400 mb-1" />
+                        <span className="text-xs text-gray-500 text-center">
+                          {t('addPhoto')}
+                        </span>
                       </label>
                     )}
                   </div>

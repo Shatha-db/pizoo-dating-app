@@ -103,7 +103,7 @@ const Notifications = () => {
           <div className="text-center flex-1">
             <h1 className="text-xl font-bold dark:text-gray-900">{t('title')}</h1>
             {unreadCount > 0 && (
-              <p className="text-sm text-gray-600 dark:text-gray-700">{unreadCount} غير مقروءة</p>
+              <p className="text-sm text-gray-600 dark:text-gray-700">{t('unread', { count: unreadCount })}</p>
             )}
           </div>
           {unreadCount > 0 && (

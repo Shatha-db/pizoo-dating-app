@@ -674,7 +674,7 @@ const Home = () => {
                 {t('home:weeklyLimitReached')}
               </h2>
               <p className="text-gray-600 mb-1">
-                المستخدمون المجانيون لديهم:
+                {t('home:freeUsersHave')}
               </p>
               <ul className="text-right mb-6 space-y-2">
                 <li className="flex items-center justify-center gap-2">

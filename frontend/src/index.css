@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import global fixes */
+@import './styles/fixes.css';
+
 body {
     margin: 0;
     font-family:

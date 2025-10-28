@@ -91,31 +91,31 @@ const Settings = () => {
         <button onClick={() => navigate(-1)} className="ml-3">
           <ArrowRight className="w-6 h-6 dark:text-gray-900" />
         </button>
-        <h1 className="text-xl font-bold dark:text-gray-900">الإعدادات</h1>
+        <h1 className="text-xl font-bold dark:text-gray-900">{t('title')}</h1>
       </header>
 
       <main className="max-w-2xl mx-auto p-4 space-y-6">
         {/* Visibility & Control */}
         <Card className="p-4">
-          <h2 className="font-bold text-lg mb-4">التحكم في الظهور</h2>
+          <h2 className="font-bold text-lg mb-4">{t('visibility_control')}</h2>
           
           <div className="space-y-4">
             <div>
-              <label className="text-sm text-gray-600 mb-2 block">وضع الظهور</label>
+              <label className="text-sm text-gray-600 mb-2 block">{t('visibility_mode')}</label>
               <select
                 value={settings?.visibility_mode || 'standard'}
                 onChange={(e) => updateSetting('visibility_mode', e.target.value)}
                 className="w-full p-3 border rounded-lg"
               >
-                <option value="standard">قياسي</option>
-                <option value="incognito">Incognito Mode</option>
+                <option value="standard">{t('standard')}</option>
+                <option value="incognito">{t('incognito_mode')}</option>
               </select>
             </div>
 
             <div className="flex items-center justify-between py-2">
               <div>
-                <div className="font-medium">تمكين خاصية الاختفاء</div>
-                <div className="text-sm text-gray-600">إخفاء ملفك عن الآخرين</div>
+                <div className="font-medium">{t('enable_incognito')}</div>
+                <div className="text-sm text-gray-600">{t('hide_profile')}</div>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input

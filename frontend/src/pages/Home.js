@@ -157,7 +157,7 @@ const Home = () => {
         localStorage.setItem('location_denied', 'true');
         await handleGeoIPFallback();
       } else {
-        alert('حدث خطأ في الحصول على موقعك. سنستخدم موقعك التقريبي.');
+        alert(t('home:locationError'));
         await handleGeoIPFallback();
       }
       

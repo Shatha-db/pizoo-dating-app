@@ -1040,7 +1040,7 @@ const EditProfile = () => {
               disabled={saving}
               className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-6 text-lg"
             >
-              {saving ? 'جاري الحفظ...' : 'حفظ التغييرات'}
+              {saving ? t('saving') : t('saveChanges')}
             </Button>
           </div>
         ) : (

@@ -103,19 +103,19 @@ const Profile = () => {
     const missing = [];
     
     if (!profile.photos || profile.photos.length < 3) {
-      missing.push('أضف المزيد من الصور (3 على الأقل)');
+      missing.push(t('addMorePhotos'));
     }
     if (!profile.bio || profile.bio.length < 50) {
-      missing.push('اكتب نبذة أطول عنك');
+      missing.push(t('writeLongerBio'));
     }
     if (!profile.interests || profile.interests.length < 3) {
-      missing.push('أضف المزيد من الاهتمامات');
+      missing.push(t('addMoreInterests'));
     }
     if (!profile.languages || profile.languages.length < 2) {
-      missing.push('أضف لغات تتحدثها');
+      missing.push(t('addLanguages'));
     }
     if (!profile.occupation) {
-      missing.push('أضف وظيفتك');
+      missing.push(t('addOccupation'));
     }
     
     return missing;

@@ -196,8 +196,8 @@ const Likes = () => {
       <main className="max-w-6xl mx-auto p-4">
         <Tabs defaultValue="sent" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="sent">أرسلت ({sent.length})</TabsTrigger>
-            <TabsTrigger value="received">استلمت ({received.length})</TabsTrigger>
+            <TabsTrigger value="sent">{t('sent')} ({sent.length})</TabsTrigger>
+            <TabsTrigger value="received">{t('received')} ({received.length})</TabsTrigger>
           </TabsList>
           
           <TabsContent value="sent" className="mt-4">

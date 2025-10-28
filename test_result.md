@@ -327,6 +327,30 @@ backend:
         agent: "testing"
         comment: "✅ COMPREHENSIVE BACKEND TESTING COMPLETE: Phone OTP Authentication working perfectly. RESULTS: 17/17 tests passed (100% success rate). ✅ WORKING FEATURES: 1) POST /api/auth/phone/send-otp - generates 6-digit OTP, stores hash in MongoDB with 5min expiry, returns otpId and ttl, 2) POST /api/auth/phone/verify-otp - verifies OTP hash, checks expiry, limits attempts (max 3), returns JWT token, 3) Invalid phone validation - correctly rejects empty, malformed, too short phones with INVALID_PHONE error, 4) Wrong OTP handling - increments attempts counter, blocks after 3 failed attempts with TOO_MANY_ATTEMPTS error, 5) OTP expiry - correctly rejects expired OTPs (>5min) with OTP_EXPIRED error, 6) New user registration - auto-creates user with phone number when OTP verified for first time, 7) Existing user login - returns JWT token for existing users, 8) SMS service (mock mode) - logs OTP to console correctly, 9) MongoDB integration - user_otp collection created and managed properly. MINOR FIX APPLIED: Changed JWT_SECRET/JWT_ALGORITHM to SECRET_KEY/ALGORITHM in verify endpoint to match codebase constants. All OTP scenarios tested including happy path, invalid inputs, attempts limiting, expiry handling. Backend ready for production use."
 
+  - task: "Explore Sections API (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: New GET /api/explore/sections endpoint. Returns 3 sections: 1) Trending Profiles - sorted by number of photos (mock popularity metric), 2) Nearby Users - filtered by distance if user has GPS coordinates (within 50km), sorted by proximity, 3) Newcomers - most recent profiles. Each section contains up to 10 profiles with formatted data (id, name, age, location, photos, distance). Uses existing calculate_distance function for proximity calculation. Ready for testing: endpoint response structure, profile formatting, distance calculation, section filtering logic."
+
+  - task: "Personal Moments API (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: New GET /api/personal/list endpoint. Returns personalized opportunities/moments for users. Currently returns mock data with 3 sample moments: 1) Special Weekend Event (new badge), 2) Premium Upgrade 50% Off (premium + new badges), 3) Complete Your Profile (standard). Each moment includes: id, title, description, image URL, isPremium flag, isNew flag, action type (open_link/view_profile), link/userId, ctaText. Ready for testing: endpoint response structure, moment data format, badge flags, action types."
+
 frontend:
   - task: "Home Page with Card Swipe"
     implemented: true

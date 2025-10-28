@@ -485,6 +485,18 @@ const Home = () => {
         </div>
       </header>
 
+      {/* CTA Buttons */}
+      <div className="home-ctas">
+        <Link to="/explore-new" className="btn-cta explore">
+          <span className="icon">✨</span>
+          {t('cta.exploreNew')}
+        </Link>
+        <Link to="/personal" className="btn-cta personal">
+          <span className="icon">🎯</span>
+          {t('cta.personal')}
+        </Link>
+      </div>
+
       {/* Main Card */}
       <main className="max-w-md mx-auto px-4 pt-6">
         {currentProfile ? (

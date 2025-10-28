@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import PersonalCard from '../modules/personal/PersonalCard';
 import BottomNav from '../components/BottomNav';
 import '../styles/personal.css';
 
 const PersonalMoments = () => {
   const { t } = useTranslation('personal');
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [moments, setMoments] = useState([]);
   const [loading, setLoading] = useState(true);
 

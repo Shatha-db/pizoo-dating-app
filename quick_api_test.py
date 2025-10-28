@@ -27,7 +27,7 @@ def test_user_auth():
     
     try:
         response = requests.post(f"{BACKEND_URL}/auth/register", json=register_data)
-        if response.status_code == 201:
+        if response.status_code == 200:
             print("✅ New user registered successfully")
             return response.json()["access_token"]
         elif response.status_code == 400 and "مسجل مسبقاً" in response.text:

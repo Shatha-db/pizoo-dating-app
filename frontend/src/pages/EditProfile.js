@@ -349,7 +349,7 @@ const EditProfile = () => {
             className="bg-pink-500 hover:bg-pink-600 text-white"
             size="sm"
           >
-            {saving ? 'جاري الحفظ...' : 'حفظ'}
+            {saving ? t('saving') : t('save')}
           </Button>
         </div>
       </header>

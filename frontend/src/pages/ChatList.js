@@ -18,7 +18,7 @@ const ChatList = () => {
   const navigate = useNavigate();
   const { token, user } = useAuth();
   const { isUserOnline, isConnected } = useWebSocket();
-  const { t } = useTranslation('chat');
+  const { t, i18n } = useTranslation('chat');
   const [conversations, setConversations] = useState([]);
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -3,26 +3,15 @@ import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 
-const SUPPORTED = ['en', 'ar', 'fr', 'es', 'de', 'tr', 'it', 'pt-BR', 'ru'];
+const SUPPORTED = ['en', 'ar', 'de', 'fr', 'es', 'tr', 'it', 'pt-BR', 'ru'];
+const RTL_SET = ['ar', 'fa', 'ur', 'he'];
 
-function updateDir(lng = 'en') {
-  const base = (lng || 'en').split('-')[0];
-  const isRTL = ['ar', 'fa', 'ur', 'he'].includes(base);
-  
-  // Update HTML attributes
-  document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
-  document.documentElement.lang = lng || 'en';
-  
-  // Update body class for Tailwind RTL support
-  if (isRTL) {
-    document.documentElement.classList.add('rtl');
-    document.body.classList.add('rtl');
-  } else {
-    document.documentElement.classList.remove('rtl');
-    document.body.classList.remove('rtl');
-  }
-  
-  console.log(`✅ Language updated: ${lng}, Direction: ${isRTL ? 'RTL' : 'LTR'}`);
+function setHtmlAttributes(lng = 'en') {
+  const baseLanguage = (lng || 'en').split('-')[0];
+  const dir = RTL_SET.includes(baseLanguage) ? 'rtl' : 'ltr';
+  document.documentElement.dir = dir;
+  document.documentElement.lang = lng;
+  document.body.dir = dir;
 }
 
 // First visit → save EN

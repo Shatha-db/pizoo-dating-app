@@ -210,22 +210,22 @@ const Settings = () => {
 
         {/* Theme */}
         <Card className="p-4">
-          <h2 className="font-bold text-lg mb-4">الوضع الذكي</h2>
+          <h2 className="font-bold text-lg mb-4">{t('theme_title')}</h2>
           
           <select
             value={theme}
             onChange={(e) => updateTheme(e.target.value)}
             className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600"
           >
-            <option value="system">استخدام إعدادات النظام</option>
-            <option value="light">الوضع المضيء</option>
-            <option value="dark">الوضع الداكن</option>
+            <option value="system">{t('theme_system')}</option>
+            <option value="light">{t('theme_light')}</option>
+            <option value="dark">{t('theme_dark')}</option>
           </select>
           
           <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            {theme === 'system' && '⚙️ يتبع إعدادات نظامك'}
-            {theme === 'light' && '☀️ الوضع المضيء مفعّل'}
-            {theme === 'dark' && '🌙 الوضع الداكن مفعّل'}
+            {theme === 'system' && t('theme_system_indicator')}
+            {theme === 'light' && t('theme_light_indicator')}
+            {theme === 'dark' && t('theme_dark_indicator')}
           </div>
         </Card>
 

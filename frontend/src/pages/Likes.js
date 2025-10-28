@@ -107,7 +107,7 @@ const Likes = () => {
         // Increment like counter
         await incUsage('like');
         
-        showToast('تم الإعجاب! 💕 انتظر إعجاب الطرف الآخر لفتح الدردشة');
+        showToast(t('likeSuccess'));
       }
     } catch (error) {
       console.error('Error:', error);
@@ -115,7 +115,7 @@ const Likes = () => {
         setUpsellReason('like');
         setShowUpsell(true);
       } else {
-        showToast('حدث خطأ، حاول مرة أخرى');
+        showToast(t('errorTryAgain'));
       }
     }
   };

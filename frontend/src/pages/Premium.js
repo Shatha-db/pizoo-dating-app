@@ -244,7 +244,7 @@ const Premium = () => {
               disabled={loading}
               className="w-full bg-white text-black hover:bg-gray-100 font-bold text-lg py-6"
             >
-              {loading ? 'جاري المعالجة...' : 'اشترك الآن'}
+              {loading ? t('processing') : t('subscribeNow')}
             </Button>
           </div>
         </Card>

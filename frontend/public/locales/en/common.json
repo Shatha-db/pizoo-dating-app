@@ -39,5 +39,10 @@
   "cta": {
     "exploreNew": "Discover now ✨",
     "personal": "Personal offers 🎯"
-  }
+  },
+  "now": "Now",
+  "yesterday": "Yesterday",
+  "minutesShort": "m",
+  "hoursShort": "h",
+  "daysShort": "d"
 }

@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 const Register = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('auth');
   const [formData, setFormData] = useState({
     name: '',
     email: '',

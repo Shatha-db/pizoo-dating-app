@@ -1,27 +1,26 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import Backend from 'i18next-http-backend';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import Backend from "i18next-http-backend";
 
-const SUPPORTED = ['en', 'ar', 'de', 'fr', 'es', 'tr', 'it', 'pt-BR', 'ru'];
-const RTL_SET = ['ar', 'fa', 'ur', 'he'];
+const SUPPORTED = ["en","ar","fr","es","de","tr","it","pt-BR","ru"];
 
-function setHtmlAttributes(lng = 'en') {
-  const baseLanguage = (lng || 'en').split('-')[0];
-  const dir = RTL_SET.includes(baseLanguage) ? 'rtl' : 'ltr';
+const setHtml = (lng) => {
+  const base = (lng || 'en').split('-')[0];
+  const dir = ['ar','fa','ur','he'].includes(base)?'rtl':'ltr';
   document.documentElement.dir = dir;
-  document.documentElement.lang = lng;
-  document.body.dir = dir;
-}
+  document.documentElement.lang = lng || 'en';
+  document.documentElement.classList.toggle("rtl", dir==='rtl');
+};
 
-// Set default language to English if not set
 try {
-  if (typeof localStorage !== 'undefined' && !localStorage.getItem('i18nextLng')) {
-    localStorage.setItem('i18nextLng', 'en');
+  if (typeof localStorage!=='undefined' && !localStorage.getItem('i18nextLng')){
+    localStorage.setItem('i18nextLng','en');
   }
-} catch (e) {
-  console.warn('localStorage not available:', e);
-}
+} catch {}
+
+const saved = (typeof localStorage!=='undefined' && localStorage.getItem('i18nextLng')) || 'en';
+setHtml(saved);
 
 i18n
   .use(Backend)
@@ -29,36 +28,21 @@ i18n
   .use(initReactI18next)
   .init({
     supportedLngs: SUPPORTED,
-    fallbackLng: 'en',
-    ns: ['common', 'auth', 'profile', 'chat', 'map', 'notifications', 'settings', 'premium', 'likes', 'swipe', 'explore', 'personal'],
-    defaultNS: 'common',
-    keySeparator: false,
-    load: 'languageOnly',
+    fallbackLng: "en",
     detection: {
-      order: ['localStorage', 'querystring', 'cookie', 'navigator', 'htmlTag'],
-      caches: ['localStorage'],
-      lookupQuerystring: 'lng',
-      lookupCookie: 'i18next',
+      order: ['localStorage','querystring','cookie','htmlTag','navigator'],
       lookupLocalStorage: 'i18nextLng',
+      caches: ['localStorage']
     },
-    backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json'
-    },
+    backend: { loadPath: "/locales/{{lng}}/{{ns}}.json" },
+    ns: ["common","auth","profile","chat","map","notifications","settings","premium","likes","explore","personal"],
+    defaultNS: "common",
+    keySeparator: false,
     interpolation: { escapeValue: false },
     react: { useSuspense: false }
   });
 
-// Set HTML attributes on initial load
-setHtmlAttributes(i18n.resolvedLanguage || 'en');
-
-// Update HTML attributes when language changes
-i18n.on('languageChanged', (lng) => {
-  setHtmlAttributes(lng);
-  try {
-    localStorage.setItem('i18nextLng', lng);
-  } catch (e) {
-    console.warn('Could not save language to localStorage:', e);
-  }
-});
+i18n.on('initialized',()=>setHtml(i18n.language));
+i18n.on('languageChanged',(lng)=>{ setHtml(lng); try{ localStorage.setItem('i18nextLng',lng);}catch{} });
 
 export default i18n;

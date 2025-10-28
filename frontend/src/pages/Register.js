@@ -256,7 +256,7 @@ const Register = () => {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium">الاسم الكامل</Label>
+                <Label htmlFor="name" className="text-sm font-medium">{t('full_name')}</Label>
                 <Input
                   id="name"
                   name="name"
@@ -264,13 +264,13 @@ const Register = () => {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="أدخل اسمك الكامل"
+                  placeholder={t('placeholder_full_name')}
                   className="h-12 rounded-lg"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">البريد الإلكتروني</Label>
+                <Label htmlFor="email" className="text-sm font-medium">{t('email')}</Label>
                 <Input
                   id="email"
                   name="email"
@@ -284,7 +284,7 @@ const Register = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phoneNumber" className="text-sm font-medium">رقم الهاتف</Label>
+                <Label htmlFor="phoneNumber" className="text-sm font-medium">{t('phone_number')}</Label>
                 <Input
                   id="phoneNumber"
                   name="phoneNumber"
@@ -292,13 +292,13 @@ const Register = () => {
                   required
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                  placeholder="+966 XX XXX XX XX"
+                  placeholder={t('placeholder_phone_number')}
                   className="h-12 rounded-lg"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium">كلمة المرور</Label>
+                <Label htmlFor="password" className="text-sm font-medium">{t('password')}</Label>
                 <Input
                   id="password"
                   name="password"
@@ -306,7 +306,7 @@ const Register = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="6 أحرف على الأقل"
+                  placeholder={t('password_min_6')}
                   className="h-12 rounded-lg"
                 />
               </div>
@@ -321,9 +321,9 @@ const Register = () => {
                   htmlFor="terms"
                   className="text-sm text-gray-700 leading-relaxed cursor-pointer"
                 >
-                  أوافق على{' '}
+                  {t('accept_terms')}{' '}
                   <Link to="/terms" className="text-blue-600 hover:underline font-medium">
-                    الشروط والأحكام
+                    {t('terms_and_conditions')}
                   </Link>
                 </label>
               </div>
@@ -333,7 +333,7 @@ const Register = () => {
                 disabled={loading}
                 className="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-bold py-6 rounded-full"
               >
-                {loading ? 'جاري إنشاء الحساب...' : 'إنشاء حساب جديد'}
+                {loading ? t('creating_account') : t('register_title')}
               </Button>
 
               <Button
@@ -342,7 +342,7 @@ const Register = () => {
                 onClick={() => setRegisterMethod('social')}
                 className="w-full"
               >
-                العودة للطرق الأخرى
+                {t('back_to_other_methods')}
               </Button>
             </form>
           )}

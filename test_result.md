@@ -615,15 +615,16 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Phone OTP Login Page (NEW)"
+    - "Explore Sections API (NEW)"
+    - "Personal Moments API (NEW)"
+    - "Explore New Page (NEW)"
+    - "Personal Moments Page (NEW)"
   stuck_tasks: []
   test_all: false
-  test_priority: "phone_otp_frontend"
-  backend_testing_complete: true
-  backend_success_rate: "100% (17/17 tests passed)"
-  phone_otp_backend_status: "✅ COMPLETE - All backend endpoints working perfectly"
+  test_priority: "new_explore_personal_features"
+  backend_testing_pending: true
   frontend_testing_pending: true
-  testing_notes: "Backend Phase Complete: All OTP endpoints tested and working (send-otp, verify-otp, validation, expiry, attempts limiting). Next: Frontend Phone Login UI testing pending user approval."
+  testing_notes: "New multilingual Explore and Personal Moments features implemented. Backend: Added GET /api/explore/sections (trending, nearby, newcomers) and GET /api/personal/list endpoints. Frontend: Created ExploreNew.jsx and PersonalMoments.jsx pages with full i18n support (9 languages), reusable components (ExploreRow, PersonalCard), custom CSS, and routes. Next: Test backend APIs first, then frontend E2E with language switching and RTL layout."
 
 agent_communication:
   - agent: "main"

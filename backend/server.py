@@ -1894,6 +1894,23 @@ async def get_matches(current_user: dict = Depends(get_current_user)):
     return {"matches": match_profiles}
 
 
+@api_router.get("/matches/{match_id}")
+async def get_match(match_id: str, current_user: dict = Depends(get_current_user)):
+    """Get a specific match by ID"""
+    match = await db.matches.find_one({
+        "id": match_id,
+        "$or": [
+            {"user1_id": current_user['id']},
+            {"user2_id": current_user['id']}
+        ]
+    }, {"_id": 0})
+    
+    if not match:
+        raise HTTPException(status_code=404, detail="Match not found")
+    
+    return match
+
+
 @api_router.get("/likes/sent")
 async def get_sent_likes(current_user: dict = Depends(get_current_user)):
     # Get users I liked

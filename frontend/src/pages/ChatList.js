@@ -295,16 +295,16 @@ const ChatList = () => {
           <div className="text-center py-20 px-4">
             <div className="text-8xl mb-4">💬</div>
             <h2 className="text-2xl font-bold text-gray-700 mb-2">
-              لا توجد محادثات بعد
+              {t('noConversations')}
             </h2>
             <p className="text-gray-600 mb-6">
-              ابدأ بالإعجاب بالملفات الشخصية للحصول على تطابقات!
+              {t('startSwipingTip')}
             </p>
             <Button
               onClick={() => navigate('/home')}
               className="bg-gradient-to-r from-pink-500 to-purple-500 text-white"
             >
-              ابدأ التصفح
+              {t('startBrowsing')}
             </Button>
           </div>
         )}
@@ -314,15 +314,15 @@ const ChatList = () => {
       {showSafetyTools && (
         <div className="fixed inset-0 bg-black/50 flex items-end z-50" onClick={() => setShowSafetyTools(false)}>
           <Card className="w-full bg-white rounded-t-3xl p-6 animate-slide-up" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-xl font-bold mb-4">أدوات السلامة</h2>
+            <h2 className="text-xl font-bold mb-4">{t('safetyTools')}</h2>
             
             <div className="space-y-3">
               <button className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 rounded-lg transition-colors text-right">
                 <Flag className="w-6 h-6 text-red-500" />
                 <div>
-                  <div className="font-medium">إبلاغ</div>
+                  <div className="font-medium">{t('report')}</div>
                   <div className="text-sm text-gray-600">
-                    أبلغ عن شخص أو محتوى غير لائق
+                    {t('reportDesc')}
                   </div>
                 </div>
               </button>
@@ -330,9 +330,9 @@ const ChatList = () => {
               <button className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 rounded-lg transition-colors text-right">
                 <SettingsIcon className="w-6 h-6 text-blue-500" />
                 <div>
-                  <div className="font-medium">تحديث إعدادات الرسائل</div>
+                  <div className="font-medium">{t('updateMessageSettings')}</div>
                   <div className="text-sm text-gray-600">
-                    حدد من يمكنه إرسال رسائل إليك
+                    {t('updateMessageSettingsDesc')}
                   </div>
                 </div>
               </button>
@@ -343,9 +343,9 @@ const ChatList = () => {
               >
                 <Shield className="w-6 h-6 text-green-500" />
                 <div>
-                  <div className="font-medium">الاتصال بمركز السلامة</div>
+                  <div className="font-medium">{t('contactSafetyCenter')}</div>
                   <div className="text-sm text-gray-600">
-                    موارد السلامة والأدوات
+                    {t('contactSafetyCenterDesc')}
                   </div>
                 </div>
               </button>
@@ -356,7 +356,7 @@ const ChatList = () => {
               variant="ghost"
               className="w-full mt-4"
             >
-              إغلاق
+              {t('close')}
             </Button>
           </Card>
         </div>

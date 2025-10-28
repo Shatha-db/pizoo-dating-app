@@ -100,7 +100,7 @@ const ProfileView = () => {
       }
     } catch (error) {
       console.error('Error:', error);
-      showToast('حدث خطأ، حاول مرة أخرى');
+      showToast(t('errorTryAgain'));
     }
   };
 

@@ -216,14 +216,14 @@ const Profile = () => {
             )}
             {profile?.photos && profile.photos.length > 1 && (
               <div className="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
-                +{profile.photos.length - 1} صور
+                {t('morePhotos', { count: profile.photos.length - 1 })}
               </div>
             )}
           </div>
           
           <div className="p-6 text-center">
             <h2 className="text-2xl font-bold mb-1">
-              {profile?.display_name || user?.name || 'مستخدم'}
+              {profile?.display_name || user?.name || t('user')}
             </h2>
             {profile?.occupation && (
               <p className="text-gray-600 mb-2">{profile.occupation}</p>
@@ -241,7 +241,7 @@ const Profile = () => {
               onClick={() => navigate('/profile/edit')}
             >
               <Edit className="w-4 h-4 ml-2" />
-              تعديل البروفايل
+              {t('editProfile')}
             </Button>
           </div>
         </Card>
@@ -249,29 +249,31 @@ const Profile = () => {
         {/* Profile Details */}
         {profile && (
           <Card className="p-4">
-            <h3 className="font-bold text-lg mb-3">التفاصيل</h3>
+            <h3 className="font-bold text-lg mb-3">{t('details')}</h3>
             <div className="space-y-2 text-sm">
               {profile.gender && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">الجنس:</span>
-                  <span className="font-medium">{profile.gender === 'male' ? 'ذكر' : profile.gender === 'female' ? 'أنثى' : 'آخر'}</span>
+                  <span className="text-gray-600">{t('gender')}:</span>
+                  <span className="font-medium">
+                    {profile.gender === 'male' ? t('male') : profile.gender === 'female' ? t('female') : t('other')}
+                  </span>
                 </div>
               )}
               {profile.height && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">الطول:</span>
-                  <span className="font-medium">{profile.height} سم</span>
+                  <span className="text-gray-600">{t('height')}:</span>
+                  <span className="font-medium">{profile.height} {t('cm')}</span>
                 </div>
               )}
               {profile.relationship_goals && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">الهدف:</span>
+                  <span className="text-gray-600">{t('goal')}:</span>
                   <span className="font-medium">{profile.relationship_goals}</span>
                 </div>
               )}
               {profile.education && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">التعليم:</span>
+                  <span className="text-gray-600">{t('education')}:</span>
                   <span className="font-medium">{profile.education}</span>
                 </div>
               )}
@@ -282,7 +284,7 @@ const Profile = () => {
         {/* Interests */}
         {profile?.interests && profile.interests.length > 0 && (
           <Card className="p-4">
-            <h3 className="font-bold text-lg mb-3">الاهتمامات</h3>
+            <h3 className="font-bold text-lg mb-3">{t('interests')}</h3>
             <div className="flex flex-wrap gap-2">
               {profile.interests.map((interest, i) => (
                 <span 
@@ -301,15 +303,15 @@ const Profile = () => {
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <div className="text-2xl font-bold text-pink-500">-</div>
-              <div className="text-xs text-gray-600">الإعجابات</div>
+              <div className="text-xs text-gray-600">{t('likes')}</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-purple-500">-</div>
-              <div className="text-xs text-gray-600">التطابقات</div>
+              <div className="text-xs text-gray-600">{t('matches')}</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-blue-500">-</div>
-              <div className="text-xs text-gray-600">الزيارات</div>
+              <div className="text-xs text-gray-600">{t('visits')}</div>
             </div>
           </div>
         </Card>
@@ -322,7 +324,7 @@ const Profile = () => {
             onClick={() => navigate('/settings')}
           >
             <Settings className="w-5 h-5 ml-2" />
-            الإعدادات
+            {t('settings')}
           </Button>
           
           <Button 
@@ -331,7 +333,7 @@ const Profile = () => {
             onClick={() => navigate('/safety')}
           >
             <Shield className="w-5 h-5 ml-2" />
-            الأمان والخصوصية
+            {t('safetyPrivacy')}
           </Button>
 
           <Button 
@@ -340,7 +342,7 @@ const Profile = () => {
             onClick={handleLogout}
           >
             <LogOut className="w-5 h-5 ml-2" />
-            تسجيل الخروج
+            {t('logout')}
           </Button>
         </Card>
       </main>

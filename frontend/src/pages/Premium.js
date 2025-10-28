@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { ArrowRight, Check, Zap, Star, Crown } from 'lucide-react';
@@ -12,6 +13,7 @@ const API = `${BACKEND_URL}/api`;
 const Premium = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
+  const { t } = useTranslation('premium');
   const [plans, setPlans] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [selectedDuration, setSelectedDuration] = useState('1month');

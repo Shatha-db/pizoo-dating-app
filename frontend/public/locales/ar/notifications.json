@@ -1,8 +1,13 @@
 {
   "title": "الإشعارات",
-  "newMatch": "تطابق جديد",
-  "newMessage": "رسالة جديدة",
-  "newLike": "شخص ما أعجب بك",
-  "markAllRead": "تحديد الكل كمقروء",
-  "noNotifications": "لا توجد إشعارات بعد"
+  "unread": "{count} غير مقروءة",
+  "markAllRead": "قراءة الكل",
+  "noNotifications": "لا توجد إشعارات",
+  "noNotificationsDesc": "سنخبرك عندما يكون هناك شيء جديد!",
+  "loading": "جاري التحميل...",
+  "justNow": "منذ لحظات",
+  "minutesAgo": "منذ {count} د",
+  "hoursAgo": "منذ {count} س",
+  "daysAgo": "منذ {count} ي",
+  "weeksAgo": "منذ {count} أ"
 }

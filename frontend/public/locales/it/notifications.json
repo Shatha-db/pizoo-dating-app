@@ -1,8 +1,13 @@
 {
   "title": "Notifiche",
-  "newMatch": "Nuovo match",
-  "newMessage": "Nuovo messaggio",
-  "newLike": "Qualcuno ti piace",
+  "unread": "{count} non lette",
   "markAllRead": "Segna tutto come letto",
-  "noNotifications": "Nessuna notifica ancora"
+  "noNotifications": "Nessuna notifica",
+  "noNotificationsDesc": "Ti avviseremo quando ci sarà qualcosa di nuovo!",
+  "loading": "Caricamento...",
+  "justNow": "Proprio ora",
+  "minutesAgo": "{count}m fa",
+  "hoursAgo": "{count}h fa",
+  "daysAgo": "{count}g fa",
+  "weeksAgo": "{count}s fa"
 }

@@ -1,8 +1,13 @@
 {
   "title": "Notifications",
-  "newMatch": "New Match",
-  "newMessage": "New Message",
-  "newLike": "Someone liked you",
+  "unread": "{count} unread",
   "markAllRead": "Mark all as read",
-  "noNotifications": "No notifications yet"
+  "noNotifications": "No notifications",
+  "noNotificationsDesc": "We'll let you know when there's something new!",
+  "loading": "Loading...",
+  "justNow": "Just now",
+  "minutesAgo": "{count}m ago",
+  "hoursAgo": "{count}h ago",
+  "daysAgo": "{count}d ago",
+  "weeksAgo": "{count}w ago"
 }

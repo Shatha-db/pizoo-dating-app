@@ -1,8 +1,13 @@
 {
   "title": "Bildirimler",
-  "newMatch": "Yeni Eşleşme",
-  "newMessage": "Yeni Mesaj",
-  "newLike": "Biri seni beğendi",
+  "unread": "{count} okunmamış",
   "markAllRead": "Tümünü okundu olarak işaretle",
-  "noNotifications": "Henüz bildirim yok"
+  "noNotifications": "Bildirim yok",
+  "noNotificationsDesc": "Yeni bir şey olduğunda sizi bilgilendireceğiz!",
+  "loading": "Yükleniyor...",
+  "justNow": "Az önce",
+  "minutesAgo": "{count}dk önce",
+  "hoursAgo": "{count}s önce",
+  "daysAgo": "{count}g önce",
+  "weeksAgo": "{count}h önce"
 }

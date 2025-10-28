@@ -1,8 +1,13 @@
 {
   "title": "Benachrichtigungen",
-  "newMatch": "Neues Match",
-  "newMessage": "Neue Nachricht",
-  "newLike": "Jemand mag dich",
+  "unread": "{count} ungelesen",
   "markAllRead": "Alle als gelesen markieren",
-  "noNotifications": "Noch keine Benachrichtigungen"
+  "noNotifications": "Keine Benachrichtigungen",
+  "noNotificationsDesc": "Wir benachrichtigen Sie, wenn es etwas Neues gibt!",
+  "loading": "Wird geladen...",
+  "justNow": "Gerade eben",
+  "minutesAgo": "Vor {count}m",
+  "hoursAgo": "Vor {count}h",
+  "daysAgo": "Vor {count}t",
+  "weeksAgo": "Vor {count}w"
 }

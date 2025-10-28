@@ -92,7 +92,7 @@ const Premium = () => {
             {/* Gold */}
             <div className="text-center p-4 border-4 border-yellow-400 rounded-lg bg-gradient-to-br from-yellow-50 to-orange-50 relative">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-white text-xs px-3 py-1 rounded-full font-bold">
-                الأكثر شعبية
+                {t('mostPopular')}
               </div>
               <div className="text-4xl mb-2">⭐</div>
               <h4 className="font-bold text-lg mb-3">Gold</h4>

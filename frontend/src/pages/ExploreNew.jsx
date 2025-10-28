@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AuthContext } from '../../context/AuthContext';
-import ExploreRow from '../../modules/explore/ExploreRow';
-import BottomNav from '../../components/BottomNav';
-import '../../styles/explore.css';
+import { AuthContext } from '../context/AuthContext';
+import ExploreRow from '../modules/explore/ExploreRow';
+import BottomNav from '../components/BottomNav';
+import '../styles/explore.css';
 
 const ExploreNew = () => {
   const { t } = useTranslation('explore');

@@ -386,7 +386,7 @@ const EditProfile = () => {
             {/* Media Section */}
             <Card className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold text-lg">الوسائط</h2>
+                <h2 className="font-bold text-lg">{t('photos')}</h2>
                 <span className="text-sm text-gray-600">
                   {photos.filter(p => p !== null).length}/9
                 </span>

@@ -1,8 +1,13 @@
 {
   "title": "استكشف",
-  "trending": "الملفات الرائجة",
-  "nearby": "المستخدمون القريبون",
-  "newcomers": "الأعضاء الجدد",
+  "most_active": "الأكثر تفاعلاً",
+  "ready_chat": "متاحون الآن",
+  "near_you": "بالقرب منك",
+  "new_faces": "وجوه جديدة",
+  "serious_love": "بحث جدي",
+  "fun_date": "موعد ممتع اليوم",
+  "smart_talks": "دردشات ذكية",
+  "friends_only": "أصدقاء فقط",
   "see_all": "عرض الكل",
   "no_profiles": "لا توجد ملفات",
   "loading": "جاري التحميل..."

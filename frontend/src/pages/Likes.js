@@ -157,7 +157,7 @@ const Likes = () => {
               className="flex-1 text-xs"
             >
               <Eye className="w-3 h-3 ml-1" />
-              عرض
+              {t('view')}
             </Button>
             <Button
               onClick={() => handleMessage(profile)}
@@ -165,7 +165,7 @@ const Likes = () => {
               className="flex-1 bg-pink-500 hover:bg-pink-600 text-white text-xs"
             >
               <MessageCircle className="w-3 h-3 ml-1" />
-              رسالة
+              {t('message')}
             </Button>
             <Button
               onClick={() => handleLike(profile.id || profile.user_id)}

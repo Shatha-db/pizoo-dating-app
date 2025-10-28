@@ -35,9 +35,11 @@ i18n
     keySeparator: false,
     load: 'languageOnly',
     detection: {
-      order: ['localStorage', 'querystring', 'cookie', 'htmlTag', 'navigator'],
+      order: ['localStorage', 'querystring', 'cookie', 'navigator', 'htmlTag'],
+      caches: ['localStorage'],
+      lookupQuerystring: 'lng',
+      lookupCookie: 'i18next',
       lookupLocalStorage: 'i18nextLng',
-      caches: ['localStorage']
     },
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json'

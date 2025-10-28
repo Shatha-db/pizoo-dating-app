@@ -72,10 +72,10 @@ const Notifications = () => {
     try {
       return formatDistanceToNow(new Date(dateString), {
         addSuffix: true,
-        locale: ar
+        locale: getDateLocale()
       });
     } catch (error) {
-      return 'منذ لحظات';
+      return t('justNow');
     }
   };
 

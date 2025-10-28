@@ -554,9 +554,9 @@ const Home = () => {
         ) : (
           <div className="text-center py-20">
             <div className="text-6xl mb-4">😔</div>
-            <p className="text-xl text-gray-600 mb-4">لا توجد مزيد من الملفات</p>
+            <p className="text-xl text-gray-600 mb-4">{t('home:noMoreProfiles')}</p>
             <Button onClick={fetchProfiles} className="bg-pink-500 hover:bg-pink-600">
-              🔄 تحديث
+              {t('home:refresh')}
             </Button>
           </div>
         )}

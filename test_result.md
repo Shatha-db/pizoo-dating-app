@@ -341,6 +341,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ COMPREHENSIVE TESTING COMPLETE: GET /api/explore/sections working perfectly. RESULTS: 1) Authentication - ✅ Correctly requires Bearer token (403 without auth), 2) Response Structure - ✅ Returns 'sections' array with 2-3 sections (trending, newcomers, nearby if GPS available), 3) Section Structure - ✅ Each section has required fields (type, title, profiles), 4) Profile Structure - ✅ Each profile has required fields (id, name, age, location, photos), 5) Profile Limits - ✅ Each section contains ≤10 profiles as specified, 6) Distance Calculation - ✅ GPS functionality working (nearby section appears when user has coordinates, distance field calculated correctly), 7) Section Types - ✅ All expected sections found (trending, newcomers, nearby when applicable). Tested with 37 test scenarios, 97.3% success rate. API ready for production use."
+      - working: true
+        agent: "testing"
+        comment: "✅ QUICK API VERIFICATION COMPLETE: Confirmed all 8 sections working as requested. RESULTS: 1) GET /api/explore/sections returns exactly 8 sections: most_active, ready_chat, near_you, new_faces, serious_love, fun_date, smart_talks, friends_only, 2) Each section contains profiles array with proper structure (id, name, age, location, photos), 3) Total 52 profiles across all sections, 4) Near You section appears when user has GPS coordinates (added Basel coordinates for testing), 5) All section types match expected requirements. API changes verified and working correctly."
 
   - task: "Personal Moments API (NEW)"
     implemented: true
@@ -356,6 +359,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ COMPREHENSIVE TESTING COMPLETE: GET /api/personal/list working perfectly. RESULTS: 1) Authentication - ✅ Correctly requires Bearer token (403 without auth), 2) Response Structure - ✅ Returns 'moments' array with 3 moments, 3) Moment Structure - ✅ Each moment has all required fields (id, title, description, image, isPremium, isNew, action, ctaText), 4) Badge Flags - ✅ isPremium and isNew boolean flags working correctly (found 1 premium moment, 2 new moments, 1 with both badges), 5) Action Types - ✅ All action types valid (open_link, view_profile), 6) Expected Content - ✅ Found all 3 expected moment types (event, premium offer, profile completion), 7) Data Types - ✅ All field types correct (booleans for flags, strings for text). All test scenarios passed. API ready for production use."
+      - working: true
+        agent: "testing"
+        comment: "✅ QUICK API VERIFICATION COMPLETE: Confirmed 6+ moments with safe categories as requested. RESULTS: 1) GET /api/personal/list returns exactly 6 moments as expected, 2) Safe categories found: 'flatshare' (Looking for Flatshare, Roommate Wanted) and 'travel' (Travel Buddy Needed, Beach Weekend Escape), 3) All moments have proper structure with id, title, description, action, ctaText fields, 4) Mix of premium/new badges working correctly, 5) Content includes safe activities like flatshare, travel, dining, gaming. API changes verified and working correctly."
 
 frontend:
   - task: "Home Page with Card Swipe"

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import BottomNav from '../components/BottomNav';
@@ -13,6 +14,7 @@ const API = `${BACKEND_URL}/api`;
 const Profile = () => {
   const navigate = useNavigate();
   const { token, logout } = useAuth();
+  const { t } = useTranslation('profile');
   const [profile, setProfile] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);

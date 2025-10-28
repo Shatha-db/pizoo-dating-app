@@ -24,5 +24,16 @@
   "tab_likes": "Likes",
   "tab_chats": "Chats",
   "tab_account": "Account",
-  "brand": "Pizoo"
+  "brand": "Pizoo",
+  "card": {
+    "boost": "Boost",
+    "favorite": "Favorite",
+    "like": "Like",
+    "pass": "Pass",
+    "rewind": "Rewind",
+    "verified": "Verified",
+    "online": "Online",
+    "icebreaker": "Try this opener",
+    "view_full": "View Full"
+  }
 }

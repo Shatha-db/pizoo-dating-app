@@ -115,24 +115,20 @@ const ChatRoom = () => {
     try {
       // Send via WebSocket for real-time delivery
       if (isConnected && otherUser) {
-        const success = wsSendMessage(matchId, otherUser.id, newMessage);
+        const success = wsSendMessage(matchId, otherUser.id, messageText);
         if (success) {
-          // Add message to local state immediately
-          const newMsg = {
-            id: Date.now().toString(),
-            sender_id: user.id,
-            content: newMessage,
-            created_at: new Date().toISOString(),
-            status: 'sent'
-          };
-          setMessages(prev => [...prev, newMsg]);
-          setNewMessage('');
+          // Update optimistic message to 'sent' status
+          setMessages(prev => prev.map(msg => 
+            msg.id === tempId ? { ...msg, status: 'sent' } : msg
+          ));
+        } else {
+          throw new Error('WebSocket send failed');
         }
       } else {
         // Fallback to HTTP if WebSocket not connected
         const response = await axios.post(
           `${API}/conversations/${matchId}/messages`,
-          { content: newMessage },
+          { content: messageText },
           { 
             headers: { 
               Authorization: `Bearer ${token}`,
@@ -142,33 +138,22 @@ const ChatRoom = () => {
           }
         );
         
-        // Add sent message to local state
+        // Replace optimistic message with actual server response
         if (response.data) {
-          const newMsg = {
-            id: response.data.id || Date.now().toString(),
-            sender_id: user.id,
-            content: newMessage,
-            created_at: new Date().toISOString(),
-            status: 'sent'
-          };
-          setMessages(prev => [...prev, newMsg]);
+          setMessages(prev => prev.map(msg => 
+            msg.id === tempId ? { ...msg, id: response.data.id, status: 'sent' } : msg
+          ));
         }
-        
-        setNewMessage('');
       }
     } catch (error) {
       console.error('Error sending message:', error);
+      // Mark message as failed
+      setMessages(prev => prev.map(msg => 
+        msg.id === tempId ? { ...msg, status: 'failed' } : msg
+      ));
       
-      // Check if it's a 403 error (message limit reached)
-      if (error.response && error.response.status === 403) {
-        setShowMessageLimitWarning(true);
-      } else if (error.response && error.response.status === 401) {
-        // Session expired
-        navigate('/login');
-      } else {
-        // Show error toast
-        alert('تعذّر إرسال الرسالة، حاول مرة أخرى');
-      }
+      // Show error toast
+      alert('فشل إرسال الرسالة. الرجاء المحاولة مرة أخرى.');
     } finally {
       setSending(false);
     }

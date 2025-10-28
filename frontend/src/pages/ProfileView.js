@@ -16,6 +16,7 @@ const ProfileView = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
   const { token } = useAuth();
+  const { t } = useTranslation();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);

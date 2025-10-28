@@ -840,7 +840,7 @@ class DatingAppTester:
         print("=" * 80)
         
         # Authenticate first
-        if not self.test_register_user():
+        if not self.test_user_registration():
             print("❌ Authentication failed. Cannot proceed with tests.")
             return
         

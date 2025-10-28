@@ -42,6 +42,7 @@
   "logout": "Logout",
   "morePhotos": "+{count} photos",
   "user": "User",
+  "photo": "Photo",
   "addMorePhotos": "Add more photos (at least 3)",
   "writeLongerBio": "Write a longer bio about yourself",
   "addMoreInterests": "Add more interests",

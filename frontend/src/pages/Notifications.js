@@ -114,7 +114,7 @@ const Notifications = () => {
               className="text-pink-600"
             >
               <Check className="w-4 h-4 ml-1" />
-              قراءة الكل
+              {t('markAllRead')}
             </Button>
           )}
         </div>

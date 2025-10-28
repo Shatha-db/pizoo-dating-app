@@ -696,7 +696,7 @@ const Home = () => {
                 className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold text-lg py-6 mb-3"
               >
                 <Star className="w-5 h-5 ml-2 fill-white" />
-                ترقية إلى Premium
+                {t('home:upgradeToPremium')}
               </Button>
               
               <Button
@@ -704,7 +704,7 @@ const Home = () => {
                 variant="ghost"
                 className="w-full"
               >
-                إغلاق
+                {t('home:close')}
               </Button>
             </div>
           </Card>

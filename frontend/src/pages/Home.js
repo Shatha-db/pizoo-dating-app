@@ -626,10 +626,10 @@ const Home = () => {
             <div className="text-center">
               <div className="text-6xl mb-4">💕</div>
               <h2 className="text-2xl font-bold mb-2">
-                لديك {newLikesCount} إعجابات جديدة!
+                {t('home:youHaveNewLikes', { count: newLikesCount })}
               </h2>
               <p className="text-gray-700 mb-6">
-                بعض الأشخاص معجبون بك. اكتشف من هم!
+                {t('home:someoneAdmires')}
               </p>
               
               <div className="flex gap-2 mb-4">

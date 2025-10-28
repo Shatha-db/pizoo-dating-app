@@ -18,5 +18,16 @@
   "back": "Retour",
   "next": "Suivant",
   "done": "Terminé",
-  "settings": "Paramètres"
+  "settings": "Paramètres",
+  "card": {
+    "boost": "Booster",
+    "favorite": "Favori",
+    "like": "J'aime",
+    "pass": "Ignorer",
+    "rewind": "Revenir",
+    "verified": "Vérifié",
+    "online": "En ligne",
+    "icebreaker": "Brise-glace suggéré",
+    "view_full": "Voir en entier"
+  }
 }

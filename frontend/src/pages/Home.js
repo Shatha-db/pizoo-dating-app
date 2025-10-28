@@ -678,7 +678,7 @@ const Home = () => {
               </p>
               <ul className="text-right mb-6 space-y-2">
                 <li className="flex items-center justify-center gap-2">
-                  <span className="font-semibold">12 إعجاب</span>
+                  <span className="font-semibold">12 {t('home:likesPerWeek')}</span>
                   <Heart className="w-5 h-5 text-pink-500" />
                 </li>
                 <li className="flex items-center justify-center gap-2">

@@ -208,9 +208,9 @@ const Likes = () => {
           </TabsContent>
           
           <TabsContent value="received" className="mt-4">
-            {loading ? <div className="text-center py-10">جاري التحميل...</div> :
+            {loading ? <div className="text-center py-10">{t('loading')}</div> :
               received.length > 0 ? <ProfileGrid profiles={received} /> :
-              <div className="text-center py-20 text-gray-500">لم تستلم إعجابات بعد</div>
+              <div className="text-center py-20 text-gray-500">{t('noLikesReceived')}</div>
             }
           </TabsContent>
         </Tabs>

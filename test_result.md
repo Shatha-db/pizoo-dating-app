@@ -708,7 +708,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Profile Single Endpoint (NEW)"
     - "Chat Message Status Fix (NEW)"
     - "Call Permissions Modal Removal (NEW)"
     - "Profile View Optimization (NEW)"
@@ -716,9 +715,9 @@ test_plan:
   stuck_tasks: []
   test_all: false
   test_priority: "critical_bug_fixes"
-  backend_testing_pending: true
+  backend_testing_pending: false
   frontend_testing_pending: true
-  testing_notes: "Implemented 4 critical fixes requested by user: 1) Added backend endpoint for single profile fetch, 2) Fixed chat message error icons by ensuring all messages have status, 3) Removed call permission modals for seamless calling, 4) Fixed language persistence on registration. Backend needs testing for new profile endpoint. Frontend needs E2E testing for chat, calls, profile navigation, and language switching."
+  testing_notes: "Profile Single Endpoint testing COMPLETE - working perfectly with 100% success rate. Remaining tasks need frontend E2E testing: 1) Chat message error icons fix verification, 2) Call permissions modal removal verification, 3) Profile navigation optimization verification, 4) Language persistence fix verification. All backend APIs functional, frontend testing needed to verify user-facing fixes."
 
 agent_communication:
   - agent: "main"

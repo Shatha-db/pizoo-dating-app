@@ -89,7 +89,14 @@ const ChatRoom = () => {
       const response = await axios.get(`${API}/conversations/${matchId}/messages`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setMessages(response.data.messages || []);
+      
+      // Ensure all messages have a status field
+      const messagesWithStatus = (response.data.messages || []).map(msg => ({
+        ...msg,
+        status: msg.status || 'sent' // Default to 'sent' if no status
+      }));
+      
+      setMessages(messagesWithStatus);
     } catch (error) {
       console.error('Error fetching messages:', error);
     } finally {

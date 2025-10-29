@@ -246,7 +246,7 @@ const ChatRoom = () => {
           <button
             onClick={() => {
               setCallType('audio');
-              setShowPermissionsModal(true);
+              setShowCallModal(true);
             }}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
             title="مكالمة صوتية"
@@ -258,7 +258,7 @@ const ChatRoom = () => {
           <button
             onClick={() => {
               setCallType('video');
-              setShowPermissionsModal(true);
+              setShowCallModal(true);
             }}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
             title="مكالمة فيديو"

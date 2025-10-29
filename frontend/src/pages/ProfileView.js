@@ -34,15 +34,13 @@ const ProfileView = () => {
 
   const fetchProfile = async () => {
     try {
-      // Fetch all profiles and find the one with matching user_id
-      const response = await axios.get(`${API}/profiles/discover?limit=100`, {
+      // Fetch specific profile by user_id
+      const response = await axios.get(`${API}/profiles/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      const userProfile = response.data.profiles.find(p => p.user_id === userId);
-      
-      if (userProfile) {
-        setProfile(userProfile);
+      if (response.data) {
+        setProfile(response.data);
       } else {
         showToast('البروفايل غير موجود');
         navigate(-1);

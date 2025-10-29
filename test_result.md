@@ -705,14 +705,17 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Explore New Page (NEW)"
-    - "Personal Moments Page (NEW)"
+    - "Profile Single Endpoint (NEW)"
+    - "Chat Message Status Fix (NEW)"
+    - "Call Permissions Modal Removal (NEW)"
+    - "Profile View Optimization (NEW)"
+    - "i18n Language Persistence Fix (NEW)"
   stuck_tasks: []
   test_all: false
-  test_priority: "frontend_explore_personal_features"
-  backend_testing_pending: false
+  test_priority: "critical_bug_fixes"
+  backend_testing_pending: true
   frontend_testing_pending: true
-  testing_notes: "Backend APIs for Explore and Personal Moments tested and working perfectly. Both GET /api/explore/sections and GET /api/personal/list endpoints fully functional with authentication, proper response structures, and all required features. Next: Test frontend pages (ExploreNew.jsx and PersonalMoments.jsx) with i18n support and API integration."
+  testing_notes: "Implemented 4 critical fixes requested by user: 1) Added backend endpoint for single profile fetch, 2) Fixed chat message error icons by ensuring all messages have status, 3) Removed call permission modals for seamless calling, 4) Fixed language persistence on registration. Backend needs testing for new profile endpoint. Frontend needs E2E testing for chat, calls, profile navigation, and language switching."
 
 agent_communication:
   - agent: "main"

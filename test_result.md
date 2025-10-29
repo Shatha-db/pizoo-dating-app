@@ -639,15 +639,18 @@ frontend:
 
   - task: "Profile Single Endpoint (NEW)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "IMPLEMENTED: Added GET /api/profiles/{user_id} endpoint to fetch a single profile by user_id. Includes distance calculation if both users have GPS coordinates. This replaces the inefficient workaround of fetching 100 profiles and searching."
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE TESTING COMPLETE: GET /api/profiles/{user_id} endpoint working perfectly. RESULTS: 1) Valid User ID Test - ✅ Successfully fetches profiles for existing users from database, 2) Response Structure - ✅ Includes all required profile fields (user_id, display_name, photos, age, location, bio, gender, interests, etc.), 3) Distance Calculation - ✅ Correctly calculates distance when both users have GPS coordinates (tested 74.5km Basel-Zurich), correctly returns null when GPS unavailable, 4) Error Handling - ✅ Returns 404 for non-existent user_id, returns 403 for unauthenticated requests, 5) Authentication - ✅ Properly enforces Bearer token authentication, rejects invalid tokens, 6) Response Format - ✅ Matches expected JSON structure from review specification. Tested all 5 scenarios from review request with 100% success rate (7/7 tests passed). Endpoint ready for production use."
 
   - task: "i18n Language Persistence Fix (NEW)"
     implemented: true

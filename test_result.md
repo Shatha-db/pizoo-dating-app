@@ -637,6 +637,30 @@ frontend:
         agent: "main"
         comment: "IMPLEMENTED: New Personal Moments page with multilingual support. PersonalMoments.jsx features: 1) Fetches moments from GET /api/personal/list, 2) Displays moments in responsive grid (1 col mobile, 2 cols tablet, 3 cols desktop), 3) Loading state with spinner, 4) Empty state with 💫 icon, 5) i18n support for all text (title, subtitle, premium_badge, new_badge, no_moments, loading, view_details), 6) Bottom navigation. PersonalCard.jsx is reusable component for opportunity cards with: image, premium/new badges, title, description, CTA button, click handling (view_profile or open_link actions), hover effects. Translation files created for all 9 languages. Route added to App.js at /personal. Custom CSS in personal.css with badge gradients and animations. Ready for testing: API integration, card display, badge rendering, action handling, i18n switching, RTL layout, responsive grid."
 
+  - task: "Profile Single Endpoint (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: Added GET /api/profiles/{user_id} endpoint to fetch a single profile by user_id. Includes distance calculation if both users have GPS coordinates. This replaces the inefficient workaround of fetching 100 profiles and searching."
+
+  - task: "i18n Language Persistence Fix (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Register.js, /app/frontend/src/i18n.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: Fixed language persistence issues: 1) Updated Register.js to save selected language to backend via PUT /api/user/language after successful registration, 2) Removed redundant 'preferred_language' localStorage key in favor of i18n's automatic 'i18nextLng', 3) Added missing namespaces (home, premium, editProfile, swipe) to i18n.js, 4) i18n automatically updates HTML dir/lang attributes on language change."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"

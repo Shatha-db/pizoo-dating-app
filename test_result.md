@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Complete comprehensive code review and cleanup: Fix all errors, remove duplicates, resolve issues, and prepare for next development phase."
+user_problem_statement: "Fix 4 critical issues: 1) Chat message error icon showing despite successful sending, 2) Video/audio calls failing with unwanted alerts, 3) Language selection not persisting across all pages, 4) Profile viewing broken from Explore, Likes, and chat pages."
 
 backend:
   - task: "User Authentication (Register/Login)"

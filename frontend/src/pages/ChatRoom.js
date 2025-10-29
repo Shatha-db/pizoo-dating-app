@@ -48,7 +48,13 @@ const ChatRoom = () => {
     if (newWsMessages.length > 0) {
       setMessages(prev => {
         const existingIds = new Set(prev.map(m => m.id));
-        const uniqueNew = newWsMessages.filter(m => !existingIds.has(m.id));
+        // Ensure WebSocket messages also have status
+        const uniqueNew = newWsMessages
+          .filter(m => !existingIds.has(m.id))
+          .map(msg => ({
+            ...msg,
+            status: msg.status || 'sent'
+          }));
         return [...prev, ...uniqueNew];
       });
     }

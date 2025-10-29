@@ -1670,6 +1670,35 @@ async def discover_profiles(
 # Duplicate swipe endpoint removed - using the one at line 1535
 
 
+@api_router.get("/profiles/{user_id}")
+async def get_profile_by_id(
+    user_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Get a specific user profile by user_id
+    """
+    # Fetch the profile
+    profile = await db.profiles.find_one({"user_id": user_id}, {"_id": 0})
+    
+    if not profile:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Profile not found"
+        )
+    
+    # Calculate distance if both users have GPS coordinates
+    my_profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})
+    if my_profile and profile.get('latitude') and profile.get('longitude') and my_profile.get('latitude') and my_profile.get('longitude'):
+        profile['distance'] = calculate_distance(
+            my_profile['latitude'],
+            my_profile['longitude'],
+            profile['latitude'],
+            profile['longitude']
+        )
+    
+    return profile
+
 
 @api_router.get("/profiles/top-picks")
 async def get_top_picks(current_user: dict = Depends(get_current_user)):

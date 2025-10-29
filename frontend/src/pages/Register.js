@@ -29,10 +29,8 @@ const Register = () => {
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
-    localStorage.setItem('preferred_language', lng);
-    const rtlLanguages = ['ar', 'he', 'fa', 'ur'];
-    document.documentElement.dir = rtlLanguages.includes(lng) ? 'rtl' : 'ltr';
-    document.documentElement.lang = lng;
+    // i18n automatically saves to localStorage as 'i18nextLng'
+    // No need for separate 'preferred_language' key
     setShowLanguages(false);
   };
 

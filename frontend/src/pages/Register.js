@@ -68,6 +68,24 @@ const Register = () => {
     setLoading(false);
 
     if (result.success) {
+      // Save current language to backend
+      try {
+        const token = localStorage.getItem('token');
+        const currentLanguage = i18n.language;
+        await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/language`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ language: currentLanguage })
+        });
+        console.log('✅ Language saved to backend:', currentLanguage);
+      } catch (err) {
+        console.error('Failed to save language:', err);
+        // Don't block registration flow
+      }
+      
       navigate('/profile/setup');
     } else {
       setError(result.error);

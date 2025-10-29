@@ -661,6 +661,42 @@ frontend:
         agent: "main"
         comment: "IMPLEMENTED: Fixed language persistence issues: 1) Updated Register.js to save selected language to backend via PUT /api/user/language after successful registration, 2) Removed redundant 'preferred_language' localStorage key in favor of i18n's automatic 'i18nextLng', 3) Added missing namespaces (home, premium, editProfile, swipe) to i18n.js, 4) i18n automatically updates HTML dir/lang attributes on language change."
 
+  - task: "Chat Message Status Fix (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/ChatRoom.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: Fixed chat message error icon issue. Added default 'sent' status to all messages loaded from API and WebSocket to prevent showing error icon (❌) for messages without explicit status. Both fetchMessages() and WebSocket message handler now ensure all messages have a status field (sending/sent/read/failed)."
+
+  - task: "Call Permissions Modal Removal (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/ChatRoom.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: Removed unwanted permissions modal before calls. Call buttons (audio/video) now directly open CallModal without showing PermissionsModal first. Removed showPermissionsModal state and PermissionsModal component import from ChatRoom.js. Users can now start calls immediately without intermediate alerts."
+
+  - task: "Profile View Optimization (NEW)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/ProfileView.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "IMPLEMENTED: Optimized ProfileView.js to use new GET /api/profiles/{user_id} endpoint instead of fetching 100 profiles and searching. Profile viewing now works reliably from Explore, Likes, and chat pages with direct profile fetch."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"

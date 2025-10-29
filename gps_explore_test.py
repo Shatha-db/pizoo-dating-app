@@ -7,7 +7,7 @@ import requests
 import json
 from datetime import datetime
 
-BACKEND_URL = "https://pizoo-chat-fix.preview.emergentagent.com/api"
+BACKEND_URL = "https://dating-app-bugfix.preview.emergentagent.com/api"
 
 def test_gps_explore():
     """Test GPS functionality with explore sections"""

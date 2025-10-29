@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://pizoo-chat-fix.preview.emergentagent.com/api"
+BACKEND_URL = "https://dating-app-bugfix.preview.emergentagent.com/api"
 
 class SafetyChatTester:
     def __init__(self):

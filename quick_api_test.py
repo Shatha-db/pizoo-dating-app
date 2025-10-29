@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://pizoo-chat-fix.preview.emergentagent.com/api"
+BACKEND_URL = "https://dating-app-bugfix.preview.emergentagent.com/api"
 
 def test_user_auth():
     """Create or login a test user to get authentication token"""

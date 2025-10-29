@@ -281,7 +281,7 @@
 
 ## 🔗 الروابط
 
-- **التطبيق الحالي:** https://pizoo-chat-fix.preview.emergentagent.com
+- **التطبيق الحالي:** https://dating-app-bugfix.preview.emergentagent.com
 - **Github Repo:** https://github.com/Shatha-db/pizoo-dating-app
 - **Documentation:** /app/COMPREHENSIVE_REPORT.md
 

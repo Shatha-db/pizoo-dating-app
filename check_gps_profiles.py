@@ -7,7 +7,7 @@ import requests
 import json
 import uuid
 
-BASE_URL = "https://pizoo-chat-fix.preview.emergentagent.com/api"
+BASE_URL = "https://dating-app-bugfix.preview.emergentagent.com/api"
 HEADERS = {"Content-Type": "application/json"}
 
 def check_gps_profiles():

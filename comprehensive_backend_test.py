@@ -11,7 +11,7 @@ from datetime import datetime
 import uuid
 
 # Configuration
-BASE_URL = "https://pizoo-chat-fix.preview.emergentagent.com/api"
+BASE_URL = "https://dating-app-bugfix.preview.emergentagent.com/api"
 HEADERS = {"Content-Type": "application/json"}
 
 class ComprehensiveTester:

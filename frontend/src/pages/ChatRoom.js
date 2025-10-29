@@ -444,17 +444,6 @@ const ChatRoom = () => {
           onClose={() => setShowCallModal(false)}
         />
       )}
-
-      {/* Permissions Modal */}
-      <PermissionsModal
-        isOpen={showPermissionsModal}
-        onClose={() => setShowPermissionsModal(false)}
-        onProceed={() => {
-          setShowPermissionsModal(false);
-          setShowCallModal(true);
-        }}
-        callType={callType}
-      />
     </div>
   );
 };

@@ -1195,6 +1195,106 @@ async def twilio_voice_status(request: Request):
     print(f"📊 Twilio call status: {dict(data)}")
     return "OK"
 
+
+
+# ========================================
+# LiveKit Real-Time Communication (RTC)
+# ========================================
+
+class LiveKitTokenRequest(BaseModel):
+    """Request model for LiveKit token generation"""
+    match_id: str = Field(..., description="Match/Chat ID for the call")
+    call_type: str = Field(default="video", description="Type of call: 'video' or 'audio'")
+    participant_name: Optional[str] = Field(default=None, description="Display name for participant")
+
+@api_router.post("/livekit/token")
+async def generate_livekit_token(
+    payload: LiveKitTokenRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Generate LiveKit access token for video/voice calls
+    
+    Features:
+    - 1-to-1 video calls
+    - Voice-only calls (audio)
+    - Secure room-based communication
+    - Automatic participant naming
+    
+    Returns:
+        token: JWT token for LiveKit
+        url: LiveKit server WebSocket URL
+        room_name: Room name to join
+        participant_info: User identity and name
+    """
+    try:
+        # Check if LiveKit is configured
+        if not LiveKitService.is_configured():
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="خدمة المكالمات غير متاحة حالياً. يرجى المحاولة لاحقاً."
+            )
+        
+        # Get user info
+        user_id = current_user.get('id')
+        user_name = payload.participant_name or current_user.get('display_name') or f"User-{user_id[:8]}"
+        
+        # Generate token
+        result = LiveKitService.create_room_token(
+            match_id=payload.match_id,
+            user_id=user_id,
+            user_name=user_name,
+            call_type=payload.call_type
+        )
+        
+        if not result.get("success"):
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=result.get("error", "فشل إنشاء جلسة المكالمة")
+            )
+        
+        logging.info(f"✅ LiveKit token generated for user {user_id} in match {payload.match_id}")
+        
+        return {
+            "success": True,
+            "token": result["token"],
+            "url": result["url"],
+            "room_name": result["room_name"],
+            "participant": {
+                "identity": result["participant_identity"],
+                "name": result["participant_name"]
+            },
+            "call_type": payload.call_type,
+            "video_enabled": result["video_enabled"],
+            "audio_enabled": result["audio_enabled"]
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ LiveKit token error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="حدث خطأ أثناء إنشاء جلسة المكالمة"
+        )
+
+@api_router.get("/livekit/status")
+async def livekit_status():
+    """
+    Check LiveKit service status
+    
+    Returns:
+        configured: Whether LiveKit is properly configured
+        url: LiveKit server URL (if configured)
+    """
+    is_configured = LiveKitService.is_configured()
+    
+    return {
+        "configured": is_configured,
+        "url": os.environ.get('LIVEKIT_URL') if is_configured else None,
+        "message": "LiveKit is ready" if is_configured else "LiveKit credentials not configured"
+    }
+
 # ========================================
 # Twilio Verify (Alternative OTP System)
 # ========================================

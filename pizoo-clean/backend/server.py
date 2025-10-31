@@ -21,6 +21,22 @@ from sms_service import generate_and_send, verify as verify_otp
 from twilio_service import create_voice_token, create_video_token, send_sms, verify_start, verify_check
 from twilio.twiml.voice_response import VoiceResponse, Dial
 from bson import ObjectId
+
+# Helper function to convert MongoDB documents to JSON-safe format
+def serialize_mongo_doc(doc):
+    """Convert MongoDB document to JSON-safe format"""
+    if doc is None:
+        return None
+    if isinstance(doc, list):
+        return [serialize_mongo_doc(item) for item in doc]
+    if isinstance(doc, dict):
+        return {key: serialize_mongo_doc(value) for key, value in doc.items()}
+    if isinstance(doc, ObjectId):
+        return str(doc)
+    if isinstance(doc, datetime):
+        return doc.isoformat()
+    return doc
+
 import httpx
 
 ROOT_DIR = Path(__file__).parent

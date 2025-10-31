@@ -213,13 +213,13 @@ const DoubleDating = () => {
 
           <div className="text-center mb-6">
             <p className="text-gray-600 mb-3">
-              يُمكنك تشكيل ثُنائي مع ما يصل إلى 3 من أصدقائك في موعد مزدوج.
+              {t('max_friends_info')}
             </p>
             <button
               onClick={() => navigate('/double-dating-info')}
               className="text-blue-500 font-medium hover:underline"
             >
-              اعرف أكثر
+              {t('learn_more')}
             </button>
           </div>
         </div>
@@ -228,12 +228,12 @@ const DoubleDating = () => {
         <Card className="p-6 mb-6">
           <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
             <MessageCircle className="w-5 h-5 text-pink-500" />
-            دعوات من الأصدقاء
+            {t('friend_invitations')}
           </h3>
           
           <div className="flex flex-col items-center justify-center py-8 text-gray-400">
             <MessageCircle className="w-16 h-16 mb-3" />
-            <p className="text-center">يُمكنك بيع دعوات موعدك المزدوج هنا.</p>
+            <p className="text-center">{t('view_invitations_info')}</p>
           </div>
         </Card>
 
@@ -242,7 +242,7 @@ const DoubleDating = () => {
           onClick={() => setShowInviteOptions(true)}
           className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-6 text-lg rounded-xl"
         >
-          دعوة الأصدقاء
+          {t('invite_friends')}
         </Button>
 
         {/* Invite Options Modal */}
@@ -250,7 +250,7 @@ const DoubleDating = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <Card className="w-full max-w-md p-6 bg-white">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold">مشاركة التطبيق</h3>
+                <h3 className="text-lg font-bold">{t('share_app')}</h3>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -266,7 +266,7 @@ const DoubleDating = () => {
                   className="w-full bg-green-500 hover:bg-green-600 text-white flex items-center gap-3 justify-center py-3"
                 >
                   <Share2 className="w-5 h-5" />
-                  مشاركة عبر WhatsApp
+                  {t('share_via_whatsapp')}
                 </Button>
                 
                 <Button
@@ -274,7 +274,7 @@ const DoubleDating = () => {
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-3 justify-center py-3"
                 >
                   <Share2 className="w-5 h-5" />
-                  مشاركة عبر Facebook
+                  {t('share_via_facebook')}
                 </Button>
                 
                 <Button

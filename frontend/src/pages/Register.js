@@ -316,16 +316,26 @@ const Register = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="phoneNumber" className="text-sm font-medium">{t('phone_number')}</Label>
-                <Input
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  type="tel"
-                  required
-                  value={formData.phoneNumber}
-                  onChange={handleChange}
-                  placeholder={t('placeholder_phone_number')}
-                  className="h-12 rounded-lg"
-                />
+                <div className="flex gap-2">
+                  <CountryCodeSelect 
+                    value={countryCode} 
+                    onChange={setCountryCode}
+                    className="w-32"
+                  />
+                  <Input
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    type="tel"
+                    required
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                    placeholder="XX XXX XX XX"
+                    className="h-12 rounded-lg flex-1"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  {t('phone_format')}
+                </p>
               </div>
 
               <div className="space-y-2">

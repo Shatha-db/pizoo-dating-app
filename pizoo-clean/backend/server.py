@@ -5030,7 +5030,7 @@ async def admin_list_users(
             {"id": search}
         ]
     
-    users = await db.users.find(
+    users_cursor = db.users.find(
         query,
         {
             "id": 1,
@@ -5042,8 +5042,9 @@ async def admin_list_users(
             "subscription_type": 1,
             "_id": 0
         }
-    ).skip(skip).limit(limit).to_list(length=limit)
+    ).skip(skip).limit(limit)
     
+    users = [serialize_mongo_doc(user) async for user in users_cursor]
     total = await db.users.count_documents(query)
     
     return {

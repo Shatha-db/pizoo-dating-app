@@ -174,7 +174,7 @@ const DoubleDating = () => {
         {/* Friends Grid */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold">أصدقاء موعد مزدوج ({invitedFriends.length}/3)</h2>
+            <h2 className="text-lg font-bold">{t('double_date_friends')} {t('friends_count', { count: invitedFriends.length })}</h2>
           </div>
 
           <div className="grid grid-cols-3 gap-4 mb-4">

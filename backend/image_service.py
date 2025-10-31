@@ -62,25 +62,27 @@ class ImageUploadService:
     """Service for handling image uploads to Cloudinary"""
     
     # Constants
-    MAX_FILE_SIZE_MB = 10
+    MAX_FILE_SIZE_MB = MAX_IMAGE_MB
     MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
-    MAX_IMAGE_WIDTH = 1920
-    QUALITY = "auto"
+    MAX_IMAGE_WIDTH = 1600  # Updated to 1600px as per requirements
+    QUALITY = "auto:good"
     FORMAT = "auto"
     
     # Folder structure
     FOLDERS = {
-        "avatar": "pizoo/users/avatars",
-        "story": "pizoo/stories",
-        "verification": "pizoo/verification",
-        "profile": "pizoo/users/profiles"
+        "avatar": f"{CLOUDINARY_FOLDER}/avatars",
+        "story": f"{CLOUDINARY_FOLDER}/stories",
+        "verification": f"{CLOUDINARY_FOLDER}/verification",
+        "profile": f"{CLOUDINARY_FOLDER}/profiles"
     }
     
     @classmethod
     def compress_image(cls, image_bytes: bytes, max_width: int = MAX_IMAGE_WIDTH) -> bytes:
         """
-        Compress image before upload
-        - Resize if too large
+        Compress and optimize image before upload
+        - Auto-orient based on EXIF
+        - Strip EXIF metadata for privacy
+        - Resize if too large (max 1600px on longest side)
         - Optimize quality
         - Convert to efficient format
         """
@@ -88,22 +90,36 @@ class ImageUploadService:
             # Open image
             image = Image.open(io.BytesIO(image_bytes))
             
+            # Auto-orient based on EXIF and strip EXIF data
+            image = ImageOps.exif_transpose(image)
+            
             # Convert RGBA to RGB if necessary
-            if image.mode in ('RGBA', 'LA'):
+            if image.mode in ('RGBA', 'LA', 'P'):
                 background = Image.new('RGB', image.size, (255, 255, 255))
-                background.paste(image, mask=image.split()[-1] if image.mode == 'RGBA' else image.split()[1])
+                if image.mode == 'P':
+                    image = image.convert('RGBA')
+                if image.mode in ('RGBA', 'LA'):
+                    background.paste(image, mask=image.split()[-1] if image.mode == 'RGBA' else image.split()[1])
                 image = background
             
-            # Resize if too large
-            if image.width > max_width:
-                ratio = max_width / image.width
-                new_height = int(image.height * ratio)
-                image = image.resize((max_width, new_height), Image.Resampling.LANCZOS)
-                logger.info(f"📐 Image resized to {max_width}x{new_height}")
+            # Resize if either dimension exceeds max_width
+            if image.width > max_width or image.height > max_width:
+                # Resize based on longest side
+                if image.width > image.height:
+                    ratio = max_width / image.width
+                    new_height = int(image.height * ratio)
+                    new_size = (max_width, new_height)
+                else:
+                    ratio = max_width / image.height
+                    new_width = int(image.width * ratio)
+                    new_size = (new_width, max_width)
+                
+                image = image.resize(new_size, Image.Resampling.LANCZOS)
+                logger.info(f"📐 Image resized to {new_size[0]}x{new_size[1]}")
             
-            # Save to bytes with optimization
+            # Save to bytes with optimization (strip all metadata)
             output = io.BytesIO()
-            image.save(output, format='JPEG', quality=85, optimize=True)
+            image.save(output, format='JPEG', quality=85, optimize=True, exif=b'')
             compressed_bytes = output.getvalue()
             
             # Log compression result

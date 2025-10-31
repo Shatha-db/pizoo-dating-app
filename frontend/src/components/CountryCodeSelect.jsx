@@ -78,27 +78,62 @@ const CountryCodeSelect = ({ value, onChange, className = '' }) => {
 
             {/* Countries List */}
             <div className="overflow-y-auto">
-              {filteredCountries.length > 0 ? (
-                filteredCountries.map((country) => (
-                  <button
-                    key={country.code}
-                    type="button"
-                    onClick={() => handleSelect(country)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-pink-50 transition-colors ${
-                      selectedCountry.code === country.code ? 'bg-pink-100' : ''
-                    }`}
-                  >
-                    <span className="text-2xl">{country.flag}</span>
-                    <span className="flex-1 text-left font-medium text-gray-700">
-                      {i18n.language === 'ar' ? country.nameAr : country.name}
-                    </span>
-                    <span className="text-gray-600 font-mono">{country.dial}</span>
-                  </button>
-                ))
-              ) : (
-                <div className="px-4 py-8 text-center text-gray-500">
-                  No countries found
+              {/* Popular Section */}
+              {!search && filteredPopular.length > 0 && (
+                <div className="border-b border-gray-200">
+                  <div className="px-3 py-2 bg-gray-50 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    {i18n.language === 'ar' ? 'شائع' : 'Popular'}
+                  </div>
+                  {filteredPopular.map((country) => (
+                    <button
+                      key={`popular-${country.code}`}
+                      type="button"
+                      onClick={() => handleSelect(country)}
+                      className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-pink-50 transition-colors ${
+                        selectedCountry.code === country.code ? 'bg-pink-100' : ''
+                      }`}
+                    >
+                      <span className="text-2xl">{country.flag}</span>
+                      <span className="flex-1 text-left text-sm font-medium text-gray-700">
+                        {i18n.language === 'ar' ? country.nameAr : country.name}
+                      </span>
+                      <span className="text-gray-600 font-mono text-sm">{country.dial}</span>
+                    </button>
+                  ))}
                 </div>
+              )}
+              
+              {/* All/Filtered Countries */}
+              {filteredOthers.length > 0 ? (
+                <>
+                  {!search && (
+                    <div className="px-3 py-2 bg-gray-50 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      {i18n.language === 'ar' ? 'جميع الدول' : 'All Countries'}
+                    </div>
+                  )}
+                  {filteredOthers.map((country) => (
+                    <button
+                      key={country.code}
+                      type="button"
+                      onClick={() => handleSelect(country)}
+                      className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-pink-50 transition-colors ${
+                        selectedCountry.code === country.code ? 'bg-pink-100' : ''
+                      }`}
+                    >
+                      <span className="text-2xl">{country.flag}</span>
+                      <span className="flex-1 text-left text-sm font-medium text-gray-700">
+                        {i18n.language === 'ar' ? country.nameAr : country.name}
+                      </span>
+                      <span className="text-gray-600 font-mono text-sm">{country.dial}</span>
+                    </button>
+                  ))}
+                </>
+              ) : (
+                search && filteredPopular.length === 0 && (
+                  <div className="px-4 py-8 text-center text-gray-500">
+                    {i18n.language === 'ar' ? 'لم يتم العثور على دول' : 'No countries found'}
+                  </div>
+                )
               )}
             </div>
           </div>

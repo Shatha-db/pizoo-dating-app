@@ -281,7 +281,6 @@ class ImageUploadService:
             if is_primary and upload_type == "avatar":
                 upload_options["public_id"] = f"{folder_path}/primary"
                 upload_options["overwrite"] = True
-                upload_options["overwrite"] = True
             
             # Upload to Cloudinary
             logger.info(f"☁️ Uploading to Cloudinary: {folder_path}")
@@ -292,9 +291,15 @@ class ImageUploadService:
             
             logger.info(f"✅ Upload successful: {result['public_id']}")
             
+            # Get WebP preview URL if eager transformation was created
+            webp_url = None
+            if 'eager' in result and len(result['eager']) > 0:
+                webp_url = result['eager'][0].get('secure_url')
+            
             return {
                 "success": True,
-                "url": result['secure_url'],
+                "url": result['secure_url'],  # Original/optimized image
+                "webp_url": webp_url,  # WebP preview
                 "public_id": result['public_id'],
                 "width": result.get('width'),
                 "height": result.get('height'),
@@ -307,13 +312,15 @@ class ImageUploadService:
             logger.error(f"❌ Cloudinary error: {str(e)}")
             return {
                 "success": False,
-                "error": f"فشل رفع الصورة: {str(e)}"
+                "error": f"فشل رفع الصورة: {str(e)}",
+                "error_code": "UPLOAD_FAILED"
             }
         except Exception as e:
             logger.error(f"❌ Upload error: {str(e)}")
             return {
                 "success": False,
-                "error": "حدث خطأ أثناء رفع الصورة"
+                "error": "حدث خطأ أثناء رفع الصورة",
+                "error_code": "INTERNAL_ERROR"
             }
     
     @classmethod

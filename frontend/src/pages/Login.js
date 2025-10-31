@@ -22,9 +22,12 @@ const Login = () => {
   const { t } = useTranslation('auth'); // Load auth namespace
   const [formData, setFormData] = useState({
     email: '',
+    phoneNumber: '',
     password: '',
     rememberMe: false
   });
+  const [countryCode, setCountryCode] = useState('+966'); // Default to Saudi Arabia
+  const [loginMethod, setLoginMethod] = useState('email'); // 'email' or 'phone'
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // ✅ Password visibility state

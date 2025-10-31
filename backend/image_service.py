@@ -1,6 +1,12 @@
 """
 Enhanced Image Upload Service with Cloudinary Integration
 Handles image uploads, compression, folder organization, and error recovery
+Features:
+- Auto-orient and strip EXIF metadata
+- Resize to max 1600px on longest side
+- WebP conversion for previews
+- Per-user folder organization (users/<userId>/)
+- Secure HTTPS URLs
 """
 
 import os
@@ -9,7 +15,7 @@ from dotenv import load_dotenv
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-from PIL import Image
+from PIL import Image, ImageOps
 import io
 import base64
 from typing import Optional, Tuple, Dict
@@ -25,6 +31,10 @@ logger = logging.getLogger(__name__)
 
 # Initialize Cloudinary from environment variable
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
+CLOUDINARY_FOLDER = os.environ.get('CLOUDINARY_FOLDER', 'users')
+MAX_IMAGE_MB = int(os.environ.get('MAX_IMAGE_MB', '5'))
+ALLOWED_MIME = os.environ.get('ALLOWED_MIME', 'image/jpeg,image/png,image/webp').split(',')
+
 if CLOUDINARY_URL:
     try:
         # Parse CLOUDINARY_URL manually for better compatibility

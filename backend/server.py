@@ -1539,15 +1539,36 @@ async def upload_profile_photo(
             user_id=current_user['id'],
             upload_type="profile",
             filename=file.filename,
-            is_primary=is_primary
+            is_primary=is_primary,
+            mime_type=file.content_type
         )
         
         # Check if upload was successful
         if not upload_result.get("success"):
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=upload_result.get("error", "فشل رفع الصورة")
-            )
+            error_code = upload_result.get("error_code", "UNKNOWN")
+            error_message = upload_result.get("error", "فشل رفع الصورة")
+            
+            # Return appropriate HTTP status codes
+            if error_code == "FILE_TOO_LARGE":
+                raise HTTPException(
+                    status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                    detail=error_message
+                )
+            elif error_code == "UNSUPPORTED_TYPE":
+                raise HTTPException(
+                    status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+                    detail=error_message
+                )
+            elif error_code == "SERVICE_UNAVAILABLE":
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail=error_message
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=error_message
+                )
         
         # Get current photos
         photos = profile.get('photos', [])

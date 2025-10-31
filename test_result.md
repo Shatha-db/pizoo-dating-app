@@ -97,6 +97,23 @@
     priority: "medium"
     needs_retesting: false
     status_history:
+
+
+  - task: "Legal & Support Pages - Translation & Navigation"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/HelpSupport.js, /app/frontend/src/pages/CommunityGuidelines.js, /app/frontend/src/pages/SafetyCenter.js, /app/frontend/src/i18n.js, /app/frontend/src/App.js, /app/frontend/src/pages/Settings.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "Legal pages showing i18n keys instead of text. Support pages not opening (Help, Community, Safety)."
+      - working: true
+        agent: "main"
+        comment: "Fixed i18n.js by adding 'privacy' and 'cookies' to namespaces. Created 3 new pages: HelpSupport.js, CommunityGuidelines.js, SafetyCenter.js - all bilingual (EN/AR) with RTL support. Added routes to App.js and connected navigation from Settings.js. All pages now working correctly."
+
       - working: false
         agent: "user"
         comment: "Jitsi shows prejoin page before entering call"

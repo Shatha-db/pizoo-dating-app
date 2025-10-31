@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { X, Users, Settings, Heart, MessageCircle, Share2, Trash2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -12,6 +13,7 @@ const API = `${BACKEND_URL}/api`;
 const DoubleDating = () => {
   const navigate = useNavigate();
   const { token, user } = useAuth();
+  const { t, i18n } = useTranslation('doubledating');
   const [invitedFriends, setInvitedFriends] = useState([]);
   const [showSettings, setShowSettings] = useState(false);
   const [showInviteOptions, setShowInviteOptions] = useState(false);
@@ -51,17 +53,7 @@ const DoubleDating = () => {
     const appUrl = window.location.origin;
     const inviteCode = user?.id || 'PIZOO2024';
     
-    return `🔥 مرحباً! انضم إليّ على Pizoo - أفضل تطبيق للمواعدة المزدوجة!
-
-✨ أكثر من 100,000 مستخدم نشط
-💕 تطبيق آمن وموثوق
-👥 ميزة المواعدة المزدوجة الفريدة
-🎉 انضم الآن وشكّل ثنائياً معي!
-
-رابط التسجيل: ${appUrl}
-كود الدعوة: ${inviteCode}
-
-#Pizoo #مواعدة_مزدوجة #التعارف`;
+    return t('invite_message', { appUrl, inviteCode });
   };
 
   const shareViaWhatsApp = () => {
@@ -77,7 +69,7 @@ const DoubleDating = () => {
   };
 
   const shareViaTwitter = () => {
-    const message = encodeURIComponent('انضم إليّ على Pizoo - أفضل تطبيق للمواعدة المزدوجة! 🔥💕');
+    const message = encodeURIComponent(t('invite_twitter_message'));
     const appUrl = window.location.origin;
     window.open(`https://twitter.com/intent/tweet?text=${message}&url=${encodeURIComponent(appUrl)}`, '_blank');
     setShowInviteOptions(false);
@@ -86,13 +78,13 @@ const DoubleDating = () => {
   const copyInviteLink = () => {
     const message = generateInviteMessage();
     navigator.clipboard.writeText(message).then(() => {
-      alert('تم نسخ رسالة الدعوة! 📋');
+      alert(t('invite_copied'));
       setShowInviteOptions(false);
     });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 pb-20" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 pb-20" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
       {/* Header */}
       <header className="bg-white shadow-sm p-4 flex items-center justify-between sticky top-0 z-10">
         <Button

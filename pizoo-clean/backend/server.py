@@ -157,33 +157,7 @@ def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
 
 
 # Create the main app without a prefix
-from fastapi.encoders import jsonable_encoder
-from bson import ObjectId as BsonObjectId
-
-# Custom JSON encoder for MongoDB ObjectId
-class CustomJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, BsonObjectId):
-            return str(obj)
-        if isinstance(obj, datetime):
-            return obj.isoformat()
-        return super().default(obj)
-
 app = FastAPI()
-
-# Add custom JSON response class
-from fastapi.responses import JSONResponse as FastAPIJSONResponse
-
-class JSONResponse(FastAPIJSONResponse):
-    def render(self, content) -> bytes:
-        return json.dumps(
-            content,
-            ensure_ascii=False,
-            allow_nan=False,
-            indent=None,
-            separators=(",", ":"),
-            cls=CustomJSONEncoder
-        ).encode("utf-8")
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")

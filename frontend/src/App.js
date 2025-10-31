@@ -125,6 +125,9 @@ function AppRoot() {
                     <Route path="/terms" element={<TermsNew />} />
                     <Route path="/privacy" element={<TermsNew />} />
                     <Route path="/cookies" element={<TermsNew />} />
+                    <Route path="/help" element={<HelpSupport />} />
+                    <Route path="/community" element={<CommunityGuidelines />} />
+                    <Route path="/safety" element={<SafetyCenter />} />
                     <Route path="/custom-logo" element={<CustomLogoPage />} />
                     <Route path="/dashboard" element={<Navigate to="/home" replace />} />
                     <Route

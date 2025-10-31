@@ -49,12 +49,12 @@ const Register = () => {
     setError('');
 
     if (!formData.termsAccepted) {
-      setError('يجب الموافقة على الشروط والأحكام');
+      setError(t('terms_required'));
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('يجب أن تكون كلمة المرور 6 أحرف على الأقل');
+      setError(t('password_length_error'));
       return;
     }
 

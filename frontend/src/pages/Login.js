@@ -118,22 +118,77 @@ const Login = () => {
               </Alert>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">
-                {t('email_or_phone')}
-              </Label>
-              <Input
-                id="email"
-                name="email"
-                type="text"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                placeholder={t('placeholder_email_phone')}
-                className="h-12 rounded-lg"
-                data-testid="email-input"
-              />
+            {/* Login Method Toggle */}
+            <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
+              <button
+                type="button"
+                onClick={() => setLoginMethod('email')}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-all ${
+                  loginMethod === 'email'
+                    ? 'bg-white text-pink-600 shadow-sm font-medium'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <Mail className="w-4 h-4" />
+                {t('email')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setLoginMethod('phone')}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-all ${
+                  loginMethod === 'phone'
+                    ? 'bg-white text-pink-600 shadow-sm font-medium'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <Phone className="w-4 h-4" />
+                {t('phone')}
+              </button>
             </div>
+
+            {/* Email or Phone Input */}
+            {loginMethod === 'email' ? (
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium">
+                  {t('email')}
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder={t('placeholder_email')}
+                  className="h-12 rounded-lg"
+                  data-testid="email-input"
+                />
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="text-sm font-medium">
+                  {t('phone_number')}
+                </Label>
+                <div className="flex gap-2">
+                  <CountryCodeSelect 
+                    value={countryCode} 
+                    onChange={setCountryCode}
+                    className="w-auto"
+                  />
+                  <Input
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    type="tel"
+                    required
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                    placeholder="501234567"
+                    className="flex-1 h-12 rounded-lg"
+                    data-testid="phone-input"
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="password" className="text-sm font-medium">

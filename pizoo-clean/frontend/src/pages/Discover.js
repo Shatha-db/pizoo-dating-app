@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
-import { Heart, X, User, MapPin, Briefcase } from 'lucide-react';
+import { Heart, X, User, MapPin, Briefcase, Sparkles, Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -10,28 +11,61 @@ const API = `${BACKEND_URL}/api`;
 
 const Discover = () => {
   const { token, logout } = useAuth();
+  const { t, i18n } = useTranslation(['discover', 'common']);
   const [profiles, setProfiles] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [useAI, setUseAI] = useState(true);  // Toggle for AI matching
 
   useEffect(() => {
     fetchProfiles();
-  }, []);
+  }, [useAI]);
 
   const fetchProfiles = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get(`${API}/profiles/discover`, {
+      const endpoint = useAI ? '/ai/match' : '/profiles/discover';
+      const response = await axios.get(`${API}${endpoint}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setProfiles(response.data.profiles);
+      
+      if (useAI) {
+        // AI matching response format
+        setProfiles(response.data.matches || []);
+      } else {
+        // Regular discover response format
+        setProfiles(response.data.profiles || []);
+      }
     } catch (error) {
       console.error('Error fetching profiles:', error);
+      // Fallback to regular discover if AI fails
+      if (useAI) {
+        setUseAI(false);
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLike = () => {
+  const handleLike = async () => {
+    try {
+      const profile = profiles[currentIndex];
+      const profileId = useAI ? profile.profile?.id : profile.user_id;
+      
+      await axios.post(
+        `${API}/likes/send`,
+        { liked_user_id: profileId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      // Track analytics
+      if (window.analytics) {
+        window.analytics.track('like_sent', { profile_id: profileId });
+      }
+    } catch (error) {
+      console.error('Error sending like:', error);
+    }
+    
     if (currentIndex < profiles.length - 1) {
       setCurrentIndex(currentIndex + 1);
     }
@@ -43,11 +77,19 @@ const Discover = () => {
     }
   };
 
+  const getCompatibilityBadge = (score) => {
+    if (score >= 70) return { text: t('high_compatibility', 'High'), color: 'bg-green-500' };
+    if (score >= 50) return { text: t('medium_compatibility', 'Medium'), color: 'bg-yellow-500' };
+    return { text: t('good_compatibility', 'Good'), color: 'bg-blue-500' };
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">{t('loading_matches', 'Finding your matches...')}</p>
+        </div>
           <p className="mt-4 text-gray-600">جاري التحميل...</p>
         </div>
       </div>

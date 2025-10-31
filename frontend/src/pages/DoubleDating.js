@@ -305,10 +305,10 @@ const DoubleDating = () => {
               <div className="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center">
                 <Heart className="w-5 h-5 text-white" />
               </div>
-              <h4 className="font-bold">ادعُ أصدقائك</h4>
+              <h4 className="font-bold">{t('invite_your_friends_card')}</h4>
             </div>
             <p className="text-sm text-gray-600">
-              شكّل ثُنائيًا مع ما يصل إلى 3 أصدقاء في موعد مزدوج
+              {t('invite_your_friends_card_desc')}
             </p>
           </Card>
 
@@ -317,10 +317,10 @@ const DoubleDating = () => {
               <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
                 <Users className="w-5 h-5 text-white" />
               </div>
-              <h4 className="font-bold">تبادل الإعجاب معًا</h4>
+              <h4 className="font-bold">{t('like_together')}</h4>
             </div>
             <p className="text-sm text-gray-600">
-              عند قبولك، ستبقى بإمكانك تبادل الإعجاب مع أناس مع أصدقائك
+              {t('like_together_desc')}
             </p>
           </Card>
         </div>

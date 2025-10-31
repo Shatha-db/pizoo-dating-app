@@ -94,11 +94,11 @@ const Register = () => {
   };
 
   const handleAppleSignup = () => {
-    alert('التسجيل بواسطة Apple - قريباً! 🍎');
+    alert(t('apple_coming_soon'));
   };
 
   const handleFacebookSignup = () => {
-    alert('التسجيل عبر Facebook - قريباً! 📘');
+    alert(t('facebook_coming_soon'));
   };
 
   const handlePhoneSignup = () => {

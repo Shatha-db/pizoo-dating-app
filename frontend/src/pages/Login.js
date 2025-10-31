@@ -46,7 +46,12 @@ const Login = () => {
     setError('');
     setLoading(true);
 
-    const result = await login(formData.email, formData.password);
+    // Determine the login identifier (email or phone with country code)
+    const identifier = loginMethod === 'phone' 
+      ? `${countryCode}${formData.phoneNumber}`
+      : formData.email;
+
+    const result = await login(identifier, formData.password);
 
     if (result.success) {
       // Save remember me preference

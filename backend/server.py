@@ -53,11 +53,13 @@ try:
             dsn=sentry_dsn,
             traces_sample_rate=float(os.getenv("SENTRY_TRACES_SAMPLE", "0.2")),
             environment=os.getenv("ENVIRONMENT", "production"),
-            integrations=[FastApiIntegration()]
+            integrations=[FastApiIntegration()],
+            send_default_pii=True,  # Include request headers, IP, user data
         )
         logging.info("✅ Sentry initialized for backend")
         logging.info(f"   DSN: {sentry_dsn[:50]}...")
         logging.info(f"   Environment: {os.getenv('ENVIRONMENT', 'production')}")
+        logging.info(f"   PII Tracking: Enabled")
     else:
         logging.warning("⚠️ Sentry DSN not configured")
 except ImportError:

@@ -1,6 +1,6 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, WebSocket, WebSocketDisconnect, File, UploadFile, Request, Form
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, WebSocket, WebSocketDisconnect, File, UploadFile, Request, Form, BackgroundTasks
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, JSONResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -21,9 +21,26 @@ from sms_service import generate_and_send, verify as verify_otp
 from twilio_service import create_voice_token, create_video_token, send_sms, verify_start, verify_check
 from twilio.twiml.voice_response import VoiceResponse, Dial
 from bson import ObjectId
+import httpx
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
+
+# Initialize Sentry for error tracking
+try:
+    import sentry_sdk
+    sentry_dsn = os.getenv("SENTRY_DSN_BACKEND")
+    if sentry_dsn:
+        sentry_sdk.init(
+            dsn=sentry_dsn,
+            traces_sample_rate=0.2,
+            environment=os.getenv("ENVIRONMENT", "production")
+        )
+        logging.info("✅ Sentry initialized for backend")
+except ImportError:
+    logging.warning("⚠️ Sentry SDK not installed. Run: pip install sentry-sdk")
+except Exception as e:
+    logging.error(f"❌ Failed to initialize Sentry: {e}")
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']

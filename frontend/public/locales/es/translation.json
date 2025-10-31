@@ -1,0 +1,23 @@
+{
+  "common": {
+    "app_name": "Pizoo",
+    "welcome": "Bienvenido",
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "next": "Siguiente",
+    "back": "Atrás"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "create_account": "Crear cuenta"
+  },
+  "settings": {
+    "title": "Configuración",
+    "language": "Idioma",
+    "select_language": "Selecciona tu idioma"
+  }
+}

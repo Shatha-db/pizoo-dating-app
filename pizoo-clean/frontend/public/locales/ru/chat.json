@@ -1,0 +1,26 @@
+{
+  "_todo": "Machine translation seed. Needs human review.",
+  "title": "Чат",
+  "messages": "Сообщения",
+  "sendMessage": "Отправить сообщение",
+  "typeMessage": "Напишите сообщение...",
+  "noMessages": "Пока нет сообщений",
+  "startConversation": "Начать разговор",
+  "online": "В сети",
+  "offline": "Не в сети",
+  "typing": "печатает...",
+  "seen": "Просмотрено",
+  "delivered": "Доставлено",
+  "sent": "Отправлено",
+  "safetyConsent": "Правила безопасности",
+  "agreeToSafety": "Я согласен следовать правилам безопасности",
+  "reportUser": "Пожаловаться на пользователя",
+  "blockUser": "Заблокировать пользователя",
+  "unblockUser": "Разблокировать пользователя",
+  "deleteConversation": "Удалить разговор",
+  "errors": {
+    "messageFailed": "Не удалось отправить сообщение",
+    "connectionLost": "Соединение потеряно",
+    "userBlocked": "Пользователь заблокирован"
+  }
+}

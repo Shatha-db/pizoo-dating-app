@@ -1,0 +1,21 @@
+{
+  "title": "Descubrir",
+  "nearbyUsers": "Usuarios cercanos",
+  "searchRadius": "Radio de búsqueda",
+  "recenterMap": "Recentrar mapa",
+  "locationPermission": "Permiso de ubicación",
+  "needLocation": "Necesitamos tu ubicación",
+  "locationDescription": "Para mostrarte usuarios cercanos y ayudarte a encontrar personas en tu área",
+  "allowNow": "Permitir ahora",
+  "maybeLater": "Quizás más tarde",
+  "locationDenied": "Acceso a la ubicación denegado",
+  "locationDeniedDescription": "Activa la ubicación en configuración para ver usuarios cercanos",
+  "distance": "Distancia",
+  "away": "de distancia",
+  "km": "km",
+  "viewProfile": "Ver perfil",
+  "errors": {
+    "locationFailed": "Fallo al obtener la ubicación",
+    "mapLoadFailed": "Fallo al cargar el mapa"
+  }
+}

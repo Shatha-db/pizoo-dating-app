@@ -4992,6 +4992,108 @@ async def ai_match_profiles(
         raise HTTPException(status_code=500, detail=f"Failed to generate AI matches: {str(e)}")
 
 
+# ==================== ADMIN ENDPOINTS ====================
+# Simple admin endpoints for dashboard - TODO: Add proper authentication
+
+@api_router.get("/admin/users")
+async def admin_list_users(
+    skip: int = 0,
+    limit: int = 50,
+    search: Optional[str] = None
+):
+    """
+    List all users for admin dashboard
+    TODO: Add admin authentication middleware
+    """
+    query = {"is_deleted": {"$ne": True}}
+    
+    if search:
+        query["$or"] = [
+            {"email": {"$regex": search, "$options": "i"}},
+            {"name": {"$regex": search, "$options": "i"}},
+            {"id": search}
+        ]
+    
+    users = await db.users.find(
+        query,
+        {
+            "id": 1,
+            "email": 1,
+            "name": 1,
+            "created_at": 1,
+            "is_deleted": 1,
+            "email_verified": 1,
+            "subscription_type": 1,
+            "_id": 0
+        }
+    ).skip(skip).limit(limit).to_list(length=limit)
+    
+    total = await db.users.count_documents(query)
+    
+    return {
+        "items": users,
+        "total": total,
+        "skip": skip,
+        "limit": limit
+    }
+
+
+@api_router.get("/admin/stats")
+async def admin_stats():
+    """
+    Get platform statistics for admin dashboard
+    TODO: Add admin authentication middleware
+    """
+    try:
+        # Count users
+        total_users = await db.users.count_documents({})
+        active_users = await db.users.count_documents({"is_deleted": {"$ne": True}})
+        verified_users = await db.users.count_documents({"email_verified": True})
+        
+        # Count profiles
+        profiles = await db.profiles.count_documents({})
+        complete_profiles = await db.profiles.count_documents({"profileSetupComplete": True})
+        
+        # Count interactions
+        messages = await db.messages.count_documents({})
+        matches = await db.matches.count_documents({})
+        likes = await db.likes.count_documents({})
+        swipes = await db.swipes.count_documents({})
+        
+        # Count subscriptions
+        free_users = await db.users.count_documents({"subscription_type": "free"})
+        gold_users = await db.users.count_documents({"subscription_type": "gold"})
+        platinum_users = await db.users.count_documents({"subscription_type": "platinum"})
+        
+        return {
+            "users": {
+                "total": total_users,
+                "active": active_users,
+                "verified": verified_users,
+                "deleted": total_users - active_users
+            },
+            "profiles": {
+                "total": profiles,
+                "complete": complete_profiles,
+                "incomplete": profiles - complete_profiles
+            },
+            "interactions": {
+                "messages": messages,
+                "matches": matches,
+                "likes": likes,
+                "swipes": swipes
+            },
+            "subscriptions": {
+                "free": free_users,
+                "gold": gold_users,
+                "platinum": platinum_users
+            }
+        }
+    except Exception as e:
+        logging.error(f"Failed to get admin stats: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve statistics")
+
+
 # Mount the API router
 app.include_router(api_router)
 

@@ -189,3 +189,5 @@ agent_communication:
     message: "✅ Completed Phase 1 & 2: Language selector now shows all 9 languages. Country selector expanded to 240+ countries with Popular section and search. Added to both Register and Login pages. ⏳ Phase 3: Enhanced image service ready for Cloudinary credentials. Waiting for user to provide CLOUDINARY_URL."
   - agent: "main"
     message: "✅✅✅ ALL PHASES COMPLETE! Cloudinary credentials configured and verified. Test upload successful. Image processing pipeline working: compression (8KB→1.8KB), auto-orient, EXIF strip, WebP preview generation, per-user folders (users/<userId>/). All 3 critical fixes now live and working!"
+  - agent: "main"
+    message: "🔧 ADDITIONAL FIXES: Fixed React Error #31 in ChatRoom.js & ChatList.js (objects rendered in JSX). Updated CORS_ORIGINS for proper domain whitelist. Added general /api/media/upload endpoint. Fixed Jitsi prejoin screen to skip directly to call. All services restarted and verified."

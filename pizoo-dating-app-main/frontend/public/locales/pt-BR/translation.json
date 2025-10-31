@@ -1,0 +1,33 @@
+{
+  "common": {
+    "app_name": "Pizoo",
+    "welcome": "Bem-vindo",
+    "loading": "Carregando...",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "next": "Próximo",
+    "back": "Voltar",
+    "submit": "Enviar",
+    "delete": "Excluir",
+    "edit": "Editar"
+  },
+  "auth": {
+    "login": "Entrar",
+    "register": "Cadastrar",
+    "email": "E-mail",
+    "password": "Senha",
+    "create_account": "Criar Nova Conta",
+    "welcome_back": "Bem-vindo de volta!"
+  },
+  "profile": {
+    "setup_title": "Complete Seu Perfil",
+    "display_name": "Nome de Exibição",
+    "photos": "Suas Fotos",
+    "everyone_here_to_see_you": "Todo mundo está aqui para ver você 📸"
+  },
+  "settings": {
+    "title": "Configurações",
+    "language": "Idioma",
+    "select_language": "Selecione Seu Idioma"
+  }
+}

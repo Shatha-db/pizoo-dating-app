@@ -1,0 +1,33 @@
+{
+  "home": "Accueil",
+  "discover": "Découvrir",
+  "likes": "J'aime",
+  "chat": "Messages",
+  "account": "Compte",
+  "language": "Langue",
+  "logout": "Déconnexion",
+  "save": "Enregistrer",
+  "cancel": "Annuler",
+  "loading": "Chargement...",
+  "error": "Erreur survenue",
+  "retry": "Réessayer",
+  "close": "Fermer",
+  "edit": "Modifier",
+  "delete": "Supprimer",
+  "confirm": "Confirmer",
+  "back": "Retour",
+  "next": "Suivant",
+  "done": "Terminé",
+  "settings": "Paramètres",
+  "card": {
+    "boost": "Booster",
+    "favorite": "Favori",
+    "like": "J'aime",
+    "pass": "Ignorer",
+    "rewind": "Revenir",
+    "verified": "Vérifié",
+    "online": "En ligne",
+    "icebreaker": "Brise-glace suggéré",
+    "view_full": "Voir en entier"
+  }
+}

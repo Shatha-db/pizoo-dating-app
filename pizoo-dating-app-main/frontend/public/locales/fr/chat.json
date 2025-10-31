@@ -1,0 +1,25 @@
+{
+  "title": "Discussion",
+  "messages": "Messages",
+  "sendMessage": "Envoyer un message",
+  "typeMessage": "Tapez un message...",
+  "noMessages": "Pas encore de messages",
+  "startConversation": "Commencer une conversation",
+  "online": "En ligne",
+  "offline": "Hors ligne",
+  "typing": "en train d'écrire...",
+  "seen": "Vu",
+  "delivered": "Livré",
+  "sent": "Envoyé",
+  "safetyConsent": "Directives de sécurité",
+  "agreeToSafety": "J'accepte de suivre les directives de sécurité",
+  "reportUser": "Signaler l'utilisateur",
+  "blockUser": "Bloquer l'utilisateur",
+  "unblockUser": "Débloquer l'utilisateur",
+  "deleteConversation": "Supprimer la conversation",
+  "errors": {
+    "messageFailed": "Échec de l'envoi du message",
+    "connectionLost": "Connexion perdue",
+    "userBlocked": "L'utilisateur est bloqué"
+  }
+}

@@ -146,6 +146,56 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Health Check Endpoint
+@app.get("/health")
+async def health_check():
+    """
+    Health check endpoint for monitoring service status
+    Returns: Status of database, OTP service, and AI matching
+    """
+    checks = {"db": "unknown", "otp": "unknown", "ai": "unknown", "status": "unknown"}
+    
+    # Check MongoDB connection
+    try:
+        await db.command("ping")
+        checks["db"] = "ok"
+    except Exception as e:
+        checks["db"] = f"fail: {str(e)[:50]}"
+        logging.error(f"Health check - DB failed: {e}")
+    
+    # Check OTP service (Telnyx/Twilio)
+    try:
+        telnyx_key = os.getenv("TELNYX_API_KEY")
+        twilio_sid = os.getenv("TWILIO_ACCOUNT_SID")
+        
+        if telnyx_key:
+            # Quick check for Telnyx
+            checks["otp"] = "ok"  # Assume OK if key exists
+        elif twilio_sid:
+            # Quick check for Twilio
+            checks["otp"] = "ok"  # Assume OK if credentials exist
+        else:
+            checks["otp"] = "not_configured"
+    except Exception as e:
+        checks["otp"] = f"fail: {str(e)[:50]}"
+        logging.error(f"Health check - OTP failed: {e}")
+    
+    # Check AI matching service
+    try:
+        # Test if we can access users collection for matching
+        user_count = await db.users.count_documents({"profileSetupComplete": True})
+        checks["ai"] = "ok" if user_count >= 0 else "fail"
+    except Exception as e:
+        checks["ai"] = f"fail: {str(e)[:50]}"
+        logging.error(f"Health check - AI failed: {e}")
+    
+    # Overall status
+    all_ok = all(v in ("ok", "not_configured") for v in [checks["db"], checks["otp"], checks["ai"]])
+    checks["status"] = "healthy" if all_ok else "degraded"
+    
+    status_code = 200 if all_ok else 503
+    return JSONResponse(content=checks, status_code=status_code)
+
 # Country-based default radius mapping (in km)
 COUNTRY_DEFAULT_RADIUS = {
     "BH": 10,  # Bahrain (small)

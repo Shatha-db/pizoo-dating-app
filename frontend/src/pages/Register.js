@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { Phone, Globe, Eye, EyeOff } from 'lucide-react';
 import CustomLogo from '../components/CustomLogo';
+import CountryCodeSelect from '../components/CountryCodeSelect';
 import { useTranslation } from 'react-i18next';
 
 const Register = () => {
@@ -22,11 +23,12 @@ const Register = () => {
     password: '',
     termsAccepted: false
   });
+  const [countryCode, setCountryCode] = useState('+966'); // Default to Saudi Arabia
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [registerMethod, setRegisterMethod] = useState('social'); // social or email
+  const [registerMethod, setRegisterMethod] = useState('social'); // social, email, or phone
   const [showLanguages, setShowLanguages] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // ✅ Password visibility state
+  const [showPassword, setShowPassword] = useState(false);
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);

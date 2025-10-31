@@ -130,3 +130,5 @@ frontend/node_modules/.cache/default-development/3.pack
 # Environment files
 *.env
 *.env.*
+pizoo-clean/frontend/node_modules/.cache/default-development/3.pack
+pizoo-clean/frontend/node_modules/.cache/default-development/0.pack

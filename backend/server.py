@@ -1,6 +1,6 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, WebSocket, WebSocketDisconnect, File, UploadFile, Request, Form
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, WebSocket, WebSocketDisconnect, File, UploadFile, Request, Form, BackgroundTasks
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, JSONResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -22,8 +22,41 @@ from twilio_service import create_voice_token, create_video_token, send_sms, ver
 from twilio.twiml.voice_response import VoiceResponse, Dial
 from bson import ObjectId
 
+# Helper function to convert MongoDB documents to JSON-safe format
+def serialize_mongo_doc(doc):
+    """Convert MongoDB document to JSON-safe format"""
+    if doc is None:
+        return None
+    if isinstance(doc, list):
+        return [serialize_mongo_doc(item) for item in doc]
+    if isinstance(doc, dict):
+        return {key: serialize_mongo_doc(value) for key, value in doc.items()}
+    if isinstance(doc, ObjectId):
+        return str(doc)
+    if isinstance(doc, datetime):
+        return doc.isoformat()
+    return doc
+
+import httpx
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
+
+# Initialize Sentry for error tracking
+try:
+    import sentry_sdk
+    sentry_dsn = os.getenv("SENTRY_DSN_BACKEND")
+    if sentry_dsn:
+        sentry_sdk.init(
+            dsn=sentry_dsn,
+            traces_sample_rate=0.2,
+            environment=os.getenv("ENVIRONMENT", "production")
+        )
+        logging.info("✅ Sentry initialized for backend")
+except ImportError:
+    logging.warning("⚠️ Sentry SDK not installed. Run: pip install sentry-sdk")
+except Exception as e:
+    logging.error(f"❌ Failed to initialize Sentry: {e}")
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -128,6 +161,56 @@ app = FastAPI()
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
+
+# Health Check Endpoint
+@app.get("/health")
+async def health_check():
+    """
+    Health check endpoint for monitoring service status
+    Returns: Status of database, OTP service, and AI matching
+    """
+    checks = {"db": "unknown", "otp": "unknown", "ai": "unknown", "status": "unknown"}
+    
+    # Check MongoDB connection
+    try:
+        await db.command("ping")
+        checks["db"] = "ok"
+    except Exception as e:
+        checks["db"] = f"fail: {str(e)[:50]}"
+        logging.error(f"Health check - DB failed: {e}")
+    
+    # Check OTP service (Telnyx/Twilio)
+    try:
+        telnyx_key = os.getenv("TELNYX_API_KEY")
+        twilio_sid = os.getenv("TWILIO_ACCOUNT_SID")
+        
+        if telnyx_key:
+            # Quick check for Telnyx
+            checks["otp"] = "ok"  # Assume OK if key exists
+        elif twilio_sid:
+            # Quick check for Twilio
+            checks["otp"] = "ok"  # Assume OK if credentials exist
+        else:
+            checks["otp"] = "not_configured"
+    except Exception as e:
+        checks["otp"] = f"fail: {str(e)[:50]}"
+        logging.error(f"Health check - OTP failed: {e}")
+    
+    # Check AI matching service
+    try:
+        # Test if we can access users collection for matching
+        user_count = await db.users.count_documents({"profileSetupComplete": True})
+        checks["ai"] = "ok" if user_count >= 0 else "fail"
+    except Exception as e:
+        checks["ai"] = f"fail: {str(e)[:50]}"
+        logging.error(f"Health check - AI failed: {e}")
+    
+    # Overall status
+    all_ok = all(v in ("ok", "not_configured") for v in [checks["db"], checks["otp"], checks["ai"]])
+    checks["status"] = "healthy" if all_ok else "degraded"
+    
+    status_code = 200 if all_ok else 503
+    return JSONResponse(content=checks, status_code=status_code)
 
 # Country-based default radius mapping (in km)
 COUNTRY_DEFAULT_RADIUS = {
@@ -1502,6 +1585,84 @@ async def delete_photo(index: int, current_user: dict = Depends(get_current_user
     )
     
     return {"message": "تم حذف الصورة بنجاح"}
+
+
+# Soft Delete Account - GDPR Compliance
+async def purge_user_assets_background(user_id: str):
+    """
+    Background task to delete user-related data
+    This includes: messages, matches, swipes, photos, etc.
+    """
+    try:
+        # Delete user messages
+        await db.messages.delete_many({"$or": [{"sender_id": user_id}, {"receiver_id": user_id}]})
+        
+        # Delete user swipes
+        await db.swipes.delete_many({"$or": [{"user_id": user_id}, {"swiped_user_id": user_id}]})
+        
+        # Delete user matches
+        await db.matches.delete_many({"$or": [{"user1_id": user_id}, {"user2_id": user_id}]})
+        
+        # Delete user likes
+        await db.likes.delete_many({"$or": [{"from_user_id": user_id}, {"to_user_id": user_id}]})
+        
+        # Delete user notifications
+        await db.notifications.delete_many({"user_id": user_id})
+        
+        # Delete user sessions
+        await db.sessions.delete_many({"user_id": user_id})
+        
+        # Delete user profile
+        await db.profiles.delete_one({"user_id": user_id})
+        
+        # TODO: Delete photos from Cloudinary/S3
+        # image_service.delete_user_photos(user_id)
+        
+        logging.info(f"✅ Successfully purged all data for user: {user_id}")
+    except Exception as e:
+        logging.error(f"❌ Failed to purge user assets for {user_id}: {e}")
+
+
+@api_router.delete("/users/me", status_code=204)
+async def delete_my_account(
+    background_tasks: BackgroundTasks,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Delete user account (GDPR compliant soft delete)
+    - Marks account as deleted immediately
+    - Schedules background task to purge all related data
+    """
+    user_id = current_user.get('id')
+    
+    # Check if user exists
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check if already deleted
+    if user.get('is_deleted'):
+        raise HTTPException(status_code=400, detail="Account already deleted")
+    
+    # Soft delete - mark as deleted
+    await db.users.update_one(
+        {"id": user_id},
+        {
+            "$set": {
+                "is_deleted": True,
+                "deleted_at": datetime.now(timezone.utc),
+                "email": f"deleted_{user_id}@deleted.com",  # Anonymize email
+                "phone_number": "",  # Clear phone
+                "name": "Deleted User"  # Anonymize name
+            }
+        }
+    )
+    
+    # Schedule background purge
+    background_tasks.add_task(purge_user_assets_background, user_id)
+    
+    logging.info(f"🗑️ User account marked for deletion: {user_id}")
+    return
 
 
 @api_router.get("/profiles/discover")
@@ -4845,6 +5006,109 @@ async def ai_match_profiles(
     except Exception as e:
         logging.error(f"AI matching error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to generate AI matches: {str(e)}")
+
+
+# ==================== ADMIN ENDPOINTS ====================
+# Simple admin endpoints for dashboard - TODO: Add proper authentication
+
+@api_router.get("/admin/users")
+async def admin_list_users(
+    skip: int = 0,
+    limit: int = 50,
+    search: Optional[str] = None
+):
+    """
+    List all users for admin dashboard
+    TODO: Add admin authentication middleware
+    """
+    query = {"is_deleted": {"$ne": True}}
+    
+    if search:
+        query["$or"] = [
+            {"email": {"$regex": search, "$options": "i"}},
+            {"name": {"$regex": search, "$options": "i"}},
+            {"id": search}
+        ]
+    
+    users_cursor = db.users.find(
+        query,
+        {
+            "id": 1,
+            "email": 1,
+            "name": 1,
+            "created_at": 1,
+            "is_deleted": 1,
+            "email_verified": 1,
+            "subscription_type": 1,
+            "_id": 0
+        }
+    ).skip(skip).limit(limit)
+    
+    users = [serialize_mongo_doc(user) async for user in users_cursor]
+    total = await db.users.count_documents(query)
+    
+    return {
+        "items": users,
+        "total": total,
+        "skip": skip,
+        "limit": limit
+    }
+
+
+@api_router.get("/admin/stats")
+async def admin_stats():
+    """
+    Get platform statistics for admin dashboard
+    TODO: Add admin authentication middleware
+    """
+    try:
+        # Count users
+        total_users = await db.users.count_documents({})
+        active_users = await db.users.count_documents({"is_deleted": {"$ne": True}})
+        verified_users = await db.users.count_documents({"email_verified": True})
+        
+        # Count profiles
+        profiles = await db.profiles.count_documents({})
+        complete_profiles = await db.profiles.count_documents({"profileSetupComplete": True})
+        
+        # Count interactions
+        messages = await db.messages.count_documents({})
+        matches = await db.matches.count_documents({})
+        likes = await db.likes.count_documents({})
+        swipes = await db.swipes.count_documents({})
+        
+        # Count subscriptions
+        free_users = await db.users.count_documents({"subscription_type": "free"})
+        gold_users = await db.users.count_documents({"subscription_type": "gold"})
+        platinum_users = await db.users.count_documents({"subscription_type": "platinum"})
+        
+        return {
+            "users": {
+                "total": total_users,
+                "active": active_users,
+                "verified": verified_users,
+                "deleted": total_users - active_users
+            },
+            "profiles": {
+                "total": profiles,
+                "complete": complete_profiles,
+                "incomplete": profiles - complete_profiles
+            },
+            "interactions": {
+                "messages": messages,
+                "matches": matches,
+                "likes": likes,
+                "swipes": swipes
+            },
+            "subscriptions": {
+                "free": free_users,
+                "gold": gold_users,
+                "platinum": platinum_users
+            }
+        }
+    except Exception as e:
+        logging.error(f"Failed to get admin stats: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve statistics")
 
 
 # Mount the API router

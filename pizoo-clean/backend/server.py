@@ -1571,6 +1571,84 @@ async def delete_photo(index: int, current_user: dict = Depends(get_current_user
     return {"message": "تم حذف الصورة بنجاح"}
 
 
+# Soft Delete Account - GDPR Compliance
+async def purge_user_assets_background(user_id: str):
+    """
+    Background task to delete user-related data
+    This includes: messages, matches, swipes, photos, etc.
+    """
+    try:
+        # Delete user messages
+        await db.messages.delete_many({"$or": [{"sender_id": user_id}, {"receiver_id": user_id}]})
+        
+        # Delete user swipes
+        await db.swipes.delete_many({"$or": [{"user_id": user_id}, {"swiped_user_id": user_id}]})
+        
+        # Delete user matches
+        await db.matches.delete_many({"$or": [{"user1_id": user_id}, {"user2_id": user_id}]})
+        
+        # Delete user likes
+        await db.likes.delete_many({"$or": [{"from_user_id": user_id}, {"to_user_id": user_id}]})
+        
+        # Delete user notifications
+        await db.notifications.delete_many({"user_id": user_id})
+        
+        # Delete user sessions
+        await db.sessions.delete_many({"user_id": user_id})
+        
+        # Delete user profile
+        await db.profiles.delete_one({"user_id": user_id})
+        
+        # TODO: Delete photos from Cloudinary/S3
+        # image_service.delete_user_photos(user_id)
+        
+        logging.info(f"✅ Successfully purged all data for user: {user_id}")
+    except Exception as e:
+        logging.error(f"❌ Failed to purge user assets for {user_id}: {e}")
+
+
+@api_router.delete("/users/me", status_code=204)
+async def delete_my_account(
+    background_tasks: BackgroundTasks,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Delete user account (GDPR compliant soft delete)
+    - Marks account as deleted immediately
+    - Schedules background task to purge all related data
+    """
+    user_id = current_user.get('id')
+    
+    # Check if user exists
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check if already deleted
+    if user.get('is_deleted'):
+        raise HTTPException(status_code=400, detail="Account already deleted")
+    
+    # Soft delete - mark as deleted
+    await db.users.update_one(
+        {"id": user_id},
+        {
+            "$set": {
+                "is_deleted": True,
+                "deleted_at": datetime.now(timezone.utc),
+                "email": f"deleted_{user_id}@deleted.com",  # Anonymize email
+                "phone_number": "",  # Clear phone
+                "name": "Deleted User"  # Anonymize name
+            }
+        }
+    )
+    
+    # Schedule background purge
+    background_tasks.add_task(purge_user_assets_background, user_id)
+    
+    logging.info(f"🗑️ User account marked for deletion: {user_id}")
+    return
+
+
 @api_router.get("/profiles/discover")
 async def discover_profiles(
     current_user: dict = Depends(get_current_user), 

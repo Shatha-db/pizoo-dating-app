@@ -309,6 +309,13 @@ const ChatRoom = () => {
         {messages.map((msg, index) => {
           const isSent = msg.sender_id === user?.id;
           
+          // ✅ Fix React Error #31: Ensure content is always a string
+          const safeContent = typeof msg.content === 'string' 
+            ? msg.content 
+            : (typeof msg.content === 'object' && msg.content !== null)
+              ? JSON.stringify(msg.content)
+              : String(msg.content || '');
+          
           return (
             <div
               key={msg.id || index}
@@ -321,7 +328,7 @@ const ChatRoom = () => {
                     : 'bg-white text-gray-800 shadow-md'
                 }`}
               >
-                <p className="break-words">{msg.content}</p>
+                <p className="break-words">{safeContent}</p>
                 <div className={`text-xs mt-1 flex items-center gap-1 ${isSent ? 'opacity-75 justify-end' : 'opacity-60'}`}>
                   <span>{formatTimeOnly(msg.created_at, 'ar')}</span>
                   {isSent && (

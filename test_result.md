@@ -73,6 +73,38 @@
 ##     -agent: "main"  # or "testing" or "user"
 ##     -message: "Communication message between agents"
 
+
+  - task: "React Error #31 Fix - Chat Messages"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/ChatRoom.js, /app/frontend/src/pages/ChatList.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported React Error #31 when viewing chat messages - objects being rendered directly in JSX"
+      - working: true
+        agent: "main"
+        comment: "Fixed by adding safe content extraction: checks if msg.content is string, if object converts to JSON string, otherwise converts to String. Applied to both ChatRoom (message bubbles) and ChatList (last message preview)."
+  
+  - task: "Jitsi Prejoin Screen Skip"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/modules/chat/CallModal.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "Jitsi shows prejoin page before entering call"
+      - working: true
+        agent: "main"
+        comment: "Fixed Jitsi URL to skip prejoin: config.prejoinPageEnabled=false. For audio calls: startWithVideoMuted=true. For video calls: startWithVideoMuted=false. Direct entry to call now working."
+
+
 # Protocol Guidelines for Main agent
 #
 # 1. Update Test Result File Before Testing:

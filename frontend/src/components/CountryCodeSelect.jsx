@@ -1,36 +1,10 @@
 import React, { useState } from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { POPULAR_COUNTRIES, getAllCountries } from '../data/countries';
 
-// Popular countries with flags and dial codes
-const COUNTRIES = [
-  { code: 'SA', name: 'Saudi Arabia', nameAr: 'السعودية', dial: '+966', flag: '🇸🇦' },
-  { code: 'AE', name: 'UAE', nameAr: 'الإمارات', dial: '+971', flag: '🇦🇪' },
-  { code: 'US', name: 'United States', nameAr: 'الولايات المتحدة', dial: '+1', flag: '🇺🇸' },
-  { code: 'GB', name: 'United Kingdom', nameAr: 'المملكة المتحدة', dial: '+44', flag: '🇬🇧' },
-  { code: 'EG', name: 'Egypt', nameAr: 'مصر', dial: '+20', flag: '🇪🇬' },
-  { code: 'JO', name: 'Jordan', nameAr: 'الأردن', dial: '+962', flag: '🇯🇴' },
-  { code: 'KW', name: 'Kuwait', nameAr: 'الكويت', dial: '+965', flag: '🇰🇼' },
-  { code: 'QA', name: 'Qatar', nameAr: 'قطر', dial: '+974', flag: '🇶🇦' },
-  { code: 'BH', name: 'Bahrain', nameAr: 'البحرين', dial: '+973', flag: '🇧🇭' },
-  { code: 'OM', name: 'Oman', nameAr: 'عمان', dial: '+968', flag: '🇴🇲' },
-  { code: 'LB', name: 'Lebanon', nameAr: 'لبنان', dial: '+961', flag: '🇱🇧' },
-  { code: 'SY', name: 'Syria', nameAr: 'سوريا', dial: '+963', flag: '🇸🇾' },
-  { code: 'IQ', name: 'Iraq', nameAr: 'العراق', dial: '+964', flag: '🇮🇶' },
-  { code: 'MA', name: 'Morocco', nameAr: 'المغرب', dial: '+212', flag: '🇲🇦' },
-  { code: 'DZ', name: 'Algeria', nameAr: 'الجزائر', dial: '+213', flag: '🇩🇿' },
-  { code: 'TN', name: 'Tunisia', nameAr: 'تونس', dial: '+216', flag: '🇹🇳' },
-  { code: 'FR', name: 'France', nameAr: 'فرنسا', dial: '+33', flag: '🇫🇷' },
-  { code: 'ES', name: 'Spain', nameAr: 'إسبانيا', dial: '+34', flag: '🇪🇸' },
-  { code: 'DE', name: 'Germany', nameAr: 'ألمانيا', dial: '+49', flag: '🇩🇪' },
-  { code: 'IT', name: 'Italy', nameAr: 'إيطاليا', dial: '+39', flag: '🇮🇹' },
-  { code: 'TR', name: 'Turkey', nameAr: 'تركيا', dial: '+90', flag: '🇹🇷' },
-  { code: 'CA', name: 'Canada', nameAr: 'كندا', dial: '+1', flag: '🇨🇦' },
-  { code: 'AU', name: 'Australia', nameAr: 'أستراليا', dial: '+61', flag: '🇦🇺' },
-  { code: 'IN', name: 'India', nameAr: 'الهند', dial: '+91', flag: '🇮🇳' },
-  { code: 'PK', name: 'Pakistan', nameAr: 'باكستان', dial: '+92', flag: '🇵🇰' },
-  { code: 'BD', name: 'Bangladesh', nameAr: 'بنغلاديش', dial: '+880', flag: '🇧🇩' },
-];
+// Get all countries with popular section first
+const ALL_COUNTRIES_LIST = getAllCountries();
 
 const CountryCodeSelect = ({ value, onChange, className = '' }) => {
   const { t, i18n } = useTranslation('auth');

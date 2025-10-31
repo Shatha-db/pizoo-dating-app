@@ -136,9 +136,12 @@ class ImageUploadService:
             return image_bytes
     
     @classmethod
-    def validate_image(cls, file_bytes: bytes, filename: str) -> Tuple[bool, Optional[str]]:
+    def validate_image(cls, file_bytes: bytes, filename: str, mime_type: str = None) -> Tuple[bool, Optional[str]]:
         """
         Validate image before upload
+        - Check file size
+        - Check MIME type against allowed list
+        - Verify it's a valid image
         Returns: (is_valid, error_message)
         """
         # Check file size
@@ -147,11 +150,20 @@ class ImageUploadService:
             size_mb = file_size / (1024 * 1024)
             return False, f"حجم الملف ({size_mb:.1f}MB) يتجاوز الحد الأقصى {cls.MAX_FILE_SIZE_MB}MB"
         
-        # Check file type
+        # Check MIME type if provided
+        if mime_type:
+            if not any(allowed in mime_type.lower() for allowed in ALLOWED_MIME):
+                allowed_formats = ', '.join([m.split('/')[-1].upper() for m in ALLOWED_MIME])
+                return False, f"صيغة الصورة غير مدعومة. الصيغ المدعومة: {allowed_formats}"
+        
+        # Check file type by opening it
         try:
             image = Image.open(io.BytesIO(file_bytes))
             # Verify it's actually an image
             image.verify()
+            
+            # Re-open for format check (verify() closes the file)
+            image = Image.open(io.BytesIO(file_bytes))
             
             # Check format
             allowed_formats = ['JPEG', 'JPG', 'PNG', 'WEBP', 'HEIC', 'HEIF']

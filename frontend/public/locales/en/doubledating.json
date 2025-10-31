@@ -27,5 +27,9 @@
   "invite_twitter_message": "Join me on Pizoo - the best double dating app! 🔥💕",
   "invite_copied": "Invite message copied! 📋",
   "no_friends_yet": "No double dating friends yet",
-  "start_inviting": "Start inviting your friends to join you!"
+  "start_inviting": "Start inviting your friends to join you!",
+  "invite_your_friends_card": "Invite your friends",
+  "invite_your_friends_card_desc": "Form a duo with up to 3 friends for a double date",
+  "like_together": "Like together",
+  "like_together_desc": "When accepted, you can still like people with your friends"
 }

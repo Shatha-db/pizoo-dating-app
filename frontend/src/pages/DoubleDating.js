@@ -134,9 +134,9 @@ const DoubleDating = () => {
 
               <div className="flex items-center justify-between py-2">
                 <div>
-                  <div className="font-medium">أظهر أصدقاء على حسابي الشخصي</div>
+                  <div className="font-medium">{t('show_friend_on_my_profile')}</div>
                   <div className="text-sm text-gray-600">
-                    قد يظهر اسم وصورة صديقك المزدوج في الواعدة المزدوجة على حسابك الشخصي
+                    {t('show_friend_on_my_profile_desc')}
                   </div>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">

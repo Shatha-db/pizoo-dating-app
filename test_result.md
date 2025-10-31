@@ -26,6 +26,19 @@
 ##     status_history:
 ##         -working: true  # or false or "NA"
 ##         -agent: "main"  # or "testing" or "user"
+
+  - task: "General Media Upload Endpoint"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Added POST /api/media/upload endpoint with support for all media types (profile, story, verification, avatar). Returns url, webp_url, dimensions. Integrated with Cloudinary service."
+
 ##         -comment: "Detailed comment about status"
 ##
 ## frontend:

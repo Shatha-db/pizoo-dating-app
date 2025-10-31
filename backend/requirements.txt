@@ -91,3 +91,6 @@ Werkzeug==3.1.3
 wsproto==1.2.0
 yarl==1.22.0
 twilio==8.10.0
+livekit==1.0.17
+livekit-api==1.0.7
+livekit-protocol==1.0.8

@@ -110,6 +110,23 @@
       - working: false
         agent: "user"
         comment: "Legal pages showing i18n keys instead of text. Support pages not opening (Help, Community, Safety)."
+
+
+  - task: "LiveKit RTC Integration - Video/Voice Calls"
+    implemented: true
+    working: "pending_credentials"
+    file: "/app/backend/livekit_service.py, /app/backend/server.py, /app/frontend/src/modules/chat/LiveKitCallModal.jsx, /app/frontend/src/pages/ChatRoom.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "Requested migration from Jitsi to LiveKit for better control and quality."
+      - working: "pending_credentials"
+        agent: "main"
+        comment: "Complete LiveKit integration implemented. Backend: token generation endpoint, LiveKitService class. Frontend: LiveKitCallModal component with video conference, automatic layout, controls. Waiting for LIVEKIT_API_KEY, LIVEKIT_API_SECRET, LIVEKIT_URL from user to test."
+
       - working: true
         agent: "main"
         comment: "Fixed i18n.js by adding 'privacy' and 'cookies' to namespaces. Created 3 new pages: HelpSupport.js, CommunityGuidelines.js, SafetyCenter.js - all bilingual (EN/AR) with RTL support. Added routes to App.js and connected navigation from Settings.js. All pages now working correctly."

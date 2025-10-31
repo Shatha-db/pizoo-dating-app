@@ -183,10 +183,16 @@ class ImageUploadService:
         user_id: str,
         upload_type: str = "profile",  # avatar, story, verification, profile
         filename: Optional[str] = None,
-        is_primary: bool = False
+        is_primary: bool = False,
+        mime_type: str = None
     ) -> Dict:
         """
         Upload image to Cloudinary with proper organization
+        - Stores under users/<userId>/ folder structure
+        - Returns secure HTTPS URLs
+        - Auto-orients and strips EXIF
+        - Resizes to max 1600px on longest side
+        - Generates WebP preview
         
         Args:
             file_bytes: Image file bytes
@@ -194,12 +200,14 @@ class ImageUploadService:
             upload_type: Type of upload (avatar, story, verification, profile)
             filename: Original filename (optional)
             is_primary: Whether this is the primary/avatar photo
+            mime_type: MIME type of the file (for validation)
             
         Returns:
             Dict with upload result:
             {
                 "success": bool,
-                "url": str (secure_url),
+                "url": str (secure_url - original),
+                "webp_url": str (secure_url - WebP preview),
                 "public_id": str,
                 "width": int,
                 "height": int,
@@ -214,22 +222,26 @@ class ImageUploadService:
                 logger.error("❌ Cloudinary not configured")
                 return {
                     "success": False,
-                    "error": "خدمة رفع الصور غير متاحة حالياً"
+                    "error": "خدمة رفع الصور غير متاحة حالياً",
+                    "error_code": "SERVICE_UNAVAILABLE"
                 }
             
             # Validate image
-            is_valid, error_msg = cls.validate_image(file_bytes, filename or "image")
+            is_valid, error_msg = cls.validate_image(file_bytes, filename or "image", mime_type)
             if not is_valid:
+                # Return appropriate HTTP error code
+                error_code = "UNSUPPORTED_TYPE" if "صيغة" in error_msg else "FILE_TOO_LARGE"
                 return {
                     "success": False,
-                    "error": error_msg
+                    "error": error_msg,
+                    "error_code": error_code
                 }
             
-            # Compress image
-            logger.info("🗜️ Compressing image before upload...")
+            # Compress image (auto-orient, strip EXIF, resize)
+            logger.info("🗜️ Processing image: auto-orient, strip EXIF, resize, compress...")
             compressed_bytes = cls.compress_image(file_bytes)
             
-            # Determine folder
+            # Determine folder (users/<userId>/)
             folder = cls.FOLDERS.get(upload_type, cls.FOLDERS["profile"])
             folder_path = f"{folder}/{user_id}"
             
@@ -242,7 +254,17 @@ class ImageUploadService:
                 "overwrite": False,
                 "unique_filename": True,
                 "use_filename": bool(filename),
-                "tags": [upload_type, user_id]
+                "tags": [upload_type, user_id],
+                "eager": [
+                    # Generate WebP preview
+                    {
+                        "width": cls.MAX_IMAGE_WIDTH,
+                        "crop": "limit",
+                        "quality": "auto:good",
+                        "fetch_format": "webp"
+                    }
+                ],
+                "eager_async": False  # Wait for transformations
             }
             
             # Add transformation for optimization
@@ -258,6 +280,7 @@ class ImageUploadService:
             # If this is primary avatar, set specific public_id
             if is_primary and upload_type == "avatar":
                 upload_options["public_id"] = f"{folder_path}/primary"
+                upload_options["overwrite"] = True
                 upload_options["overwrite"] = True
             
             # Upload to Cloudinary

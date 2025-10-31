@@ -94,7 +94,7 @@ const DoubleDating = () => {
         >
           <X className="w-6 h-6" />
         </Button>
-        <h1 className="text-xl font-bold">أصدقاء</h1>
+        <h1 className="text-xl font-bold">{t('title')}</h1>
         <Button
           variant="ghost"
           size="icon"

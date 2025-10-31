@@ -45,16 +45,23 @@ load_dotenv(ROOT_DIR / '.env')
 # Initialize Sentry for error tracking
 try:
     import sentry_sdk
-    sentry_dsn = os.getenv("SENTRY_DSN_BACKEND")
+    from sentry_sdk.integrations.fastapi import FastApiIntegration
+    
+    sentry_dsn = os.getenv("SENTRY_DSN_BACKEND") or os.getenv("SENTRY_DSN")
     if sentry_dsn:
         sentry_sdk.init(
             dsn=sentry_dsn,
-            traces_sample_rate=0.2,
-            environment=os.getenv("ENVIRONMENT", "production")
+            traces_sample_rate=float(os.getenv("SENTRY_TRACES_SAMPLE", "0.2")),
+            environment=os.getenv("ENVIRONMENT", "production"),
+            integrations=[FastApiIntegration()]
         )
         logging.info("✅ Sentry initialized for backend")
+        logging.info(f"   DSN: {sentry_dsn[:50]}...")
+        logging.info(f"   Environment: {os.getenv('ENVIRONMENT', 'production')}")
+    else:
+        logging.warning("⚠️ Sentry DSN not configured")
 except ImportError:
-    logging.warning("⚠️ Sentry SDK not installed. Run: pip install sentry-sdk")
+    logging.warning("⚠️ Sentry SDK not installed. Run: pip install sentry-sdk[fastapi]")
 except Exception as e:
     logging.error(f"❌ Failed to initialize Sentry: {e}")
 

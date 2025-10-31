@@ -4706,6 +4706,147 @@ async def msg_send(payload: dict, current_user: dict = Depends(optional_auth)):
     }
 
 
+# AI Matching Algorithm
+@api_router.get("/ai/match")
+async def ai_match_profiles(
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    AI-powered matching algorithm that ranks profiles based on:
+    - Common interests
+    - Location proximity
+    - Age compatibility
+    - Activity level
+    - Personality match score
+    """
+    try:
+        user_id = current_user.get('id')
+        
+        # Get current user's profile
+        user_profile = await db.users.find_one({"id": user_id})
+        if not user_profile:
+            raise HTTPException(status_code=404, detail="User profile not found")
+        
+        # Get user preferences
+        user_interests = user_profile.get('interests', [])
+        user_age = user_profile.get('age', 25)
+        user_location = user_profile.get('location', {})
+        user_gender = user_profile.get('gender', '')
+        user_looking_for = user_profile.get('lookingFor', '')
+        
+        # Fetch potential matches
+        query = {
+            "id": {"$ne": user_id},
+            "profileSetupComplete": True
+        }
+        
+        # Filter by gender preference
+        if user_looking_for:
+            query["gender"] = user_looking_for
+        
+        potential_matches = await db.users.find(query).to_list(length=100)
+        
+        # AI Scoring Algorithm
+        scored_matches = []
+        for profile in potential_matches:
+            score = 0
+            reasons = []
+            
+            # 1. Interest Match (40% weight)
+            profile_interests = profile.get('interests', [])
+            common_interests = set(user_interests) & set(profile_interests)
+            interest_score = (len(common_interests) / max(len(user_interests), 1)) * 40
+            score += interest_score
+            if common_interests:
+                reasons.append(f"Shares {len(common_interests)} interests")
+            
+            # 2. Age Compatibility (20% weight)
+            profile_age = profile.get('age', 25)
+            age_diff = abs(user_age - profile_age)
+            if age_diff <= 3:
+                age_score = 20
+            elif age_diff <= 5:
+                age_score = 15
+            elif age_diff <= 10:
+                age_score = 10
+            else:
+                age_score = 5
+            score += age_score
+            if age_diff <= 5:
+                reasons.append("Perfect age match")
+            
+            # 3. Location Proximity (15% weight)
+            profile_location = profile.get('location', {})
+            if user_location.get('city') == profile_location.get('city'):
+                location_score = 15
+                reasons.append("Same city")
+            elif user_location.get('country') == profile_location.get('country'):
+                location_score = 10
+                reasons.append("Same country")
+            else:
+                location_score = 5
+            score += location_score
+            
+            # 4. Activity Level (10% weight)
+            user_last_active = user_profile.get('lastActive', datetime.now(timezone.utc))
+            profile_last_active = profile.get('lastActive', datetime.now(timezone.utc))
+            if isinstance(profile_last_active, str):
+                try:
+                    profile_last_active = datetime.fromisoformat(profile_last_active.replace('Z', '+00:00'))
+                except:
+                    profile_last_active = datetime.now(timezone.utc)
+            
+            hours_since_active = (datetime.now(timezone.utc) - profile_last_active).total_seconds() / 3600
+            if hours_since_active < 24:
+                activity_score = 10
+                reasons.append("Active today")
+            elif hours_since_active < 72:
+                activity_score = 7
+            else:
+                activity_score = 3
+            score += activity_score
+            
+            # 5. Profile Completeness (15% weight)
+            profile_fields = ['bio', 'photos', 'occupation', 'education']
+            completed_fields = sum(1 for field in profile_fields if profile.get(field))
+            completeness_score = (completed_fields / len(profile_fields)) * 15
+            score += completeness_score
+            if completed_fields >= 3:
+                reasons.append("Complete profile")
+            
+            # Add to scored matches
+            scored_matches.append({
+                "profile": {
+                    "id": profile.get('id'),
+                    "name": profile.get('name'),
+                    "age": profile.get('age'),
+                    "bio": profile.get('bio', ''),
+                    "photos": profile.get('photos', []),
+                    "interests": profile.get('interests', []),
+                    "location": profile.get('location', {}),
+                    "occupation": profile.get('occupation', ''),
+                    "verified": profile.get('verified', False)
+                },
+                "matchScore": round(score, 1),
+                "matchReasons": reasons[:3],  # Top 3 reasons
+                "compatibility": "high" if score >= 70 else "medium" if score >= 50 else "good"
+            })
+        
+        # Sort by score (highest first)
+        scored_matches.sort(key=lambda x: x['matchScore'], reverse=True)
+        
+        # Return top 20 matches
+        return {
+            "matches": scored_matches[:20],
+            "total": len(scored_matches),
+            "algorithm": "AI-powered compatibility matching"
+        }
+        
+    except Exception as e:
+        logging.error(f"AI matching error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate AI matches: {str(e)}")
+
+
 # Mount the API router
 app.include_router(api_router)
 

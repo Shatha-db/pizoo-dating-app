@@ -1616,6 +1616,92 @@ async def upload_profile_photo(
         )
 
 
+
+@api_router.post("/media/upload")
+async def upload_media(
+    file: UploadFile = File(...),
+    upload_type: str = Form("profile"),  # profile, story, verification, avatar
+    is_primary: bool = Form(False),
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    General media upload endpoint
+    - Auto-orient and strip EXIF metadata
+    - Resize to max 1600px on longest side
+    - Generate WebP preview
+    - Store in users/<userId>/ folder
+    - Return secure HTTPS URLs
+    
+    Supported types: profile, story, verification, avatar
+    Max size: 5MB (configurable via MAX_IMAGE_MB)
+    Allowed formats: JPEG, PNG, WebP (configurable via ALLOWED_MIME)
+    """
+    try:
+        # Read file content
+        file_content = await file.read()
+        
+        # Upload to Cloudinary using ImageUploadService
+        upload_result = ImageUploadService.upload_image(
+            file_bytes=file_content,
+            user_id=current_user['id'],
+            upload_type=upload_type,
+            filename=file.filename,
+            is_primary=is_primary,
+            mime_type=file.content_type
+        )
+        
+        # Check if upload was successful
+        if not upload_result.get("success"):
+            error_code = upload_result.get("error_code", "UNKNOWN")
+            error_message = upload_result.get("error", "فشل رفع الصورة")
+            
+            # Return appropriate HTTP status codes
+            if error_code == "FILE_TOO_LARGE":
+                raise HTTPException(
+                    status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                    detail=error_message
+                )
+            elif error_code == "UNSUPPORTED_TYPE":
+                raise HTTPException(
+                    status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+                    detail=error_message
+                )
+            elif error_code == "SERVICE_UNAVAILABLE":
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail=error_message
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=error_message
+                )
+        
+        return {
+            "success": True,
+            "message": "تم رفع الملف بنجاح",
+            "media": {
+                "url": upload_result['url'],
+                "webp_url": upload_result.get('webp_url'),
+                "public_id": upload_result.get('public_id'),
+                "width": upload_result.get('width'),
+                "height": upload_result.get('height'),
+                "format": upload_result.get('format'),
+                "size": upload_result.get('size'),
+                "type": upload_type
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Media upload error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="حدث خطأ أثناء رفع الملف"
+        )
+
+
 @api_router.delete("/profile/photo/{index}")
 async def delete_photo(index: int, current_user: dict = Depends(get_current_user)):
     profile = await db.profiles.find_one({"user_id": current_user['id']}, {"_id": 0})

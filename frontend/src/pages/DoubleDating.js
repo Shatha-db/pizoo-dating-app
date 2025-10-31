@@ -282,7 +282,7 @@ const DoubleDating = () => {
                   className="w-full bg-sky-500 hover:bg-sky-600 text-white flex items-center gap-3 justify-center py-3"
                 >
                   <Share2 className="w-5 h-5" />
-                  مشاركة عبر Twitter
+                  {t('share_via_twitter')}
                 </Button>
                 
                 <Button
@@ -291,7 +291,7 @@ const DoubleDating = () => {
                   className="w-full flex items-center gap-3 justify-center py-3"
                 >
                   <Share2 className="w-5 h-5" />
-                  نسخ رسالة الدعوة
+                  {t('copy_invite_message')}
                 </Button>
               </div>
             </Card>

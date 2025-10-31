@@ -110,15 +110,15 @@ const DoubleDating = () => {
           <Card className="p-6 mb-6 bg-gradient-to-br from-blue-50 to-purple-50">
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
               <Settings className="w-5 h-5 text-purple-500" />
-              المواعدة المزدوجة
+              {t('double_dating')}
             </h3>
             
             <div className="space-y-4">
               <div className="flex items-center justify-between py-2">
                 <div>
-                  <div className="font-medium">أظهرني على الحساب الشخصي لصديقي</div>
+                  <div className="font-medium">{t('show_on_friend_profile')}</div>
                   <div className="text-sm text-gray-600">
-                    قد يظهر اسمك وصورتك على حساب صديقك المزدوج في الواعدة المزدوجة
+                    {t('show_on_friend_profile_desc')}
                   </div>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">

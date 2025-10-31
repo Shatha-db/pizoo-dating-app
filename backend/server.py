@@ -1597,6 +1597,7 @@ async def upload_profile_photo(
             "message": "تم رفع الصورة بنجاح",
             "photo": {
                 "url": upload_result['url'],
+                "webp_url": upload_result.get('webp_url'),
                 "public_id": upload_result.get('public_id'),
                 "width": upload_result.get('width'),
                 "height": upload_result.get('height'),

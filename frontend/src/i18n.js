@@ -26,7 +26,7 @@ i18n
  .init({
     supportedLngs: SUPPORTED,
     fallbackLng: "en",
-    ns: ["common","auth","profile","chat","map","notifications","settings","likes","explore","personal","home","premium","editProfile","swipe","terms","doubledating"],
+    ns: ["common","auth","profile","chat","map","notifications","settings","likes","explore","personal","home","premium","editProfile","swipe","terms","privacy","cookies","doubledating","discover"],
     defaultNS: "common",
     keySeparator: false,
     interpolation: { escapeValue: false },

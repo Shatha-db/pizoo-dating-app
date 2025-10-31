@@ -175,10 +175,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Fix Cloudinary configuration for image uploads"
-    - "Expand language selector to 9 languages"
-    - "Expand country code list to all countries"
-    - "Add country code selector to Login page"
+    - "Verify language selector shows all 9 languages in Register page"
+    - "Verify country code selector has 240+ countries with Popular section in Register and Login"
+    - "Test image upload end-to-end with real user profile"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

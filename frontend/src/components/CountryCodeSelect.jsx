@@ -11,9 +11,12 @@ const CountryCodeSelect = ({ value, onChange, className = '' }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   
-  const selectedCountry = COUNTRIES.find(c => c.dial === value) || COUNTRIES[0];
+  const selectedCountry = ALL_COUNTRIES_LIST.find(c => c.dial === value) || POPULAR_COUNTRIES[0];
   
-  const filteredCountries = COUNTRIES.filter(country => {
+  // Filter countries based on search
+  const filteredCountries = ALL_COUNTRIES_LIST.filter(country => {
+    if (!search) return true;
+    
     const searchLower = search.toLowerCase();
     return (
       country.name.toLowerCase().includes(searchLower) ||
@@ -22,6 +25,11 @@ const CountryCodeSelect = ({ value, onChange, className = '' }) => {
       country.code.toLowerCase().includes(searchLower)
     );
   });
+  
+  // Separate popular and other countries for display
+  const popularCodes = POPULAR_COUNTRIES.map(c => c.code);
+  const filteredPopular = filteredCountries.filter(c => popularCodes.includes(c.code));
+  const filteredOthers = filteredCountries.filter(c => !popularCodes.includes(c.code));
 
   const handleSelect = (country) => {
     onChange(country.dial);

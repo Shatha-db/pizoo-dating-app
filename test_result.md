@@ -111,7 +111,7 @@ user_problem_statement: |
 backend:
   - task: "Image Upload with Cloudinary Integration"
     implemented: true
-    working: false
+    working: "pending_credentials"
     file: "/app/backend/server.py, /app/backend/image_service.py"
     stuck_count: 0
     priority: "high"
@@ -123,11 +123,14 @@ backend:
       - working: false
         agent: "main"
         comment: "Investigation found CLOUDINARY_URL is not configured in backend/.env. ImageUploadService requires Cloudinary credentials to function."
+      - working: "pending_credentials"
+        agent: "main"
+        comment: "Enhanced image service with: auto-orient, EXIF stripping, resize to 1600px, WebP preview generation, proper error codes (413, 415), per-user folder structure. Waiting for user to provide CLOUDINARY_URL."
 
 frontend:
   - task: "Language Selector - Complete 9 Languages"
-    implemented: false
-    working: false
+    implemented: true
+    working: true
     file: "/app/frontend/src/pages/Register.js"
     stuck_count: 0
     priority: "high"
@@ -139,11 +142,14 @@ frontend:
       - working: false
         agent: "main"
         comment: "Register.js only shows 4 languages (AR, EN, FR, ES). Missing: DE, TR, IT, PT-BR, RU. Translation files exist for all 9 languages."
+      - working: true
+        agent: "main"
+        comment: "Updated Register.js to display all 9 languages: ar, en, de, fr, es, it, pt-BR, ru, tr with proper flags and names. Language dropdown now scrollable."
   
   - task: "Country Code Selector - All Countries"
-    implemented: false
-    working: false
-    file: "/app/frontend/src/components/CountryCodeSelect.jsx, /app/frontend/src/pages/Login.js"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/CountryCodeSelect.jsx, /app/frontend/src/data/countries.js, /app/frontend/src/pages/Login.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: true
@@ -154,6 +160,9 @@ frontend:
       - working: false
         agent: "main"
         comment: "CountryCodeSelect.jsx has only ~26 countries (MENA + popular). Need ~240 countries. Login.js doesn't use CountryCodeSelect at all - needs phone login option with country selector."
+      - working: true
+        agent: "main"
+        comment: "Created comprehensive country list with 240+ countries. Added Popular section (CH, DE, FR, IT, AT, MENA, US, GB) at top, then alphabetical. Added search by name and dial code. Updated Login.js with email/phone toggle and country selector for phone login."
 
 metadata:
   created_by: "main_agent"

@@ -101,3 +101,76 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: |
+  Fix three critical issues in Pizoo Dating App:
+  1. Image upload error (NotFoundError) - users cannot upload profile photos
+  2. Language selection list incomplete - only shows 4 languages instead of all 9 supported languages
+  3. Country code dropdown incomplete - needs all countries (~240) and must be consistent on both registration and login pages
+
+backend:
+  - task: "Image Upload with Cloudinary Integration"
+    implemented: true
+    working: false
+    file: "/app/backend/server.py, /app/backend/image_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported 'NotFoundError' when trying to upload images"
+      - working: false
+        agent: "main"
+        comment: "Investigation found CLOUDINARY_URL is not configured in backend/.env. ImageUploadService requires Cloudinary credentials to function."
+
+frontend:
+  - task: "Language Selector - Complete 9 Languages"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/pages/Register.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "Language selection list incomplete on account creation page"
+      - working: false
+        agent: "main"
+        comment: "Register.js only shows 4 languages (AR, EN, FR, ES). Missing: DE, TR, IT, PT-BR, RU. Translation files exist for all 9 languages."
+  
+  - task: "Country Code Selector - All Countries"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/components/CountryCodeSelect.jsx, /app/frontend/src/pages/Login.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "Country code dropdown not comprehensive - needs all countries on both registration and login"
+      - working: false
+        agent: "main"
+        comment: "CountryCodeSelect.jsx has only ~26 countries (MENA + popular). Need ~240 countries. Login.js doesn't use CountryCodeSelect at all - needs phone login option with country selector."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 0
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Fix Cloudinary configuration for image uploads"
+    - "Expand language selector to 9 languages"
+    - "Expand country code list to all countries"
+    - "Add country code selector to Login page"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Starting investigation of 3 critical bugs: image upload, language selector, country code selector. Will need Cloudinary credentials from user to fix image uploads."

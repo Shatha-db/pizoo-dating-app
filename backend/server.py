@@ -212,6 +212,31 @@ async def health_check():
     status_code = 200 if all_ok else 503
     return JSONResponse(content=checks, status_code=status_code)
 
+
+# Debug endpoint for testing Sentry (REMOVE IN PRODUCTION)
+@app.get("/debug-sentry")
+async def debug_sentry():
+    """
+    Test endpoint to verify Sentry is working
+    WARNING: Remove this in production!
+    """
+    try:
+        # Intentional error for testing
+        result = 1 / 0
+    except Exception as e:
+        # Capture exception in Sentry
+        sentry_sdk.capture_exception(e)
+        logging.error(f"Debug Sentry test error: {e}")
+        return JSONResponse(
+            content={
+                "message": "Error captured and sent to Sentry",
+                "error": str(e),
+                "sentry_enabled": bool(os.getenv("SENTRY_DSN_BACKEND"))
+            },
+            status_code=200
+        )
+    return {"message": "This should not happen"}
+
 # Country-based default radius mapping (in km)
 COUNTRY_DEFAULT_RADIUS = {
     "BH": 10,  # Bahrain (small)

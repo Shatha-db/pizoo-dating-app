@@ -152,9 +152,9 @@ const DoubleDating = () => {
 
               <div className="flex items-center justify-between py-2">
                 <div>
-                  <div className="font-medium">عرض الحسابات الشخصية لميزة موعد مزدوج</div>
+                  <div className="font-medium">{t('show_personal_accounts')}</div>
                   <div className="text-sm text-gray-600">
-                    عند تعطيل هذا الخيار، لن تظهر لك الحسابات الشخصية لميزة موعد مزدوج في وضع "من أحبك"
+                    {t('show_personal_accounts_desc')}
                   </div>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">

@@ -253,3 +253,5 @@ agent_communication:
     message: "✅✅✅ ALL PHASES COMPLETE! Cloudinary credentials configured and verified. Test upload successful. Image processing pipeline working: compression (8KB→1.8KB), auto-orient, EXIF strip, WebP preview generation, per-user folders (users/<userId>/). All 3 critical fixes now live and working!"
   - agent: "main"
     message: "🔧 ADDITIONAL FIXES: Fixed React Error #31 in ChatRoom.js & ChatList.js (objects rendered in JSX). Updated CORS_ORIGINS for proper domain whitelist. Added general /api/media/upload endpoint. Fixed Jitsi prejoin screen to skip directly to call. All services restarted and verified."
+  - agent: "main"
+    message: "📄 LEGAL & SUPPORT PAGES FIX: Fixed i18n keys showing on Terms/Privacy/Cookies pages by adding missing namespaces to i18n.js. Created 3 new support pages: HelpSupport.js, CommunityGuidelines.js, SafetyCenter.js - all bilingual (EN/AR) with RTL. Added routes to App.js and connected Settings navigation. All pages now working correctly."

@@ -455,9 +455,9 @@ const ChatRoom = () => {
         </div>
       )}
       
-      {/* Call Modal */}
+      {/* LiveKit Call Modal */}
       {showCallModal && (
-        <CallModal
+        <LiveKitCallModal
           matchId={matchId}
           type={callType}
           onClose={() => setShowCallModal(false)}

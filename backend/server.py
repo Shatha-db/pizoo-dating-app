@@ -304,6 +304,11 @@ class User(BaseModel):
     terms_accepted_at: Optional[datetime] = None
     profile_completed: bool = False
     
+    # One-time account verification
+    verified: bool = False  # Account verification status
+    verified_method: Optional[str] = None  # "google_oauth", "facebook_oauth", "email_link", "phone_otp"
+    verified_at: Optional[datetime] = None  # When verification completed
+    
     # i18n & Geo
     language: Optional[str] = "en"  # BCP-47: ar, en, fr, es, de, tr, it, pt-BR, ru
     country: Optional[str] = None  # ISO 3166-1 alpha-2: SA, US, FR, etc.

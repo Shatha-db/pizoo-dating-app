@@ -1963,11 +1963,12 @@ async def livekit_status():
         configured: Whether LiveKit is properly configured
         url: LiveKit server URL (if configured)
     """
+    from livekit_service import LIVEKIT_URL
     is_configured = LiveKitService.is_configured()
     
     return {
         "configured": is_configured,
-        "url": os.environ.get('LIVEKIT_URL') if is_configured else None,
+        "url": LIVEKIT_URL if is_configured else None,
         "message": "LiveKit is ready" if is_configured else "LiveKit credentials not configured"
     }
 

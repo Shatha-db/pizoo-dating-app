@@ -27,6 +27,7 @@ SMTP_PORT = int(os.environ.get('SMTP_PORT', '587'))
 SMTP_USER = os.environ.get('SMTP_USER', '')
 SMTP_PASS = os.environ.get('SMTP_PASS', '')
 EMAIL_FROM = os.environ.get('EMAIL_FROM', 'Pizoo App <noreply@pizoo.app>')
+EMAIL_MODE = os.environ.get('EMAIL_MODE', 'mock')  # 'smtp' or 'mock'
 
 # Frontend URL for magic links
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
@@ -120,6 +121,20 @@ class AuthService:
     @staticmethod
     async def send_verification_email(email: str, token: str, user_name: str) -> bool:
         """Send magic link verification email"""
+        
+        # MOCK MODE - for testing without real SMTP
+        if EMAIL_MODE == 'mock':
+            verification_link = f"{FRONTEND_URL}/verify-email?token={token}"
+            logger.info(f"📧 [MOCK EMAIL] Verification link for {email}:")
+            logger.info(f"   User: {user_name}")
+            logger.info(f"   Link: {verification_link}")
+            logger.info(f"   Token: {token}")
+            logger.info(f"   Expires: 15 minutes")
+            logger.info(f"")
+            logger.info(f"   ✅ To test: Copy the token above and call POST /api/auth/email/verify")
+            return True
+        
+        # REAL SMTP MODE
         try:
             # Create verification link
             verification_link = f"{FRONTEND_URL}/verify-email?token={token}"
@@ -185,11 +200,11 @@ class AuthService:
                 server.login(SMTP_USER, SMTP_PASS)
                 server.send_message(message)
             
-            logger.info(f"Verification email sent to {email}")
+            logger.info(f"✅ Verification email sent to {email}")
             return True
             
         except Exception as e:
-            logger.error(f"Failed to send verification email to {email}: {e}")
+            logger.error(f"❌ Failed to send verification email to {email}: {e}")
             return False
     
     @staticmethod

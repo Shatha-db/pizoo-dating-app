@@ -121,7 +121,7 @@ const Register = () => {
         </Button>
         
         {showLanguages && (
-          <div className="absolute top-12 right-0 bg-white rounded-lg shadow-xl p-2 min-w-[150px] space-y-1">
+          <div className="absolute top-12 right-0 bg-white rounded-lg shadow-xl p-2 min-w-[180px] max-h-[400px] overflow-y-auto space-y-1">
             <button
               onClick={() => changeLanguage('ar')}
               className={`w-full text-right px-4 py-2 rounded-lg transition-colors ${
@@ -139,6 +139,14 @@ const Register = () => {
               🇬🇧 English
             </button>
             <button
+              onClick={() => changeLanguage('de')}
+              className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                i18n.language === 'de' ? 'bg-pink-500 text-white' : 'hover:bg-gray-100'
+              }`}
+            >
+              🇩🇪 Deutsch
+            </button>
+            <button
               onClick={() => changeLanguage('fr')}
               className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
                 i18n.language === 'fr' ? 'bg-pink-500 text-white' : 'hover:bg-gray-100'
@@ -153,6 +161,38 @@ const Register = () => {
               }`}
             >
               🇪🇸 Español
+            </button>
+            <button
+              onClick={() => changeLanguage('it')}
+              className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                i18n.language === 'it' ? 'bg-pink-500 text-white' : 'hover:bg-gray-100'
+              }`}
+            >
+              🇮🇹 Italiano
+            </button>
+            <button
+              onClick={() => changeLanguage('pt-BR')}
+              className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                i18n.language === 'pt-BR' ? 'bg-pink-500 text-white' : 'hover:bg-gray-100'
+              }`}
+            >
+              🇧🇷 Português
+            </button>
+            <button
+              onClick={() => changeLanguage('ru')}
+              className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                i18n.language === 'ru' ? 'bg-pink-500 text-white' : 'hover:bg-gray-100'
+              }`}
+            >
+              🇷🇺 Русский
+            </button>
+            <button
+              onClick={() => changeLanguage('tr')}
+              className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                i18n.language === 'tr' ? 'bg-pink-500 text-white' : 'hover:bg-gray-100'
+              }`}
+            >
+              🇹🇷 Türkçe
             </button>
           </div>
         )}

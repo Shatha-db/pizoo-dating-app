@@ -1,6 +1,12 @@
 """
 Enhanced Image Upload Service with Cloudinary Integration
 Handles image uploads, compression, folder organization, and error recovery
+Features:
+- Auto-orient and strip EXIF metadata
+- Resize to max 1600px on longest side
+- WebP conversion for previews
+- Per-user folder organization (users/<userId>/)
+- Secure HTTPS URLs
 """
 
 import os
@@ -9,7 +15,7 @@ from dotenv import load_dotenv
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-from PIL import Image
+from PIL import Image, ImageOps
 import io
 import base64
 from typing import Optional, Tuple, Dict
@@ -25,6 +31,10 @@ logger = logging.getLogger(__name__)
 
 # Initialize Cloudinary from environment variable
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
+CLOUDINARY_FOLDER = os.environ.get('CLOUDINARY_FOLDER', 'users')
+MAX_IMAGE_MB = int(os.environ.get('MAX_IMAGE_MB', '5'))
+ALLOWED_MIME = os.environ.get('ALLOWED_MIME', 'image/jpeg,image/png,image/webp').split(',')
+
 if CLOUDINARY_URL:
     try:
         # Parse CLOUDINARY_URL manually for better compatibility
@@ -52,25 +62,27 @@ class ImageUploadService:
     """Service for handling image uploads to Cloudinary"""
     
     # Constants
-    MAX_FILE_SIZE_MB = 10
+    MAX_FILE_SIZE_MB = MAX_IMAGE_MB
     MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
-    MAX_IMAGE_WIDTH = 1920
-    QUALITY = "auto"
+    MAX_IMAGE_WIDTH = 1600  # Updated to 1600px as per requirements
+    QUALITY = "auto:good"
     FORMAT = "auto"
     
     # Folder structure
     FOLDERS = {
-        "avatar": "pizoo/users/avatars",
-        "story": "pizoo/stories",
-        "verification": "pizoo/verification",
-        "profile": "pizoo/users/profiles"
+        "avatar": f"{CLOUDINARY_FOLDER}/avatars",
+        "story": f"{CLOUDINARY_FOLDER}/stories",
+        "verification": f"{CLOUDINARY_FOLDER}/verification",
+        "profile": f"{CLOUDINARY_FOLDER}/profiles"
     }
     
     @classmethod
     def compress_image(cls, image_bytes: bytes, max_width: int = MAX_IMAGE_WIDTH) -> bytes:
         """
-        Compress image before upload
-        - Resize if too large
+        Compress and optimize image before upload
+        - Auto-orient based on EXIF
+        - Strip EXIF metadata for privacy
+        - Resize if too large (max 1600px on longest side)
         - Optimize quality
         - Convert to efficient format
         """
@@ -78,22 +90,36 @@ class ImageUploadService:
             # Open image
             image = Image.open(io.BytesIO(image_bytes))
             
+            # Auto-orient based on EXIF and strip EXIF data
+            image = ImageOps.exif_transpose(image)
+            
             # Convert RGBA to RGB if necessary
-            if image.mode in ('RGBA', 'LA'):
+            if image.mode in ('RGBA', 'LA', 'P'):
                 background = Image.new('RGB', image.size, (255, 255, 255))
-                background.paste(image, mask=image.split()[-1] if image.mode == 'RGBA' else image.split()[1])
+                if image.mode == 'P':
+                    image = image.convert('RGBA')
+                if image.mode in ('RGBA', 'LA'):
+                    background.paste(image, mask=image.split()[-1] if image.mode == 'RGBA' else image.split()[1])
                 image = background
             
-            # Resize if too large
-            if image.width > max_width:
-                ratio = max_width / image.width
-                new_height = int(image.height * ratio)
-                image = image.resize((max_width, new_height), Image.Resampling.LANCZOS)
-                logger.info(f"📐 Image resized to {max_width}x{new_height}")
+            # Resize if either dimension exceeds max_width
+            if image.width > max_width or image.height > max_width:
+                # Resize based on longest side
+                if image.width > image.height:
+                    ratio = max_width / image.width
+                    new_height = int(image.height * ratio)
+                    new_size = (max_width, new_height)
+                else:
+                    ratio = max_width / image.height
+                    new_width = int(image.width * ratio)
+                    new_size = (new_width, max_width)
+                
+                image = image.resize(new_size, Image.Resampling.LANCZOS)
+                logger.info(f"📐 Image resized to {new_size[0]}x{new_size[1]}")
             
-            # Save to bytes with optimization
+            # Save to bytes with optimization (strip all metadata)
             output = io.BytesIO()
-            image.save(output, format='JPEG', quality=85, optimize=True)
+            image.save(output, format='JPEG', quality=85, optimize=True, exif=b'')
             compressed_bytes = output.getvalue()
             
             # Log compression result
@@ -110,9 +136,12 @@ class ImageUploadService:
             return image_bytes
     
     @classmethod
-    def validate_image(cls, file_bytes: bytes, filename: str) -> Tuple[bool, Optional[str]]:
+    def validate_image(cls, file_bytes: bytes, filename: str, mime_type: str = None) -> Tuple[bool, Optional[str]]:
         """
         Validate image before upload
+        - Check file size
+        - Check MIME type against allowed list
+        - Verify it's a valid image
         Returns: (is_valid, error_message)
         """
         # Check file size
@@ -121,11 +150,20 @@ class ImageUploadService:
             size_mb = file_size / (1024 * 1024)
             return False, f"حجم الملف ({size_mb:.1f}MB) يتجاوز الحد الأقصى {cls.MAX_FILE_SIZE_MB}MB"
         
-        # Check file type
+        # Check MIME type if provided
+        if mime_type:
+            if not any(allowed in mime_type.lower() for allowed in ALLOWED_MIME):
+                allowed_formats = ', '.join([m.split('/')[-1].upper() for m in ALLOWED_MIME])
+                return False, f"صيغة الصورة غير مدعومة. الصيغ المدعومة: {allowed_formats}"
+        
+        # Check file type by opening it
         try:
             image = Image.open(io.BytesIO(file_bytes))
             # Verify it's actually an image
             image.verify()
+            
+            # Re-open for format check (verify() closes the file)
+            image = Image.open(io.BytesIO(file_bytes))
             
             # Check format
             allowed_formats = ['JPEG', 'JPG', 'PNG', 'WEBP', 'HEIC', 'HEIF']
@@ -145,10 +183,16 @@ class ImageUploadService:
         user_id: str,
         upload_type: str = "profile",  # avatar, story, verification, profile
         filename: Optional[str] = None,
-        is_primary: bool = False
+        is_primary: bool = False,
+        mime_type: str = None
     ) -> Dict:
         """
         Upload image to Cloudinary with proper organization
+        - Stores under users/<userId>/ folder structure
+        - Returns secure HTTPS URLs
+        - Auto-orients and strips EXIF
+        - Resizes to max 1600px on longest side
+        - Generates WebP preview
         
         Args:
             file_bytes: Image file bytes
@@ -156,12 +200,14 @@ class ImageUploadService:
             upload_type: Type of upload (avatar, story, verification, profile)
             filename: Original filename (optional)
             is_primary: Whether this is the primary/avatar photo
+            mime_type: MIME type of the file (for validation)
             
         Returns:
             Dict with upload result:
             {
                 "success": bool,
-                "url": str (secure_url),
+                "url": str (secure_url - original),
+                "webp_url": str (secure_url - WebP preview),
                 "public_id": str,
                 "width": int,
                 "height": int,
@@ -176,22 +222,26 @@ class ImageUploadService:
                 logger.error("❌ Cloudinary not configured")
                 return {
                     "success": False,
-                    "error": "خدمة رفع الصور غير متاحة حالياً"
+                    "error": "خدمة رفع الصور غير متاحة حالياً",
+                    "error_code": "SERVICE_UNAVAILABLE"
                 }
             
             # Validate image
-            is_valid, error_msg = cls.validate_image(file_bytes, filename or "image")
+            is_valid, error_msg = cls.validate_image(file_bytes, filename or "image", mime_type)
             if not is_valid:
+                # Return appropriate HTTP error code
+                error_code = "UNSUPPORTED_TYPE" if "صيغة" in error_msg else "FILE_TOO_LARGE"
                 return {
                     "success": False,
-                    "error": error_msg
+                    "error": error_msg,
+                    "error_code": error_code
                 }
             
-            # Compress image
-            logger.info("🗜️ Compressing image before upload...")
+            # Compress image (auto-orient, strip EXIF, resize)
+            logger.info("🗜️ Processing image: auto-orient, strip EXIF, resize, compress...")
             compressed_bytes = cls.compress_image(file_bytes)
             
-            # Determine folder
+            # Determine folder (users/<userId>/)
             folder = cls.FOLDERS.get(upload_type, cls.FOLDERS["profile"])
             folder_path = f"{folder}/{user_id}"
             
@@ -204,7 +254,17 @@ class ImageUploadService:
                 "overwrite": False,
                 "unique_filename": True,
                 "use_filename": bool(filename),
-                "tags": [upload_type, user_id]
+                "tags": [upload_type, user_id],
+                "eager": [
+                    # Generate WebP preview
+                    {
+                        "width": cls.MAX_IMAGE_WIDTH,
+                        "crop": "limit",
+                        "quality": "auto:good",
+                        "fetch_format": "webp"
+                    }
+                ],
+                "eager_async": False  # Wait for transformations
             }
             
             # Add transformation for optimization
@@ -231,9 +291,15 @@ class ImageUploadService:
             
             logger.info(f"✅ Upload successful: {result['public_id']}")
             
+            # Get WebP preview URL if eager transformation was created
+            webp_url = None
+            if 'eager' in result and len(result['eager']) > 0:
+                webp_url = result['eager'][0].get('secure_url')
+            
             return {
                 "success": True,
-                "url": result['secure_url'],
+                "url": result['secure_url'],  # Original/optimized image
+                "webp_url": webp_url,  # WebP preview
                 "public_id": result['public_id'],
                 "width": result.get('width'),
                 "height": result.get('height'),
@@ -246,13 +312,15 @@ class ImageUploadService:
             logger.error(f"❌ Cloudinary error: {str(e)}")
             return {
                 "success": False,
-                "error": f"فشل رفع الصورة: {str(e)}"
+                "error": f"فشل رفع الصورة: {str(e)}",
+                "error_code": "UPLOAD_FAILED"
             }
         except Exception as e:
             logger.error(f"❌ Upload error: {str(e)}")
             return {
                 "success": False,
-                "error": "حدث خطأ أثناء رفع الصورة"
+                "error": "حدث خطأ أثناء رفع الصورة",
+                "error_code": "INTERNAL_ERROR"
             }
     
     @classmethod

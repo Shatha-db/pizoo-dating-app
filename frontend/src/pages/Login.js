@@ -7,8 +7,9 @@ import { Label } from '../components/ui/label';
 import { Checkbox } from '../components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Alert, AlertDescription } from '../components/ui/alert';
-import { LogIn, Eye, EyeOff } from 'lucide-react';
+import { LogIn, Eye, EyeOff, Mail, Phone } from 'lucide-react';
 import CustomLogo from '../components/CustomLogo';
+import CountryCodeSelect from '../components/CountryCodeSelect';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../modules/i18n/LanguageSelector';
 import axios from 'axios';
@@ -21,9 +22,12 @@ const Login = () => {
   const { t } = useTranslation('auth'); // Load auth namespace
   const [formData, setFormData] = useState({
     email: '',
+    phoneNumber: '',
     password: '',
     rememberMe: false
   });
+  const [countryCode, setCountryCode] = useState('+966'); // Default to Saudi Arabia
+  const [loginMethod, setLoginMethod] = useState('email'); // 'email' or 'phone'
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // ✅ Password visibility state
@@ -42,7 +46,12 @@ const Login = () => {
     setError('');
     setLoading(true);
 
-    const result = await login(formData.email, formData.password);
+    // Determine the login identifier (email or phone with country code)
+    const identifier = loginMethod === 'phone' 
+      ? `${countryCode}${formData.phoneNumber}`
+      : formData.email;
+
+    const result = await login(identifier, formData.password);
 
     if (result.success) {
       // Save remember me preference
@@ -109,22 +118,77 @@ const Login = () => {
               </Alert>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">
-                {t('email_or_phone')}
-              </Label>
-              <Input
-                id="email"
-                name="email"
-                type="text"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                placeholder={t('placeholder_email_phone')}
-                className="h-12 rounded-lg"
-                data-testid="email-input"
-              />
+            {/* Login Method Toggle */}
+            <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
+              <button
+                type="button"
+                onClick={() => setLoginMethod('email')}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-all ${
+                  loginMethod === 'email'
+                    ? 'bg-white text-pink-600 shadow-sm font-medium'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <Mail className="w-4 h-4" />
+                {t('email')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setLoginMethod('phone')}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-all ${
+                  loginMethod === 'phone'
+                    ? 'bg-white text-pink-600 shadow-sm font-medium'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <Phone className="w-4 h-4" />
+                {t('phone')}
+              </button>
             </div>
+
+            {/* Email or Phone Input */}
+            {loginMethod === 'email' ? (
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium">
+                  {t('email')}
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder={t('placeholder_email')}
+                  className="h-12 rounded-lg"
+                  data-testid="email-input"
+                />
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="text-sm font-medium">
+                  {t('phone_number')}
+                </Label>
+                <div className="flex gap-2">
+                  <CountryCodeSelect 
+                    value={countryCode} 
+                    onChange={setCountryCode}
+                    className="w-auto"
+                  />
+                  <Input
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    type="tel"
+                    required
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                    placeholder="501234567"
+                    className="flex-1 h-12 rounded-lg"
+                    data-testid="phone-input"
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="password" className="text-sm font-medium">

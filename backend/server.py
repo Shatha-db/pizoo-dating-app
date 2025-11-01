@@ -17,6 +17,7 @@ from datetime import datetime, timezone, timedelta
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from image_service import ImageUploadService
+from livekit_service import LiveKitService
 from sms_service import generate_and_send, verify as verify_otp
 from twilio_service import create_voice_token, create_video_token, send_sms, verify_start, verify_check
 from twilio.twiml.voice_response import VoiceResponse, Dial
@@ -1194,6 +1195,106 @@ async def twilio_voice_status(request: Request):
     print(f"📊 Twilio call status: {dict(data)}")
     return "OK"
 
+
+
+# ========================================
+# LiveKit Real-Time Communication (RTC)
+# ========================================
+
+class LiveKitTokenRequest(BaseModel):
+    """Request model for LiveKit token generation"""
+    match_id: str = Field(..., description="Match/Chat ID for the call")
+    call_type: str = Field(default="video", description="Type of call: 'video' or 'audio'")
+    participant_name: Optional[str] = Field(default=None, description="Display name for participant")
+
+@api_router.post("/livekit/token")
+async def generate_livekit_token(
+    payload: LiveKitTokenRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Generate LiveKit access token for video/voice calls
+    
+    Features:
+    - 1-to-1 video calls
+    - Voice-only calls (audio)
+    - Secure room-based communication
+    - Automatic participant naming
+    
+    Returns:
+        token: JWT token for LiveKit
+        url: LiveKit server WebSocket URL
+        room_name: Room name to join
+        participant_info: User identity and name
+    """
+    try:
+        # Check if LiveKit is configured
+        if not LiveKitService.is_configured():
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="خدمة المكالمات غير متاحة حالياً. يرجى المحاولة لاحقاً."
+            )
+        
+        # Get user info
+        user_id = current_user.get('id')
+        user_name = payload.participant_name or current_user.get('display_name') or f"User-{user_id[:8]}"
+        
+        # Generate token
+        result = LiveKitService.create_room_token(
+            match_id=payload.match_id,
+            user_id=user_id,
+            user_name=user_name,
+            call_type=payload.call_type
+        )
+        
+        if not result.get("success"):
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=result.get("error", "فشل إنشاء جلسة المكالمة")
+            )
+        
+        logging.info(f"✅ LiveKit token generated for user {user_id} in match {payload.match_id}")
+        
+        return {
+            "success": True,
+            "token": result["token"],
+            "url": result["url"],
+            "room_name": result["room_name"],
+            "participant": {
+                "identity": result["participant_identity"],
+                "name": result["participant_name"]
+            },
+            "call_type": payload.call_type,
+            "video_enabled": result["video_enabled"],
+            "audio_enabled": result["audio_enabled"]
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ LiveKit token error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="حدث خطأ أثناء إنشاء جلسة المكالمة"
+        )
+
+@api_router.get("/livekit/status")
+async def livekit_status():
+    """
+    Check LiveKit service status
+    
+    Returns:
+        configured: Whether LiveKit is properly configured
+        url: LiveKit server URL (if configured)
+    """
+    is_configured = LiveKitService.is_configured()
+    
+    return {
+        "configured": is_configured,
+        "url": os.environ.get('LIVEKIT_URL') if is_configured else None,
+        "message": "LiveKit is ready" if is_configured else "LiveKit credentials not configured"
+    }
+
 # ========================================
 # Twilio Verify (Alternative OTP System)
 # ========================================
@@ -1539,15 +1640,36 @@ async def upload_profile_photo(
             user_id=current_user['id'],
             upload_type="profile",
             filename=file.filename,
-            is_primary=is_primary
+            is_primary=is_primary,
+            mime_type=file.content_type
         )
         
         # Check if upload was successful
         if not upload_result.get("success"):
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=upload_result.get("error", "فشل رفع الصورة")
-            )
+            error_code = upload_result.get("error_code", "UNKNOWN")
+            error_message = upload_result.get("error", "فشل رفع الصورة")
+            
+            # Return appropriate HTTP status codes
+            if error_code == "FILE_TOO_LARGE":
+                raise HTTPException(
+                    status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                    detail=error_message
+                )
+            elif error_code == "UNSUPPORTED_TYPE":
+                raise HTTPException(
+                    status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+                    detail=error_message
+                )
+            elif error_code == "SERVICE_UNAVAILABLE":
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail=error_message
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=error_message
+                )
         
         # Get current photos
         photos = profile.get('photos', [])
@@ -1576,6 +1698,7 @@ async def upload_profile_photo(
             "message": "تم رفع الصورة بنجاح",
             "photo": {
                 "url": upload_result['url'],
+                "webp_url": upload_result.get('webp_url'),
                 "public_id": upload_result.get('public_id'),
                 "width": upload_result.get('width'),
                 "height": upload_result.get('height'),
@@ -1591,6 +1714,92 @@ async def upload_profile_photo(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="حدث خطأ أثناء رفع الصورة"
+        )
+
+
+
+@api_router.post("/media/upload")
+async def upload_media(
+    file: UploadFile = File(...),
+    upload_type: str = Form("profile"),  # profile, story, verification, avatar
+    is_primary: bool = Form(False),
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    General media upload endpoint
+    - Auto-orient and strip EXIF metadata
+    - Resize to max 1600px on longest side
+    - Generate WebP preview
+    - Store in users/<userId>/ folder
+    - Return secure HTTPS URLs
+    
+    Supported types: profile, story, verification, avatar
+    Max size: 5MB (configurable via MAX_IMAGE_MB)
+    Allowed formats: JPEG, PNG, WebP (configurable via ALLOWED_MIME)
+    """
+    try:
+        # Read file content
+        file_content = await file.read()
+        
+        # Upload to Cloudinary using ImageUploadService
+        upload_result = ImageUploadService.upload_image(
+            file_bytes=file_content,
+            user_id=current_user['id'],
+            upload_type=upload_type,
+            filename=file.filename,
+            is_primary=is_primary,
+            mime_type=file.content_type
+        )
+        
+        # Check if upload was successful
+        if not upload_result.get("success"):
+            error_code = upload_result.get("error_code", "UNKNOWN")
+            error_message = upload_result.get("error", "فشل رفع الصورة")
+            
+            # Return appropriate HTTP status codes
+            if error_code == "FILE_TOO_LARGE":
+                raise HTTPException(
+                    status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                    detail=error_message
+                )
+            elif error_code == "UNSUPPORTED_TYPE":
+                raise HTTPException(
+                    status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+                    detail=error_message
+                )
+            elif error_code == "SERVICE_UNAVAILABLE":
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail=error_message
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=error_message
+                )
+        
+        return {
+            "success": True,
+            "message": "تم رفع الملف بنجاح",
+            "media": {
+                "url": upload_result['url'],
+                "webp_url": upload_result.get('webp_url'),
+                "public_id": upload_result.get('public_id'),
+                "width": upload_result.get('width'),
+                "height": upload_result.get('height'),
+                "format": upload_result.get('format'),
+                "size": upload_result.get('size'),
+                "type": upload_type
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Media upload error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="حدث خطأ أثناء رفع الملف"
         )
 
 

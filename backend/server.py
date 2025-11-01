@@ -1022,6 +1022,15 @@ async def login(request: LoginRequest):
     
     access_token = create_access_token(data={"sub": user['id']})
     
+    # Convert trial_end_date to ISO string to prevent JSON serialization issues
+    trial_end_date = user['trial_end_date']
+    if isinstance(trial_end_date, datetime):
+        trial_end_date_str = trial_end_date.isoformat()
+    elif isinstance(trial_end_date, str):
+        trial_end_date_str = trial_end_date
+    else:
+        trial_end_date_str = datetime.now(timezone.utc).isoformat()
+    
     return TokenResponse(
         access_token=access_token,
         user={
@@ -1029,7 +1038,10 @@ async def login(request: LoginRequest):
             "name": user['name'],
             "email": user['email'],
             "subscription_status": user['subscription_status'],
-            "trial_end_date": user['trial_end_date']
+            "trial_end_date": trial_end_date_str,
+            "verified": user.get('verified', False),
+            "verified_method": user.get('verified_method'),
+            "premium_tier": user.get('premium_tier', 'free')
         }
     )
 
@@ -1551,16 +1563,37 @@ async def get_current_user_profile(current_user: dict = Depends(get_current_user
 
 
 
-@api_router.get("/user/profile", response_model=UserProfile)
+@api_router.get("/user/profile")
 async def get_profile(current_user: dict = Depends(get_current_user)):
-    return UserProfile(
-        id=current_user['id'],
-        name=current_user['name'],
-        email=current_user['email'],
-        subscription_status=current_user['subscription_status'],
-        trial_end_date=datetime.fromisoformat(current_user['trial_end_date']) if isinstance(current_user['trial_end_date'], str) else current_user['trial_end_date'],
-        created_at=datetime.fromisoformat(current_user['created_at']) if isinstance(current_user['created_at'], str) else current_user['created_at']
-    )
+    """Get user profile - returns JSON-serializable data"""
+    # Convert datetime fields to ISO strings
+    trial_end_date = current_user.get('trial_end_date')
+    if isinstance(trial_end_date, datetime):
+        trial_end_date_str = trial_end_date.isoformat()
+    elif isinstance(trial_end_date, str):
+        trial_end_date_str = trial_end_date
+    else:
+        trial_end_date_str = None
+    
+    created_at = current_user.get('created_at')
+    if isinstance(created_at, datetime):
+        created_at_str = created_at.isoformat()
+    elif isinstance(created_at, str):
+        created_at_str = created_at
+    else:
+        created_at_str = datetime.now(timezone.utc).isoformat()
+    
+    return {
+        "id": current_user['id'],
+        "name": current_user['name'],
+        "email": current_user['email'],
+        "subscription_status": current_user.get('subscription_status', 'trial'),
+        "trial_end_date": trial_end_date_str,
+        "created_at": created_at_str,
+        "verified": current_user.get('verified', False),
+        "verified_method": current_user.get('verified_method'),
+        "premium_tier": current_user.get('premium_tier', 'free')
+    }
 
 
 class AddPaymentRequest(BaseModel):
@@ -2118,7 +2151,8 @@ async def get_my_profile(current_user: dict = Depends(get_current_user)):
             detail="الملف الشخصي غير موجود"
         )
     
-    return profile
+    # Use serialize_mongo_doc to convert datetime objects to ISO strings
+    return serialize_mongo_doc(profile)
 
 
 

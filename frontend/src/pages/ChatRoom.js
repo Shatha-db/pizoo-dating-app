@@ -254,29 +254,48 @@ const ChatRoom = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Voice Call Button */}
-          <button
-            onClick={() => {
-              setCallType('audio');
-              setShowCallModal(true);
-            }}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-            title="مكالمة صوتية"
-          >
-            <Phone className="w-5 h-5 text-green-500" />
-          </button>
+          {/* Voice Call Button - Only for verified users */}
+          {user?.verified && (
+            <button
+              onClick={() => {
+                setCallType('audio');
+                setShowCallModal(true);
+              }}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              title="مكالمة صوتية"
+            >
+              <Phone className="w-5 h-5 text-green-500" />
+            </button>
+          )}
           
-          {/* Video Call Button */}
-          <button
-            onClick={() => {
-              setCallType('video');
-              setShowCallModal(true);
-            }}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-            title="مكالمة فيديو"
-          >
-            <Video className="w-5 h-5 text-blue-500" />
-          </button>
+          {/* Video Call Button - Only for verified users */}
+          {user?.verified && (
+            <button
+              onClick={() => {
+                setCallType('video');
+                setShowCallModal(true);
+              }}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              title="مكالمة فيديو"
+            >
+              <Video className="w-5 h-5 text-blue-500" />
+            </button>
+          )}
+          
+          {/* Verification prompt for unverified users */}
+          {!user?.verified && (
+            <div className="flex items-center gap-2 px-3 py-1 bg-amber-50 border border-amber-200 rounded-full">
+              <span className="text-xs text-amber-700">
+                🔒 Verify account to enable calls
+              </span>
+              <button
+                onClick={() => navigate('/verify-account')}
+                className="text-xs text-amber-900 font-semibold hover:underline"
+              >
+                Verify Now
+              </button>
+            </div>
+          )}
           
           <button className="p-2 hover:bg-gray-100 rounded-full">
             <MoreVertical className="w-5 h-5" />

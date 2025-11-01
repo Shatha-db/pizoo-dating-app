@@ -43,6 +43,9 @@ import httpx
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
+# Import LiveKitService AFTER loading .env
+from livekit_service import LiveKitService
+
 # Initialize Sentry for error tracking
 try:
     import sentry_sdk

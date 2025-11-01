@@ -2,15 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {
   LiveKitRoom,
   VideoConference,
-  GridLayout,
-  ParticipantTile,
   RoomAudioRenderer,
-  ControlBar,
-  useTracks,
 } from '@livekit/components-react';
-import '@livekit/components-styles';
-import { Track } from 'livekit-client';
-import { X, Mic, MicOff, Video, VideoOff, PhoneOff, MessageCircle } from 'lucide-react';
+import { X, PhoneOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 

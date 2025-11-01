@@ -18,6 +18,7 @@ from passlib.context import CryptContext
 from jose import JWTError, jwt
 from image_service import ImageUploadService
 from livekit_service import LiveKitService
+from auth_service import AuthService
 from sms_service import generate_and_send, verify as verify_otp
 from twilio_service import create_voice_token, create_video_token, send_sms, verify_start, verify_check
 from twilio.twiml.voice_response import VoiceResponse, Dial

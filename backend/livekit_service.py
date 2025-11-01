@@ -7,6 +7,12 @@ import os
 from datetime import timedelta
 from livekit import api
 import logging
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
 
 logger = logging.getLogger(__name__)
 
@@ -63,22 +69,19 @@ class LiveKitService:
             # Create access token
             token = api.AccessToken(LIVEKIT_API_KEY, LIVEKIT_API_SECRET)
             
-            # Set identity and name
-            token.identity = participant_identity
-            if participant_name:
-                token.name = participant_name
-            
-            # Set room grant
-            token.add_grant(api.VideoGrants(
-                room_join=True,
-                room=room_name,
-                can_publish=can_publish,
-                can_subscribe=can_subscribe,
-                can_publish_data=can_publish_data,
-            ))
-            
-            # Set token validity (24 hours)
-            token.ttl = timedelta(hours=24)
+            # Set identity and name and grants using chaining
+            token = (
+                token
+                .with_identity(participant_identity)
+                .with_name(participant_name or participant_identity)
+                .with_grants(api.VideoGrants(
+                    room_join=True,
+                    room=room_name,
+                    can_publish=can_publish,
+                    can_subscribe=can_subscribe,
+                    can_publish_data=can_publish_data,
+                ))
+            )
             
             # Generate JWT token
             jwt_token = token.to_jwt()

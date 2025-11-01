@@ -18,6 +18,7 @@ from passlib.context import CryptContext
 from jose import JWTError, jwt
 from image_service import ImageUploadService
 from livekit_service import LiveKitService
+from auth_service import AuthService
 from sms_service import generate_and_send, verify as verify_otp
 from twilio_service import create_voice_token, create_video_token, send_sms, verify_start, verify_check
 from twilio.twiml.voice_response import VoiceResponse, Dial
@@ -304,6 +305,11 @@ class User(BaseModel):
     terms_accepted_at: Optional[datetime] = None
     profile_completed: bool = False
     
+    # One-time account verification
+    verified: bool = False  # Account verification status
+    verified_method: Optional[str] = None  # "google_oauth", "facebook_oauth", "email_link", "phone_otp"
+    verified_at: Optional[datetime] = None  # When verification completed
+    
     # i18n & Geo
     language: Optional[str] = "en"  # BCP-47: ar, en, fr, es, de, tr, it, pt-BR, ru
     country: Optional[str] = None  # ISO 3166-1 alpha-2: SA, US, FR, etc.
@@ -373,6 +379,59 @@ class PaymentMethod(BaseModel):
     bank_account_country: Optional[str] = None
     is_active: bool = True
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+
+# Session Management Models
+class UserSession(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str  # References User.id
+    session_token: str  # The persistent token (7 days)
+    refresh_token: Optional[str] = None  # Optional refresh token for JWT
+    device_info: Optional[str] = None  # Device/browser info
+    ip_address: Optional[str] = None
+    expires_at: datetime  # Session expiry (7 days from creation)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    last_used_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class EmailVerificationToken(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    token: str  # Random verification token
+    email: str
+    expires_at: datetime  # 15 minutes TTL
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    used: bool = False
+
+
+class PhoneVerificationOTP(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    phone_number: str
+    otp_code: str  # 6-digit OTP
+    expires_at: datetime  # 10 minutes TTL
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    verified: bool = False
+    attempts: int = 0  # Track verification attempts
+
+
+# Rate Limiting Model
+class RateLimit(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    endpoint: str  # e.g., "/livekit/token"
+    count: int = 0  # Number of requests
+    window_start: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    last_request: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 
@@ -975,6 +1034,523 @@ async def login(request: LoginRequest):
     )
 
 
+# ==================================================================================
+# NEW ONE-TIME VERIFICATION AUTH ENDPOINTS
+# ==================================================================================
+
+# ===== Google OAuth (Emergent) =====
+
+class EmergentOAuthRequest(BaseModel):
+    session_id: str  # Temporary token from URL fragment
+
+
+@api_router.post("/auth/oauth/google")
+async def google_oauth_login(request: EmergentOAuthRequest):
+    """
+    Google OAuth login via Emergent
+    User redirects to: https://auth.emergentagent.com/?redirect={your_app_url}
+    After auth, user lands at: {your_app_url}#session_id={session_id}
+    Frontend extracts session_id and calls this endpoint
+    
+    Returns: Access token, Refresh token, User data
+    """
+    try:
+        # Get session data from Emergent
+        session_data = await AuthService.get_emergent_oauth_session_data(request.session_id)
+        
+        if not session_data:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired session"
+            )
+        
+        # Extract user data
+        oauth_id = session_data.get("id")
+        email = session_data.get("email")
+        name = session_data.get("name")
+        picture = session_data.get("picture")
+        emergent_session_token = session_data.get("session_token")
+        
+        # Check if user exists
+        user = await db.users.find_one({"email": email}, {"_id": 0})
+        
+        if user:
+            # Existing user - update if not verified
+            if not user.get("verified"):
+                await db.users.update_one(
+                    {"id": user["id"]},
+                    {"$set": {
+                        "verified": True,
+                        "verified_method": "google_oauth",
+                        "verified_at": datetime.now(timezone.utc).isoformat()
+                    }}
+                )
+                user["verified"] = True
+                user["verified_method"] = "google_oauth"
+        else:
+            # New user - create account with verified=True
+            trial_end_date = datetime.now(timezone.utc) + timedelta(days=14)
+            user = User(
+                name=name,
+                email=email,
+                phone_number="",  # No phone for OAuth
+                password_hash="",  # No password for OAuth
+                trial_end_date=trial_end_date,
+                subscription_status="trial",
+                terms_accepted=True,
+                terms_accepted_at=datetime.now(timezone.utc),
+                verified=True,
+                verified_method="google_oauth",
+                verified_at=datetime.now(timezone.utc)
+            )
+            
+            user_dict = user.model_dump()
+            user_dict['created_at'] = user_dict['created_at'].isoformat()
+            user_dict['trial_end_date'] = user_dict['trial_end_date'].isoformat()
+            user_dict['terms_accepted_at'] = user_dict['terms_accepted_at'].isoformat()
+            user_dict['verified_at'] = user_dict['verified_at'].isoformat()
+            
+            await db.users.insert_one(user_dict)
+            
+            # Create subscription
+            subscription = Subscription(
+                user_id=user.id,
+                status="trial",
+                trial_end_date=trial_end_date,
+                next_payment_date=trial_end_date
+            )
+            
+            subscription_dict = subscription.model_dump()
+            subscription_dict['created_at'] = subscription_dict['created_at'].isoformat()
+            subscription_dict['start_date'] = subscription_dict['start_date'].isoformat()
+            subscription_dict['trial_end_date'] = subscription_dict['trial_end_date'].isoformat()
+            subscription_dict['next_payment_date'] = subscription_dict['next_payment_date'].isoformat()
+            
+            await db.subscriptions.insert_one(subscription_dict)
+            
+            # Create profile
+            profile = Profile(
+                user_id=user.id,
+                display_name=name,
+                photos=[picture] if picture else [],
+                interests=[],
+                languages=[]
+            )
+            
+            profile_dict = profile.model_dump()
+            profile_dict['created_at'] = profile_dict['created_at'].isoformat()
+            profile_dict['updated_at'] = profile_dict['updated_at'].isoformat()
+            
+            await db.profiles.insert_one(profile_dict)
+            
+            user = user_dict
+        
+        # Create JWT tokens
+        user_id = user.get("id") if isinstance(user, dict) else user.id
+        access_token = AuthService.create_access_token(data={"sub": user_id})
+        refresh_token = AuthService.create_refresh_token(data={"sub": user_id})
+        
+        # Create session in database
+        session_expiry = AuthService.calculate_session_expiry()
+        user_session = UserSession(
+            user_id=user_id,
+            session_token=emergent_session_token,
+            refresh_token=refresh_token,
+            expires_at=session_expiry
+        )
+        
+        session_dict = user_session.model_dump()
+        session_dict['expires_at'] = session_dict['expires_at'].isoformat()
+        session_dict['created_at'] = session_dict['created_at'].isoformat()
+        session_dict['last_used_at'] = session_dict['last_used_at'].isoformat()
+        
+        await db.user_sessions.insert_one(session_dict)
+        
+        logging.info(f"✅ Google OAuth login successful for {email}")
+        
+        return {
+            "success": True,
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer",
+            "expires_in": 3600,  # 1 hour
+            "user": {
+                "id": user_id,
+                "name": user.get("name") if isinstance(user, dict) else user.name,
+                "email": user.get("email") if isinstance(user, dict) else user.email,
+                "verified": True,
+                "verified_method": "google_oauth"
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Google OAuth error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Authentication failed"
+        )
+
+
+# ===== Email Magic Link =====
+
+class EmailVerificationSendRequest(BaseModel):
+    email: EmailStr
+    name: str
+
+
+class EmailVerificationVerifyRequest(BaseModel):
+    token: str
+
+
+@api_router.post("/auth/email/send-link")
+async def send_email_verification_link(request: EmailVerificationSendRequest):
+    """
+    Send magic link to email for one-time account verification
+    Link expires in 15 minutes
+    """
+    try:
+        # Check if user already exists and is verified
+        existing_user = await db.users.find_one({"email": request.email}, {"_id": 0})
+        
+        if existing_user and existing_user.get("verified"):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already verified. Please login."
+            )
+        
+        # Generate verification token
+        token = AuthService.generate_verification_token()
+        expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
+        
+        # If user doesn't exist, create a pending user
+        if not existing_user:
+            trial_end_date = datetime.now(timezone.utc) + timedelta(days=14)
+            user = User(
+                name=request.name,
+                email=request.email,
+                phone_number="",
+                password_hash="",  # No password for email link
+                trial_end_date=trial_end_date,
+                subscription_status="trial",
+                terms_accepted=True,
+                terms_accepted_at=datetime.now(timezone.utc),
+                verified=False,  # Not verified yet
+                verified_method=None
+            )
+            
+            user_dict = user.model_dump()
+            user_dict['created_at'] = user_dict['created_at'].isoformat()
+            user_dict['trial_end_date'] = user_dict['trial_end_date'].isoformat()
+            user_dict['terms_accepted_at'] = user_dict['terms_accepted_at'].isoformat()
+            
+            await db.users.insert_one(user_dict)
+            user_id = user.id
+        else:
+            user_id = existing_user["id"]
+        
+        # Store verification token
+        verification_token = EmailVerificationToken(
+            user_id=user_id,
+            token=token,
+            email=request.email,
+            expires_at=expires_at
+        )
+        
+        token_dict = verification_token.model_dump()
+        token_dict['created_at'] = token_dict['created_at'].isoformat()
+        token_dict['expires_at'] = token_dict['expires_at'].isoformat()
+        
+        await db.email_verification_tokens.insert_one(token_dict)
+        
+        # Send verification email
+        email_sent = await AuthService.send_verification_email(request.email, token, request.name)
+        
+        if not email_sent:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to send verification email"
+            )
+        
+        logging.info(f"✅ Verification email sent to {request.email}")
+        
+        return {
+            "success": True,
+            "message": "Verification email sent. Please check your inbox.",
+            "expires_in": 900  # 15 minutes in seconds
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Email verification send error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to send verification email"
+        )
+
+
+@api_router.post("/auth/email/verify")
+async def verify_email_link(request: EmailVerificationVerifyRequest):
+    """
+    Verify email using magic link token
+    Sets user.verified = true and issues JWT tokens
+    """
+    try:
+        # Find verification token
+        token_data = await db.email_verification_tokens.find_one(
+            {"token": request.token, "used": False},
+            {"_id": 0}
+        )
+        
+        if not token_data:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid or expired verification link"
+            )
+        
+        # Check if expired
+        expires_at = datetime.fromisoformat(token_data["expires_at"]) if isinstance(token_data["expires_at"], str) else token_data["expires_at"]
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
+        
+        if datetime.now(timezone.utc) > expires_at:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Verification link has expired"
+            )
+        
+        # Mark token as used
+        await db.email_verification_tokens.update_one(
+            {"token": request.token},
+            {"$set": {"used": True}}
+        )
+        
+        # Update user verification status
+        user_id = token_data["user_id"]
+        await db.users.update_one(
+            {"id": user_id},
+            {"$set": {
+                "verified": True,
+                "verified_method": "email_link",
+                "verified_at": datetime.now(timezone.utc).isoformat(),
+                "email_verified": True
+            }}
+        )
+        
+        # Get updated user
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        
+        # Create JWT tokens
+        access_token = AuthService.create_access_token(data={"sub": user_id})
+        refresh_token = AuthService.create_refresh_token(data={"sub": user_id})
+        
+        # Create session
+        session_expiry = AuthService.calculate_session_expiry()
+        session_token = AuthService.generate_verification_token()
+        user_session = UserSession(
+            user_id=user_id,
+            session_token=session_token,
+            refresh_token=refresh_token,
+            expires_at=session_expiry
+        )
+        
+        session_dict = user_session.model_dump()
+        session_dict['expires_at'] = session_dict['expires_at'].isoformat()
+        session_dict['created_at'] = session_dict['created_at'].isoformat()
+        session_dict['last_used_at'] = session_dict['last_used_at'].isoformat()
+        
+        await db.user_sessions.insert_one(session_dict)
+        
+        # Create subscription and profile if they don't exist
+        subscription = await db.subscriptions.find_one({"user_id": user_id})
+        if not subscription:
+            trial_end_date = datetime.now(timezone.utc) + timedelta(days=14)
+            subscription = Subscription(
+                user_id=user_id,
+                status="trial",
+                trial_end_date=trial_end_date,
+                next_payment_date=trial_end_date
+            )
+            
+            subscription_dict = subscription.model_dump()
+            subscription_dict['created_at'] = subscription_dict['created_at'].isoformat()
+            subscription_dict['start_date'] = subscription_dict['start_date'].isoformat()
+            subscription_dict['trial_end_date'] = subscription_dict['trial_end_date'].isoformat()
+            subscription_dict['next_payment_date'] = subscription_dict['next_payment_date'].isoformat()
+            
+            await db.subscriptions.insert_one(subscription_dict)
+        
+        profile = await db.profiles.find_one({"user_id": user_id})
+        if not profile:
+            profile = Profile(
+                user_id=user_id,
+                display_name=user["name"],
+                photos=[],
+                interests=[],
+                languages=[]
+            )
+            
+            profile_dict = profile.model_dump()
+            profile_dict['created_at'] = profile_dict['created_at'].isoformat()
+            profile_dict['updated_at'] = profile_dict['updated_at'].isoformat()
+            
+            await db.profiles.insert_one(profile_dict)
+        
+        logging.info(f"✅ Email verification successful for {user['email']}")
+        
+        return {
+            "success": True,
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer",
+            "expires_in": 3600,
+            "user": {
+                "id": user["id"],
+                "name": user["name"],
+                "email": user["email"],
+                "verified": True,
+                "verified_method": "email_link"
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Email verification error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Email verification failed"
+        )
+
+
+# ===== JWT Refresh Token =====
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+
+@api_router.post("/auth/refresh")
+async def refresh_access_token(request: RefreshTokenRequest):
+    """
+    Refresh access token using refresh token
+    Refresh tokens are valid for 7 days
+    """
+    try:
+        # Verify refresh token
+        payload = AuthService.verify_token(request.refresh_token, token_type="refresh")
+        
+        if not payload:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired refresh token"
+            )
+        
+        user_id = payload.get("sub")
+        
+        # Verify session exists and is valid
+        session = await db.user_sessions.find_one(
+            {"user_id": user_id, "refresh_token": request.refresh_token},
+            {"_id": 0}
+        )
+        
+        if not session:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Session not found"
+            )
+        
+        # Check if session expired
+        expires_at = datetime.fromisoformat(session["expires_at"]) if isinstance(session["expires_at"], str) else session["expires_at"]
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
+        
+        if datetime.now(timezone.utc) > expires_at:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Session has expired. Please login again."
+            )
+        
+        # Generate new access token
+        access_token = AuthService.create_access_token(data={"sub": user_id})
+        
+        # Update session last_used_at
+        await db.user_sessions.update_one(
+            {"user_id": user_id, "refresh_token": request.refresh_token},
+            {"$set": {"last_used_at": datetime.now(timezone.utc).isoformat()}}
+        )
+        
+        logging.info(f"✅ Token refreshed for user {user_id}")
+        
+        return {
+            "success": True,
+            "access_token": access_token,
+            "token_type": "bearer",
+            "expires_in": 3600
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Token refresh error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token refresh failed"
+        )
+
+
+# ===== Logout =====
+
+@api_router.post("/auth/logout")
+async def logout(current_user: dict = Depends(get_current_user)):
+    """
+    Logout user by deleting session
+    """
+    try:
+        user_id = current_user["id"]
+        
+        # Delete all sessions for this user
+        await db.user_sessions.delete_many({"user_id": user_id})
+        
+        logging.info(f"✅ User {user_id} logged out")
+        
+        return {
+            "success": True,
+            "message": "Logged out successfully"
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Logout error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Logout failed"
+        )
+
+
+# ===== Get Current User Info =====
+
+@api_router.get("/auth/me")
+async def get_current_user_profile(current_user: dict = Depends(get_current_user)):
+    """
+    Get current authenticated user profile
+    """
+    return {
+        "success": True,
+        "user": {
+            "id": current_user["id"],
+            "name": current_user["name"],
+            "email": current_user["email"],
+            "verified": current_user.get("verified", False),
+            "verified_method": current_user.get("verified_method"),
+            "subscription_status": current_user.get("subscription_status"),
+            "premium_tier": current_user.get("premium_tier", "free")
+        }
+    }
+
+
+
+
 @api_router.get("/user/profile", response_model=UserProfile)
 async def get_profile(current_user: dict = Depends(get_current_user)):
     return UserProfile(
@@ -1215,11 +1791,16 @@ async def generate_livekit_token(
     """
     Generate LiveKit access token for video/voice calls
     
+    Requirements:
+    - User must be verified (verified=True)
+    - Rate limited to 30 requests per hour per user
+    
     Features:
     - 1-to-1 video calls
     - Voice-only calls (audio)
     - Secure room-based communication
     - Automatic participant naming
+    - Short-lived tokens (10 minutes TTL)
     
     Returns:
         token: JWT token for LiveKit
@@ -1228,6 +1809,69 @@ async def generate_livekit_token(
         participant_info: User identity and name
     """
     try:
+        # Check if user is verified
+        if not current_user.get("verified"):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Account not verified. Please complete verification to use calls."
+            )
+        
+        # Rate limiting: 30 calls per hour
+        user_id = current_user.get('id')
+        now = datetime.now(timezone.utc)
+        rate_limit_window = timedelta(hours=1)
+        window_start = now - rate_limit_window
+        
+        # Check existing rate limit
+        rate_limit = await db.rate_limits.find_one(
+            {"user_id": user_id, "endpoint": "/livekit/token"},
+            {"_id": 0}
+        )
+        
+        if rate_limit:
+            window_start_dt = datetime.fromisoformat(rate_limit["window_start"]) if isinstance(rate_limit["window_start"], str) else rate_limit["window_start"]
+            if window_start_dt.tzinfo is None:
+                window_start_dt = window_start_dt.replace(tzinfo=timezone.utc)
+            
+            # Reset if window expired
+            if now - window_start_dt >= rate_limit_window:
+                await db.rate_limits.update_one(
+                    {"user_id": user_id, "endpoint": "/livekit/token"},
+                    {"$set": {
+                        "count": 1,
+                        "window_start": now.isoformat(),
+                        "last_request": now.isoformat()
+                    }}
+                )
+            else:
+                # Check if limit exceeded
+                if rate_limit["count"] >= 30:
+                    raise HTTPException(
+                        status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                        detail=f"Rate limit exceeded. Maximum 30 calls per hour. Try again in {int((rate_limit_window - (now - window_start_dt)).total_seconds() / 60)} minutes."
+                    )
+                
+                # Increment count
+                await db.rate_limits.update_one(
+                    {"user_id": user_id, "endpoint": "/livekit/token"},
+                    {"$inc": {"count": 1}, "$set": {"last_request": now.isoformat()}}
+                )
+        else:
+            # Create new rate limit entry
+            rate_limit_entry = RateLimit(
+                user_id=user_id,
+                endpoint="/livekit/token",
+                count=1,
+                window_start=now,
+                last_request=now
+            )
+            
+            rate_limit_dict = rate_limit_entry.model_dump()
+            rate_limit_dict['window_start'] = rate_limit_dict['window_start'].isoformat()
+            rate_limit_dict['last_request'] = rate_limit_dict['last_request'].isoformat()
+            
+            await db.rate_limits.insert_one(rate_limit_dict)
+        
         # Check if LiveKit is configured
         if not LiveKitService.is_configured():
             raise HTTPException(
@@ -1236,10 +1880,9 @@ async def generate_livekit_token(
             )
         
         # Get user info
-        user_id = current_user.get('id')
         user_name = payload.participant_name or current_user.get('display_name') or f"User-{user_id[:8]}"
         
-        # Generate token
+        # Generate token with 10 minutes TTL
         result = LiveKitService.create_room_token(
             match_id=payload.match_id,
             user_id=user_id,
@@ -1253,7 +1896,7 @@ async def generate_livekit_token(
                 detail=result.get("error", "فشل إنشاء جلسة المكالمة")
             )
         
-        logging.info(f"✅ LiveKit token generated for user {user_id} in match {payload.match_id}")
+        logging.info(f"✅ LiveKit token generated for verified user {user_id} in match {payload.match_id}")
         
         return {
             "success": True,

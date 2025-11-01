@@ -381,6 +381,59 @@ class PaymentMethod(BaseModel):
 
 
 
+# Session Management Models
+class UserSession(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str  # References User.id
+    session_token: str  # The persistent token (7 days)
+    refresh_token: Optional[str] = None  # Optional refresh token for JWT
+    device_info: Optional[str] = None  # Device/browser info
+    ip_address: Optional[str] = None
+    expires_at: datetime  # Session expiry (7 days from creation)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    last_used_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class EmailVerificationToken(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    token: str  # Random verification token
+    email: str
+    expires_at: datetime  # 15 minutes TTL
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    used: bool = False
+
+
+class PhoneVerificationOTP(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    phone_number: str
+    otp_code: str  # 6-digit OTP
+    expires_at: datetime  # 10 minutes TTL
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    verified: bool = False
+    attempts: int = 0  # Track verification attempts
+
+
+# Rate Limiting Model
+class RateLimit(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    endpoint: str  # e.g., "/livekit/token"
+    count: int = 0  # Number of requests
+    window_start: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    last_request: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+
 class Notification(BaseModel):
     model_config = ConfigDict(extra="ignore")
     

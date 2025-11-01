@@ -208,6 +208,22 @@ backend:
       - working: "pending_credentials"
         agent: "main"
         comment: "Enhanced image service with: auto-orient, EXIF stripping, resize to 1600px, WebP preview generation, proper error codes (413, 415), per-user folder structure. Waiting for user to provide CLOUDINARY_URL."
+
+  - task: "One-Time Account Verification System"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py, /app/backend/auth_service.py, /app/backend/migrate_verification.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User requested one-time verification at signup with Google OAuth, Email Magic Link, and Phone OTP. Remove per-call verification codes."
+      - working: true
+        agent: "main"
+        comment: "✅ IMPLEMENTED: 1) Updated User model with verified/verified_method/verified_at fields. 2) Migrated 2 existing users to verified=false. 3) Implemented Google OAuth via Emergent (/api/auth/oauth/google). 4) Implemented Email Magic Link with 15-min TTL (/api/auth/email/send-link, /api/auth/email/verify). 5) JWT refresh token support (/api/auth/refresh). 6) Updated LiveKit endpoint to require verified=true with 30/hour rate limiting. 7) Email service running in MOCK mode (logs tokens to console) - user will add real SMTP credentials when ready. 8) Created comprehensive API docs, Postman collection, and EMAIL_SETUP_GUIDE.md. 9) All endpoints tested and working: Email verification flow successful, LiveKit requires verification, rate limiting functional."
+
       - working: true
         agent: "main"
         comment: "✅ Cloudinary credentials configured. Connection verified with test upload. Image processing working: auto-orient, EXIF strip, compression (8KB→1.8KB), WebP preview generation, secure HTTPS URLs. Test image uploaded to: https://res.cloudinary.com/dpm7hliv6/image/upload/v1761945168/users/profiles/test_user_123/file_olqblf.jpg"

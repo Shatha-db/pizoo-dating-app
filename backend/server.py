@@ -1034,6 +1034,523 @@ async def login(request: LoginRequest):
     )
 
 
+# ==================================================================================
+# NEW ONE-TIME VERIFICATION AUTH ENDPOINTS
+# ==================================================================================
+
+# ===== Google OAuth (Emergent) =====
+
+class EmergentOAuthRequest(BaseModel):
+    session_id: str  # Temporary token from URL fragment
+
+
+@api_router.post("/auth/oauth/google")
+async def google_oauth_login(request: EmergentOAuthRequest):
+    """
+    Google OAuth login via Emergent
+    User redirects to: https://auth.emergentagent.com/?redirect={your_app_url}
+    After auth, user lands at: {your_app_url}#session_id={session_id}
+    Frontend extracts session_id and calls this endpoint
+    
+    Returns: Access token, Refresh token, User data
+    """
+    try:
+        # Get session data from Emergent
+        session_data = await AuthService.get_emergent_oauth_session_data(request.session_id)
+        
+        if not session_data:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired session"
+            )
+        
+        # Extract user data
+        oauth_id = session_data.get("id")
+        email = session_data.get("email")
+        name = session_data.get("name")
+        picture = session_data.get("picture")
+        emergent_session_token = session_data.get("session_token")
+        
+        # Check if user exists
+        user = await db.users.find_one({"email": email}, {"_id": 0})
+        
+        if user:
+            # Existing user - update if not verified
+            if not user.get("verified"):
+                await db.users.update_one(
+                    {"id": user["id"]},
+                    {"$set": {
+                        "verified": True,
+                        "verified_method": "google_oauth",
+                        "verified_at": datetime.now(timezone.utc).isoformat()
+                    }}
+                )
+                user["verified"] = True
+                user["verified_method"] = "google_oauth"
+        else:
+            # New user - create account with verified=True
+            trial_end_date = datetime.now(timezone.utc) + timedelta(days=14)
+            user = User(
+                name=name,
+                email=email,
+                phone_number="",  # No phone for OAuth
+                password_hash="",  # No password for OAuth
+                trial_end_date=trial_end_date,
+                subscription_status="trial",
+                terms_accepted=True,
+                terms_accepted_at=datetime.now(timezone.utc),
+                verified=True,
+                verified_method="google_oauth",
+                verified_at=datetime.now(timezone.utc)
+            )
+            
+            user_dict = user.model_dump()
+            user_dict['created_at'] = user_dict['created_at'].isoformat()
+            user_dict['trial_end_date'] = user_dict['trial_end_date'].isoformat()
+            user_dict['terms_accepted_at'] = user_dict['terms_accepted_at'].isoformat()
+            user_dict['verified_at'] = user_dict['verified_at'].isoformat()
+            
+            await db.users.insert_one(user_dict)
+            
+            # Create subscription
+            subscription = Subscription(
+                user_id=user.id,
+                status="trial",
+                trial_end_date=trial_end_date,
+                next_payment_date=trial_end_date
+            )
+            
+            subscription_dict = subscription.model_dump()
+            subscription_dict['created_at'] = subscription_dict['created_at'].isoformat()
+            subscription_dict['start_date'] = subscription_dict['start_date'].isoformat()
+            subscription_dict['trial_end_date'] = subscription_dict['trial_end_date'].isoformat()
+            subscription_dict['next_payment_date'] = subscription_dict['next_payment_date'].isoformat()
+            
+            await db.subscriptions.insert_one(subscription_dict)
+            
+            # Create profile
+            profile = Profile(
+                user_id=user.id,
+                display_name=name,
+                photos=[picture] if picture else [],
+                interests=[],
+                languages=[]
+            )
+            
+            profile_dict = profile.model_dump()
+            profile_dict['created_at'] = profile_dict['created_at'].isoformat()
+            profile_dict['updated_at'] = profile_dict['updated_at'].isoformat()
+            
+            await db.profiles.insert_one(profile_dict)
+            
+            user = user_dict
+        
+        # Create JWT tokens
+        user_id = user.get("id") if isinstance(user, dict) else user.id
+        access_token = AuthService.create_access_token(data={"sub": user_id})
+        refresh_token = AuthService.create_refresh_token(data={"sub": user_id})
+        
+        # Create session in database
+        session_expiry = AuthService.calculate_session_expiry()
+        user_session = UserSession(
+            user_id=user_id,
+            session_token=emergent_session_token,
+            refresh_token=refresh_token,
+            expires_at=session_expiry
+        )
+        
+        session_dict = user_session.model_dump()
+        session_dict['expires_at'] = session_dict['expires_at'].isoformat()
+        session_dict['created_at'] = session_dict['created_at'].isoformat()
+        session_dict['last_used_at'] = session_dict['last_used_at'].isoformat()
+        
+        await db.user_sessions.insert_one(session_dict)
+        
+        logging.info(f"✅ Google OAuth login successful for {email}")
+        
+        return {
+            "success": True,
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer",
+            "expires_in": 3600,  # 1 hour
+            "user": {
+                "id": user_id,
+                "name": user.get("name") if isinstance(user, dict) else user.name,
+                "email": user.get("email") if isinstance(user, dict) else user.email,
+                "verified": True,
+                "verified_method": "google_oauth"
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Google OAuth error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Authentication failed"
+        )
+
+
+# ===== Email Magic Link =====
+
+class EmailVerificationSendRequest(BaseModel):
+    email: EmailStr
+    name: str
+
+
+class EmailVerificationVerifyRequest(BaseModel):
+    token: str
+
+
+@api_router.post("/auth/email/send-link")
+async def send_email_verification_link(request: EmailVerificationSendRequest):
+    """
+    Send magic link to email for one-time account verification
+    Link expires in 15 minutes
+    """
+    try:
+        # Check if user already exists and is verified
+        existing_user = await db.users.find_one({"email": request.email}, {"_id": 0})
+        
+        if existing_user and existing_user.get("verified"):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already verified. Please login."
+            )
+        
+        # Generate verification token
+        token = AuthService.generate_verification_token()
+        expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
+        
+        # If user doesn't exist, create a pending user
+        if not existing_user:
+            trial_end_date = datetime.now(timezone.utc) + timedelta(days=14)
+            user = User(
+                name=request.name,
+                email=request.email,
+                phone_number="",
+                password_hash="",  # No password for email link
+                trial_end_date=trial_end_date,
+                subscription_status="trial",
+                terms_accepted=True,
+                terms_accepted_at=datetime.now(timezone.utc),
+                verified=False,  # Not verified yet
+                verified_method=None
+            )
+            
+            user_dict = user.model_dump()
+            user_dict['created_at'] = user_dict['created_at'].isoformat()
+            user_dict['trial_end_date'] = user_dict['trial_end_date'].isoformat()
+            user_dict['terms_accepted_at'] = user_dict['terms_accepted_at'].isoformat()
+            
+            await db.users.insert_one(user_dict)
+            user_id = user.id
+        else:
+            user_id = existing_user["id"]
+        
+        # Store verification token
+        verification_token = EmailVerificationToken(
+            user_id=user_id,
+            token=token,
+            email=request.email,
+            expires_at=expires_at
+        )
+        
+        token_dict = verification_token.model_dump()
+        token_dict['created_at'] = token_dict['created_at'].isoformat()
+        token_dict['expires_at'] = token_dict['expires_at'].isoformat()
+        
+        await db.email_verification_tokens.insert_one(token_dict)
+        
+        # Send verification email
+        email_sent = await AuthService.send_verification_email(request.email, token, request.name)
+        
+        if not email_sent:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to send verification email"
+            )
+        
+        logging.info(f"✅ Verification email sent to {request.email}")
+        
+        return {
+            "success": True,
+            "message": "Verification email sent. Please check your inbox.",
+            "expires_in": 900  # 15 minutes in seconds
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Email verification send error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to send verification email"
+        )
+
+
+@api_router.post("/auth/email/verify")
+async def verify_email_link(request: EmailVerificationVerifyRequest):
+    """
+    Verify email using magic link token
+    Sets user.verified = true and issues JWT tokens
+    """
+    try:
+        # Find verification token
+        token_data = await db.email_verification_tokens.find_one(
+            {"token": request.token, "used": False},
+            {"_id": 0}
+        )
+        
+        if not token_data:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid or expired verification link"
+            )
+        
+        # Check if expired
+        expires_at = datetime.fromisoformat(token_data["expires_at"]) if isinstance(token_data["expires_at"], str) else token_data["expires_at"]
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
+        
+        if datetime.now(timezone.utc) > expires_at:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Verification link has expired"
+            )
+        
+        # Mark token as used
+        await db.email_verification_tokens.update_one(
+            {"token": request.token},
+            {"$set": {"used": True}}
+        )
+        
+        # Update user verification status
+        user_id = token_data["user_id"]
+        await db.users.update_one(
+            {"id": user_id},
+            {"$set": {
+                "verified": True,
+                "verified_method": "email_link",
+                "verified_at": datetime.now(timezone.utc).isoformat(),
+                "email_verified": True
+            }}
+        )
+        
+        # Get updated user
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        
+        # Create JWT tokens
+        access_token = AuthService.create_access_token(data={"sub": user_id})
+        refresh_token = AuthService.create_refresh_token(data={"sub": user_id})
+        
+        # Create session
+        session_expiry = AuthService.calculate_session_expiry()
+        session_token = AuthService.generate_verification_token()
+        user_session = UserSession(
+            user_id=user_id,
+            session_token=session_token,
+            refresh_token=refresh_token,
+            expires_at=session_expiry
+        )
+        
+        session_dict = user_session.model_dump()
+        session_dict['expires_at'] = session_dict['expires_at'].isoformat()
+        session_dict['created_at'] = session_dict['created_at'].isoformat()
+        session_dict['last_used_at'] = session_dict['last_used_at'].isoformat()
+        
+        await db.user_sessions.insert_one(session_dict)
+        
+        # Create subscription and profile if they don't exist
+        subscription = await db.subscriptions.find_one({"user_id": user_id})
+        if not subscription:
+            trial_end_date = datetime.now(timezone.utc) + timedelta(days=14)
+            subscription = Subscription(
+                user_id=user_id,
+                status="trial",
+                trial_end_date=trial_end_date,
+                next_payment_date=trial_end_date
+            )
+            
+            subscription_dict = subscription.model_dump()
+            subscription_dict['created_at'] = subscription_dict['created_at'].isoformat()
+            subscription_dict['start_date'] = subscription_dict['start_date'].isoformat()
+            subscription_dict['trial_end_date'] = subscription_dict['trial_end_date'].isoformat()
+            subscription_dict['next_payment_date'] = subscription_dict['next_payment_date'].isoformat()
+            
+            await db.subscriptions.insert_one(subscription_dict)
+        
+        profile = await db.profiles.find_one({"user_id": user_id})
+        if not profile:
+            profile = Profile(
+                user_id=user_id,
+                display_name=user["name"],
+                photos=[],
+                interests=[],
+                languages=[]
+            )
+            
+            profile_dict = profile.model_dump()
+            profile_dict['created_at'] = profile_dict['created_at'].isoformat()
+            profile_dict['updated_at'] = profile_dict['updated_at'].isoformat()
+            
+            await db.profiles.insert_one(profile_dict)
+        
+        logging.info(f"✅ Email verification successful for {user['email']}")
+        
+        return {
+            "success": True,
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer",
+            "expires_in": 3600,
+            "user": {
+                "id": user["id"],
+                "name": user["name"],
+                "email": user["email"],
+                "verified": True,
+                "verified_method": "email_link"
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Email verification error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Email verification failed"
+        )
+
+
+# ===== JWT Refresh Token =====
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+
+@api_router.post("/auth/refresh")
+async def refresh_access_token(request: RefreshTokenRequest):
+    """
+    Refresh access token using refresh token
+    Refresh tokens are valid for 7 days
+    """
+    try:
+        # Verify refresh token
+        payload = AuthService.verify_token(request.refresh_token, token_type="refresh")
+        
+        if not payload:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired refresh token"
+            )
+        
+        user_id = payload.get("sub")
+        
+        # Verify session exists and is valid
+        session = await db.user_sessions.find_one(
+            {"user_id": user_id, "refresh_token": request.refresh_token},
+            {"_id": 0}
+        )
+        
+        if not session:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Session not found"
+            )
+        
+        # Check if session expired
+        expires_at = datetime.fromisoformat(session["expires_at"]) if isinstance(session["expires_at"], str) else session["expires_at"]
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
+        
+        if datetime.now(timezone.utc) > expires_at:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Session has expired. Please login again."
+            )
+        
+        # Generate new access token
+        access_token = AuthService.create_access_token(data={"sub": user_id})
+        
+        # Update session last_used_at
+        await db.user_sessions.update_one(
+            {"user_id": user_id, "refresh_token": request.refresh_token},
+            {"$set": {"last_used_at": datetime.now(timezone.utc).isoformat()}}
+        )
+        
+        logging.info(f"✅ Token refreshed for user {user_id}")
+        
+        return {
+            "success": True,
+            "access_token": access_token,
+            "token_type": "bearer",
+            "expires_in": 3600
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Token refresh error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token refresh failed"
+        )
+
+
+# ===== Logout =====
+
+@api_router.post("/auth/logout")
+async def logout(current_user: dict = Depends(get_current_user)):
+    """
+    Logout user by deleting session
+    """
+    try:
+        user_id = current_user["id"]
+        
+        # Delete all sessions for this user
+        await db.user_sessions.delete_many({"user_id": user_id})
+        
+        logging.info(f"✅ User {user_id} logged out")
+        
+        return {
+            "success": True,
+            "message": "Logged out successfully"
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Logout error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Logout failed"
+        )
+
+
+# ===== Get Current User Info =====
+
+@api_router.get("/auth/me")
+async def get_current_user_profile(current_user: dict = Depends(get_current_user)):
+    """
+    Get current authenticated user profile
+    """
+    return {
+        "success": True,
+        "user": {
+            "id": current_user["id"],
+            "name": current_user["name"],
+            "email": current_user["email"],
+            "verified": current_user.get("verified", False),
+            "verified_method": current_user.get("verified_method"),
+            "subscription_status": current_user.get("subscription_status"),
+            "premium_tier": current_user.get("premium_tier", "free")
+        }
+    }
+
+
+
+
 @api_router.get("/user/profile", response_model=UserProfile)
 async def get_profile(current_user: dict = Depends(get_current_user)):
     return UserProfile(

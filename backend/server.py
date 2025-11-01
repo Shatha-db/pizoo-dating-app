@@ -2151,7 +2151,8 @@ async def get_my_profile(current_user: dict = Depends(get_current_user)):
             detail="الملف الشخصي غير موجود"
         )
     
-    return profile
+    # Use serialize_mongo_doc to convert datetime objects to ISO strings
+    return serialize_mongo_doc(profile)
 
 
 

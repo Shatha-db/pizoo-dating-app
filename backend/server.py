@@ -1022,6 +1022,15 @@ async def login(request: LoginRequest):
     
     access_token = create_access_token(data={"sub": user['id']})
     
+    # Convert trial_end_date to ISO string to prevent JSON serialization issues
+    trial_end_date = user['trial_end_date']
+    if isinstance(trial_end_date, datetime):
+        trial_end_date_str = trial_end_date.isoformat()
+    elif isinstance(trial_end_date, str):
+        trial_end_date_str = trial_end_date
+    else:
+        trial_end_date_str = datetime.now(timezone.utc).isoformat()
+    
     return TokenResponse(
         access_token=access_token,
         user={
@@ -1029,7 +1038,10 @@ async def login(request: LoginRequest):
             "name": user['name'],
             "email": user['email'],
             "subscription_status": user['subscription_status'],
-            "trial_end_date": user['trial_end_date']
+            "trial_end_date": trial_end_date_str,
+            "verified": user.get('verified', False),
+            "verified_method": user.get('verified_method'),
+            "premium_tier": user.get('premium_tier', 'free')
         }
     )
 

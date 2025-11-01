@@ -182,10 +182,13 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Fix three critical issues in Pizoo Dating App:
-  1. Image upload error (NotFoundError) - users cannot upload profile photos
-  2. Language selection list incomplete - only shows 4 languages instead of all 9 supported languages
-  3. Country code dropdown incomplete - needs all countries (~240) and must be consistent on both registration and login pages
+  Implement one-time account verification system to replace per-call OTP codes:
+  1. Database: Add verified (bool), verified_method, verified_at fields to User model
+  2. Auth APIs: Google OAuth (Emergent), Email Magic Link (15-min TTL), Phone OTP (Telnyx - later)
+  3. JWT: Access token (1h) + Refresh token (7d)
+  4. LiveKit: Require verified=true, rate-limit 30/hour, issue 10-min tokens
+  5. Frontend: Unified verification screen, remove per-call prompts
+  6. Migration: Set existing users to verified=false
 
 backend:
   - task: "Image Upload with Cloudinary Integration"

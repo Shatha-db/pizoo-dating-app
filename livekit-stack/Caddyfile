@@ -1,0 +1,84 @@
+# Caddyfile for LiveKit Reverse Proxy
+# Auto SSL with Let's Encrypt
+
+{
+    # Global options
+    email admin@pizoo.app
+    
+    # Enable HTTP/3
+    servers {
+        protocol {
+            experimental_http3
+        }
+    }
+}
+
+# Main domain
+rtc.pizoo.app {
+    # Enable automatic HTTPS
+    tls {
+        protocols tls1.2 tls1.3
+    }
+    
+    # WebSocket upgrade for LiveKit
+    @websockets {
+        header Connection *Upgrade*
+        header Upgrade websocket
+    }
+    
+    # Health check endpoint
+    handle /health {
+        reverse_proxy livekit:7880
+    }
+    
+    # LiveKit WebSocket/HTTP
+    handle {
+        reverse_proxy livekit:7880 {
+            # WebSocket specific
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+            header_up X-Forwarded-For {remote}
+            header_up X-Forwarded-Proto {scheme}
+            
+            # Keep connections alive
+            transport http {
+                keepalive 90s
+                keepalive_idle_conns 10
+            }
+        }
+    }
+    
+    # Security headers
+    header {
+        # Remove server info
+        -Server
+        
+        # Security headers
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        
+        # CORS for WebRTC
+        Access-Control-Allow-Origin "*"
+        Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Access-Control-Allow-Headers "Accept, Authorization, Content-Type, Origin"
+        Access-Control-Max-Age "3600"
+    }
+    
+    # Logging
+    log {
+        output file /data/logs/access.log {
+            roll_size 100mb
+            roll_keep 5
+            roll_keep_for 720h
+        }
+        format json
+        level INFO
+    }
+}
+
+# Export certificates for other services (Coturn, LiveKit TURN)
+# Caddy will automatically generate certs and we'll mount them
+# to the shared volume /certs

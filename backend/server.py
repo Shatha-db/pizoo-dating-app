@@ -1791,11 +1791,16 @@ async def generate_livekit_token(
     """
     Generate LiveKit access token for video/voice calls
     
+    Requirements:
+    - User must be verified (verified=True)
+    - Rate limited to 30 requests per hour per user
+    
     Features:
     - 1-to-1 video calls
     - Voice-only calls (audio)
     - Secure room-based communication
     - Automatic participant naming
+    - Short-lived tokens (10 minutes TTL)
     
     Returns:
         token: JWT token for LiveKit
@@ -1804,6 +1809,69 @@ async def generate_livekit_token(
         participant_info: User identity and name
     """
     try:
+        # Check if user is verified
+        if not current_user.get("verified"):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Account not verified. Please complete verification to use calls."
+            )
+        
+        # Rate limiting: 30 calls per hour
+        user_id = current_user.get('id')
+        now = datetime.now(timezone.utc)
+        rate_limit_window = timedelta(hours=1)
+        window_start = now - rate_limit_window
+        
+        # Check existing rate limit
+        rate_limit = await db.rate_limits.find_one(
+            {"user_id": user_id, "endpoint": "/livekit/token"},
+            {"_id": 0}
+        )
+        
+        if rate_limit:
+            window_start_dt = datetime.fromisoformat(rate_limit["window_start"]) if isinstance(rate_limit["window_start"], str) else rate_limit["window_start"]
+            if window_start_dt.tzinfo is None:
+                window_start_dt = window_start_dt.replace(tzinfo=timezone.utc)
+            
+            # Reset if window expired
+            if now - window_start_dt >= rate_limit_window:
+                await db.rate_limits.update_one(
+                    {"user_id": user_id, "endpoint": "/livekit/token"},
+                    {"$set": {
+                        "count": 1,
+                        "window_start": now.isoformat(),
+                        "last_request": now.isoformat()
+                    }}
+                )
+            else:
+                # Check if limit exceeded
+                if rate_limit["count"] >= 30:
+                    raise HTTPException(
+                        status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                        detail=f"Rate limit exceeded. Maximum 30 calls per hour. Try again in {int((rate_limit_window - (now - window_start_dt)).total_seconds() / 60)} minutes."
+                    )
+                
+                # Increment count
+                await db.rate_limits.update_one(
+                    {"user_id": user_id, "endpoint": "/livekit/token"},
+                    {"$inc": {"count": 1}, "$set": {"last_request": now.isoformat()}}
+                )
+        else:
+            # Create new rate limit entry
+            rate_limit_entry = RateLimit(
+                user_id=user_id,
+                endpoint="/livekit/token",
+                count=1,
+                window_start=now,
+                last_request=now
+            )
+            
+            rate_limit_dict = rate_limit_entry.model_dump()
+            rate_limit_dict['window_start'] = rate_limit_dict['window_start'].isoformat()
+            rate_limit_dict['last_request'] = rate_limit_dict['last_request'].isoformat()
+            
+            await db.rate_limits.insert_one(rate_limit_dict)
+        
         # Check if LiveKit is configured
         if not LiveKitService.is_configured():
             raise HTTPException(
@@ -1812,10 +1880,9 @@ async def generate_livekit_token(
             )
         
         # Get user info
-        user_id = current_user.get('id')
         user_name = payload.participant_name or current_user.get('display_name') or f"User-{user_id[:8]}"
         
-        # Generate token
+        # Generate token with 10 minutes TTL
         result = LiveKitService.create_room_token(
             match_id=payload.match_id,
             user_id=user_id,
@@ -1829,7 +1896,7 @@ async def generate_livekit_token(
                 detail=result.get("error", "فشل إنشاء جلسة المكالمة")
             )
         
-        logging.info(f"✅ LiveKit token generated for user {user_id} in match {payload.match_id}")
+        logging.info(f"✅ LiveKit token generated for verified user {user_id} in match {payload.match_id}")
         
         return {
             "success": True,

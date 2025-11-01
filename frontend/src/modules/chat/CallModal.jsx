@@ -8,19 +8,22 @@ export default function CallModal({ matchId, type = 'video', onClose }) {
   
   const roomName = `pizoo-match-${matchId}`;
   
-  // ✅ Enhanced URL with all necessary parameters to skip prejoin
-  const jitsiUrl = `https://meet.jit.si/${roomName}?` + new URLSearchParams({
-    '#config.prejoinPageEnabled': 'false',
-    '#config.startWithAudioMuted': 'false',
-    '#config.startWithVideoMuted': type === 'audio' ? 'true' : 'false',
-    '#config.disableDeepLinking': 'true',
-    '#interfaceConfig.SHOW_JITSI_WATERMARK': 'false',
-    '#interfaceConfig.APP_NAME': 'Pizoo',
-    '#interfaceConfig.SHOW_BRAND_WATERMARK': 'false',
-    '#interfaceConfig.SHOW_POWERED_BY': 'false',
-    '#interfaceConfig.MOBILE_APP_PROMO': 'false',
-    '#userInfo.displayName': 'Pizoo User'
-  }).toString().replace(/&/g, '&');
+  // ✅ Properly formatted Jitsi URL to skip prejoin page
+  const baseUrl = `https://meet.jit.si/${roomName}`;
+  const hashParams = [
+    'config.prejoinPageEnabled=false',
+    `config.startWithAudioMuted=false`,
+    `config.startWithVideoMuted=${type === 'audio' ? 'true' : 'false'}`,
+    'config.disableDeepLinking=true',
+    'interfaceConfig.SHOW_JITSI_WATERMARK=false',
+    'interfaceConfig.APP_NAME=Pizoo',
+    'interfaceConfig.SHOW_BRAND_WATERMARK=false',
+    'interfaceConfig.SHOW_POWERED_BY=false',
+    'interfaceConfig.MOBILE_APP_PROMO=false',
+    'userInfo.displayName=Pizoo User'
+  ];
+  
+  const jitsiUrl = `${baseUrl}#${hashParams.join('&')}`;
 
   useEffect(() => {
     // Auto-close modal on ESC key

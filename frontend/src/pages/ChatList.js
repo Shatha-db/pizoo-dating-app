@@ -277,7 +277,11 @@ const ChatList = () => {
                       
                       <div className="flex items-center justify-between">
                         <p className="text-sm text-gray-600 truncate">
-                          {conv.last_message.content || t('startConversation')}
+                          {typeof conv.last_message?.content === 'string' 
+                            ? conv.last_message.content 
+                            : conv.last_message?.content 
+                              ? String(conv.last_message.content)
+                              : t('startConversation')}
                         </p>
                         {conv.unread_count > 0 && (
                           <span className="bg-pink-500 text-white text-xs px-2 py-1 rounded-full min-w-[20px] text-center">

@@ -8,7 +8,7 @@ import { ArrowRight, MoreVertical, Video, Send, Smile, Mic, Star, Phone } from '
 import axios from 'axios';
 import SafetyConsentModal from '../modules/safety/SafetyConsentModal';
 import EmojiPicker from '../modules/chat/EmojiPicker';
-import CallModal from '../modules/chat/CallModal';
+import LiveKitCallModal from '../modules/chat/LiveKitCallModal';
 import { formatTimeOnly } from '../utils/timeFormat';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -309,6 +309,13 @@ const ChatRoom = () => {
         {messages.map((msg, index) => {
           const isSent = msg.sender_id === user?.id;
           
+          // ✅ Fix React Error #31: Ensure content is always a string
+          const safeContent = typeof msg.content === 'string' 
+            ? msg.content 
+            : (typeof msg.content === 'object' && msg.content !== null)
+              ? JSON.stringify(msg.content)
+              : String(msg.content || '');
+          
           return (
             <div
               key={msg.id || index}
@@ -321,7 +328,7 @@ const ChatRoom = () => {
                     : 'bg-white text-gray-800 shadow-md'
                 }`}
               >
-                <p className="break-words">{msg.content}</p>
+                <p className="break-words">{safeContent}</p>
                 <div className={`text-xs mt-1 flex items-center gap-1 ${isSent ? 'opacity-75 justify-end' : 'opacity-60'}`}>
                   <span>{formatTimeOnly(msg.created_at, 'ar')}</span>
                   {isSent && (
@@ -448,9 +455,9 @@ const ChatRoom = () => {
         </div>
       )}
       
-      {/* Call Modal */}
+      {/* LiveKit Call Modal */}
       {showCallModal && (
-        <CallModal
+        <LiveKitCallModal
           matchId={matchId}
           type={callType}
           onClose={() => setShowCallModal(false)}

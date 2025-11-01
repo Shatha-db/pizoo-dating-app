@@ -257,7 +257,10 @@ const Settings = () => {
           <h2 className="font-bold text-lg mb-4">{t('support_community')}</h2>
           
           <div className="space-y-2">
-            <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+            <button 
+              onClick={() => navigate('/help')}
+              className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg"
+            >
               <div className="flex items-center gap-3">
                 <HelpCircle className="w-5 h-5 text-blue-500" />
                 <span>{t('help_support')}</span>
@@ -265,7 +268,10 @@ const Settings = () => {
               <ChevronLeft className="w-5 h-5 text-gray-400" />
             </button>
 
-            <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+            <button 
+              onClick={() => navigate('/community')}
+              className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg"
+            >
               <div className="flex items-center gap-3">
                 <Users className="w-5 h-5 text-purple-500" />
                 <span>{t('community_guidelines')}</span>
@@ -273,7 +279,10 @@ const Settings = () => {
               <ChevronLeft className="w-5 h-5 text-gray-400" />
             </button>
 
-            <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+            <button 
+              onClick={() => navigate('/safety')}
+              className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg"
+            >
               <div className="flex items-center gap-3">
                 <Shield className="w-5 h-5 text-green-500" />
                 <span>{t('safety_center')}</span>

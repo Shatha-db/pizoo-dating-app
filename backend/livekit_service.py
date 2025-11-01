@@ -14,7 +14,11 @@ logger = logging.getLogger(__name__)
 # Note: .env is loaded by server.py before importing this module
 LIVEKIT_API_KEY = os.environ.get('LIVEKIT_API_KEY')
 LIVEKIT_API_SECRET = os.environ.get('LIVEKIT_API_SECRET')
-LIVEKIT_URL = os.environ.get('LIVEKIT_URL', 'wss://pizoo-app-2jxoavwx.livekit.cloud')
+LIVEKIT_URL = os.environ.get('LIVEKIT_URL')  # Must be set in .env
+
+if not LIVEKIT_URL:
+    logger.warning("⚠️ LIVEKIT_URL not set in environment variables")
+    LIVEKIT_URL = 'wss://pizoo-app-2jxoavwx.livekit.cloud'  # Fallback
 
 class LiveKitService:
     """Service for LiveKit token generation and room management"""

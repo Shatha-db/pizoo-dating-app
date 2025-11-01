@@ -8,7 +8,13 @@ import sys
 sys.path.append('/app/backend')
 
 from livekit_service import LiveKitService
+from dotenv import load_dotenv
+from pathlib import Path
 import os
+
+# Load environment variables
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
 
 def test_livekit_connection():
     """Test LiveKit configuration and token generation"""

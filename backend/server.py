@@ -17,7 +17,6 @@ from datetime import datetime, timezone, timedelta
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from image_service import ImageUploadService
-from livekit_service import LiveKitService
 from auth_service import AuthService
 from sms_service import generate_and_send, verify as verify_otp
 from twilio_service import create_voice_token, create_video_token, send_sms, verify_start, verify_check
@@ -43,6 +42,10 @@ import httpx
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
+
+# Import LiveKitService AFTER loading .env
+from livekit_service import LiveKitService, LIVEKIT_URL as LK_URL
+logging.info(f"✅ LiveKit URL loaded: {LK_URL}")
 
 # Initialize Sentry for error tracking
 try:
@@ -1963,11 +1966,12 @@ async def livekit_status():
         configured: Whether LiveKit is properly configured
         url: LiveKit server URL (if configured)
     """
+    from livekit_service import LIVEKIT_URL
     is_configured = LiveKitService.is_configured()
     
     return {
         "configured": is_configured,
-        "url": os.environ.get('LIVEKIT_URL') if is_configured else None,
+        "url": LIVEKIT_URL if is_configured else None,
         "message": "LiveKit is ready" if is_configured else "LiveKit credentials not configured"
     }
 

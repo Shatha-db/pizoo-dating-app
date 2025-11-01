@@ -104,13 +104,81 @@ export default function LiveKitCallModal({ matchId, type = 'video', onClose }) {
   // Render LiveKit room
   return (
     <div className="fixed inset-0 bg-black z-[9999]">
+      {/* Add basic LiveKit styles inline */}
+      <style>{`
+        .lk-room-container {
+          height: 100%;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+        .lk-video-conference {
+          height: 100%;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+        .lk-grid-layout {
+          display: grid;
+          gap: 8px;
+          padding: 8px;
+          height: 100%;
+        }
+        .lk-participant-tile {
+          position: relative;
+          background: #1a1a1a;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+        .lk-participant-tile video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .lk-participant-name {
+          position: absolute;
+          bottom: 8px;
+          left: 8px;
+          background: rgba(0, 0, 0, 0.7);
+          color: white;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 14px;
+        }
+        .lk-control-bar {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          padding: 24px;
+          background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        }
+        .lk-button {
+          padding: 12px;
+          border-radius: 50%;
+          border: none;
+          cursor: pointer;
+          transition: all 0.2s;
+          background: rgba(255, 255, 255, 0.2);
+          color: white;
+        }
+        .lk-button:hover {
+          background: rgba(255, 255, 255, 0.3);
+        }
+        .lk-button.active {
+          background: #ef4444;
+        }
+      `}</style>
+      
       <LiveKitRoom
         video={type === 'video'}
         audio={true}
         token={token}
         serverUrl={serverUrl}
-        data-lk-theme="default"
-        style={{ height: '100vh' }}
+        style={{ height: '100vh', width: '100%' }}
         onDisconnected={onClose}
       >
         {/* Header */}

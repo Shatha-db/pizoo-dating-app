@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 # Load LiveKit configuration from environment
 LIVEKIT_API_KEY = os.environ.get('LIVEKIT_API_KEY')
 LIVEKIT_API_SECRET = os.environ.get('LIVEKIT_API_SECRET')
-LIVEKIT_URL = os.environ.get('LIVEKIT_URL', 'wss://your-livekit-server.livekit.cloud')
+LIVEKIT_URL = os.environ.get('LIVEKIT_URL', 'wss://pizoo-app-2jxoavwx.livekit.cloud')
 
 class LiveKitService:
     """Service for LiveKit token generation and room management"""

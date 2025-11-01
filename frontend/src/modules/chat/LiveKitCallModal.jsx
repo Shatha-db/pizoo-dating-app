@@ -17,8 +17,6 @@ export default function LiveKitCallModal({ matchId, type = 'video', onClose }) {
   const [serverUrl, setServerUrl] = useState(null);
   const [roomName, setRoomName] = useState(null);
   const [error, setError] = useState(null);
-  const [micMuted, setMicMuted] = useState(false);
-  const [videoMuted, setVideoMuted] = useState(type === 'audio');
 
   // Fetch LiveKit token on mount
   useEffect(() => {

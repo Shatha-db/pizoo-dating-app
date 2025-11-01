@@ -7,19 +7,18 @@ import os
 from datetime import timedelta
 from livekit import api
 import logging
-from pathlib import Path
-from dotenv import load_dotenv
-
-# Load environment variables
-ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
 
 logger = logging.getLogger(__name__)
 
 # Load LiveKit configuration from environment
+# Note: .env is loaded by server.py before importing this module
 LIVEKIT_API_KEY = os.environ.get('LIVEKIT_API_KEY')
 LIVEKIT_API_SECRET = os.environ.get('LIVEKIT_API_SECRET')
-LIVEKIT_URL = os.environ.get('LIVEKIT_URL', 'wss://your-livekit-server.livekit.cloud')
+LIVEKIT_URL = os.environ.get('LIVEKIT_URL')  # Must be set in .env
+
+if not LIVEKIT_URL:
+    logger.warning("⚠️ LIVEKIT_URL not set in environment variables")
+    LIVEKIT_URL = 'wss://pizoo-app-2jxoavwx.livekit.cloud'  # Fallback
 
 class LiveKitService:
     """Service for LiveKit token generation and room management"""

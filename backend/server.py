@@ -3479,7 +3479,10 @@ async def get_messages(match_id: str, current_user: dict = Depends(get_current_u
         }
     )
     
-    return {"messages": messages}
+    # Serialize messages to ensure no ObjectId issues
+    serialized_messages = [serialize_mongo_doc(msg) for msg in messages]
+    
+    return {"messages": serialized_messages}
 
 
 class SendMessageRequest(BaseModel):

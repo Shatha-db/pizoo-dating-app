@@ -3567,9 +3567,12 @@ async def send_message(
         messages_sent = updated_user.get('messages_sent_this_week', 0)
         remaining_messages = max(0, 10 - messages_sent)
     
+    # Serialize message_data to ensure no ObjectId issues
+    serialized_message_data = serialize_mongo_doc(message_data)
+    
     return {
         "message": "Message sent successfully",
-        "data": message_data,
+        "data": serialized_message_data,
         "remaining_messages": remaining_messages
     }
 

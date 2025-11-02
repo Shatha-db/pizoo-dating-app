@@ -48,6 +48,7 @@ const webpackConfig = {
           failOnError: false,
           failOnWarning: false,
           emitWarning: true,
+          quiet: true, // Only show errors, not warnings
         })
       );
 

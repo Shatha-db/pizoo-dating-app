@@ -3409,6 +3409,10 @@ async def get_conversations(current_user: dict = Depends(get_current_user)):
             sort=[("created_at", -1)]
         )
         
+        # Serialize last_message if exists
+        if last_message:
+            last_message = serialize_mongo_doc(last_message)
+        
         # Count unread messages
         unread_count = await db.messages.count_documents({
             "match_id": match['id'],

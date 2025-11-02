@@ -11,7 +11,7 @@ All secrets and sensitive information have been successfully redacted from the r
 ### 1. GitHub Tokens Redacted ✅
 - `GIT_HISTORY_CLEANED.md` line 14: Token replaced with `<GITHUB_TOKEN_REDACTED>`
 - `GIT_HISTORY_CLEANED.md` line 82: Token reference removed
-- `SERVICE_VERIFICATION_REPORT.md` line 38: `ghp_xxxxx` → `<your-github-token>`
+- `SERVICE_VERIFICATION_REPORT.md` line 38: `GITHUB_TOKEN_EXAMPLE` → `<your-github-token>`
 
 ### 2. Cloudinary URLs Redacted ✅
 - `FINAL_STATUS.md`: Real URL → `cloudinary://API_KEY:API_SECRET@CLOUD_NAME`

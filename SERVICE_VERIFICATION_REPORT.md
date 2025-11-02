@@ -35,7 +35,7 @@
 1. Go to GitHub → Settings → Developer Settings
 2. Generate Personal Access Token
 3. Select scopes: `repo`, `workflow`, `admin:org`
-4. Add to `.env`: `GITHUB_ACCESS_TOKEN=ghp_xxxxx`
+4. Add to `.env`: `GITHUB_ACCESS_TOKEN=<your-github-token>`
 5. Restart backend
 
 **Priority:** Medium (needed for automated deployments)

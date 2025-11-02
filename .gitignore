@@ -278,3 +278,4 @@ node_modules/.pnpm/@next+swc-linux-arm64-gnu@14.2.33/node_modules/@next/swc-linu
 node_modules/.pnpm/@next+swc-linux-arm64-musl@14.2.33/node_modules/@next/swc-linux-arm64-musl/next-swc.linux-arm64-musl.node
 node_modules/@next/swc-linux-arm64-musl/next-swc.linux-arm64-musl.node
 node_modules/@next/swc-linux-arm64-gnu/next-swc.linux-arm64-gnu.node
+apps/web/node_modules/.cache/default-development/0.pack

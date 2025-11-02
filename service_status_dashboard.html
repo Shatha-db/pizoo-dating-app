@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizoo Service Status Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            font-size: 32px;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+        .header .subtitle {
+            color: #718096;
+            font-size: 14px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        .stat-card .icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        .stat-card .label {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 8px;
+        }
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1a202c;
+        }
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 20px;
+        }
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .service-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-connected {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .service-details {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .service-details div {
+            margin-bottom: 8px;
+        }
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 8px;
+            height: 8px;
+            overflow: hidden;
+            margin-top: 16px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            transition: width 0.3s;
+        }
+        .footer {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Pizoo Service Status Dashboard</h1>
+            <p class="subtitle">Real-time monitoring and health check • Last updated: <span id="timestamp">2025-11-02 12:26:04 UTC</span></p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="icon">✅</div>
+                <div class="label">Connected Services</div>
+                <div class="value">4</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">⚠️</div>
+                <div class="label">Not Configured</div>
+                <div class="value">2</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">💚</div>
+                <div class="label">Overall Health</div>
+                <div class="value">67%</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">🤖</div>
+                <div class="label">Automation</div>
+                <div class="value">Active</div>
+            </div>
+        </div>
+
+        <div class="services">
+            <div class="service-card">
+                <div class="service-header">
+                    <span class="service-name">🗄️ MongoDB</span>
+                    <span class="status-badge status-connected">CONNECTED</span>
+                </div>
+                <div class="service-details">
+                    <div>📍 <strong>Host:</strong> localhost:27017</div>
+                    <div>💾 <strong>Database:</strong> test_database</div>
+                    <div>📦 <strong>Collections:</strong> 9</div>
+                    <div>✅ <strong>Read/Write:</strong> Working</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <span class="service-name">🎥 LiveKit</span>
+                    <span class="status-badge status-connected">CONNECTED</span>
+                </div>
+                <div class="service-details">
+                    <div>🌐 <strong>URL:</strong> wss://pizoo-app-2jxoavwx.livekit.cloud</div>
+                    <div>🔑 <strong>API Key:</strong> APIRRhiN***</div>
+                    <div>✅ <strong>Token Gen:</strong> Working</div>
+                    <div>📹 <strong>Features:</strong> Video, Voice, Screen Share</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <span class="service-name">📸 Cloudinary</span>
+                    <span class="status-badge status-connected">CONNECTED</span>
+                </div>
+                <div class="service-details">
+                    <div>☁️ <strong>Cloud:</strong> dpm7hliv6</div>
+                    <div>📁 <strong>Folder:</strong> users</div>
+                    <div>✅ <strong>Upload:</strong> Working</div>
+                    <div>🎨 <strong>Features:</strong> WebP, Resize, Auto-orient</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <span class="service-name">🔍 Sentry</span>
+                    <span class="status-badge status-connected">CONNECTED</span>
+                </div>
+                <div class="service-details">
+                    <div>📊 <strong>Project:</strong> python-fastapi</div>
+                    <div>🌍 <strong>Environment:</strong> production</div>
+                    <div>✅ <strong>Test Event:</strong> Sent</div>
+                    <div>📈 <strong>Sample Rate:</strong> 20%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <span class="service-name">🧰 GitHub</span>
+                    <span class="status-badge status-warning">NOT CONFIGURED</span>
+                </div>
+                <div class="service-details">
+                    <div>⚠️ <strong>Status:</strong> Token not set</div>
+                    <div>📦 <strong>Repo:</strong> pizoo-dating-app</div>
+                    <div>🔧 <strong>Required:</strong> For auto-deploy</div>
+                    <div>📖 <strong>Guide:</strong> See ENV_CONFIGURATION_GUIDE.md</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <span class="service-name">☁️ Hetzner</span>
+                    <span class="status-badge status-warning">NOT CONFIGURED</span>
+                </div>
+                <div class="service-details">
+                    <div>⚠️ <strong>Status:</strong> Token not set</div>
+                    <div>🖥️ <strong>Purpose:</strong> VPS hosting</div>
+                    <div>📌 <strong>Priority:</strong> Low (optional)</div>
+                    <div>💡 <strong>Note:</strong> For self-hosted LiveKit</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3 style="margin-bottom: 12px;">🤖 Automation Status</h3>
+            <p>Emergent Agent has full automation privileges for code maintenance, database operations, service monitoring, and error management.</p>
+            <p style="margin-top: 8px; font-size: 14px; opacity: 0.9;">Manual approval required for: Production deployment, Schema migrations, Security changes</p>
+        </div>
+    </div>
+</body>
+</html>

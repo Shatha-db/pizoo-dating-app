@@ -1,0 +1,59 @@
+{
+  "timestamp": "2025-11-02T12:26:04.422443+00:00",
+  "environment": "production",
+  "results": {
+    "github": {
+      "status": "NOT_CONFIGURED",
+      "message": "GITHUB_ACCESS_TOKEN not set",
+      "permissions": null,
+      "health": "N/A"
+    },
+    "mongodb": {
+      "status": "CONNECTED",
+      "host": "localhost:27017",
+      "database": "test_database",
+      "version": "7.0.25",
+      "collections_count": 9,
+      "read_access": true,
+      "write_access": true,
+      "health": "HEALTHY"
+    },
+    "hetzner": {
+      "status": "NOT_CONFIGURED",
+      "message": "HETZNER_API_TOKEN not set",
+      "health": "N/A"
+    },
+    "livekit": {
+      "status": "CONNECTED",
+      "url": "wss://pizoo-app-2jxoavwx.livekit.cloud",
+      "api_key": "APIRRhiN...",
+      "token_generation": "SUCCESS",
+      "can_create_rooms": true,
+      "can_generate_tokens": true,
+      "health": "HEALTHY"
+    },
+    "cloudinary": {
+      "status": "CONNECTED",
+      "cloud_name": "dpm7hliv6",
+      "api_key": "39981793...",
+      "resources_accessible": true,
+      "can_upload": true,
+      "can_delete": true,
+      "health": "HEALTHY"
+    },
+    "sentry": {
+      "status": "CONNECTED",
+      "dsn": "https://79c952777d037f686f42fc...",
+      "test_event_sent": true,
+      "event_id": "03948cc0479846729335b3b4cf86aaf4",
+      "can_report_errors": true,
+      "health": "HEALTHY"
+    }
+  },
+  "summary": {
+    "total": 6,
+    "connected": 4,
+    "not_configured": 2,
+    "errors": 0
+  }
+}

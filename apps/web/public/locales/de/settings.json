@@ -1,0 +1,10 @@
+{
+  "language": "Sprache",
+  "theme": "Design",
+  "notifications": "Benachrichtigungen",
+  "privacy": "Datenschutz und Sicherheit",
+  "account": "Kontoeinstellungen",
+  "help": "Hilfe und Support",
+  "logout": "Abmelden",
+  "version": "Version"
+}

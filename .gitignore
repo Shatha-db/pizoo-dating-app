@@ -225,6 +225,7 @@ frontend/node_modules/.cache/default-development/8.pack
 # Environment files
 *.env
 *.env.*
+<<<<<<< HEAD
 -e 
 # Environment files
 *.env
@@ -237,3 +238,37 @@ frontend/node_modules/.cache/default-development/8.pack
 # Environment files
 *.env
 *.env.*
+=======
+
+# Monorepo
+node_modules/
+.turbo/
+dist/
+build/
+.next/
+.env
+.env.local
+.env.*.local
+*.log
+pnpm-lock.yaml
+.pnpm-store/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+venv/
+.venv/
+*.egg-info/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+>>>>>>> c7795dcc04016d57f43ca2481f9536ed6cbcf60b

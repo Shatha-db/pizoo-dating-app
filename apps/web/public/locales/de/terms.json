@@ -1,0 +1,56 @@
+{
+  "terms_title": "Geschäftsbedingungen",
+  "privacy_title": "Datenschutzrichtlinie",
+  "cookies_title": "Cookie-Richtlinie",
+  "last_updated": "Zuletzt aktualisiert",
+  "contact_us": "Kontaktieren Sie uns",
+  "email": "E-Mail",
+  "website": "Webseite",
+  "all_rights_reserved": "Alle Rechte vorbehalten",
+  
+  "terms": {
+    "heading": "Nutzungsbedingungen für Pizoo",
+    "section1_title": "1. Annahme der Bedingungen",
+    "section1_content": "Durch den Zugriff auf und die Nutzung der Pizoo-Anwendung erklären Sie sich mit diesen Geschäftsbedingungen einverstanden. Wenn Sie mit einem Teil dieser Bedingungen nicht einverstanden sind, dürfen Sie die Anwendung nicht verwenden.",
+    "section2_title": "2. Berechtigung",
+    "section2_content": "Sie müssen mindestens 18 Jahre alt sein, um Pizoo zu nutzen. Durch die Nutzung der Anwendung erklären und garantieren Sie, dass Sie diese Voraussetzung erfüllen und das gesetzliche Recht, die Befugnis und die Fähigkeit haben, diese Vereinbarung einzugehen.",
+    "section3_title": "3. Ihr Konto",
+    "section3_content": "Bei der Erstellung eines Kontos bei Pizoo erklären Sie sich bereit:",
+    "section3_item1": "Genaue, vollständige und aktuelle Informationen über sich selbst bereitzustellen",
+    "section3_item2": "Die Sicherheit Ihres Passworts zu wahren",
+    "section3_item3": "Die volle Verantwortung für alle Aktivitäten zu übernehmen, die unter Ihrem Konto stattfinden",
+    "section3_item4": "Uns unverzüglich über jede unbefugte Nutzung Ihres Kontos zu informieren",
+    "section4_title": "4. Verhaltenskodex",
+    "section4_content": "Sie verpflichten sich, Folgendes nicht zu tun:",
+    "section4_item1": "Sich als eine Person oder Organisation auszugeben",
+    "section4_item2": "Unangemessene, beleidigende, rassistische oder diskriminierende Inhalte zu veröffentlichen",
+    "section4_item3": "Die Anwendung ohne unsere Zustimmung für kommerzielle Zwecke zu nutzen",
+    "section4_item4": "Andere Benutzer zu belästigen oder zu missbrauchen",
+    "section4_item5": "Illegale, schädliche oder bedrohliche Inhalte zu veröffentlichen",
+    "section4_item6": "Informationen anderer Benutzer ohne deren Zustimmung zu sammeln",
+    "section5_title": "5. Inhalt",
+    "section5_content": "Sie sind allein verantwortlich für die Inhalte, die Sie auf Pizoo veröffentlichen. Wir behalten uns das Recht vor, alle Inhalte zu entfernen, die gegen diese Bedingungen verstoßen oder nach unserem alleinigen Ermessen als unangemessen erachtet werden.",
+    "section6_title": "6. Bezahlte Abonnements",
+    "section6_content": "Wir bieten kostenpflichtige Abonnementfunktionen an (Gold und Platinum). Durch das Abonnieren:",
+    "section6_item1": "Stimmen Sie den zum Zeitpunkt des Kaufs angezeigten Gebühren zu",
+    "section6_item2": "Verlängern sich Abonnements automatisch, sofern sie nicht gekündigt werden",
+    "section6_item3": "Können Sie Ihr Abonnement jederzeit in Ihren Kontoeinstellungen kündigen",
+    "section6_item4": "Bieten wir keine Rückerstattungen für nicht genutzte Zeiträume an",
+    "section7_title": "7. Kontokündigung",
+    "section7_content": "Wir behalten uns das Recht vor, Ihr Konto jederzeit mit oder ohne Vorankündigung zu sperren oder zu kündigen, wenn Sie gegen diese Bedingungen verstoßen oder aus einem anderen Grund nach unserem alleinigen Ermessen.",
+    "section8_title": "8. Haftungsausschluss",
+    "section8_content": "Pizoo wird 'wie besehen' ohne Garantien jeglicher Art bereitgestellt. Wir garantieren nicht, dass der Service fehlerfrei oder ohne Unterbrechung verfügbar sein wird.",
+    "section9_title": "9. Änderungen der Bedingungen",
+    "section9_content": "Wir behalten uns das Recht vor, diese Bedingungen jederzeit zu ändern. Sie werden über wesentliche Änderungen über die Anwendung oder per E-Mail benachrichtigt. Ihre fortgesetzte Nutzung des Dienstes nach solchen Änderungen stellt die Annahme der geänderten Bedingungen dar.",
+    "section10_title": "10. Kontaktieren Sie uns",
+    "section10_content": "Wenn Sie Fragen zu diesen Bedingungen haben, können Sie uns kontaktieren unter:"
+  },
+  "privacy": {
+    "heading": "Datenschutzrichtlinie",
+    "intro": "Bei Pizoo nehmen wir Ihre Privatsphäre ernst. Diese Datenschutzrichtlinie erklärt, wie wir Ihre persönlichen Informationen sammeln, verwenden und schützen."
+  },
+  "cookies": {
+    "heading": "Cookie-Richtlinie",
+    "intro": "Diese Cookie-Richtlinie erklärt, wie Pizoo Cookies und ähnliche Technologien verwendet."
+  }
+}

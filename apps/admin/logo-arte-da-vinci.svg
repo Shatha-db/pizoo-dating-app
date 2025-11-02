@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 80">
+  <defs><style>@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap');.word{font-family:'Playfair Display',serif;fill:#c8a96a;font-weight:600}.word2{fill:#fff;font-family:'Playfair Display',serif;font-weight:600}.mono{fill:#c8a96a;font-family:'Playfair Display',serif;font-weight:600}</style></defs>
+  <circle cx="38" cy="40" r="28" fill="none" stroke="#c8a96a" stroke-width="2"/>
+  <text x="38" y="47" text-anchor="middle" font-size="22" class="mono">AdV</text>
+  <text x="80" y="34" class="word2" font-size="28">Arte</text>
+  <text x="80" y="62" class="word" font-size="30">da vinci</text>
+</svg>

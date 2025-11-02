@@ -1,0 +1,106 @@
+/* ============================================
+   Pizoo Global Fixes - Text Overflow & Layout
+   ============================================ */
+
+/* Prevent text overflow on profile cards */
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Line clamping utilities */
+.clamp-1 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
+.clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+/* Prevent click-blocking overlays */
+.overlay-no-pointer,
+.decor,
+.image-gradient {
+  pointer-events: none;
+}
+
+/* Ensure interactive elements can receive clicks */
+.interactive {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Responsive image container */
+.img-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Button hover effects */
+.btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar but keep functionality */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* RTL-specific fixes */
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+/* Dark mode improvements */
+@media (prefers-color-scheme: dark) {
+  .dark\:bg-gray-800 {
+    background-color: rgb(31 41 55);
+  }
+  
+  .dark\:text-white {
+    color: rgb(255 255 255);
+  }
+}

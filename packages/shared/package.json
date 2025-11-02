@@ -1,0 +1,16 @@
+{
+  "name": "@pizoo/shared",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "jest": "^29.7.0"
+  }
+}

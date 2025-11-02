@@ -1,0 +1,13 @@
+{
+  "you_got_likes": "¡Tienes nuevos me gusta!",
+  "view_who_liked_you": "Ver quién te dio me gusta",
+  "liked_you": "Le gustas",
+  "mutual_like": "Me gusta mutuo",
+  "no_likes_yet": "Aún no hay me gusta",
+  "refresh": "Actualizar",
+  "see_who_likes_you": "Ver quién te dio me gusta",
+  "unlock_with_gold": "Desbloquear con Gold",
+  "people_liked_you": "{{count}} personas te dieron me gusta",
+  "start_matching": "Comenzar a hacer match",
+  "keep_swiping": "Seguir deslizando"
+}

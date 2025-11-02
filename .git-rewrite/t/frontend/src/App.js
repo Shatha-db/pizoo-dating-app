@@ -36,6 +36,9 @@ import Notifications from './pages/Notifications';
 import Premium from './pages/Premium';
 import Settings from './pages/Settings';
 import TermsNew from './pages/TermsNew';
+import HelpSupport from './pages/HelpSupport';
+import CommunityGuidelines from './pages/CommunityGuidelines';
+import SafetyCenter from './pages/SafetyCenter';
 import CustomLogoPage from './pages/CustomLogoPage';
 import { Toaster } from './components/ui/sonner';
 import { useTranslation } from 'react-i18next';
@@ -122,6 +125,9 @@ function AppRoot() {
                     <Route path="/terms" element={<TermsNew />} />
                     <Route path="/privacy" element={<TermsNew />} />
                     <Route path="/cookies" element={<TermsNew />} />
+                    <Route path="/help" element={<HelpSupport />} />
+                    <Route path="/community" element={<CommunityGuidelines />} />
+                    <Route path="/safety" element={<SafetyCenter />} />
                     <Route path="/custom-logo" element={<CustomLogoPage />} />
                     <Route path="/dashboard" element={<Navigate to="/home" replace />} />
                     <Route

@@ -97,6 +97,40 @@
     priority: "medium"
     needs_retesting: false
     status_history:
+
+
+  - task: "Legal & Support Pages - Translation & Navigation"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/HelpSupport.js, /app/frontend/src/pages/CommunityGuidelines.js, /app/frontend/src/pages/SafetyCenter.js, /app/frontend/src/i18n.js, /app/frontend/src/App.js, /app/frontend/src/pages/Settings.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "Legal pages showing i18n keys instead of text. Support pages not opening (Help, Community, Safety)."
+
+
+  - task: "LiveKit RTC Integration - Video/Voice Calls"
+    implemented: true
+    working: "pending_credentials"
+    file: "/app/backend/livekit_service.py, /app/backend/server.py, /app/frontend/src/modules/chat/LiveKitCallModal.jsx, /app/frontend/src/pages/ChatRoom.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "Requested migration from Jitsi to LiveKit for better control and quality."
+      - working: "pending_credentials"
+        agent: "main"
+        comment: "Complete LiveKit integration implemented. Backend: token generation endpoint, LiveKitService class. Frontend: LiveKitCallModal component with video conference, automatic layout, controls. Waiting for LIVEKIT_API_KEY, LIVEKIT_API_SECRET, LIVEKIT_URL from user to test."
+
+      - working: true
+        agent: "main"
+        comment: "Fixed i18n.js by adding 'privacy' and 'cookies' to namespaces. Created 3 new pages: HelpSupport.js, CommunityGuidelines.js, SafetyCenter.js - all bilingual (EN/AR) with RTL support. Added routes to App.js and connected navigation from Settings.js. All pages now working correctly."
+
       - working: false
         agent: "user"
         comment: "Jitsi shows prejoin page before entering call"
@@ -236,3 +270,5 @@ agent_communication:
     message: "✅✅✅ ALL PHASES COMPLETE! Cloudinary credentials configured and verified. Test upload successful. Image processing pipeline working: compression (8KB→1.8KB), auto-orient, EXIF strip, WebP preview generation, per-user folders (users/<userId>/). All 3 critical fixes now live and working!"
   - agent: "main"
     message: "🔧 ADDITIONAL FIXES: Fixed React Error #31 in ChatRoom.js & ChatList.js (objects rendered in JSX). Updated CORS_ORIGINS for proper domain whitelist. Added general /api/media/upload endpoint. Fixed Jitsi prejoin screen to skip directly to call. All services restarted and verified."
+  - agent: "main"
+    message: "📄 LEGAL & SUPPORT PAGES FIX: Fixed i18n keys showing on Terms/Privacy/Cookies pages by adding missing namespaces to i18n.js. Created 3 new support pages: HelpSupport.js, CommunityGuidelines.js, SafetyCenter.js - all bilingual (EN/AR) with RTL. Added routes to App.js and connected Settings navigation. All pages now working correctly."

@@ -1,0 +1,15 @@
+{
+  "name": "@pizoo/backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "uvicorn server:app --reload --host 0.0.0.0 --port 8001",
+    "start": "uvicorn server:app --host 0.0.0.0 --port 8001",
+    "lint": "ruff check .",
+    "format": "ruff format .",
+    "typecheck": "mypy .",
+    "test": "pytest"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

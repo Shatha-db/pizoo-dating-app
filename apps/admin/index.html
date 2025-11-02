@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Coiffeur Shatha – Schönheit & Pflege in Basel</title>
+  <meta name="description" content="Eleganter Salon in Basel – Haarschnitt, Färben, Maniküre, Make-up & Brautservice. Online anfragen & per WhatsApp reservieren.">
+  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header id="brand-hero" class="brand-hero" role="banner">
+  <div class="container">
+    <div class="brand">
+      <img src="assets/logo-arte-da-vinci.svg" alt="Arte da vinci" class="brand-logo"/>
+      <div class="brand-text">
+        <span class="brand-top">Arte</span>
+        <span class="brand-bottom">da vinci</span>
+      </div>
+    </div>
+    <p class="tagline">Beauty · Make-up · Hair · Nails · Lashes</p>
+  </div>
+</header>
+<style>
+:root{ --brand-accent:#c8a96a; --bg:#0d0d0f; }
+body{ background:#0d0d0f; color:#fff; }
+.brand-hero{padding:44px 0 26px;text-align:center}
+.brand-hero .container{max-width:1100px;margin:0 auto;padding:0 16px}
+.brand{display:flex;gap:14px;align-items:center;justify-content:center}
+.brand-logo{width:88px;height:auto}
+.brand-text{font-family:'Playfair Display',serif; line-height:.9}
+.brand-text .brand-top{display:block;font-size:54px;letter-spacing:.5px;color:#fff}
+.brand-text .brand-bottom{display:block;font-size:56px;letter-spacing:2px;color:var(--brand-accent)}
+.tagline{margin-top:8px;color:#d8d8d8}
+/* Accordion contrast on dark */
+.accordion .acc-title{background:#f2f2f4;color:#111}
+.price-list li, .info-list li{color:#111;background:#fff;border-radius:8px;margin:6px 0;border:1px solid #eee}
+/* Booking controls */
+#freebusy-ui input[type="date"]{padding:10px 12px;border:1px solid #ccc;border-radius:12px;background:#fff;color:#111}
+#freebusy-ui button{padding:10px 16px;border:1px solid #e5e5e5;border-radius:999px;background:#ffffff;color:#111;cursor:pointer}
+#freebusy-ui button:hover{filter:brightness(.98)}
+/* WhatsApp */
+.wa-float{position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 8px 20px rgba(0,0,0,.25);z-index:9999;background:#25D366}
+.wa-float svg{width:28px;height:28px;fill:#fff}
+.wa-float:focus{outline:2px solid #0b8f3c;outline-offset:2px}
+</style>
+
+  <header class="topbar">
+    <div class="container">
+      <div class="brand">
+        <span class="logo">Shatha</span>
+        <span class="tag">Beauty • Basel</span>
+      </div>
+      <nav>
+        <a href="#services">Services</a>
+        <a href="#preise">Preise</a>
+        <a href="#booking">Buchen</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+      <button class="menu-btn" aria-label="Menü" onclick="toggleMenu()">☰</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1></h1>
+      <p>Erleben Sie Schönheit und Pflege auf höchstem Niveau – präzise Schnitte, feine Farbnuancen und makellose Nägel in einer Atmosphäre voller Stil.</p>
+      <div class="cta-row">
+        <a class="cta" href="#preise">Preise ansehen</a>
+        <a class="cta ghost" href="#booking">Jetzt Termin anfragen</a>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section id="services" class="section">
+      <div class="container">
+        <h2>Unsere Leistungen</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>Haarschnitt & Styling</h3>
+            <p>Typgerechte Beratung, präzise Schnitte und Finish – vom klassischen Bob bis zu modernen Fades.</p>
+          </article>
+          <article class="card">
+            <h3>Färben & Highlights</h3>
+            <p>Glossing, Balayage oder Strähnen – brillante Farben mit maximaler Haarpflege.</p>
+          </article>
+          <article class="card">
+            <h3>Maniküre & Pediküre</h3>
+            <p>Natürliche Pflege, Shellac/Gellack und perfekte Formen – für Hände & Füße, die Eindruck machen.</p>
+          </article>
+          <article class="card">
+            <h3>Make‑up & Brautservice</h3>
+            <p>Dezenter Glow bis Full-Glam – auch als Brautpaket inkl. Probestecken & Make-up.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    
+<section id="preise" class="preise-section" aria-labelledby="preise-title">
+  <div class="container">
+    <h2 id="preise-title">Preise</h2>
+    <p>Wählen Sie eine Hauptkategorie aus, um die jeweiligen Leistungen und Preise zu sehen. Tippen Sie zum Öffnen.</p>
+    <div class="accordion">
+
+      <div class="acc-item">
+        <div class="acc-title"><span>Wimpernverlängerung</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+        <div class="acc-panel">
+          <ul class="price-list">
+            <li><span>Klassik Neuset</span><strong>80 CHF</strong></li>
+            <li><span>Klassik Auffüllen</span><strong>65 CHF</strong></li>
+            <li><span>Volumen Neuset</span><strong>100 CHF</strong></li>
+            <li><span>Volumen Auffüllen</span><strong>70 CHF</strong></li>
+            <li class="bundle"><span>Wimpernverlängerung + Augenbrauen Zupfen <em>(Sonderpaket)</em></span><strong>120 CHF</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-title"><span>Augenbrauenbehandlung</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+        <div class="acc-panel">
+          <ul class="price-list">
+            <li><span>Wimpern färben</span><strong>20 CHF</strong></li>
+            <li><span>Brauen färben</span><strong>15 CHF</strong></li>
+            <li><span>Brauen zupfen</span><strong>15 CHF</strong></li>
+            <li><span>Wimpern Lifting</span><strong>75 CHF</strong></li>
+            <li><span>Wimpern Lifting mit Farbe</span><strong>80 CHF</strong></li>
+            <li class="bundle"><span>Augenbrauen färben + Zupfen + Wimpern Lifting <em>(Sonderpaket)</em></span><strong>95 CHF</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-title"><span>Massage</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+        <div class="acc-panel">
+          <ul class="price-list">
+            <li><span>Gesichtsmassage 30 min</span><strong>40 CHF</strong></li>
+            <li class="bundle"><span>Kombimassage Gesicht + Hals 45 min <em>(Sonderpaket)</em></span><strong>55 CHF</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-title"><span>Maniküre</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+        <div class="acc-panel">
+          <ul class="price-list">
+            <li><span>Nagelpflege</span><strong>40 CHF</strong></li>
+            <li><span>Shellac inkl. Maniküre</span><strong>50 CHF</strong></li>
+            <li class="bundle"><span>Maniküre + Shellac + Design <em>(Sonderpaket)</em></span><strong>75 CHF</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-title"><span>Pediküre</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+        <div class="acc-panel">
+          <ul class="price-list">
+            <li><span>Pediküre</span><strong>50 CHF</strong></li>
+            <li><span>Pediküre mit Shellac</span><strong>65 CHF</strong></li>
+            <li><span>Pediküre mit Acryl</span><strong>80 CHF</strong></li>
+            <li class="bundle"><span>Pediküre + Fußmassage <em>(Sonderpaket)</em></span><strong>85 CHF</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-title"><span>Nagel Acryl System</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+        <div class="acc-panel">
+          <ul class="price-list">
+            <li><span>Neue Modell</span><strong>65 CHF</strong></li>
+            <li><span>Acryl Natur</span><strong>50 CHF</strong></li>
+            <li><span>Acryl mit Farbe</span><strong>60 CHF</strong></li>
+            <li><span>Acryl Design</span><strong>ab 5 CHF</strong></li>
+            <li><span>Strasssteine</span><strong>ab 0.50 CHF / Stück</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-title"><span>Make-up</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+        <div class="acc-panel">
+          <ul class="price-list">
+            <li><span>Tages-Make-up</span><strong>50 CHF</strong></li>
+            <li><span>Abend-Make-up</span><strong>100 CHF</strong></li>
+            <li><span>Braut-Make-up</span><strong>200 CHF</strong></li>
+            <li><span>Braut Make-up + Hochsteckfrisur</span><strong>400 CHF</strong></li>
+            <li><span>Abend-Make-up + Frisur</span><strong>200 CHF</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-title"><span>Haare</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+        <div class="acc-panel">
+          <ul class="price-list">
+            <li><span>Haarschnitt</span><strong>60 CHF</strong></li>
+            <li><span>Waschen und Föhnen</span><strong>35 CHF</strong></li>
+            <li><span>Schneiden + Föhnen</span><strong>45 CHF</strong></li>
+            <li><span>Kinder Haarschnitt bis 10 Jahre</span><strong>30 CHF</strong></li>
+            <li><span>Haarbotox</span><strong>150 CHF</strong></li>
+            <li class="bundle"><span>Haar Botox + Färben <em>(Sonderpaket)</em></span><strong>220 CHF</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-title"><span>Färben</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+        <div class="acc-panel">
+          <ul class="price-list">
+            <li><span>Färben</span><strong>ab 90 CHF</strong></li>
+            <li><span>Ansatz färben + Föhnen</span><strong>65 CHF</strong></li>
+            <li><span>Meches Blond</span><strong>ab 150 CHF</strong></li>
+            <li><span>Färben + Haarschnitt</span><strong>ab 130 CHF</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-title"><span>Hochzeitspakete</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+        <div class="acc-panel">
+          <ul class="price-list">
+            <li><span>Brautpaket: Braut-Make-up + Brautfrisur</span><strong>400 CHF</strong></li>
+            <li><span>Braut-Make-up + Brautfrisur + Maniküre</span><strong>450 CHF</strong></li>
+            <li class="bundle"><span>Komplett Braut Paket (Braut-Make-up + Brautfrisur + Maniküre + Pediküre + Wimpernverlängerung) <em>(Gesamtpaket mit Sonderrabatt)</em></span><strong>600 CHF</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-title"><span>Spezialangebote &amp; Rabatte</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+        <div class="acc-panel">
+          <ul class="price-list">
+            <li><span>Neukunden Rabatt</span><strong>20% auf die erste Behandlung</strong></li>
+            <li><span>Treueprogramm</span><strong>Nach 5 Besuchen gratis Behandlung oder 10% Rabatt</strong></li>
+            <li><span>Pärchen Angebot (Maniküre + Pediküre für zwei)</span><strong>120 CHF</strong></li>
+            <li><span>Monatsangebot (Wimpernverlängerung + Maniküre)</span><strong>130 CHF</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-title"><span>Zusätzliche Informationen</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+        <div class="acc-panel">
+          <ul class="info-list">
+            <li>Online-Buchung: Einfach und bequem auf unserer Webseite.</li>
+            <li>Geschenkgutscheine für alle Dienstleistungen erhältlich.</li>
+            <li>Flexibles Terminmanagement: Änderungen/Absagen problemlos möglich.</li>
+            <li><em>Hinweis:</em> Alle Preise in CHF inkl. MwSt.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<style>
+.preise-section{padding:60px 0;border-top:1px solid #eee}
+.preise-section .container{max-width:1100px;margin:0 auto;padding:0 16px}
+.preise-section h2{text-align:center;margin-bottom:12px}
+.preise-section p{text-align:center;margin-bottom:28px}
+.accordion .acc-title{cursor:pointer;padding:14px 16px;border-radius:8px;background:#f2f2f4;margin:10px 0;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#111}
+.accordion .acc-title svg{width:18px;height:18px}
+.accordion .acc-panel{display:none;padding:10px 0 14px 0}
+.accordion .acc-item.acc-open .acc-panel{display:block}
+.price-list, .info-list{list-style:none;margin:0;padding:0}
+.price-list li, .info-list li{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid #f1bfd1;background:#f8d7e3;border-radius:8px;margin:6px 0;color:#111}
+.price-list li.bundle span em{font-style:normal;font-weight:600}
+</style>
+<script>
+document.addEventListener('click', function(e){
+  const t = e.target.closest('.acc-title');
+  if(t && t.parentElement && t.parentElement.classList.contains('acc-item')){
+    t.parentElement.classList.toggle('acc-open');
+  }
+});
+</script>
+
+
+    <section id="booking" class="section">
+      <div class="container">
+        <h2>Terminanfrage</h2>
+        <form class="booking" onsubmit="return sendRequest(event)">
+          <div class="form-grid">
+            <label>Ihr Name*<input type="text" id="name" required placeholder="Vor- und Nachname"></label>
+            <label>Telefon*<input type="tel" id="phone" required placeholder="+41 …"></label>
+            <label>E-Mail<input type="email" id="email" placeholder="mail@example.com"></label>
+            <label>Wunschtermin*<input type="datetime-local" id="date" required></label>
+          </div>
+
+          <label>Bemerkungen (optional)
+            <textarea id="notes" rows="3" placeholder="z. B. Haarlänge, Farbwunsch, besondere Hinweise …"></textarea>
+          </label>
+
+          <div class="request-actions">
+            <button type="submit" class="cta">Per WhatsApp anfragen</button>
+            <button type="button" class="cta ghost" onclick="sendEmail()">Per E‑Mail anfragen</button>
+          </div>
+          <p class="muted small">Mit dem Absenden willigen Sie in die Kontaktaufnahme zur Terminbestätigung ein.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer id="kontakt">
+    <div class="container footer-grid">
+      <div>
+        <h3>Kontakt</h3>
+        <p>Coiffeur Shatha<br>Feldbergstrasse 140, 4057 Basel</p>
+        <p>Telefon: <a href="tel:+41788057078">078 805 70 78</a><br>E‑Mail: <a href="mailto:info@shatha.ch">info@shatha.ch</a></p>
+        <p>Öffnungszeiten:<br>Mo–Sa 10:00–19:00</p>
+        <div class="social">
+          <a class="wa" href="https://wa.me/41788057078" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="ig" href="#" aria-disabled="true">Instagram</a>
+        </div>
+      </div>
+      <div>
+        <h3>Standort</h3>
+        <div class="map-wrap">
+          <iframe
+            title="Karte – Coiffeur Shatha"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Feldbergstrasse%20140%2C%204057%20Basel&output=embed">
+          </iframe>
+        </div>
+      </div>
+    </div>
+    <div class="legal">
+      <div class="container">
+        <span>© <span id="year"></span> Coiffeur Shatha</span>
+        <a href="sitemap.xml">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/app.js"></script>
+
+<section id="arbeiten" class="arbeiten-section" aria-labelledby="arbeiten-title">
+  <div class="container">
+    <h2 id="arbeiten-title">Unsere Arbeiten</h2>
+    <p>Mit mehr als 15&nbsp;Jahren Erfahrung vereint <strong>Arte da vinci</strong> professionelles Handwerk und moderne Beauty-Standards in einem Salon. Bei uns erhalten Sie sämtliche Leistungen für Ihr perfektes Erscheinungsbild aus einer Hand: Wimpernverlängerung &amp; Brow-Services, Maniküre &amp; Pediküre, Acryl-Nagelsysteme, Make-up, Haarschnitt, Farbe, Meches, Haarbotox und mehr. Sie müssen nicht zwischen unterschiedlichen Studios wechseln – wir koordinieren alles für Sie an einem Ort, auf hohem fachlichen Niveau und mit größter Sorgfalt.</p>
+    <div class="arbeiten-grid">
+      <figure><img src="images/arbeiten/sample-1.jpg" alt="Wimpernverlängerung"><figcaption>Wimpernverlängerung</figcaption></figure>
+      <figure><img src="images/arbeiten/sample-2.jpg" alt="Maniküre"><figcaption>Maniküre</figcaption></figure>
+      <figure><img src="images/arbeiten/sample-3.jpg" alt="Make-up"><figcaption>Make-up</figcaption></figure>
+      <figure><img src="images/arbeiten/sample-4.jpg" alt="Hairstyling"><figcaption>Hairstyling</figcaption></figure>
+    </div>
+  </div>
+</section>
+<style>
+.arbeiten-section{padding:60px 0}
+.arbeiten-section .container{max-width:1100px;margin:0 auto;padding:0 16px}
+.arbeiten-section h2{text-align:center;margin-bottom:12px}
+.arbeiten-section p{text-align:center;margin-bottom:28px}
+.arbeiten-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.arbeiten-grid figure{margin:0;overflow:hidden;border-radius:8px;box-shadow:0 6px 14px rgba(0,0,0,.08);background:#fff}
+.arbeiten-grid img{display:block;width:100%;height:220px;object-fit:cover}
+.arbeiten-grid figcaption{padding:10px 12px;font-size:.95rem;color:#111}
+</style>
+<script>
+document.addEventListener('click', function(e){
+  const t = e.target;
+  if(t.tagName==='IMG' && t.closest('.arbeiten-grid')){
+    const src = t.getAttribute('src');
+    const overlay = document.createElement('div');
+    overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:9998';
+    const img = document.createElement('img');
+    img.src = src; img.alt = t.alt;
+    img.style.cssText='max-width:90vw;max-height:90vh;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.5)';
+    overlay.appendChild(img);
+    overlay.addEventListener('click', ()=>overlay.remove());
+    document.body.appendChild(overlay);
+  }
+});
+</script>
+
+
+<a href="https://wa.me/41789233646" target="_blank" rel="noopener" class="wa-float" aria-label="WhatsApp chat starten">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true">
+    <path d="M19.11 17.19c-.29-.15-1.72-.85-1.99-.95-.27-.1-.47-.15-.67.15-.2.3-.77.95-.94 1.15-.17.2-.35.22-.64.07-.29-.15-1.22-.45-2.32-1.43-.86-.77-1.43-1.72-1.6-2.01-.17-.29-.02-.45.13-.6.13-.13.29-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01s-.52.07-.79.37c-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.9 1.22 3.1.15.2 2.11 3.22 5.11 4.53.71.31 1.27.5 1.7.64.71.23 1.36.2 1.88.12.57-.08 1.72-.7 1.97-1.38.24-.68.24-1.27.17-1.39-.07-.12-.27-.2-.56-.35z"/>
+    <path d="M16 3C8.82 3 3 8.82 3 16c0 2.29.58 4.45 1.6 6.34L3 29l6.83-1.79C11.66 28.3 13.76 29 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm0 23.8c-2.03 0-3.92-.62-5.47-1.69l-.39-.26-4.06 1.06 1.09-3.95-.25-.4A10.77 10.77 0 0 1 5.2 16c0-5.96 4.84-10.8 10.8-10.8S26.8 10.04 26.8 16 21.96 26.8 16 26.8z"/>
+  </svg>
+</a>
+
+</body>
+</html>

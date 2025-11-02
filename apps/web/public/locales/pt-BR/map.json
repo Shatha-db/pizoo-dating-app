@@ -1,0 +1,22 @@
+{
+  "_todo": "Machine translation seed. Needs human review.",
+  "title": "Descobrir",
+  "nearbyUsers": "Usuários próximos",
+  "searchRadius": "Raio de busca",
+  "recenterMap": "Recentrar mapa",
+  "locationPermission": "Permissão de localização",
+  "needLocation": "Precisamos da sua localização",
+  "locationDescription": "Para mostrar usuários próximos e ajudá-lo a encontrar pessoas na sua área",
+  "allowNow": "Permitir agora",
+  "maybeLater": "Talvez mais tarde",
+  "locationDenied": "Acesso à localização negado",
+  "locationDeniedDescription": "Ative a localização nas configurações para ver usuários próximos",
+  "distance": "Distância",
+  "away": "de distância",
+  "km": "km",
+  "viewProfile": "Ver perfil",
+  "errors": {
+    "locationFailed": "Falha ao obter localização",
+    "mapLoadFailed": "Falha ao carregar mapa"
+  }
+}

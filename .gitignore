@@ -225,3 +225,35 @@ frontend/node_modules/.cache/default-development/8.pack
 # Environment files
 *.env
 *.env.*
+
+# Monorepo
+node_modules/
+.turbo/
+dist/
+build/
+.next/
+.env
+.env.local
+.env.*.local
+*.log
+pnpm-lock.yaml
+.pnpm-store/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+venv/
+.venv/
+*.egg-info/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

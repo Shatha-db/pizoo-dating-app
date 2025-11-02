@@ -1,0 +1,114 @@
+{
+  "terms_title": "Terms and Conditions",
+  "privacy_title": "Privacy Policy",
+  "cookies_title": "Cookie Policy",
+  "last_updated": "Last updated",
+  "contact_us": "Contact Us",
+  "email": "Email",
+  "website": "Website",
+  "all_rights_reserved": "All rights reserved",
+  
+  "terms": {
+    "heading": "Terms of Service for Pizoo",
+    "section1_title": "1. Acceptance of Terms",
+    "section1_content": "By accessing and using the Pizoo application, you agree to be bound by these Terms and Conditions. If you do not agree to any part of these terms, you must not use the application.",
+    
+    "section2_title": "2. Eligibility",
+    "section2_content": "You must be 18 years of age or older to use Pizoo. By using the application, you represent and warrant that you meet this requirement and have the legal right, authority, and capacity to enter into this agreement.",
+    
+    "section3_title": "3. Your Account",
+    "section3_content": "When creating an account on Pizoo, you agree to:",
+    "section3_item1": "Provide accurate, complete, and current information about yourself",
+    "section3_item2": "Maintain the security of your password",
+    "section3_item3": "Accept full responsibility for all activities that occur under your account",
+    "section3_item4": "Notify us immediately of any unauthorized use of your account",
+    
+    "section4_title": "4. Code of Conduct",
+    "section4_content": "You agree not to:",
+    "section4_item1": "Impersonate any person or entity",
+    "section4_item2": "Post inappropriate, offensive, racist, or discriminatory content",
+    "section4_item3": "Use the application for commercial purposes without our consent",
+    "section4_item4": "Harass or abuse other users",
+    "section4_item5": "Post illegal, harmful, or threatening content",
+    "section4_item6": "Collect information from other users without their consent",
+    
+    "section5_title": "5. Content",
+    "section5_content": "You are solely responsible for the content you post on Pizoo. We reserve the right to remove any content that violates these terms or is deemed inappropriate at our sole discretion.",
+    
+    "section6_title": "6. Paid Subscriptions",
+    "section6_content": "We offer paid subscription features (Gold and Platinum). By subscribing:",
+    "section6_item1": "You agree to the fees displayed at the time of purchase",
+    "section6_item2": "Subscriptions automatically renew unless canceled",
+    "section6_item3": "You can cancel your subscription at any time from your account settings",
+    "section6_item4": "We do not offer refunds for unused periods",
+    
+    "section7_title": "7. Account Termination",
+    "section7_content": "We reserve the right to suspend or terminate your account at any time, with or without notice, if you violate these terms or for any other reason at our sole discretion.",
+    
+    "section8_title": "8. Disclaimer",
+    "section8_content": "Pizoo is provided 'as is' without warranties of any kind. We do not guarantee that the service will be error-free or available without interruption.",
+    
+    "section9_title": "9. Changes to Terms",
+    "section9_content": "We reserve the right to modify these terms at any time. You will be notified of any material changes via the application or email. Your continued use of the service after such changes constitutes acceptance of the modified terms.",
+    
+    "section10_title": "10. Contact Us",
+    "section10_content": "If you have any questions about these terms, you can contact us at:"
+  },
+  
+  "privacy": {
+    "heading": "Privacy Policy",
+    "intro": "At Pizoo, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your personal information.",
+    
+    "section1_title": "1. Information We Collect",
+    "section1_content": "We collect information you provide directly to us, including:",
+    "section1_item1": "Name, email address, and phone number",
+    "section1_item2": "Profile information, photos, and preferences",
+    "section1_item3": "Messages and interactions with other users",
+    "section1_item4": "Location data (with your permission)",
+    
+    "section2_title": "2. How We Use Your Information",
+    "section2_content": "We use your information to:",
+    "section2_item1": "Provide and improve our services",
+    "section2_item2": "Match you with compatible users",
+    "section2_item3": "Send you notifications and updates",
+    "section2_item4": "Ensure safety and prevent fraud",
+    
+    "section3_title": "3. Information Sharing",
+    "section3_content": "We do not sell your personal information. We may share your information only:",
+    "section3_item1": "With other users as part of the service",
+    "section3_item2": "With service providers who assist us",
+    "section3_item3": "When required by law",
+    
+    "section4_title": "4. Your Rights",
+    "section4_content": "You have the right to:",
+    "section4_item1": "Access and update your information",
+    "section4_item2": "Delete your account",
+    "section4_item3": "Opt out of marketing communications",
+    "section4_item4": "Request a copy of your data",
+    
+    "section5_title": "5. Data Security",
+    "section5_content": "We implement appropriate security measures to protect your information. However, no method of transmission over the internet is 100% secure.",
+    
+    "section6_title": "6. Changes to Privacy Policy",
+    "section6_content": "We may update this Privacy Policy from time to time. We will notify you of any significant changes."
+  },
+  
+  "cookies": {
+    "heading": "Cookie Policy",
+    "intro": "This Cookie Policy explains how Pizoo uses cookies and similar technologies.",
+    
+    "section1_title": "1. What Are Cookies",
+    "section1_content": "Cookies are small text files stored on your device that help us provide and improve our services.",
+    
+    "section2_title": "2. Types of Cookies We Use",
+    "section2_item1": "Essential cookies: Required for the service to function",
+    "section2_item2": "Analytics cookies: Help us understand how users interact with our service",
+    "section2_item3": "Preference cookies: Remember your settings and preferences",
+    
+    "section3_title": "3. Managing Cookies",
+    "section3_content": "You can control cookies through your browser settings. However, disabling certain cookies may affect the functionality of our service.",
+    
+    "section4_title": "4. Third-Party Cookies",
+    "section4_content": "We may use third-party services that set their own cookies, such as analytics providers."
+  }
+}

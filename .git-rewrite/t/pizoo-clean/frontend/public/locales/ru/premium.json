@@ -1,0 +1,30 @@
+{
+  "title": "Premium планы",
+  "mostPopular": "Самый популярный",
+  "freeBoost": "✅ Бесплатный ежемесячный буст",
+  "hideAds": "✅ Скрыть рекламу",
+  "unlimitedLikes": "✅ Неограниченные лайки",
+  "unlimitedMessages": "✅ Неограниченные сообщения",
+  "seeWhoLikes": "✅ Узнайте, кто вас лайкнул",
+  "prioritySupport": "✅ Приоритетная поддержка",
+  "advancedFilters": "✅ Расширенные фильтры",
+  "rewindUnlimited": "✅ Неограниченная отмена",
+  "onlineStatus": "✅ Скрыть статус онлайн",
+  "readReceipts": "✅ Контролировать уведомления о прочтении",
+  "premiumBadge": "✅ Значок Premium",
+  "monthDuration": {
+    "1month": "1 Месяц",
+    "3months": "3 Месяца",
+    "6months": "6 Месяцев",
+    "1year": "1 Год"
+  },
+  "perMonth": "/ месяц",
+  "save": "Сэкономьте {percent}%",
+  "autoRenew": "Автоматическое продление • Отмените в любое время",
+  "subscribeNow": "Подписаться сейчас",
+  "processing": "Обработка...",
+  "selectDuration": "Выберите продолжительность",
+  "choosePlan": "Выберите свой план",
+  "compareFeatures": "Сравнить функции",
+  "cancelAnytime": "Отмените в любое время, без обязательств"
+}

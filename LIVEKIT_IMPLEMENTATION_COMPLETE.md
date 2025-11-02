@@ -24,7 +24,7 @@ LiveKit video/voice calling has been successfully integrated into the Pizoo Dati
 ```env
 LIVEKIT_API_KEY=APIRRhiNGRW6wLh
 LIVEKIT_API_SECRET=uTCoakceqeJNLWlrNfsSGA3RLqAx2kmBferOBKh3e9SI
-LIVEKIT_URL=wss://pizoo-app-2jxoavwx.livekit.cloud
+LIVEKIT_URL=wss://your-app-xxxxx.livekit.cloud
 ```
 
 ---

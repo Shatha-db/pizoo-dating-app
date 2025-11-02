@@ -35,6 +35,21 @@ const webpackConfig = {
       '@': path.resolve(__dirname, 'src'),
     },
     configure: (webpackConfig) => {
+      // Remove old ESLintWebpackPlugin if exists
+      webpackConfig.plugins = webpackConfig.plugins.filter(plugin => {
+        return plugin.constructor.name !== 'ESLintWebpackPlugin';
+      });
+
+      // Add ESLintWebpackPlugin with correct configuration
+      const ESLintPlugin = require('eslint-webpack-plugin');
+      webpackConfig.plugins.push(
+        new ESLintPlugin({
+          extensions: ['js', 'jsx', 'ts', 'tsx'],
+          failOnError: false,
+          failOnWarning: false,
+          emitWarning: true,
+        })
+      );
 
       // Disable hot reload completely if environment variable is set
       if (config.disableHotReload) {

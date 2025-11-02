@@ -231,3 +231,4 @@ node_modules/@next/swc-linux-arm64-gnu/next-swc.linux-arm64-gnu.node
 # Environment files
 *.env
 *.env.*
+apps/web/node_modules/.cache/default-development/1.pack

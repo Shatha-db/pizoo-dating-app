@@ -72,10 +72,29 @@ except ImportError:
 except Exception as e:
     logging.error(f"❌ Failed to initialize Sentry: {e}")
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+# MongoDB connection with error handling
+try:
+    mongo_url = os.environ.get('MONGO_URL') or os.environ.get('MONGODB_URI')
+    if not mongo_url:
+        raise ValueError("MONGO_URL or MONGODB_URI environment variable is required")
+    
+    client = AsyncIOMotorClient(
+        mongo_url,
+        serverSelectionTimeoutMS=5000,  # 5 second timeout
+        connectTimeoutMS=10000,  # 10 second connection timeout
+        socketTimeoutMS=10000,   # 10 second socket timeout
+    )
+    
+    db_name = os.environ.get('DB_NAME') or os.environ.get('MONGODB_DB_NAME', 'pizoo_database')
+    db = client[db_name]
+    
+    logging.info(f"✅ MongoDB client initialized with database: {db_name}")
+except Exception as e:
+    logging.error(f"❌ Failed to initialize MongoDB client: {e}")
+    # Create a dummy client so the app can still start
+    # Health checks will report the database as unavailable
+    client = None
+    db = None
 
 # WebSocket Connection Manager
 class ConnectionManager:

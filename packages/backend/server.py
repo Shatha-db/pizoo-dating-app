@@ -206,8 +206,11 @@ async def health_check():
     
     # Check MongoDB connection
     try:
-        await db.command("ping")
-        checks["db"] = "ok"
+        if db is None:
+            checks["db"] = "not_initialized"
+        else:
+            await db.command("ping")
+            checks["db"] = "ok"
     except Exception as e:
         checks["db"] = f"fail: {str(e)[:50]}"
         logging.error(f"Health check - DB failed: {e}")

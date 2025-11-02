@@ -11,7 +11,7 @@ Successfully removed all `.env` files and GitHub tokens from the **entire git hi
 ### 1. Identified Problem
 - GitHub Personal Access Token found in commit `4ee3209f`
 - Located in `backend/.env` line 19
-- Token: `GITHUB_TOKEN_EXAMPLE`
+- Token: `<GITHUB_TOKEN_REDACTED>` (actual token removed from history)
 
 ### 2. Cleaned Git History
 Used `git filter-branch` to remove:

@@ -195,6 +195,15 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Simple root endpoint for basic connectivity check
+@app.get("/")
+async def root():
+    """
+    Simple root endpoint that returns immediately
+    Used for basic connectivity testing
+    """
+    return {"status": "running", "app": "Pizoo Dating App", "version": "1.0.0"}
+
 # Health Check Endpoint
 @app.get("/health")
 async def health_check():

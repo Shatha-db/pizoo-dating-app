@@ -79,7 +79,7 @@ The following branches had their history rewritten:
 
 1. **Token Rotation**: Although the token is removed from git history, it was exposed. **You should rotate/regenerate the GitHub token**:
    - Go to GitHub Settings → Developer Settings → Personal Access Tokens
-   - Revoke `GITHUB_TOKEN_EXAMPLE`
+   - Revoke the old token (check your GitHub settings for active tokens)
    - Generate a new token
    - Update your local `.env` file
 

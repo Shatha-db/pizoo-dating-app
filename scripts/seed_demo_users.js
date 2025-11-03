@@ -245,13 +245,17 @@ async function generateUserAndProfile(index, gender) {
       console.log('   ⚠️  Some indices may already exist, continuing...');
     }
     
-    await profilesCollection.createIndex({ user_id: 1 }, { unique: true });
-    await profilesCollection.createIndex({ id: 1 }, { unique: true });
-    await profilesCollection.createIndex({ demo: 1 });
-    await profilesCollection.createIndex({ gender: 1 });
-    await profilesCollection.createIndex({ age: 1 });
-    await profilesCollection.createIndex({ latitude: 1, longitude: 1 }); // Geo queries
-    console.log('   ✅ Profiles collection indices created');
+    try {
+      await profilesCollection.createIndex({ user_id: 1 }, { unique: true });
+      await profilesCollection.createIndex({ id: 1 }, { unique: true });
+      await profilesCollection.createIndex({ demo: 1 });
+      await profilesCollection.createIndex({ gender: 1 });
+      await profilesCollection.createIndex({ age: 1 });
+      await profilesCollection.createIndex({ latitude: 1, longitude: 1 }); // Geo queries
+      console.log('   ✅ Profiles collection indices created');
+    } catch (err) {
+      console.log('   ⚠️  Some indices may already exist, continuing...');
+    }
     
     // Generate users
     console.log('\n👥 Generating demo users...');

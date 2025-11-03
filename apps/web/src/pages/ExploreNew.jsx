@@ -78,7 +78,7 @@ const ExploreNew = () => {
   }
 
   return (
-    <div className="explore-new-container min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 pb-20">
+    <div className="explore-new-container min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 pb-24">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-10">
         <div className="px-4 py-4">

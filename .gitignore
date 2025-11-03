@@ -246,3 +246,8 @@ apps/web/node_modules/.cache/default-development/2.pack
 *.env
 *.env.*
 apps/web/node_modules/.cache/default-development/4.pack
+-e 
+# Environment files
+*.env
+*.env.*
+apps/web/node_modules/.cache/default-development/5.pack

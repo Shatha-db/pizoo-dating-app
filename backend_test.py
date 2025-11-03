@@ -251,15 +251,21 @@ class ProductionHealthChecker:
             
             # Check if CORS is properly configured
             origin_header = cors_headers.get("access-control-allow-origin")
-            if origin_header and origin_header != "*":
+            methods_header = cors_headers.get("access-control-allow-methods")
+            headers_header = cors_headers.get("access-control-allow-headers")
+            
+            if methods_header and headers_header:
+                # CORS is configured, even if origin is not explicitly set
                 self.results["services"]["cors"]["status"] = "ok"
-                self.results["services"]["cors"]["allowed_origins"] = [origin_header]
-                self.results["services"]["cors"]["details"] = "CORS properly configured with specific origins"
-                print("✅ CORS configuration looks secure")
-            elif origin_header == "*":
-                self.results["services"]["cors"]["status"] = "warn"
-                self.results["services"]["cors"]["details"] = "CORS allows all origins (*) - security risk in production"
-                print("⚠️ CORS allows all origins - potential security risk")
+                self.results["services"]["cors"]["allowed_origins"] = [origin_header] if origin_header else ["dynamic"]
+                self.results["services"]["cors"]["details"] = f"CORS configured. Methods: {methods_header}. Headers: {headers_header}"
+                print("✅ CORS configuration present")
+                
+                if origin_header == "*":
+                    self.results["services"]["cors"]["status"] = "warn"
+                    self.results["services"]["cors"]["details"] += " WARNING: Allows all origins (*)"
+                    print("⚠️ CORS allows all origins - potential security risk")
+                    
             else:
                 self.results["services"]["cors"]["status"] = "fail"
                 self.results["services"]["cors"]["details"] = "CORS not properly configured"

@@ -270,6 +270,42 @@ class ProductionHealthChecker:
             self.results["services"]["cors"]["details"] = f"CORS test error: {str(e)}"
             print(f"❌ CORS test error: {e}")
 
+    async def try_authentication(self):
+        """Try to authenticate with test credentials"""
+        print("🔍 Attempting authentication for protected endpoint testing...")
+        
+        if not self.active_backend_url:
+            return False
+        
+        # Try to register a test user
+        test_user_data = {
+            "name": "Health Check User",
+            "email": f"healthcheck_{int(time.time())}@test.com",
+            "phone_number": "+41791234567",
+            "password": "TestPassword123!",
+            "terms_accepted": True
+        }
+        
+        try:
+            response = await self.client.post(
+                f"{self.active_backend_url}/api/auth/register",
+                json=test_user_data
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "access_token" in data:
+                    self.auth_token = data["access_token"]
+                    print("✅ Test user registered and authenticated")
+                    return True
+            else:
+                print(f"   Registration failed: {response.status_code}")
+                
+        except Exception as e:
+            print(f"   Registration error: {e}")
+        
+        return False
+
     async def test_livekit_service(self):
         """Test LiveKit service connectivity"""
         print("🔍 Testing LiveKit service...")

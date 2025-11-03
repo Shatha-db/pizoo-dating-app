@@ -351,10 +351,14 @@ class ProductionHealthChecker:
         
         # Test multiple requests to get average response time
         response_times = []
+        if not self.active_backend_url:
+            print("❌ No active backend URL available")
+            return
+            
         for i in range(3):
             try:
                 start_time = time.time()
-                response = await self.client.get(f"{PRODUCTION_URL}/health")
+                response = await self.client.get(f"{self.active_backend_url}/api/")
                 response_time = (time.time() - start_time) * 1000
                 response_times.append(response_time)
                 

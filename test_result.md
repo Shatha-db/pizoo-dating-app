@@ -182,13 +182,18 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Implement one-time account verification system to replace per-call OTP codes:
-  1. Database: Add verified (bool), verified_method, verified_at fields to User model
-  2. Auth APIs: Google OAuth (Emergent), Email Magic Link (15-min TTL), Phone OTP (Telnyx - later)
-  3. JWT: Access token (1h) + Refresh token (7d)
-  4. LiveKit: Require verified=true, rate-limit 30/hour, issue 10-min tokens
-  5. Frontend: Unified verification screen, remove per-call prompts
-  6. Migration: Set existing users to verified=false
+  MongoDB Data Maintenance & Seeding with Demo Users:
+  1. Backup: Take full backup of users and profiles collections before any changes
+  2. Indexing: Create optimized indexes for email, phone, location, demo flag, gender, age, geo coordinates
+  3. Schema Verification: Ensure User and Profile models match application requirements
+  4. Demo Data Generation: Seed 400 demo accounts (350 female, 50 male) with:
+     - European names (Swiss, French, Italian, German)
+     - AI-generated avatars (DiceBear API)
+     - Realistic profiles with age, location, bio, interests, occupation, education
+     - Proper GPS coordinates for European cities
+     - Demo flag (demo: true) for easy filtering and cleanup
+  5. Data Quality: Ensure proper distribution (females 20-30 and 40-54, males 18-50)
+  6. Testing: Verify insertion and display sample records
 
 backend:
   - task: "Image Upload with Cloudinary Integration"

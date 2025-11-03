@@ -20,6 +20,7 @@ class ProductionHealthChecker:
         self.results = {
             "timestamp": datetime.now().isoformat(),
             "production_url": PRODUCTION_URL,
+            "backend_url": BACKEND_URL,
             "overall_status": "unknown",
             "services": {
                 "backend_api": {"status": "unknown", "response_time_ms": 0, "details": ""},
@@ -36,6 +37,7 @@ class ProductionHealthChecker:
             "recommendations": []
         }
         self.client = httpx.AsyncClient(timeout=30.0, follow_redirects=True)
+        self.active_backend_url = None  # Will be determined during testing
 
     async def test_health_endpoint(self):
         """Test GET /health endpoint"""

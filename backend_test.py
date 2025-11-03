@@ -201,13 +201,17 @@ class ProductionHealthChecker:
         print("🔍 Testing CORS configuration...")
         try:
             # Test OPTIONS request for CORS preflight
+            if not self.active_backend_url:
+                print("❌ No active backend URL available")
+                return
+                
             headers = {
-                "Origin": "https://multilingual-date.emergent.host",
+                "Origin": self.active_backend_url,
                 "Access-Control-Request-Method": "POST",
                 "Access-Control-Request-Headers": "Content-Type,Authorization"
             }
             
-            response = await self.client.options(f"{PRODUCTION_URL}/api/", headers=headers)
+            response = await self.client.options(f"{self.active_backend_url}/api/", headers=headers)
             
             cors_headers = {
                 "access-control-allow-origin": response.headers.get("access-control-allow-origin"),

@@ -96,7 +96,7 @@ function AppRoot() {
     return () => {
       clearTimeout(timer);
     };
-  }, []); // ✅ Empty deps - only run once
+  }, [i18n]); // Added i18n dependency
 
   if (!ready) {
     return (

@@ -828,6 +828,8 @@ class ComprehensiveBackendTester:
         await self.test_authentication_flow()
         await self.test_user_profile_management()
         await self.test_livekit_integration()
+        await self.test_matching_discovery()
+        await self.test_messaging_system()
         await self.test_error_handling()
         await self.test_cors_configuration()
         await self.test_performance()

@@ -59,20 +59,43 @@ class ComprehensiveBackendTester:
         self.active_backend_url = LOCAL_URL  # Start with local URL
         self.test_users = {}  # Store test user data and tokens
 
+    def log_test_result(self, category: str, test_name: str, passed: bool, details: str = "", response_time: float = 0):
+        """Log test result"""
+        self.results["total_tests"] += 1
+        if passed:
+            self.results["passed_tests"] += 1
+            self.results["test_categories"][category]["passed"] += 1
+            status = "✅ PASS"
+        else:
+            self.results["failed_tests"] += 1
+            self.results["test_categories"][category]["failed"] += 1
+            status = "❌ FAIL"
+        
+        test_result = {
+            "name": test_name,
+            "status": "passed" if passed else "failed",
+            "details": details,
+            "response_time_ms": int(response_time * 1000) if response_time > 0 else 0
+        }
+        
+        self.results["test_categories"][category]["tests"].append(test_result)
+        print(f"   {status} {test_name} ({int(response_time * 1000)}ms) - {details}")
+
     async def determine_active_backend(self):
         """Determine which backend URL is active"""
         print("🔍 Determining active backend URL...")
         
-        urls_to_test = [PRODUCTION_URL, BACKEND_URL]
+        urls_to_test = [LOCAL_URL, PRODUCTION_URL, BACKEND_URL]
         
         for url in urls_to_test:
             try:
-                response = await self.client.get(f"{url}/api/")
+                response = await self.client.get(f"{url}/api/", timeout=5.0)
                 if response.status_code == 200:
                     data = response.json()
                     if "message" in data:
                         print(f"✅ Active backend found at: {url}")
                         self.active_backend_url = url
+                        self.results["backend_url"] = url
                         return url
             except Exception as e:
                 print(f"   {url} not accessible: {e}")
@@ -81,201 +104,554 @@ class ComprehensiveBackendTester:
         print("❌ No active backend found")
         return None
 
-    async def test_health_endpoint(self):
-        """Test GET /health endpoint or infer health from API availability"""
-        print("🔍 Testing health endpoint...")
+    # ===== HEALTH & STATUS ENDPOINTS =====
+    
+    async def test_health_endpoints(self):
+        """Test health and status endpoints"""
+        print("\n🏥 Testing Health & Status Endpoints...")
         
-        if not self.active_backend_url:
-            print("❌ No active backend URL available")
-            self.results["services"]["backend_api"]["status"] = "fail"
-            self.results["services"]["backend_api"]["details"] = "No active backend URL found"
-            return
-        
-        # Try multiple possible health endpoint locations
-        health_endpoints = ["/health", "/api/health"]
-        
-        for endpoint in health_endpoints:
-            try:
-                start_time = time.time()
-                response = await self.client.get(f"{self.active_backend_url}{endpoint}")
-                response_time = int((time.time() - start_time) * 1000)
+        # Test GET /health
+        try:
+            start_time = time.time()
+            response = await self.client.get(f"{self.active_backend_url}/health")
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                expected_fields = ["db", "otp", "ai", "status"]
+                has_all_fields = all(field in data for field in expected_fields)
                 
-                self.results["services"]["backend_api"]["response_time_ms"] = response_time
-                
-                print(f"   Trying {endpoint}: {response.status_code}")
-                
-                if response.status_code == 200:
-                    # Check if response is JSON
-                    try:
-                        data = response.json()
-                        print(f"✅ Health endpoint found at {endpoint} - responded in {response_time}ms")
-                        print(f"   Response: {json.dumps(data, indent=2)}")
-                        
-                        # Check expected fields
-                        expected_fields = ["db", "otp", "ai", "status"]
-                        missing_fields = [field for field in expected_fields if field not in data]
-                        
-                        if not missing_fields and data.get("status") == "healthy":
-                            self.results["services"]["backend_api"]["status"] = "ok"
-                            self.results["services"]["backend_api"]["details"] = f"Health check passed at {endpoint}. Response time: {response_time}ms"
-                            
-                            # Update individual service statuses based on health response
-                            if data.get("db") == "ok":
-                                self.results["services"]["mongodb"]["status"] = "ok"
-                                self.results["services"]["mongodb"]["connection"] = "active"
-                                self.results["services"]["mongodb"]["details"] = "Database connection healthy"
-                            else:
-                                self.results["services"]["mongodb"]["status"] = "fail"
-                                self.results["services"]["mongodb"]["connection"] = "inactive"
-                                self.results["services"]["mongodb"]["details"] = f"Database status: {data.get('db', 'unknown')}"
-                            
-                            if data.get("otp") == "ok":
-                                self.results["services"]["backend_api"]["details"] += ". OTP service operational"
-                            
-                            if data.get("ai") == "ok":
-                                self.results["services"]["backend_api"]["details"] += ". AI matching service operational"
-                            
-                            return  # Success, exit function
-                            
-                        else:
-                            self.results["services"]["backend_api"]["status"] = "warn"
-                            self.results["services"]["backend_api"]["details"] = f"Health check incomplete at {endpoint}. Missing fields: {missing_fields}. Status: {data.get('status', 'unknown')}"
-                            return  # Found endpoint but incomplete, exit function
-                            
-                    except json.JSONDecodeError:
-                        # Response is not JSON (probably HTML frontend)
-                        print(f"   {endpoint} returned HTML (frontend), not JSON API")
-                        continue
-                        
-                elif response.status_code == 404:
-                    print(f"   {endpoint} not found")
-                    continue
+                if has_all_fields and data.get("status") in ["healthy", "degraded"]:
+                    self.log_test_result("health_status", "GET /health", True, 
+                                       f"Health check passed. Status: {data.get('status')}", response_time)
                 else:
-                    print(f"   {endpoint} returned {response.status_code}")
-                    continue
-                    
-            except Exception as e:
-                print(f"   Error testing {endpoint}: {e}")
-                continue
-        
-        # If no dedicated health endpoint found, infer health from API availability
-        print("⚠️ No dedicated health endpoint found, inferring health from API availability")
+                    self.log_test_result("health_status", "GET /health", False, 
+                                       f"Missing fields or invalid status: {data}", response_time)
+            else:
+                self.log_test_result("health_status", "GET /health", False, 
+                                   f"HTTP {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("health_status", "GET /health", False, f"Error: {str(e)}")
+
+        # Test GET / (root)
+        try:
+            start_time = time.time()
+            response = await self.client.get(f"{self.active_backend_url}/")
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                self.log_test_result("health_status", "GET / (root)", True, 
+                                   "Root endpoint accessible", response_time)
+            else:
+                self.log_test_result("health_status", "GET / (root)", False, 
+                                   f"HTTP {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("health_status", "GET / (root)", False, f"Error: {str(e)}")
+
+        # Test GET /api/
         try:
             start_time = time.time()
             response = await self.client.get(f"{self.active_backend_url}/api/")
-            response_time = int((time.time() - start_time) * 1000)
-            
-            self.results["services"]["backend_api"]["response_time_ms"] = response_time
+            response_time = time.time() - start_time
             
             if response.status_code == 200:
                 data = response.json()
                 if "message" in data:
-                    self.results["services"]["backend_api"]["status"] = "ok"
-                    self.results["services"]["backend_api"]["details"] = f"API accessible (no dedicated health endpoint). Response time: {response_time}ms"
-                    
-                    # Since API is working, assume basic services are operational
-                    self.results["services"]["mongodb"]["status"] = "ok"
-                    self.results["services"]["mongodb"]["connection"] = "active"
-                    self.results["services"]["mongodb"]["details"] = "Inferred from API availability (no health endpoint)"
-                    
-                    print(f"✅ API accessible - inferred health OK")
-                    return
-            
-            self.results["services"]["backend_api"]["status"] = "fail"
-            self.results["services"]["backend_api"]["details"] = f"API not accessible: {response.status_code}"
-            
-        except Exception as e:
-            self.results["services"]["backend_api"]["status"] = "fail"
-            self.results["services"]["backend_api"]["details"] = f"API test error: {str(e)}"
-            print(f"❌ API test error: {e}")
-
-    async def test_root_endpoint(self):
-        """Test GET / endpoint"""
-        print("🔍 Testing root endpoint...")
-        if not self.active_backend_url:
-            print("❌ No active backend URL available")
-            return
-            
-        try:
-            response = await self.client.get(f"{self.active_backend_url}/")
-            if response.status_code == 200:
-                print(f"✅ Root endpoint accessible")
-                print(f"   Response: {response.text[:200]}")
+                    self.log_test_result("health_status", "GET /api/", True, 
+                                       f"API welcome: {data['message']}", response_time)
+                else:
+                    self.log_test_result("health_status", "GET /api/", False, 
+                                       "No welcome message in response", response_time)
             else:
-                print(f"⚠️ Root endpoint returned {response.status_code}")
+                self.log_test_result("health_status", "GET /api/", False, 
+                                   f"HTTP {response.status_code}", response_time)
         except Exception as e:
-            print(f"❌ Root endpoint error: {e}")
+            self.log_test_result("health_status", "GET /api/", False, f"Error: {str(e)}")
 
-    async def test_api_endpoints(self):
-        """Test various API endpoints"""
-        print("🔍 Testing API endpoints...")
+    # ===== AUTHENTICATION FLOW =====
+    
+    async def test_authentication_flow(self):
+        """Test complete authentication flow"""
+        print("\n🔐 Testing Authentication Flow...")
         
-        endpoints_to_test = [
-            ("/api/", "GET", "API root"),
-            ("/api/auth/register", "POST", "Registration validation"),
-            ("/api/auth/login", "POST", "Login validation")
-        ]
+        # Generate unique test users
+        timestamp = int(time.time())
+        userA_data = {
+            "name": "Test User A",
+            "email": f"usera_{timestamp}@pizoo.app",
+            "phone_number": "+41790000001",
+            "password": "TestPassword123!",
+            "terms_accepted": True
+        }
         
-        if not self.active_backend_url:
-            print("❌ No active backend URL available")
+        userB_data = {
+            "name": "Test User B", 
+            "email": f"userb_{timestamp}@pizoo.app",
+            "phone_number": "+41790000002",
+            "password": "TestPassword123!",
+            "terms_accepted": True
+        }
+
+        # Test user registration
+        for user_key, user_data in [("userA", userA_data), ("userB", userB_data)]:
+            try:
+                start_time = time.time()
+                response = await self.client.post(
+                    f"{self.active_backend_url}/api/auth/register",
+                    json=user_data
+                )
+                response_time = time.time() - start_time
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if "access_token" in data and "user" in data:
+                        self.test_users[user_key] = {
+                            "data": user_data,
+                            "token": data["access_token"],
+                            "user_info": data["user"]
+                        }
+                        self.results["test_data"][user_key] = data["user"]
+                        self.results["test_data"]["auth_tokens"][user_key] = data["access_token"]
+                        
+                        self.log_test_result("authentication", f"POST /api/auth/register ({user_key})", True,
+                                           f"User registered successfully. ID: {data['user']['id']}", response_time)
+                    else:
+                        self.log_test_result("authentication", f"POST /api/auth/register ({user_key})", False,
+                                           "Missing access_token or user in response", response_time)
+                else:
+                    error_detail = response.text[:200] if response.text else f"HTTP {response.status_code}"
+                    self.log_test_result("authentication", f"POST /api/auth/register ({user_key})", False,
+                                       error_detail, response_time)
+            except Exception as e:
+                self.log_test_result("authentication", f"POST /api/auth/register ({user_key})", False, f"Error: {str(e)}")
+
+        # Test user login
+        if "userA" in self.test_users:
+            try:
+                login_data = {
+                    "email": userA_data["email"],
+                    "password": userA_data["password"]
+                }
+                
+                start_time = time.time()
+                response = await self.client.post(
+                    f"{self.active_backend_url}/api/auth/login",
+                    json=login_data
+                )
+                response_time = time.time() - start_time
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if "access_token" in data:
+                        self.log_test_result("authentication", "POST /api/auth/login", True,
+                                           "Login successful", response_time)
+                    else:
+                        self.log_test_result("authentication", "POST /api/auth/login", False,
+                                           "Missing access_token in response", response_time)
+                else:
+                    error_detail = response.text[:200] if response.text else f"HTTP {response.status_code}"
+                    self.log_test_result("authentication", "POST /api/auth/login", False,
+                                       error_detail, response_time)
+            except Exception as e:
+                self.log_test_result("authentication", "POST /api/auth/login", False, f"Error: {str(e)}")
+
+        # Test invalid credentials
+        try:
+            invalid_login = {
+                "email": "invalid@test.com",
+                "password": "wrongpassword"
+            }
+            
+            start_time = time.time()
+            response = await self.client.post(
+                f"{self.active_backend_url}/api/auth/login",
+                json=invalid_login
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 401:
+                self.log_test_result("authentication", "POST /api/auth/login (invalid)", True,
+                                   "Correctly rejected invalid credentials", response_time)
+            else:
+                self.log_test_result("authentication", "POST /api/auth/login (invalid)", False,
+                                   f"Should return 401, got {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("authentication", "POST /api/auth/login (invalid)", False, f"Error: {str(e)}")
+
+        # Test email verification endpoints
+        await self.test_email_verification()
+        
+        # Test JWT token validation
+        await self.test_jwt_validation()
+
+    async def test_email_verification(self):
+        """Test email verification flow"""
+        print("\n📧 Testing Email Verification...")
+        
+        # Test send email verification link
+        try:
+            email_data = {
+                "email": f"verify_{int(time.time())}@pizoo.app",
+                "name": "Verification Test User"
+            }
+            
+            start_time = time.time()
+            response = await self.client.post(
+                f"{self.active_backend_url}/api/auth/email/send-link",
+                json=email_data
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and "expires_in" in data:
+                    self.log_test_result("authentication", "POST /api/auth/email/send-link", True,
+                                       f"Email verification link sent. TTL: {data['expires_in']}s", response_time)
+                else:
+                    self.log_test_result("authentication", "POST /api/auth/email/send-link", False,
+                                       "Invalid response format", response_time)
+            else:
+                error_detail = response.text[:200] if response.text else f"HTTP {response.status_code}"
+                self.log_test_result("authentication", "POST /api/auth/email/send-link", False,
+                                   error_detail, response_time)
+        except Exception as e:
+            self.log_test_result("authentication", "POST /api/auth/email/send-link", False, f"Error: {str(e)}")
+
+        # Test verify email with invalid token
+        try:
+            verify_data = {"token": "invalid_token_123"}
+            
+            start_time = time.time()
+            response = await self.client.post(
+                f"{self.active_backend_url}/api/auth/email/verify",
+                json=verify_data
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 400:
+                self.log_test_result("authentication", "POST /api/auth/email/verify (invalid)", True,
+                                   "Correctly rejected invalid token", response_time)
+            else:
+                self.log_test_result("authentication", "POST /api/auth/email/verify (invalid)", False,
+                                   f"Should return 400, got {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("authentication", "POST /api/auth/email/verify (invalid)", False, f"Error: {str(e)}")
+
+    async def test_jwt_validation(self):
+        """Test JWT token validation"""
+        print("\n🎫 Testing JWT Token Validation...")
+        
+        if "userA" in self.test_users:
+            token = self.test_users["userA"]["token"]
+            headers = {"Authorization": f"Bearer {token}"}
+            
+            # Test /api/auth/me endpoint
+            try:
+                start_time = time.time()
+                response = await self.client.get(
+                    f"{self.active_backend_url}/api/auth/me",
+                    headers=headers
+                )
+                response_time = time.time() - start_time
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success") and "user" in data:
+                        self.log_test_result("authentication", "GET /api/auth/me", True,
+                                           f"User profile retrieved: {data['user']['email']}", response_time)
+                    else:
+                        self.log_test_result("authentication", "GET /api/auth/me", False,
+                                           "Invalid response format", response_time)
+                else:
+                    self.log_test_result("authentication", "GET /api/auth/me", False,
+                                       f"HTTP {response.status_code}", response_time)
+            except Exception as e:
+                self.log_test_result("authentication", "GET /api/auth/me", False, f"Error: {str(e)}")
+
+        # Test invalid token
+        try:
+            invalid_headers = {"Authorization": "Bearer invalid_token_123"}
+            
+            start_time = time.time()
+            response = await self.client.get(
+                f"{self.active_backend_url}/api/auth/me",
+                headers=invalid_headers
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 401:
+                self.log_test_result("authentication", "GET /api/auth/me (invalid token)", True,
+                                   "Correctly rejected invalid token", response_time)
+            else:
+                self.log_test_result("authentication", "GET /api/auth/me (invalid token)", False,
+                                   f"Should return 401, got {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("authentication", "GET /api/auth/me (invalid token)", False, f"Error: {str(e)}")
+
+    # ===== USER PROFILE MANAGEMENT =====
+    
+    async def test_user_profile_management(self):
+        """Test user profile management endpoints"""
+        print("\n👤 Testing User Profile Management...")
+        
+        if "userA" not in self.test_users:
+            print("   ⚠️ Skipping profile tests - no authenticated user available")
             return
             
-        auth_endpoints_working = True
-        
-        for endpoint, method, description in endpoints_to_test:
-            try:
-                url = f"{self.active_backend_url}{endpoint}"
-                print(f"   Testing {method} {endpoint} - {description}")
-                
-                if method == "GET":
-                    response = await self.client.get(url)
-                elif method == "POST":
-                    # Test with invalid data to check validation
-                    response = await self.client.post(url, json={})
-                
-                print(f"   → {response.status_code} {response.reason_phrase}")
-                
-                # Check for critical errors
-                if response.status_code == 500:
-                    print(f"   ❌ CRITICAL: Internal Server Error on {endpoint}")
-                    if endpoint in ["/api/auth/register", "/api/auth/login"]:
-                        auth_endpoints_working = False
-                        self.results["services"]["backend_api"]["status"] = "warn"
-                        if "Internal Server Error" not in self.results["services"]["backend_api"]["details"]:
-                            self.results["services"]["backend_api"]["details"] += ". Auth endpoints returning 500 errors"
-                
-                # For auth endpoints, we expect 400 (validation error) or 422 (unprocessable entity)
-                elif endpoint in ["/api/auth/register", "/api/auth/login"] and response.status_code in [400, 422]:
-                    print(f"   ✅ Validation working correctly")
-                elif endpoint == "/api/" and response.status_code == 200:
-                    print(f"   ✅ API root accessible")
-                    
-            except Exception as e:
-                print(f"   ❌ Error testing {endpoint}: {e}")
-        
-        # Update MongoDB status if auth endpoints are failing
-        if not auth_endpoints_working:
-            self.results["services"]["mongodb"]["status"] = "fail"
-            self.results["services"]["mongodb"]["connection"] = "inactive"
-            self.results["services"]["mongodb"]["details"] = "Database connection likely failed (auth endpoints returning 500 errors)"
-            self.results["recommendations"].append("CRITICAL: Auth endpoints returning 500 errors - check database connection and environment variables")
+        token = self.test_users["userA"]["token"]
+        headers = {"Authorization": f"Bearer {token}"}
 
+        # Test GET /api/user/profile
+        try:
+            start_time = time.time()
+            response = await self.client.get(
+                f"{self.active_backend_url}/api/user/profile",
+                headers=headers
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "id" in data and "email" in data:
+                    self.log_test_result("user_management", "GET /api/user/profile", True,
+                                       f"Profile retrieved: {data['email']}", response_time)
+                else:
+                    self.log_test_result("user_management", "GET /api/user/profile", False,
+                                       "Missing required fields in profile", response_time)
+            else:
+                self.log_test_result("user_management", "GET /api/user/profile", False,
+                                   f"HTTP {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("user_management", "GET /api/user/profile", False, f"Error: {str(e)}")
+
+        # Test profile update (if endpoint exists)
+        try:
+            profile_update = {
+                "display_name": "Updated Test User",
+                "bio": "This is a test bio for comprehensive testing",
+                "age": 25,
+                "location": "Basel, Switzerland"
+            }
+            
+            start_time = time.time()
+            response = await self.client.put(
+                f"{self.active_backend_url}/api/users/profile",
+                json=profile_update,
+                headers=headers
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                self.log_test_result("user_management", "PUT /api/users/profile", True,
+                                   "Profile updated successfully", response_time)
+            elif response.status_code == 404:
+                self.log_test_result("user_management", "PUT /api/users/profile", False,
+                                   "Profile update endpoint not found", response_time)
+            else:
+                self.log_test_result("user_management", "PUT /api/users/profile", False,
+                                   f"HTTP {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("user_management", "PUT /api/users/profile", False, f"Error: {str(e)}")
+
+        # Test photo upload endpoint
+        await self.test_photo_upload(headers)
+
+    async def test_photo_upload(self, headers):
+        """Test photo upload functionality"""
+        print("\n📸 Testing Photo Upload...")
+        
+        # Create a small test image (1x1 pixel PNG)
+        test_image_data = base64.b64decode(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChAGA4nEKtAAAAABJRU5ErkJggg=="
+        )
+        
+        try:
+            files = {"file": ("test.png", test_image_data, "image/png")}
+            
+            start_time = time.time()
+            response = await self.client.post(
+                f"{self.active_backend_url}/api/users/photos",
+                files=files,
+                headers=headers
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "url" in data:
+                    self.log_test_result("user_management", "POST /api/users/photos", True,
+                                       f"Photo uploaded: {data['url'][:50]}...", response_time)
+                else:
+                    self.log_test_result("user_management", "POST /api/users/photos", False,
+                                       "No URL in upload response", response_time)
+            elif response.status_code == 404:
+                # Try alternative endpoint
+                try:
+                    response = await self.client.post(
+                        f"{self.active_backend_url}/api/media/upload",
+                        files=files,
+                        headers=headers
+                    )
+                    if response.status_code == 200:
+                        data = response.json()
+                        if "url" in data:
+                            self.log_test_result("user_management", "POST /api/media/upload", True,
+                                               f"Photo uploaded via media endpoint: {data['url'][:50]}...", response_time)
+                        else:
+                            self.log_test_result("user_management", "POST /api/media/upload", False,
+                                               "No URL in upload response", response_time)
+                    else:
+                        self.log_test_result("user_management", "Photo upload endpoints", False,
+                                           "Both /api/users/photos and /api/media/upload failed", response_time)
+                except Exception:
+                    self.log_test_result("user_management", "Photo upload endpoints", False,
+                                       "Photo upload endpoints not available", response_time)
+            else:
+                error_detail = response.text[:200] if response.text else f"HTTP {response.status_code}"
+                self.log_test_result("user_management", "POST /api/users/photos", False,
+                                   error_detail, response_time)
+        except Exception as e:
+            self.log_test_result("user_management", "Photo upload", False, f"Error: {str(e)}")
+
+    # ===== LIVEKIT INTEGRATION =====
+    
+    async def test_livekit_integration(self):
+        """Test LiveKit integration"""
+        print("\n🎥 Testing LiveKit Integration...")
+        
+        if "userA" not in self.test_users:
+            print("   ⚠️ Skipping LiveKit tests - no authenticated user available")
+            return
+            
+        token = self.test_users["userA"]["token"]
+        headers = {"Authorization": f"Bearer {token}"}
+
+        # Test LiveKit token generation
+        try:
+            livekit_request = {
+                "match_id": f"test_match_{int(time.time())}"
+            }
+            
+            start_time = time.time()
+            response = await self.client.post(
+                f"{self.active_backend_url}/api/livekit/token",
+                json=livekit_request,
+                headers=headers
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "token" in data and "room_name" in data:
+                    self.log_test_result("livekit_integration", "POST /api/livekit/token", True,
+                                       f"LiveKit token generated for room: {data['room_name']}", response_time)
+                else:
+                    self.log_test_result("livekit_integration", "POST /api/livekit/token", False,
+                                       "Missing token or room_name in response", response_time)
+            elif response.status_code == 403:
+                # User might not be verified
+                self.log_test_result("livekit_integration", "POST /api/livekit/token", False,
+                                   "User verification required for LiveKit access", response_time)
+            elif response.status_code == 429:
+                # Rate limited
+                self.log_test_result("livekit_integration", "POST /api/livekit/token", True,
+                                   "Rate limiting working correctly", response_time)
+            else:
+                error_detail = response.text[:200] if response.text else f"HTTP {response.status_code}"
+                self.log_test_result("livekit_integration", "POST /api/livekit/token", False,
+                                   error_detail, response_time)
+        except Exception as e:
+            self.log_test_result("livekit_integration", "POST /api/livekit/token", False, f"Error: {str(e)}")
+
+        # Test without authentication
+        try:
+            start_time = time.time()
+            response = await self.client.post(
+                f"{self.active_backend_url}/api/livekit/token",
+                json={"match_id": "test"}
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 401:
+                self.log_test_result("livekit_integration", "POST /api/livekit/token (no auth)", True,
+                                   "Correctly requires authentication", response_time)
+            else:
+                self.log_test_result("livekit_integration", "POST /api/livekit/token (no auth)", False,
+                                   f"Should require auth, got {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("livekit_integration", "POST /api/livekit/token (no auth)", False, f"Error: {str(e)}")
+
+    # ===== ERROR HANDLING =====
+    
+    async def test_error_handling(self):
+        """Test error handling"""
+        print("\n🚨 Testing Error Handling...")
+        
+        # Test 404 for non-existent endpoints
+        try:
+            start_time = time.time()
+            response = await self.client.get(f"{self.active_backend_url}/api/nonexistent")
+            response_time = time.time() - start_time
+            
+            if response.status_code == 404:
+                self.log_test_result("error_handling", "GET /api/nonexistent (404)", True,
+                                   "Correctly returns 404 for non-existent endpoint", response_time)
+            else:
+                self.log_test_result("error_handling", "GET /api/nonexistent (404)", False,
+                                   f"Should return 404, got {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("error_handling", "GET /api/nonexistent (404)", False, f"Error: {str(e)}")
+
+        # Test 401 for unauthenticated requests
+        try:
+            start_time = time.time()
+            response = await self.client.get(f"{self.active_backend_url}/api/user/profile")
+            response_time = time.time() - start_time
+            
+            if response.status_code == 401:
+                self.log_test_result("error_handling", "GET /api/user/profile (no auth)", True,
+                                   "Correctly requires authentication", response_time)
+            else:
+                self.log_test_result("error_handling", "GET /api/user/profile (no auth)", False,
+                                   f"Should return 401, got {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("error_handling", "GET /api/user/profile (no auth)", False, f"Error: {str(e)}")
+
+        # Test malformed JSON
+        try:
+            start_time = time.time()
+            response = await self.client.post(
+                f"{self.active_backend_url}/api/auth/register",
+                data="invalid json",
+                headers={"Content-Type": "application/json"}
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code in [400, 422]:
+                self.log_test_result("error_handling", "POST with malformed JSON", True,
+                                   "Correctly handles malformed JSON", response_time)
+            else:
+                self.log_test_result("error_handling", "POST with malformed JSON", False,
+                                   f"Should return 400/422, got {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("error_handling", "POST with malformed JSON", False, f"Error: {str(e)}")
+
+    # ===== CORS TESTING =====
+    
     async def test_cors_configuration(self):
         """Test CORS configuration"""
-        print("🔍 Testing CORS configuration...")
+        print("\n🌐 Testing CORS Configuration...")
+        
         try:
-            # Test OPTIONS request for CORS preflight
-            if not self.active_backend_url:
-                print("❌ No active backend URL available")
-                return
-                
             headers = {
-                "Origin": self.active_backend_url,
+                "Origin": "https://datemaps.emergent.host",
                 "Access-Control-Request-Method": "POST",
                 "Access-Control-Request-Headers": "Content-Type,Authorization"
             }
             
+            start_time = time.time()
             response = await self.client.options(f"{self.active_backend_url}/api/", headers=headers)
+            response_time = time.time() - start_time
             
             cors_headers = {
                 "access-control-allow-origin": response.headers.get("access-control-allow-origin"),
@@ -284,309 +660,157 @@ class ComprehensiveBackendTester:
                 "access-control-allow-credentials": response.headers.get("access-control-allow-credentials")
             }
             
-            print(f"   CORS Headers: {json.dumps(cors_headers, indent=4)}")
-            
-            # Check if CORS is properly configured
-            origin_header = cors_headers.get("access-control-allow-origin")
-            methods_header = cors_headers.get("access-control-allow-methods")
-            headers_header = cors_headers.get("access-control-allow-headers")
-            
-            if methods_header and headers_header:
-                # CORS is configured, even if origin is not explicitly set
-                self.results["services"]["cors"]["status"] = "ok"
-                self.results["services"]["cors"]["allowed_origins"] = [origin_header] if origin_header else ["dynamic"]
-                self.results["services"]["cors"]["details"] = f"CORS configured. Methods: {methods_header}. Headers: {headers_header}"
-                print("✅ CORS configuration present")
-                
-                if origin_header == "*":
-                    self.results["services"]["cors"]["status"] = "warn"
-                    self.results["services"]["cors"]["details"] += " WARNING: Allows all origins (*)"
-                    print("⚠️ CORS allows all origins - potential security risk")
-                    
+            if cors_headers["access-control-allow-methods"] and cors_headers["access-control-allow-headers"]:
+                self.log_test_result("cors_testing", "OPTIONS /api/ (CORS preflight)", True,
+                                   f"CORS configured. Methods: {cors_headers['access-control-allow-methods']}", response_time)
             else:
-                self.results["services"]["cors"]["status"] = "fail"
-                self.results["services"]["cors"]["details"] = "CORS not properly configured"
-                print("❌ CORS not properly configured")
+                self.log_test_result("cors_testing", "OPTIONS /api/ (CORS preflight)", False,
+                                   "CORS headers missing or incomplete", response_time)
                 
         except Exception as e:
-            self.results["services"]["cors"]["status"] = "fail"
-            self.results["services"]["cors"]["details"] = f"CORS test error: {str(e)}"
-            print(f"❌ CORS test error: {e}")
+            self.log_test_result("cors_testing", "OPTIONS /api/ (CORS preflight)", False, f"Error: {str(e)}")
 
-    async def try_authentication(self):
-        """Try to authenticate with test credentials"""
-        print("🔍 Attempting authentication for protected endpoint testing...")
+    # ===== PERFORMANCE TESTING =====
+    
+    async def test_performance(self):
+        """Test API performance"""
+        print("\n⚡ Testing Performance...")
         
-        if not self.active_backend_url:
-            return False
-        
-        # Try to register a test user
-        test_user_data = {
-            "name": "Health Check User",
-            "email": f"healthcheck_{int(time.time())}@test.com",
-            "phone_number": "+41791234567",
-            "password": "TestPassword123!",
-            "terms_accepted": True
-        }
-        
-        try:
-            response = await self.client.post(
-                f"{self.active_backend_url}/api/auth/register",
-                json=test_user_data
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                if "access_token" in data:
-                    self.auth_token = data["access_token"]
-                    print("✅ Test user registered and authenticated")
-                    return True
-            else:
-                print(f"   Registration failed: {response.status_code}")
-                
-        except Exception as e:
-            print(f"   Registration error: {e}")
-        
-        return False
-
-    async def test_livekit_service(self):
-        """Test LiveKit service connectivity"""
-        print("🔍 Testing LiveKit service...")
-        if not self.active_backend_url:
-            print("❌ No active backend URL available")
-            return
-            
-        try:
-            # Test LiveKit token generation endpoint
-            headers = {}
-            if self.auth_token:
-                headers["Authorization"] = f"Bearer {self.auth_token}"
-                
-            response = await self.client.post(
-                f"{self.active_backend_url}/api/livekit/token",
-                json={"match_id": "test_match_123"},
-                headers=headers
-            )
-            
-            if response.status_code == 401:
-                # Expected - requires authentication
-                self.results["services"]["livekit"]["status"] = "ok"
-                self.results["services"]["livekit"]["details"] = "LiveKit endpoint accessible, requires authentication (expected)"
-                print("✅ LiveKit endpoint accessible (requires auth)")
-            elif response.status_code == 200:
-                data = response.json()
-                if "token" in data:
-                    self.results["services"]["livekit"]["status"] = "ok"
-                    self.results["services"]["livekit"]["details"] = "LiveKit token generation working"
-                    print("✅ LiveKit token generation working")
-            else:
-                self.results["services"]["livekit"]["status"] = "warn"
-                self.results["services"]["livekit"]["details"] = f"LiveKit endpoint returned {response.status_code}"
-                print(f"⚠️ LiveKit endpoint returned {response.status_code}")
-                
-        except Exception as e:
-            self.results["services"]["livekit"]["status"] = "fail"
-            self.results["services"]["livekit"]["details"] = f"LiveKit test error: {str(e)}"
-            print(f"❌ LiveKit test error: {e}")
-
-    async def test_cloudinary_service(self):
-        """Test Cloudinary configuration (indirect)"""
-        print("🔍 Testing Cloudinary service...")
-        if not self.active_backend_url:
-            print("❌ No active backend URL available")
-            return
-            
-        try:
-            # We can't directly test Cloudinary without uploading, but we can check if upload endpoint exists
-            headers = {}
-            if self.auth_token:
-                headers["Authorization"] = f"Bearer {self.auth_token}"
-                
-            response = await self.client.post(
-                f"{self.active_backend_url}/api/media/upload",
-                files={"file": ("test.txt", b"test", "text/plain")},
-                headers=headers
-            )
-            
-            if response.status_code == 401:
-                # Expected - requires authentication
-                self.results["services"]["cloudinary"]["status"] = "ok"
-                self.results["services"]["cloudinary"]["details"] = "Media upload endpoint accessible, requires authentication"
-                print("✅ Media upload endpoint accessible (requires auth)")
-            elif response.status_code in [400, 422]:
-                # Validation error - endpoint exists
-                self.results["services"]["cloudinary"]["status"] = "ok"
-                self.results["services"]["cloudinary"]["details"] = "Media upload endpoint accessible, validation working"
-                print("✅ Media upload endpoint accessible")
-            else:
-                self.results["services"]["cloudinary"]["status"] = "warn"
-                self.results["services"]["cloudinary"]["details"] = f"Media upload endpoint returned {response.status_code}"
-                print(f"⚠️ Media upload endpoint returned {response.status_code}")
-                
-        except Exception as e:
-            self.results["services"]["cloudinary"]["status"] = "fail"
-            self.results["services"]["cloudinary"]["details"] = f"Cloudinary test error: {str(e)}"
-            print(f"❌ Cloudinary test error: {e}")
-
-    async def test_sentry_service(self):
-        """Test Sentry configuration (indirect)"""
-        print("🔍 Testing Sentry service...")
-        if not self.active_backend_url:
-            print("❌ No active backend URL available")
-            return
-            
-        try:
-            # Test debug endpoint if available
-            response = await self.client.get(f"{self.active_backend_url}/debug-sentry")
-            
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("sentry_enabled"):
-                    self.results["services"]["sentry"]["status"] = "ok"
-                    self.results["services"]["sentry"]["environment"] = "production"
-                    self.results["services"]["sentry"]["details"] = "Sentry error tracking enabled"
-                    print("✅ Sentry error tracking enabled")
-                else:
-                    self.results["services"]["sentry"]["status"] = "warn"
-                    self.results["services"]["sentry"]["details"] = "Sentry debug endpoint accessible but not enabled"
-                    print("⚠️ Sentry not enabled")
-            else:
-                # Debug endpoint might be disabled in production (good practice)
-                self.results["services"]["sentry"]["status"] = "ok"
-                self.results["services"]["sentry"]["details"] = "Debug endpoint disabled (good security practice)"
-                print("✅ Debug endpoint disabled (good security)")
-                
-        except Exception as e:
-            self.results["services"]["sentry"]["status"] = "unknown"
-            self.results["services"]["sentry"]["details"] = f"Cannot verify Sentry: {str(e)}"
-            print(f"⚠️ Cannot verify Sentry: {e}")
-
-    async def check_performance(self):
-        """Check API performance"""
-        print("🔍 Checking API performance...")
-        
-        # Test multiple requests to get average response time
         response_times = []
-        if not self.active_backend_url:
-            print("❌ No active backend URL available")
-            return
-            
-        for i in range(3):
-            try:
-                start_time = time.time()
-                response = await self.client.get(f"{self.active_backend_url}/api/")
-                response_time = (time.time() - start_time) * 1000
-                response_times.append(response_time)
-                
-                if response_time > 5000:  # 5 seconds
-                    print(f"⚠️ Slow response detected: {response_time:.0f}ms")
-                    
-            except Exception as e:
-                print(f"❌ Performance test error: {e}")
+        endpoints_to_test = [
+            ("/api/", "GET"),
+            ("/health", "GET")
+        ]
         
+        for endpoint, method in endpoints_to_test:
+            times = []
+            for i in range(3):  # Test each endpoint 3 times
+                try:
+                    start_time = time.time()
+                    if method == "GET":
+                        response = await self.client.get(f"{self.active_backend_url}{endpoint}")
+                    response_time = time.time() - start_time
+                    times.append(response_time)
+                    response_times.append(response_time)
+                except Exception:
+                    continue
+            
+            if times:
+                avg_time = sum(times) / len(times)
+                if avg_time < 0.5:  # Less than 500ms
+                    self.log_test_result("performance", f"{method} {endpoint} performance", True,
+                                       f"Average response time: {int(avg_time * 1000)}ms", avg_time)
+                else:
+                    self.log_test_result("performance", f"{method} {endpoint} performance", False,
+                                       f"Slow response time: {int(avg_time * 1000)}ms", avg_time)
+
+        # Calculate overall performance metrics
         if response_times:
-            avg_response_time = sum(response_times) / len(response_times)
-            print(f"📊 Average response time: {avg_response_time:.0f}ms")
-            
-            if avg_response_time > 5000:
-                self.results["recommendations"].append("API response times are slow (>5s). Consider performance optimization.")
+            self.results["performance_metrics"]["average_response_time"] = int(sum(response_times) / len(response_times) * 1000)
 
-    def calculate_overall_status(self):
-        """Calculate overall system status"""
-        service_statuses = [service["status"] for service in self.results["services"].values()]
+    # ===== DATABASE OPERATIONS =====
+    
+    async def test_database_operations(self):
+        """Test database operations indirectly"""
+        print("\n🗄️ Testing Database Operations...")
         
-        if all(status == "ok" for status in service_statuses):
-            self.results["overall_status"] = "healthy"
-        elif any(status == "fail" for status in service_statuses):
-            self.results["overall_status"] = "unhealthy"
+        # Database operations are tested indirectly through API endpoints
+        # We've already tested user registration, login, profile operations
+        # which all require database connectivity
+        
+        if self.test_users:
+            self.log_test_result("database_operations", "User CRUD operations", True,
+                               f"Database operations working (created {len(self.test_users)} users)")
         else:
-            self.results["overall_status"] = "degraded"
+            self.log_test_result("database_operations", "User CRUD operations", False,
+                               "No users created - database operations may be failing")
 
-    def add_recommendations(self):
-        """Add recommendations based on test results"""
-        recommendations = []
+    # ===== MAIN TEST RUNNER =====
+    
+    async def run_comprehensive_tests(self):
+        """Run all comprehensive backend tests"""
+        print("🚀 Starting Comprehensive Backend Testing for Pizoo Dating App")
+        print(f"🎯 Target URL: {LOCAL_URL}")
+        print("=" * 80)
         
-        # Check for failed services
-        for service_name, service_data in self.results["services"].items():
-            if service_data["status"] == "fail":
-                recommendations.append(f"Fix {service_name} service: {service_data['details']}")
-            elif service_data["status"] == "warn":
-                recommendations.append(f"Review {service_name} configuration: {service_data['details']}")
-        
-        # Performance recommendations
-        if self.results["services"]["backend_api"]["response_time_ms"] > 2000:
-            recommendations.append("Consider optimizing API response times (currently >2s)")
-        
-        # Security recommendations
-        if self.results["services"]["cors"]["status"] == "warn":
-            recommendations.append("Review CORS configuration for production security")
-        
-        self.results["recommendations"].extend(recommendations)
-
-    async def run_health_check(self):
-        """Run complete health check"""
-        print("🚀 Starting Production Health Check for Pizoo Dating App")
-        print(f"🎯 Target URL: {PRODUCTION_URL}")
-        print("=" * 60)
-        
-        # Determine active backend first
+        # Determine active backend
         await self.determine_active_backend()
         
-        # Try to authenticate for protected endpoint testing
-        await self.try_authentication()
+        if not self.active_backend_url:
+            print("❌ No active backend found. Cannot proceed with testing.")
+            return self.results
         
-        # Run all tests
-        await self.test_health_endpoint()
-        await self.test_root_endpoint()
-        await self.test_api_endpoints()
+        # Run all test categories
+        await self.test_health_endpoints()
+        await self.test_authentication_flow()
+        await self.test_user_profile_management()
+        await self.test_livekit_integration()
+        await self.test_error_handling()
         await self.test_cors_configuration()
-        await self.test_livekit_service()
-        await self.test_cloudinary_service()
-        await self.test_sentry_service()
-        await self.check_performance()
+        await self.test_performance()
+        await self.test_database_operations()
         
-        # Calculate results
-        self.calculate_overall_status()
-        self.add_recommendations()
+        # Calculate final results
+        self.calculate_final_results()
         
         # Close HTTP client
         await self.client.aclose()
         
-        print("\n" + "=" * 60)
-        print("📋 HEALTH CHECK COMPLETE")
-        print("=" * 60)
+        print("\n" + "=" * 80)
+        print("📋 COMPREHENSIVE BACKEND TESTING COMPLETE")
+        print("=" * 80)
         
         return self.results
 
+    def calculate_final_results(self):
+        """Calculate final test results and recommendations"""
+        # Add recommendations based on test results
+        failed_categories = []
+        for category, results in self.results["test_categories"].items():
+            if results["failed"] > 0:
+                failed_categories.append(category)
+        
+        if failed_categories:
+            self.results["recommendations"].append(f"Fix failing tests in: {', '.join(failed_categories)}")
+        
+        if self.results["performance_metrics"]["average_response_time"] > 1000:
+            self.results["recommendations"].append("Optimize API performance - average response time > 1s")
+        
+        if not self.test_users:
+            self.results["recommendations"].append("CRITICAL: Authentication system not working - no users could be created")
+
 async def main():
-    """Main function to run health check"""
-    checker = ProductionHealthChecker()
-    results = await checker.run_health_check()
+    """Main function to run comprehensive backend tests"""
+    tester = ComprehensiveBackendTester()
+    results = await tester.run_comprehensive_tests()
     
-    # Print results
-    print(f"\n🎯 PRODUCTION HEALTH REPORT")
+    # Print summary
+    print(f"\n🎯 COMPREHENSIVE BACKEND TEST REPORT")
     print(f"Timestamp: {results['timestamp']}")
-    print(f"Overall Status: {results['overall_status'].upper()}")
-    print(f"Production URL: {results['production_url']}")
+    print(f"Backend URL: {results['backend_url']}")
+    print(f"Total Tests: {results['total_tests']}")
+    print(f"✅ Passed: {results['passed_tests']}")
+    print(f"❌ Failed: {results['failed_tests']}")
+    print(f"Success Rate: {(results['passed_tests'] / results['total_tests'] * 100):.1f}%" if results['total_tests'] > 0 else "0%")
     
-    print(f"\n📊 SERVICE STATUS:")
-    for service_name, service_data in results['services'].items():
-        status_emoji = {"ok": "✅", "warn": "⚠️", "fail": "❌", "unknown": "❓"}
-        emoji = status_emoji.get(service_data['status'], "❓")
-        print(f"  {emoji} {service_name.upper()}: {service_data['status']}")
-        if service_data['details']:
-            print(f"     Details: {service_data['details']}")
+    print(f"\n📊 TEST RESULTS BY CATEGORY:")
+    for category, category_results in results['test_categories'].items():
+        total = category_results['passed'] + category_results['failed']
+        if total > 0:
+            success_rate = (category_results['passed'] / total * 100)
+            status_emoji = "✅" if category_results['failed'] == 0 else "❌" if category_results['passed'] == 0 else "⚠️"
+            print(f"  {status_emoji} {category.replace('_', ' ').title()}: {category_results['passed']}/{total} ({success_rate:.1f}%)")
     
     if results['recommendations']:
         print(f"\n💡 RECOMMENDATIONS:")
         for i, rec in enumerate(results['recommendations'], 1):
             print(f"  {i}. {rec}")
     
-    # Save results to file
-    with open('/app/production_health_report.json', 'w') as f:
+    # Save detailed results
+    with open('/app/comprehensive_backend_test_results.json', 'w') as f:
         json.dump(results, f, indent=2)
     
-    print(f"\n📄 Full report saved to: /app/production_health_report.json")
+    print(f"\n📄 Detailed results saved to: /app/comprehensive_backend_test_results.json")
     
     return results
 

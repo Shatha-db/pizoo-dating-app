@@ -1,13 +1,13 @@
 {
-  "timestamp": "2025-11-03T09:48:10.106751",
+  "timestamp": "2025-11-03T09:48:59.746316",
   "production_url": "https://multilingual-date.emergent.host",
   "backend_url": "https://pizoo-monorepo.preview.emergentagent.com",
   "overall_status": "degraded",
   "services": {
     "backend_api": {
       "status": "ok",
-      "response_time_ms": 56,
-      "details": "API accessible (no dedicated health endpoint). Response time: 56ms"
+      "response_time_ms": 72,
+      "details": "API accessible (no dedicated health endpoint). Response time: 72ms"
     },
     "mongodb": {
       "status": "ok",

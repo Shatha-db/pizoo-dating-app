@@ -413,6 +413,9 @@ class ProductionHealthChecker:
         print(f"🎯 Target URL: {PRODUCTION_URL}")
         print("=" * 60)
         
+        # Determine active backend first
+        await self.determine_active_backend()
+        
         # Run all tests
         await self.test_health_endpoint()
         await self.test_root_endpoint()

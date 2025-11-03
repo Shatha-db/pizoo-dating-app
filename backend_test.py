@@ -11,8 +11,9 @@ import asyncio
 from datetime import datetime
 from typing import Dict, Any, Optional
 
-# Production URL from review request
-PRODUCTION_URL = "https://multilingual-date.emergent.host"
+# URLs to test
+PRODUCTION_URL = "https://multilingual-date.emergent.host"  # From review request
+BACKEND_URL = "https://pizoo-monorepo.preview.emergentagent.com"  # From frontend config
 
 class ProductionHealthChecker:
     def __init__(self):

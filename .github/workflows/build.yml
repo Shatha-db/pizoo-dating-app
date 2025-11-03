@@ -6,75 +6,88 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       matrix:
         node-version: [18]
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
-      
+
       - name: Get pnpm store directory
         id: pnpm-cache
         shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-      
+        run: echo "STORE_PATH=$(pnpm store path)" >> "$GITHUB_OUTPUT"
+
       - name: Setup pnpm cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
-      
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: Build all packages
         run: pnpm build
-      
+
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-output
           path: |
             apps/*/build
             apps/*/.next
             packages/*/dist
+          retention-days: 7
+          compression-level: 6
 
   backend-health-check:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     services:
       mongodb:
         image: mongo:7
         ports:
           - 27017:27017
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Install backend dependencies
         working-directory: ./packages/backend
         run: pip install -r requirements.txt
-      
+
       - name: Start backend server
         working-directory: ./packages/backend
         env:
@@ -84,7 +97,6 @@ jobs:
         run: |
           uvicorn server:app --host 0.0.0.0 --port 8001 &
           sleep 5
-      
+
       - name: Health check
-        run: |
-          curl -f http://localhost:8001/health || exit 1
+        run: curl -f http://localhost:8001/health

@@ -1,12 +1,13 @@
 {
-  "timestamp": "2025-11-03T09:44:36.717550",
+  "timestamp": "2025-11-03T09:46:55.274441",
   "production_url": "https://multilingual-date.emergent.host",
+  "backend_url": "https://pizoo-monorepo.preview.emergentagent.com",
   "overall_status": "unhealthy",
   "services": {
     "backend_api": {
       "status": "fail",
-      "response_time_ms": 174,
-      "details": "Health endpoint error: Expecting value: line 1 column 1 (char 0)"
+      "response_time_ms": 29,
+      "details": "No health endpoint found at /health or /api/health"
     },
     "mongodb": {
       "status": "unknown",
@@ -39,7 +40,7 @@
     "all_set": false
   },
   "recommendations": [
-    "Fix backend_api service: Health endpoint error: Expecting value: line 1 column 1 (char 0)",
+    "Fix backend_api service: No health endpoint found at /health or /api/health",
     "Review livekit configuration: LiveKit endpoint returned 403",
     "Review cloudinary configuration: Media upload endpoint returned 403",
     "Fix cors service: CORS not properly configured"

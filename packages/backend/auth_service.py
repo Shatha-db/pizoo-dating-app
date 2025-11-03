@@ -98,7 +98,7 @@ class AuthService:
         try:
             async with httpx.AsyncClient(timeout=10.0) as client:
                 response = await client.get(
-                    "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data",
+                    EMERGENT_OAUTH_URL,
                     headers={"X-Session-ID": session_id}
                 )
                 

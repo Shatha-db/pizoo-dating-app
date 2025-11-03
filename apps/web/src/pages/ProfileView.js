@@ -136,6 +136,7 @@ const ProfileView = () => {
   };
 
   const handleBlock = async () => {
+    // eslint-disable-next-line no-restricted-globals
     if (!confirm('هل أنت متأكد من حظر هذا المستخدم؟')) return;
 
     try {

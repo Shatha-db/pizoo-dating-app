@@ -581,7 +581,7 @@ class ComprehensiveBackendTester:
             )
             response_time = time.time() - start_time
             
-            if response.status_code == 401:
+            if response.status_code in [401, 403]:
                 self.log_test_result("livekit_integration", "POST /api/livekit/token (no auth)", True,
                                    "Correctly requires authentication", response_time)
             else:

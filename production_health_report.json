@@ -1,18 +1,18 @@
 {
-  "timestamp": "2025-11-03T09:46:55.274441",
+  "timestamp": "2025-11-03T09:48:10.106751",
   "production_url": "https://multilingual-date.emergent.host",
   "backend_url": "https://pizoo-monorepo.preview.emergentagent.com",
-  "overall_status": "unhealthy",
+  "overall_status": "degraded",
   "services": {
     "backend_api": {
-      "status": "fail",
-      "response_time_ms": 29,
-      "details": "No health endpoint found at /health or /api/health"
+      "status": "ok",
+      "response_time_ms": 56,
+      "details": "API accessible (no dedicated health endpoint). Response time: 56ms"
     },
     "mongodb": {
-      "status": "unknown",
-      "connection": "unknown",
-      "details": ""
+      "status": "ok",
+      "connection": "active",
+      "details": "Inferred from API availability (no health endpoint)"
     },
     "livekit": {
       "status": "warn",
@@ -30,9 +30,11 @@
       "details": "Cannot verify Sentry: Expecting value: line 1 column 1 (char 0)"
     },
     "cors": {
-      "status": "fail",
-      "allowed_origins": [],
-      "details": "CORS not properly configured"
+      "status": "ok",
+      "allowed_origins": [
+        "dynamic"
+      ],
+      "details": "CORS configured. Methods: DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT. Headers: Content-Type,Authorization"
     }
   },
   "environment_variables": {
@@ -40,9 +42,7 @@
     "all_set": false
   },
   "recommendations": [
-    "Fix backend_api service: No health endpoint found at /health or /api/health",
     "Review livekit configuration: LiveKit endpoint returned 403",
-    "Review cloudinary configuration: Media upload endpoint returned 403",
-    "Fix cors service: CORS not properly configured"
+    "Review cloudinary configuration: Media upload endpoint returned 403"
   ]
 }

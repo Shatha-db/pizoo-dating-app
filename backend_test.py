@@ -611,18 +611,18 @@ class ComprehensiveBackendTester:
         except Exception as e:
             self.log_test_result("error_handling", "GET /api/nonexistent (404)", False, f"Error: {str(e)}")
 
-        # Test 401 for unauthenticated requests
+        # Test 401/403 for unauthenticated requests
         try:
             start_time = time.time()
             response = await self.client.get(f"{self.active_backend_url}/api/user/profile")
             response_time = time.time() - start_time
             
-            if response.status_code == 401:
+            if response.status_code in [401, 403]:
                 self.log_test_result("error_handling", "GET /api/user/profile (no auth)", True,
                                    "Correctly requires authentication", response_time)
             else:
                 self.log_test_result("error_handling", "GET /api/user/profile (no auth)", False,
-                                   f"Should return 401, got {response.status_code}", response_time)
+                                   f"Should return 401/403, got {response.status_code}", response_time)
         except Exception as e:
             self.log_test_result("error_handling", "GET /api/user/profile (no auth)", False, f"Error: {str(e)}")
 

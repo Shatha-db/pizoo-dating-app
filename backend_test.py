@@ -1,18 +1,22 @@
 #!/usr/bin/env python3
 """
-Production Health Check for Pizoo Dating App
-Testing URL: https://multilingual-date.emergent.host
+Comprehensive Backend Testing for Pizoo Dating App
+Testing all critical backend functionalities including authentication, user management, 
+matching, messaging, LiveKit integration, and more.
 """
 
 import httpx
 import json
 import time
 import asyncio
+import uuid
+import base64
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
-# URLs to test
-PRODUCTION_URL = "https://multilingual-date.emergent.host"  # From review request
+# URLs to test - Using local development server as requested
+LOCAL_URL = "http://127.0.0.1:8001"  # Local development server
+PRODUCTION_URL = "https://multilingual-date.emergent.host"  # Production URL
 BACKEND_URL = "https://pizoo-monorepo.preview.emergentagent.com"  # From frontend config
 
 class ProductionHealthChecker:

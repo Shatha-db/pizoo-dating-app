@@ -201,6 +201,8 @@ class ProductionHealthChecker:
             print("❌ No active backend URL available")
             return
             
+        auth_endpoints_working = True
+        
         for endpoint, method, description in endpoints_to_test:
             try:
                 url = f"{self.active_backend_url}{endpoint}"
@@ -214,14 +216,30 @@ class ProductionHealthChecker:
                 
                 print(f"   → {response.status_code} {response.reason_phrase}")
                 
+                # Check for critical errors
+                if response.status_code == 500:
+                    print(f"   ❌ CRITICAL: Internal Server Error on {endpoint}")
+                    if endpoint in ["/api/auth/register", "/api/auth/login"]:
+                        auth_endpoints_working = False
+                        self.results["services"]["backend_api"]["status"] = "warn"
+                        if "Internal Server Error" not in self.results["services"]["backend_api"]["details"]:
+                            self.results["services"]["backend_api"]["details"] += ". Auth endpoints returning 500 errors"
+                
                 # For auth endpoints, we expect 400 (validation error) or 422 (unprocessable entity)
-                if endpoint in ["/api/auth/register", "/api/auth/login"] and response.status_code in [400, 422]:
+                elif endpoint in ["/api/auth/register", "/api/auth/login"] and response.status_code in [400, 422]:
                     print(f"   ✅ Validation working correctly")
                 elif endpoint == "/api/" and response.status_code == 200:
                     print(f"   ✅ API root accessible")
                     
             except Exception as e:
                 print(f"   ❌ Error testing {endpoint}: {e}")
+        
+        # Update MongoDB status if auth endpoints are failing
+        if not auth_endpoints_working:
+            self.results["services"]["mongodb"]["status"] = "fail"
+            self.results["services"]["mongodb"]["connection"] = "inactive"
+            self.results["services"]["mongodb"]["details"] = "Database connection likely failed (auth endpoints returning 500 errors)"
+            self.results["recommendations"].append("CRITICAL: Auth endpoints returning 500 errors - check database connection and environment variables")
 
     async def test_cors_configuration(self):
         """Test CORS configuration"""

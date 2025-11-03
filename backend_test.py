@@ -456,6 +456,9 @@ class ComprehensiveBackendTester:
 
         # Test photo upload endpoint
         await self.test_photo_upload(headers)
+        
+        # Test additional profile endpoints
+        await self.test_additional_profile_endpoints(headers)
 
     async def test_photo_upload(self, headers):
         """Test photo upload functionality"""

@@ -584,9 +584,9 @@ class ComprehensiveBackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if "likes_sent_this_week" in data or "messages_sent_this_week" in data:
+                if "premium_tier" in data and "likes" in data and "messages" in data:
                     self.log_test_result("user_management", "GET /api/usage-stats", True,
-                                       "Usage statistics retrieved", response_time)
+                                       f"Usage statistics retrieved - tier: {data.get('premium_tier')}", response_time)
                 else:
                     self.log_test_result("user_management", "GET /api/usage-stats", False,
                                        "Missing usage statistics fields", response_time)

@@ -174,7 +174,7 @@ const Likes = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20" dir="rtl">
+    <div className="min-h-screen bg-gray-50 pb-24" dir="rtl">
       {/* Toast Notification */}
       {toast && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-black/90 text-white px-6 py-3 rounded-full z-50 shadow-lg">

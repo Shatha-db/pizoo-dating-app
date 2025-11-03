@@ -42,9 +42,9 @@ import Loader from './components/Loader';
 import './App.css';
 
 // ⚠️ Lazy load DiscoverySettings to prevent Leaflet loading on every page
-const DiscoverySettings = React.lazy(() => import('./pages/DiscoverySettings'));
+const DiscoverySettings = lazy(() => import('./pages/DiscoverySettings'));
 // ⚠️ Lazy load SwipePage to prevent framer-motion issues
-const SwipePage = React.lazy(() => import('./pages/SwipePage'));
+const SwipePage = lazy(() => import('./pages/SwipePage'));
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 

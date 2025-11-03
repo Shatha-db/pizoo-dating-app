@@ -65,13 +65,19 @@ class ProductionHealthChecker:
         """Test GET /health endpoint"""
         print("🔍 Testing health endpoint...")
         
+        if not self.active_backend_url:
+            print("❌ No active backend URL available")
+            self.results["services"]["backend_api"]["status"] = "fail"
+            self.results["services"]["backend_api"]["details"] = "No active backend URL found"
+            return
+        
         # Try multiple possible health endpoint locations
         health_endpoints = ["/health", "/api/health"]
         
         for endpoint in health_endpoints:
             try:
                 start_time = time.time()
-                response = await self.client.get(f"{PRODUCTION_URL}{endpoint}")
+                response = await self.client.get(f"{self.active_backend_url}{endpoint}")
                 response_time = int((time.time() - start_time) * 1000)
                 
                 self.results["services"]["backend_api"]["response_time_ms"] = response_time

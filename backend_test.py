@@ -424,7 +424,7 @@ class ComprehensiveBackendTester:
         except Exception as e:
             self.log_test_result("user_management", "GET /api/user/profile", False, f"Error: {str(e)}")
 
-        # Test profile update (if endpoint exists)
+        # Test profile update (correct endpoint)
         try:
             profile_update = {
                 "display_name": "Updated Test User",
@@ -435,23 +435,24 @@ class ComprehensiveBackendTester:
             
             start_time = time.time()
             response = await self.client.put(
-                f"{self.active_backend_url}/api/users/profile",
+                f"{self.active_backend_url}/api/profile/update",
                 json=profile_update,
                 headers=headers
             )
             response_time = time.time() - start_time
             
             if response.status_code == 200:
-                self.log_test_result("user_management", "PUT /api/users/profile", True,
+                self.log_test_result("user_management", "PUT /api/profile/update", True,
                                    "Profile updated successfully", response_time)
             elif response.status_code == 404:
-                self.log_test_result("user_management", "PUT /api/users/profile", False,
+                self.log_test_result("user_management", "PUT /api/profile/update", False,
                                    "Profile update endpoint not found", response_time)
             else:
-                self.log_test_result("user_management", "PUT /api/users/profile", False,
-                                   f"HTTP {response.status_code}", response_time)
+                error_detail = response.text[:200] if response.text else f"HTTP {response.status_code}"
+                self.log_test_result("user_management", "PUT /api/profile/update", False,
+                                   error_detail, response_time)
         except Exception as e:
-            self.log_test_result("user_management", "PUT /api/users/profile", False, f"Error: {str(e)}")
+            self.log_test_result("user_management", "PUT /api/profile/update", False, f"Error: {str(e)}")
 
         # Test photo upload endpoint
         await self.test_photo_upload(headers)

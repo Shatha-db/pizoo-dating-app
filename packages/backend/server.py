@@ -22,6 +22,24 @@ from sms_service import generate_and_send, verify as verify_otp
 from twilio_service import create_voice_token, create_video_token, send_sms, verify_start, verify_check
 from twilio.twiml.voice_response import VoiceResponse, Dial
 from bson import ObjectId
+import sys
+
+# Configure logging at the very start
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Startup logging
+logger.info("=" * 70)
+logger.info("🚀 PIZOO DATING APP - STARTING")
+logger.info("=" * 70)
+logger.info(f"Python version: {sys.version}")
+logger.info(f"Working directory: {os.getcwd()}")
+logger.info(f"MONGO_URL present: {'MONGO_URL' in os.environ or 'MONGODB_URI' in os.environ}")
+logger.info(f"DB_NAME present: {'DB_NAME' in os.environ or 'MONGODB_DB_NAME' in os.environ}")
+logger.info("=" * 70)
 
 # Helper function to convert MongoDB documents to JSON-safe format
 def serialize_mongo_doc(doc):

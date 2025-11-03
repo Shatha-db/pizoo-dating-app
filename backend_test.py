@@ -39,55 +39,78 @@ class ProductionHealthChecker:
     async def test_health_endpoint(self):
         """Test GET /health endpoint"""
         print("🔍 Testing health endpoint...")
-        try:
-            start_time = time.time()
-            response = await self.client.get(f"{PRODUCTION_URL}/health")
-            response_time = int((time.time() - start_time) * 1000)
-            
-            self.results["services"]["backend_api"]["response_time_ms"] = response_time
-            
-            if response.status_code == 200:
-                data = response.json()
-                print(f"✅ Health endpoint responded in {response_time}ms")
-                print(f"   Response: {json.dumps(data, indent=2)}")
+        
+        # Try multiple possible health endpoint locations
+        health_endpoints = ["/health", "/api/health"]
+        
+        for endpoint in health_endpoints:
+            try:
+                start_time = time.time()
+                response = await self.client.get(f"{PRODUCTION_URL}{endpoint}")
+                response_time = int((time.time() - start_time) * 1000)
                 
-                # Check expected fields
-                expected_fields = ["db", "otp", "ai", "status"]
-                missing_fields = [field for field in expected_fields if field not in data]
+                self.results["services"]["backend_api"]["response_time_ms"] = response_time
                 
-                if not missing_fields and data.get("status") == "healthy":
-                    self.results["services"]["backend_api"]["status"] = "ok"
-                    self.results["services"]["backend_api"]["details"] = f"Health check passed. Response time: {response_time}ms"
-                    
-                    # Update individual service statuses based on health response
-                    if data.get("db") == "ok":
-                        self.results["services"]["mongodb"]["status"] = "ok"
-                        self.results["services"]["mongodb"]["connection"] = "active"
-                        self.results["services"]["mongodb"]["details"] = "Database connection healthy"
-                    else:
-                        self.results["services"]["mongodb"]["status"] = "fail"
-                        self.results["services"]["mongodb"]["connection"] = "inactive"
-                        self.results["services"]["mongodb"]["details"] = f"Database status: {data.get('db', 'unknown')}"
-                    
-                    if data.get("otp") == "ok":
-                        self.results["services"]["backend_api"]["details"] += ". OTP service operational"
-                    
-                    if data.get("ai") == "ok":
-                        self.results["services"]["backend_api"]["details"] += ". AI matching service operational"
+                print(f"   Trying {endpoint}: {response.status_code}")
+                
+                if response.status_code == 200:
+                    # Check if response is JSON
+                    try:
+                        data = response.json()
+                        print(f"✅ Health endpoint found at {endpoint} - responded in {response_time}ms")
+                        print(f"   Response: {json.dumps(data, indent=2)}")
                         
+                        # Check expected fields
+                        expected_fields = ["db", "otp", "ai", "status"]
+                        missing_fields = [field for field in expected_fields if field not in data]
+                        
+                        if not missing_fields and data.get("status") == "healthy":
+                            self.results["services"]["backend_api"]["status"] = "ok"
+                            self.results["services"]["backend_api"]["details"] = f"Health check passed at {endpoint}. Response time: {response_time}ms"
+                            
+                            # Update individual service statuses based on health response
+                            if data.get("db") == "ok":
+                                self.results["services"]["mongodb"]["status"] = "ok"
+                                self.results["services"]["mongodb"]["connection"] = "active"
+                                self.results["services"]["mongodb"]["details"] = "Database connection healthy"
+                            else:
+                                self.results["services"]["mongodb"]["status"] = "fail"
+                                self.results["services"]["mongodb"]["connection"] = "inactive"
+                                self.results["services"]["mongodb"]["details"] = f"Database status: {data.get('db', 'unknown')}"
+                            
+                            if data.get("otp") == "ok":
+                                self.results["services"]["backend_api"]["details"] += ". OTP service operational"
+                            
+                            if data.get("ai") == "ok":
+                                self.results["services"]["backend_api"]["details"] += ". AI matching service operational"
+                            
+                            return  # Success, exit function
+                            
+                        else:
+                            self.results["services"]["backend_api"]["status"] = "warn"
+                            self.results["services"]["backend_api"]["details"] = f"Health check incomplete at {endpoint}. Missing fields: {missing_fields}. Status: {data.get('status', 'unknown')}"
+                            return  # Found endpoint but incomplete, exit function
+                            
+                    except json.JSONDecodeError:
+                        # Response is not JSON (probably HTML frontend)
+                        print(f"   {endpoint} returned HTML (frontend), not JSON API")
+                        continue
+                        
+                elif response.status_code == 404:
+                    print(f"   {endpoint} not found")
+                    continue
                 else:
-                    self.results["services"]["backend_api"]["status"] = "warn"
-                    self.results["services"]["backend_api"]["details"] = f"Health check incomplete. Missing fields: {missing_fields}. Status: {data.get('status', 'unknown')}"
+                    print(f"   {endpoint} returned {response.status_code}")
+                    continue
                     
-            else:
-                self.results["services"]["backend_api"]["status"] = "fail"
-                self.results["services"]["backend_api"]["details"] = f"Health endpoint returned {response.status_code}: {response.text[:200]}"
-                print(f"❌ Health endpoint failed: {response.status_code}")
-                
-        except Exception as e:
-            self.results["services"]["backend_api"]["status"] = "fail"
-            self.results["services"]["backend_api"]["details"] = f"Health endpoint error: {str(e)}"
-            print(f"❌ Health endpoint error: {e}")
+            except Exception as e:
+                print(f"   Error testing {endpoint}: {e}")
+                continue
+        
+        # If we get here, no health endpoint was found
+        self.results["services"]["backend_api"]["status"] = "fail"
+        self.results["services"]["backend_api"]["details"] = "No health endpoint found at /health or /api/health"
+        print(f"❌ No health endpoint found")
 
     async def test_root_endpoint(self):
         """Test GET / endpoint"""

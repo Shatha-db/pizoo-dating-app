@@ -32,6 +32,9 @@ EMAIL_MODE = os.environ.get('EMAIL_MODE', 'mock')  # 'smtp' or 'mock'
 # Frontend URL for magic links
 FRONTEND_URL = os.environ.get('FRONTEND_URL') if 'FRONTEND_URL' in os.environ else None
 
+# Emergent OAuth Service URL
+EMERGENT_OAUTH_URL = os.environ.get('EMERGENT_OAUTH_URL', 'https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data')
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 

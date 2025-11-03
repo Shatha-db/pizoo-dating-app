@@ -677,11 +677,11 @@ class ComprehensiveBackendTester:
         token = self.test_users["userA"]["token"]
         headers = {"Authorization": f"Bearer {token}"}
 
-        # Test GET /api/users/discover
+        # Test GET /api/profiles/discover (correct endpoint)
         try:
             start_time = time.time()
             response = await self.client.get(
-                f"{self.active_backend_url}/api/users/discover",
+                f"{self.active_backend_url}/api/profiles/discover",
                 headers=headers
             )
             response_time = time.time() - start_time
@@ -689,19 +689,19 @@ class ComprehensiveBackendTester:
             if response.status_code == 200:
                 data = response.json()
                 if isinstance(data, list):
-                    self.log_test_result("matching_discovery", "GET /api/users/discover", True,
+                    self.log_test_result("matching_discovery", "GET /api/profiles/discover", True,
                                        f"Discovery working - found {len(data)} potential matches", response_time)
                 else:
-                    self.log_test_result("matching_discovery", "GET /api/users/discover", True,
+                    self.log_test_result("matching_discovery", "GET /api/profiles/discover", True,
                                        "Discovery endpoint accessible", response_time)
             elif response.status_code == 404:
-                self.log_test_result("matching_discovery", "GET /api/users/discover", False,
+                self.log_test_result("matching_discovery", "GET /api/profiles/discover", False,
                                    "Discovery endpoint not found", response_time)
             else:
-                self.log_test_result("matching_discovery", "GET /api/users/discover", False,
+                self.log_test_result("matching_discovery", "GET /api/profiles/discover", False,
                                    f"HTTP {response.status_code}", response_time)
         except Exception as e:
-            self.log_test_result("matching_discovery", "GET /api/users/discover", False, f"Error: {str(e)}")
+            self.log_test_result("matching_discovery", "GET /api/profiles/discover", False, f"Error: {str(e)}")
 
         # Test liking functionality (if userB exists)
         if "userB" in self.test_users:

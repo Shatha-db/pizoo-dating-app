@@ -94,4 +94,4 @@ twilio==8.10.0
 livekit==1.0.17
 livekit-api==1.0.7
 livekit-protocol==1.0.8
-emergentintegrations==0.1.0
+# emergentintegrations==0.1.0  # Requires special installation: pip install emergentintegrations --extra-index-url https://d33sy5i8bnduwe.cloudfront.net/simple/

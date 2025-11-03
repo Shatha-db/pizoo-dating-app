@@ -7,7 +7,6 @@ import { NotificationProvider } from './context/NotificationContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import LanguageGuard from './components/LanguageGuard';
 import Register from './pages/Register';
-import RegisterPhone from './modules/otp/RegisterPhone';
 import Login from './pages/Login';
 import PhoneLogin from './pages/PhoneLogin';
 import AddPayment from './pages/AddPayment';

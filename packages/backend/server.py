@@ -1076,7 +1076,19 @@ async def register(request: RegisterRequest):
 
 @api_router.post("/auth/login", response_model=TokenResponse)
 async def login(request: LoginRequest):
-    user = await db.users.find_one({"email": request.email}, {"_id": 0})
+    # Build query based on provided identifier (email or phone)
+    query = {}
+    if request.email:
+        query["email"] = request.email
+    elif request.phone:
+        query["phone"] = request.phone
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email or phone number is required"
+        )
+    
+    user = await db.users.find_one(query, {"_id": 0})
     
     if not user or not verify_password(request.password, user['password_hash']):
         raise HTTPException(

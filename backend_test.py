@@ -38,6 +38,7 @@ class ProductionHealthChecker:
         }
         self.client = httpx.AsyncClient(timeout=30.0, follow_redirects=True)
         self.active_backend_url = None  # Will be determined during testing
+        self.auth_token = None  # Will be set if we can authenticate
 
     async def determine_active_backend(self):
         """Determine which backend URL is active"""

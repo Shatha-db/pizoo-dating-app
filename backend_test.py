@@ -146,8 +146,12 @@ class ProductionHealthChecker:
     async def test_root_endpoint(self):
         """Test GET / endpoint"""
         print("🔍 Testing root endpoint...")
+        if not self.active_backend_url:
+            print("❌ No active backend URL available")
+            return
+            
         try:
-            response = await self.client.get(f"{PRODUCTION_URL}/")
+            response = await self.client.get(f"{self.active_backend_url}/")
             if response.status_code == 200:
                 print(f"✅ Root endpoint accessible")
                 print(f"   Response: {response.text[:200]}")

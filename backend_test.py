@@ -525,6 +525,77 @@ class ComprehensiveBackendTester:
         except Exception as e:
             self.log_test_result("user_management", "Photo upload", False, f"Error: {str(e)}")
 
+    async def test_additional_profile_endpoints(self, headers):
+        """Test additional profile-related endpoints"""
+        print("\n👤 Testing Additional Profile Endpoints...")
+        
+        # Test GET /api/profile/me
+        try:
+            start_time = time.time()
+            response = await self.client.get(
+                f"{self.active_backend_url}/api/profile/me",
+                headers=headers
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "user_id" in data or "display_name" in data:
+                    self.log_test_result("user_management", "GET /api/profile/me", True,
+                                       f"Profile data retrieved", response_time)
+                else:
+                    self.log_test_result("user_management", "GET /api/profile/me", False,
+                                       "Missing expected profile fields", response_time)
+            elif response.status_code == 404:
+                self.log_test_result("user_management", "GET /api/profile/me", False,
+                                   "Profile not found - may need to create profile first", response_time)
+            else:
+                self.log_test_result("user_management", "GET /api/profile/me", False,
+                                   f"HTTP {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("user_management", "GET /api/profile/me", False, f"Error: {str(e)}")
+
+        # Test GET /api/me (alternative endpoint)
+        try:
+            start_time = time.time()
+            response = await self.client.get(
+                f"{self.active_backend_url}/api/me",
+                headers=headers
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                self.log_test_result("user_management", "GET /api/me", True,
+                                   "User info retrieved", response_time)
+            else:
+                self.log_test_result("user_management", "GET /api/me", False,
+                                   f"HTTP {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("user_management", "GET /api/me", False, f"Error: {str(e)}")
+
+        # Test GET /api/usage-stats
+        try:
+            start_time = time.time()
+            response = await self.client.get(
+                f"{self.active_backend_url}/api/usage-stats",
+                headers=headers
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "likes_sent_this_week" in data or "messages_sent_this_week" in data:
+                    self.log_test_result("user_management", "GET /api/usage-stats", True,
+                                       "Usage statistics retrieved", response_time)
+                else:
+                    self.log_test_result("user_management", "GET /api/usage-stats", False,
+                                       "Missing usage statistics fields", response_time)
+            else:
+                self.log_test_result("user_management", "GET /api/usage-stats", False,
+                                   f"HTTP {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("user_management", "GET /api/usage-stats", False, f"Error: {str(e)}")
+
     # ===== LIVEKIT INTEGRATION =====
     
     async def test_livekit_integration(self):

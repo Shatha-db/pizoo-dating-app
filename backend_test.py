@@ -19,30 +19,45 @@ LOCAL_URL = "http://127.0.0.1:8001"  # Local development server
 PRODUCTION_URL = "https://multilingual-date.emergent.host"  # Production URL
 BACKEND_URL = "https://pizoo-monorepo.preview.emergentagent.com"  # From frontend config
 
-class ProductionHealthChecker:
+class ComprehensiveBackendTester:
     def __init__(self):
         self.results = {
             "timestamp": datetime.now().isoformat(),
-            "production_url": PRODUCTION_URL,
-            "backend_url": BACKEND_URL,
-            "overall_status": "unknown",
-            "services": {
-                "backend_api": {"status": "unknown", "response_time_ms": 0, "details": ""},
-                "mongodb": {"status": "unknown", "connection": "unknown", "details": ""},
-                "livekit": {"status": "unknown", "url": "", "details": ""},
-                "cloudinary": {"status": "unknown", "cloud_name": "", "details": ""},
-                "sentry": {"status": "unknown", "environment": "", "details": ""},
-                "cors": {"status": "unknown", "allowed_origins": [], "details": ""}
+            "test_environment": "local_development",
+            "backend_url": LOCAL_URL,
+            "total_tests": 0,
+            "passed_tests": 0,
+            "failed_tests": 0,
+            "test_categories": {
+                "health_status": {"passed": 0, "failed": 0, "tests": []},
+                "authentication": {"passed": 0, "failed": 0, "tests": []},
+                "user_management": {"passed": 0, "failed": 0, "tests": []},
+                "matching_discovery": {"passed": 0, "failed": 0, "tests": []},
+                "messaging": {"passed": 0, "failed": 0, "tests": []},
+                "livekit_integration": {"passed": 0, "failed": 0, "tests": []},
+                "cloudinary_integration": {"passed": 0, "failed": 0, "tests": []},
+                "error_handling": {"passed": 0, "failed": 0, "tests": []},
+                "cors_testing": {"passed": 0, "failed": 0, "tests": []},
+                "performance": {"passed": 0, "failed": 0, "tests": []},
+                "database_operations": {"passed": 0, "failed": 0, "tests": []}
             },
-            "environment_variables": {
-                "critical_missing": [],
-                "all_set": False
+            "test_data": {
+                "userA": None,
+                "userB": None,
+                "auth_tokens": {},
+                "test_match_id": None,
+                "test_conversation_id": None
+            },
+            "performance_metrics": {
+                "average_response_time": 0,
+                "slowest_endpoint": "",
+                "fastest_endpoint": ""
             },
             "recommendations": []
         }
         self.client = httpx.AsyncClient(timeout=30.0, follow_redirects=True)
-        self.active_backend_url = None  # Will be determined during testing
-        self.auth_token = None  # Will be set if we can authenticate
+        self.active_backend_url = LOCAL_URL  # Start with local URL
+        self.test_users = {}  # Store test user data and tokens
 
     async def determine_active_backend(self):
         """Determine which backend URL is active"""

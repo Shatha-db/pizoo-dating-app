@@ -246,10 +246,14 @@ class ProductionHealthChecker:
     async def test_livekit_service(self):
         """Test LiveKit service connectivity"""
         print("🔍 Testing LiveKit service...")
+        if not self.active_backend_url:
+            print("❌ No active backend URL available")
+            return
+            
         try:
             # Test LiveKit token generation endpoint
             response = await self.client.post(
-                f"{PRODUCTION_URL}/api/livekit/token",
+                f"{self.active_backend_url}/api/livekit/token",
                 json={"match_id": "test_match_123"}
             )
             

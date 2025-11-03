@@ -167,13 +167,6 @@ const Likes = () => {
               <MessageCircle className="w-3 h-3 ml-1" />
               {t('message')}
             </Button>
-            <Button
-              onClick={() => handleLike(profile.id || profile.user_id)}
-              size="sm"
-              className="flex-1 bg-rose-500 hover:bg-rose-600 text-white text-xs"
-            >
-              ❤️
-            </Button>
           </div>
         </Card>
       ))}

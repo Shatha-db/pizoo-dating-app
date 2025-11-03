@@ -170,9 +170,13 @@ class ProductionHealthChecker:
             ("/api/auth/login", "POST", "Login validation")
         ]
         
+        if not self.active_backend_url:
+            print("❌ No active backend URL available")
+            return
+            
         for endpoint, method, description in endpoints_to_test:
             try:
-                url = f"{PRODUCTION_URL}{endpoint}"
+                url = f"{self.active_backend_url}{endpoint}"
                 print(f"   Testing {method} {endpoint} - {description}")
                 
                 if method == "GET":

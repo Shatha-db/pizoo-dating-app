@@ -122,6 +122,11 @@ class AuthService:
     async def send_verification_email(email: str, token: str, user_name: str) -> bool:
         """Send magic link verification email"""
         
+        # Check if FRONTEND_URL is configured
+        if FRONTEND_URL is None:
+            logger.error("FRONTEND_URL environment variable is not configured")
+            return False
+        
         # MOCK MODE - for testing without real SMTP
         if EMAIL_MODE == 'mock':
             verification_link = f"{FRONTEND_URL}/verify-email?token={token}"

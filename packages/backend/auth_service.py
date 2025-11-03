@@ -30,7 +30,7 @@ EMAIL_FROM = os.environ.get('EMAIL_FROM', 'Pizoo App <noreply@pizoo.app>')
 EMAIL_MODE = os.environ.get('EMAIL_MODE', 'mock')  # 'smtp' or 'mock'
 
 # Frontend URL for magic links
-FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+FRONTEND_URL = os.environ.get('FRONTEND_URL') if 'FRONTEND_URL' in os.environ else None
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

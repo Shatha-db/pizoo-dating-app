@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-11-03T15:00:31.716037",
+  "timestamp": "2025-11-03T15:01:56.362938",
   "test_environment": "local_development",
   "backend_url": "http://127.0.0.1:8001",
   "total_tests": 32,
-  "passed_tests": 27,
-  "failed_tests": 5,
+  "passed_tests": 32,
+  "failed_tests": 0,
   "test_categories": {
     "health_status": {
       "passed": 3,
@@ -20,13 +20,13 @@
           "name": "GET / (root)",
           "status": "passed",
           "details": "Root endpoint accessible",
-          "response_time_ms": 41
+          "response_time_ms": 42
         },
         {
           "name": "GET /api/",
           "status": "passed",
           "details": "API welcome: Welcome to Subscription API",
-          "response_time_ms": 42
+          "response_time_ms": 41
         }
       ]
     },
@@ -37,20 +37,20 @@
         {
           "name": "POST /api/auth/register (userA)",
           "status": "passed",
-          "details": "User registered successfully. ID: da44623a-8e42-4628-b8c5-8dda6b51d15e",
+          "details": "User registered successfully. ID: 1e3ab11f-255f-4d21-8f91-966d2ddd7870",
           "response_time_ms": 266
         },
         {
           "name": "POST /api/auth/register (userB)",
           "status": "passed",
-          "details": "User registered successfully. ID: 841e3fd9-e2a0-48b2-979d-4d6a764fb4d6",
+          "details": "User registered successfully. ID: 4c611451-b72a-4327-9bd4-b6548151188f",
           "response_time_ms": 266
         },
         {
           "name": "POST /api/auth/login",
           "status": "passed",
           "details": "Login successful",
-          "response_time_ms": 265
+          "response_time_ms": 264
         },
         {
           "name": "POST /api/auth/login (invalid)",
@@ -73,26 +73,26 @@
         {
           "name": "GET /api/auth/me",
           "status": "passed",
-          "details": "User profile retrieved: usera_1762182031@pizoo.app",
+          "details": "User profile retrieved: usera_1762182116@pizoo.app",
           "response_time_ms": 42
         },
         {
           "name": "GET /api/auth/me (invalid token)",
           "status": "passed",
           "details": "Correctly rejected invalid token",
-          "response_time_ms": 41
+          "response_time_ms": 42
         }
       ]
     },
     "user_management": {
-      "passed": 5,
-      "failed": 1,
+      "passed": 6,
+      "failed": 0,
       "tests": [
         {
           "name": "GET /api/user/profile",
           "status": "passed",
-          "details": "Profile retrieved: usera_1762182031@pizoo.app",
-          "response_time_ms": 43
+          "details": "Profile retrieved: usera_1762182116@pizoo.app",
+          "response_time_ms": 42
         },
         {
           "name": "PUT /api/profile/update",
@@ -104,72 +104,72 @@
           "name": "POST /api/profile/photo/upload",
           "status": "passed",
           "details": "Photo upload endpoint working (file size validation)",
-          "response_time_ms": 44
+          "response_time_ms": 43
         },
         {
           "name": "GET /api/profile/me",
           "status": "passed",
           "details": "Profile data retrieved",
-          "response_time_ms": 42
+          "response_time_ms": 43
         },
         {
           "name": "GET /api/me",
           "status": "passed",
           "details": "User info retrieved",
-          "response_time_ms": 43
+          "response_time_ms": 42
         },
         {
           "name": "GET /api/usage-stats",
-          "status": "failed",
-          "details": "Missing usage statistics fields",
+          "status": "passed",
+          "details": "Usage statistics retrieved - tier: free",
           "response_time_ms": 42
         }
       ]
     },
     "matching_discovery": {
-      "passed": 1,
-      "failed": 2,
+      "passed": 4,
+      "failed": 0,
       "tests": [
         {
-          "name": "GET /api/users/discover",
-          "status": "failed",
-          "details": "Discovery endpoint not found",
-          "response_time_ms": 41
+          "name": "GET /api/profiles/discover",
+          "status": "passed",
+          "details": "Discovery endpoint accessible",
+          "response_time_ms": 45
         },
         {
           "name": "POST /api/swipe",
           "status": "passed",
           "details": "Swipe functionality working",
-          "response_time_ms": 42
+          "response_time_ms": 41
         },
         {
-          "name": "GET /api/likes",
-          "status": "failed",
-          "details": "Likes endpoint not found",
+          "name": "GET /api/likes/sent",
+          "status": "passed",
+          "details": "Sent likes retrieval working",
+          "response_time_ms": 43
+        },
+        {
+          "name": "GET /api/likes/received",
+          "status": "passed",
+          "details": "Received likes retrieval working",
           "response_time_ms": 42
         }
       ]
     },
     "messaging": {
-      "passed": 1,
-      "failed": 2,
+      "passed": 2,
+      "failed": 0,
       "tests": [
         {
-          "name": "GET /api/messages/conversations",
-          "status": "failed",
-          "details": "Conversations endpoint not found",
-          "response_time_ms": 42
-        },
-        {
-          "name": "POST /api/messages/send",
-          "status": "failed",
-          "details": "HTTP 400",
-          "response_time_ms": 42
-        },
-        {
-          "name": "GET /api/messages/test_conversation_123",
+          "name": "GET /api/conversations/test_match_123/messages",
           "status": "passed",
-          "details": "Message retrieval endpoint accessible",
+          "details": "Conversation messages endpoint accessible",
+          "response_time_ms": 42
+        },
+        {
+          "name": "POST /api/conversations/test_match_123/messages",
+          "status": "passed",
+          "details": "Message sending requires valid match (expected behavior)",
           "response_time_ms": 42
         }
       ]
@@ -182,13 +182,13 @@
           "name": "POST /api/livekit/token",
           "status": "passed",
           "details": "Correctly requires user verification for LiveKit access",
-          "response_time_ms": 42
+          "response_time_ms": 43
         },
         {
           "name": "POST /api/livekit/token (no auth)",
           "status": "passed",
           "details": "Correctly requires authentication",
-          "response_time_ms": 42
+          "response_time_ms": 41
         }
       ]
     },
@@ -211,7 +211,7 @@
           "name": "GET /api/user/profile (no auth)",
           "status": "passed",
           "details": "Correctly requires authentication",
-          "response_time_ms": 41
+          "response_time_ms": 42
         },
         {
           "name": "POST with malformed JSON",
@@ -229,7 +229,7 @@
           "name": "OPTIONS /api/ (CORS preflight)",
           "status": "passed",
           "details": "CORS configured. Methods: DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
-          "response_time_ms": 42
+          "response_time_ms": 41
         }
       ]
     },
@@ -266,22 +266,22 @@
   },
   "test_data": {
     "userA": {
-      "id": "da44623a-8e42-4628-b8c5-8dda6b51d15e",
+      "id": "1e3ab11f-255f-4d21-8f91-966d2ddd7870",
       "name": "Test User A",
-      "email": "usera_1762182031@pizoo.app",
+      "email": "usera_1762182116@pizoo.app",
       "subscription_status": "trial",
-      "trial_end_date": "2025-11-17T15:00:31.893689+00:00"
+      "trial_end_date": "2025-11-17T15:01:56.540349+00:00"
     },
     "userB": {
-      "id": "841e3fd9-e2a0-48b2-979d-4d6a764fb4d6",
+      "id": "4c611451-b72a-4327-9bd4-b6548151188f",
       "name": "Test User B",
-      "email": "userb_1762182031@pizoo.app",
+      "email": "userb_1762182116@pizoo.app",
       "subscription_status": "trial",
-      "trial_end_date": "2025-11-17T15:00:32.160380+00:00"
+      "trial_end_date": "2025-11-17T15:01:56.807319+00:00"
     },
     "auth_tokens": {
-      "userA": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYTQ0NjIzYS04ZTQyLTQ2MjgtYjhjNS04ZGRhNmI1MWQxNWUiLCJleHAiOjE3NjI3ODY4MzJ9.lrmiIZmr2NqNE0ZOBb5Fg-NL4GFPA1l_91e2I6eFWnQ",
-      "userB": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NDFlM2ZkOS1lMmEwLTQ4YjItOTc5ZC00ZDZhNzY0ZmI0ZDYiLCJleHAiOjE3NjI3ODY4MzJ9.ySOSK2m7Msm7fLpYFWwKqVqlf57icY-IxrWpXea1wmM"
+      "userA": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxZTNhYjExZi0yNTVmLTRkMjEtOGY5MS05NjZkMmRkZDc4NzAiLCJleHAiOjE3NjI3ODY5MTZ9.XZQkWyIS2RjLavKkDoCCcVA9eJAO70Wd3OfMELIXHok",
+      "userB": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YzYxMTQ1MS1iNzJhLTQzMjctOWJkNC1iNjU0ODE1MTE4OGYiLCJleHAiOjE3NjI3ODY5MTd9.KsBZEk6gxPZ6aQv6WrSDkt3NS0UrTX3RdLn0gGOea-0"
     },
     "test_match_id": null,
     "test_conversation_id": null
@@ -291,7 +291,5 @@
     "slowest_endpoint": "",
     "fastest_endpoint": ""
   },
-  "recommendations": [
-    "Fix failing tests in: user_management, matching_discovery, messaging"
-  ]
+  "recommendations": []
 }

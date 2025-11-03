@@ -407,13 +407,14 @@ const Register = () => {
                   id="terms"
                   checked={formData.termsAccepted}
                   onCheckedChange={handleCheckboxChange}
+                  className="cursor-pointer flex-shrink-0"
                 />
                 <label
                   htmlFor="terms"
-                  className="text-sm text-gray-700 leading-relaxed cursor-pointer"
+                  className="text-sm text-gray-700 leading-relaxed cursor-pointer select-none"
                 >
                   {t('accept_terms')}{' '}
-                  <Link to="/terms" className="text-blue-600 hover:underline font-medium">
+                  <Link to="/terms" className="text-blue-600 hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                     {t('terms_and_conditions')}
                   </Link>
                 </label>

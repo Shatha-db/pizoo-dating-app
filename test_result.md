@@ -228,6 +228,18 @@ backend:
         agent: "main"
         comment: "✅ Cloudinary credentials configured. Connection verified with test upload. Image processing working: auto-orient, EXIF strip, compression (8KB→1.8KB), WebP preview generation, secure HTTPS URLs. Test image uploaded to: https://res.cloudinary.com/dpm7hliv6/image/upload/v1761945168/users/profiles/test_user_123/file_olqblf.jpg"
 
+  - task: "Production Health Check - https://multilingual-date.emergent.host"
+    implemented: true
+    working: false
+    file: "/app/backend_test.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "PRODUCTION HEALTH CHECK RESULTS: ✅ Backend API accessible at https://multilingual-date.emergent.host/api/ (72ms response time). ✅ CORS properly configured with methods and headers. ✅ Database connection inferred working from API availability. ⚠️ LiveKit endpoint returns 403 (expected - requires authentication). ⚠️ Cloudinary upload endpoint returns 403 (expected - requires authentication). ❌ CRITICAL ISSUE: Auth endpoints (/api/auth/register, /api/auth/login) return 500 Internal Server Error when processing valid registration data, indicating database connection failure or missing environment variables. ❓ No dedicated /health endpoint found at /health or /api/health. ❓ Sentry error tracking cannot be verified (debug endpoint may be disabled). Overall Status: DEGRADED. Recommendations: 1) Fix auth endpoint 500 errors - check MongoDB connection and environment variables. 2) Add dedicated /health endpoint for monitoring. 3) Verify Sentry configuration."
+
 frontend:
   - task: "Language Selector - Complete 9 Languages"
     implemented: true

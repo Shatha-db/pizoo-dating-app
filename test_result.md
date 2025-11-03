@@ -196,6 +196,21 @@ user_problem_statement: |
   6. Testing: Verify insertion and display sample records
 
 backend:
+  - task: "MongoDB Data Maintenance & Demo User Seeding"
+    implemented: true
+    working: true
+    file: "/app/scripts/seed_demo_users.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "user"
+        comment: "User requested MongoDB maintenance with indexing and seeding 400 demo accounts (350 female, 50 male) with European names, AI-generated avatars, realistic profiles, and demo flag."
+      - working: true
+        agent: "main"
+        comment: "✅ COMPLETED SUCCESSFULLY: 1) Backup: Full mongodump taken to /app/backups/mongodb_backup_20251103_193524/ (11 users, 8 profiles preserved). 2) Script Created: /app/scripts/seed_demo_users.js with Node.js, MongoDB driver, Faker 5.5.3, DiceBear API integration. 3) Indices Created: Users (email unique sparse, phone sparse, id unique, demo, verified), Profiles (user_id unique, id unique, demo, gender, age, lat/lon geo). 4) Data Generated: 400 accounts (350 female 60% age 20-30 / 40% age 40-54, 50 male age 18-50) with European names (DE/FR/IT/CH), 17 European cities with GPS coordinates, realistic bios, interests, occupations, education levels, relationship goals. 5) Avatars: DiceBear API (avataaars style for female, male style for male). 6) Inserted: 400 User documents + 400 Profile documents successfully in batches of 50. 7) Verification: db.users.countDocuments({demo: true}) = 400, db.profiles.countDocuments({demo: true}) = 400 (350 female, 50 male). All records properly flagged with demo: true, verified: true, verified_method: 'demo_generated'. Sample 10 records displayed with full details (name, email, phone, gender, age, location with GPS, bio, interests, occupation, education, avatar URL). Script supports --dry-run for testing and --count for custom quantities. MongoDB now ready with realistic demo data for frontend testing and feature development."
+
   - task: "Image Upload with Cloudinary Integration"
     implemented: true
     working: true

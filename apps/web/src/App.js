@@ -26,10 +26,6 @@ import ProfileNew from './pages/ProfileNew';
 import ProfileView from './pages/ProfileView';
 import EditProfile from './pages/EditProfile';
 import TopPicks from './pages/TopPicks';
-// ⚠️ Lazy load DiscoverySettings to prevent Leaflet loading on every page
-const DiscoverySettings = React.lazy(() => import('./pages/DiscoverySettings'));
-// ⚠️ Lazy load SwipePage to prevent framer-motion issues
-const SwipePage = React.lazy(() => import('./pages/SwipePage'));
 import DoubleDating from './pages/DoubleDating';
 import DoubleDatingInfo from './pages/DoubleDatingInfo';
 import Notifications from './pages/Notifications';
@@ -44,6 +40,11 @@ import { Toaster } from './components/ui/sonner';
 import { useTranslation } from 'react-i18next';
 import Loader from './components/Loader';
 import './App.css';
+
+// ⚠️ Lazy load DiscoverySettings to prevent Leaflet loading on every page
+const DiscoverySettings = React.lazy(() => import('./pages/DiscoverySettings'));
+// ⚠️ Lazy load SwipePage to prevent framer-motion issues
+const SwipePage = React.lazy(() => import('./pages/SwipePage'));
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 

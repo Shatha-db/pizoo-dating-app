@@ -948,10 +948,12 @@ class LoginRequest(BaseModel):
     phone: Optional[str] = None
     password: str
     
-    @validator('email', 'phone', pre=True, always=True)
-    def check_email_or_phone(cls, v, values):
-        # At least one of email or phone must be provided
-        if not v and not values.get('email') and not values.get('phone'):
+    @field_validator('phone')
+    @classmethod
+    def check_at_least_one_identifier(cls, v, info):
+        # Check if at least one of email or phone is provided
+        email = info.data.get('email')
+        if not v and not email:
             raise ValueError('Either email or phone must be provided')
         return v
 

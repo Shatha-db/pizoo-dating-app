@@ -944,8 +944,16 @@ class RegisterRequest(BaseModel):
 
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    email: Optional[EmailStr] = None
+    phone: Optional[str] = None
     password: str
+    
+    @validator('email', 'phone', pre=True, always=True)
+    def check_email_or_phone(cls, v, values):
+        # At least one of email or phone must be provided
+        if not v and not values.get('email') and not values.get('phone'):
+            raise ValueError('Either email or phone must be provided')
+        return v
 
 
 class SwipeRequest(BaseModel):

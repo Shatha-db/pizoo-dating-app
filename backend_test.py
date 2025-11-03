@@ -355,9 +355,14 @@ class ProductionHealthChecker:
             
         try:
             # We can't directly test Cloudinary without uploading, but we can check if upload endpoint exists
+            headers = {}
+            if self.auth_token:
+                headers["Authorization"] = f"Bearer {self.auth_token}"
+                
             response = await self.client.post(
                 f"{self.active_backend_url}/api/media/upload",
-                files={"file": ("test.txt", b"test", "text/plain")}
+                files={"file": ("test.txt", b"test", "text/plain")},
+                headers=headers
             )
             
             if response.status_code == 401:

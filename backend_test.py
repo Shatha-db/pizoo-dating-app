@@ -281,10 +281,14 @@ class ProductionHealthChecker:
     async def test_cloudinary_service(self):
         """Test Cloudinary configuration (indirect)"""
         print("🔍 Testing Cloudinary service...")
+        if not self.active_backend_url:
+            print("❌ No active backend URL available")
+            return
+            
         try:
             # We can't directly test Cloudinary without uploading, but we can check if upload endpoint exists
             response = await self.client.post(
-                f"{PRODUCTION_URL}/api/media/upload",
+                f"{self.active_backend_url}/api/media/upload",
                 files={"file": ("test.txt", b"test", "text/plain")}
             )
             

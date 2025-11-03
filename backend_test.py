@@ -315,9 +315,14 @@ class ProductionHealthChecker:
             
         try:
             # Test LiveKit token generation endpoint
+            headers = {}
+            if self.auth_token:
+                headers["Authorization"] = f"Bearer {self.auth_token}"
+                
             response = await self.client.post(
                 f"{self.active_backend_url}/api/livekit/token",
-                json={"match_id": "test_match_123"}
+                json={"match_id": "test_match_123"},
+                headers=headers
             )
             
             if response.status_code == 401:

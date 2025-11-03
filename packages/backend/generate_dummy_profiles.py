@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# NOTE: Dev-only script; runtime uses MONGO_URL from environment.
 MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017/')
 DB_NAME = os.environ.get('DB_NAME', 'dating_app')
 

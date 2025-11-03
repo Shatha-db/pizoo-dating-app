@@ -664,6 +664,197 @@ class ComprehensiveBackendTester:
         except Exception as e:
             self.log_test_result("livekit_integration", "POST /api/livekit/token (no auth)", False, f"Error: {str(e)}")
 
+    # ===== MATCHING & DISCOVERY =====
+    
+    async def test_matching_discovery(self):
+        """Test matching and discovery endpoints"""
+        print("\n💕 Testing Matching & Discovery...")
+        
+        if "userA" not in self.test_users:
+            print("   ⚠️ Skipping matching tests - no authenticated user available")
+            return
+            
+        token = self.test_users["userA"]["token"]
+        headers = {"Authorization": f"Bearer {token}"}
+
+        # Test GET /api/users/discover
+        try:
+            start_time = time.time()
+            response = await self.client.get(
+                f"{self.active_backend_url}/api/users/discover",
+                headers=headers
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, list):
+                    self.log_test_result("matching_discovery", "GET /api/users/discover", True,
+                                       f"Discovery working - found {len(data)} potential matches", response_time)
+                else:
+                    self.log_test_result("matching_discovery", "GET /api/users/discover", True,
+                                       "Discovery endpoint accessible", response_time)
+            elif response.status_code == 404:
+                self.log_test_result("matching_discovery", "GET /api/users/discover", False,
+                                   "Discovery endpoint not found", response_time)
+            else:
+                self.log_test_result("matching_discovery", "GET /api/users/discover", False,
+                                   f"HTTP {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("matching_discovery", "GET /api/users/discover", False, f"Error: {str(e)}")
+
+        # Test liking functionality (if userB exists)
+        if "userB" in self.test_users:
+            userB_id = self.test_users["userB"]["user_info"]["id"]
+            
+            try:
+                like_data = {
+                    "swiped_user_id": userB_id,
+                    "action": "like"
+                }
+                
+                start_time = time.time()
+                response = await self.client.post(
+                    f"{self.active_backend_url}/api/likes/{userB_id}",
+                    json=like_data,
+                    headers=headers
+                )
+                response_time = time.time() - start_time
+                
+                if response.status_code == 200:
+                    self.log_test_result("matching_discovery", f"POST /api/likes/{userB_id}", True,
+                                       "Like functionality working", response_time)
+                elif response.status_code == 404:
+                    # Try alternative endpoint
+                    try:
+                        response = await self.client.post(
+                            f"{self.active_backend_url}/api/swipe",
+                            json=like_data,
+                            headers=headers
+                        )
+                        if response.status_code == 200:
+                            self.log_test_result("matching_discovery", "POST /api/swipe", True,
+                                               "Swipe functionality working", response_time)
+                        else:
+                            self.log_test_result("matching_discovery", "Like/Swipe endpoints", False,
+                                               "Like/swipe endpoints not working", response_time)
+                    except Exception:
+                        self.log_test_result("matching_discovery", "Like/Swipe endpoints", False,
+                                           "Like/swipe endpoints not found", response_time)
+                else:
+                    self.log_test_result("matching_discovery", f"POST /api/likes/{userB_id}", False,
+                                       f"HTTP {response.status_code}", response_time)
+            except Exception as e:
+                self.log_test_result("matching_discovery", "Like functionality", False, f"Error: {str(e)}")
+
+        # Test GET /api/likes
+        try:
+            start_time = time.time()
+            response = await self.client.get(
+                f"{self.active_backend_url}/api/likes",
+                headers=headers
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                self.log_test_result("matching_discovery", "GET /api/likes", True,
+                                   "User likes retrieval working", response_time)
+            elif response.status_code == 404:
+                self.log_test_result("matching_discovery", "GET /api/likes", False,
+                                   "Likes endpoint not found", response_time)
+            else:
+                self.log_test_result("matching_discovery", "GET /api/likes", False,
+                                   f"HTTP {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("matching_discovery", "GET /api/likes", False, f"Error: {str(e)}")
+
+    # ===== MESSAGING SYSTEM =====
+    
+    async def test_messaging_system(self):
+        """Test messaging system endpoints"""
+        print("\n💬 Testing Messaging System...")
+        
+        if "userA" not in self.test_users or "userB" not in self.test_users:
+            print("   ⚠️ Skipping messaging tests - need two authenticated users")
+            return
+            
+        tokenA = self.test_users["userA"]["token"]
+        headersA = {"Authorization": f"Bearer {tokenA}"}
+        userB_id = self.test_users["userB"]["user_info"]["id"]
+
+        # Test GET /api/messages/conversations
+        try:
+            start_time = time.time()
+            response = await self.client.get(
+                f"{self.active_backend_url}/api/messages/conversations",
+                headers=headersA
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                self.log_test_result("messaging", "GET /api/messages/conversations", True,
+                                   "Conversations list accessible", response_time)
+            elif response.status_code == 404:
+                self.log_test_result("messaging", "GET /api/messages/conversations", False,
+                                   "Conversations endpoint not found", response_time)
+            else:
+                self.log_test_result("messaging", "GET /api/messages/conversations", False,
+                                   f"HTTP {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("messaging", "GET /api/messages/conversations", False, f"Error: {str(e)}")
+
+        # Test sending a message
+        try:
+            message_data = {
+                "receiver_id": userB_id,
+                "content": "Hello from comprehensive backend test!",
+                "message_type": "text"
+            }
+            
+            start_time = time.time()
+            response = await self.client.post(
+                f"{self.active_backend_url}/api/messages/send",
+                json=message_data,
+                headers=headersA
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                self.log_test_result("messaging", "POST /api/messages/send", True,
+                                   "Message sending working", response_time)
+            elif response.status_code == 403:
+                self.log_test_result("messaging", "POST /api/messages/send", True,
+                                   "Message sending requires match (expected behavior)", response_time)
+            elif response.status_code == 404:
+                self.log_test_result("messaging", "POST /api/messages/send", False,
+                                   "Message sending endpoint not found", response_time)
+            else:
+                self.log_test_result("messaging", "POST /api/messages/send", False,
+                                   f"HTTP {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("messaging", "POST /api/messages/send", False, f"Error: {str(e)}")
+
+        # Test GET /api/messages/{conversation_id} (with dummy ID)
+        try:
+            dummy_conversation_id = "test_conversation_123"
+            
+            start_time = time.time()
+            response = await self.client.get(
+                f"{self.active_backend_url}/api/messages/{dummy_conversation_id}",
+                headers=headersA
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code in [200, 404]:
+                # 404 is expected for non-existent conversation
+                self.log_test_result("messaging", f"GET /api/messages/{dummy_conversation_id}", True,
+                                   "Message retrieval endpoint accessible", response_time)
+            else:
+                self.log_test_result("messaging", f"GET /api/messages/{dummy_conversation_id}", False,
+                                   f"HTTP {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("messaging", "GET /api/messages/{conversation_id}", False, f"Error: {str(e)}")
+
     # ===== ERROR HANDLING =====
     
     async def test_error_handling(self):

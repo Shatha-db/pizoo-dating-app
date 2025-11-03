@@ -39,6 +39,28 @@ class ProductionHealthChecker:
         self.client = httpx.AsyncClient(timeout=30.0, follow_redirects=True)
         self.active_backend_url = None  # Will be determined during testing
 
+    async def determine_active_backend(self):
+        """Determine which backend URL is active"""
+        print("🔍 Determining active backend URL...")
+        
+        urls_to_test = [PRODUCTION_URL, BACKEND_URL]
+        
+        for url in urls_to_test:
+            try:
+                response = await self.client.get(f"{url}/api/")
+                if response.status_code == 200:
+                    data = response.json()
+                    if "message" in data:
+                        print(f"✅ Active backend found at: {url}")
+                        self.active_backend_url = url
+                        return url
+            except Exception as e:
+                print(f"   {url} not accessible: {e}")
+                continue
+        
+        print("❌ No active backend found")
+        return None
+
     async def test_health_endpoint(self):
         """Test GET /health endpoint"""
         print("🔍 Testing health endpoint...")

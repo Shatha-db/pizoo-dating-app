@@ -1,0 +1,241 @@
+{
+  "timestamp": "2025-11-03T14:57:38.817827",
+  "test_environment": "local_development",
+  "backend_url": "http://127.0.0.1:8001",
+  "total_tests": 23,
+  "passed_tests": 18,
+  "failed_tests": 5,
+  "test_categories": {
+    "health_status": {
+      "passed": 3,
+      "failed": 0,
+      "tests": [
+        {
+          "name": "GET /health",
+          "status": "passed",
+          "details": "Health check passed. Status: healthy",
+          "response_time_ms": 42
+        },
+        {
+          "name": "GET / (root)",
+          "status": "passed",
+          "details": "Root endpoint accessible",
+          "response_time_ms": 42
+        },
+        {
+          "name": "GET /api/",
+          "status": "passed",
+          "details": "API welcome: Welcome to Subscription API",
+          "response_time_ms": 41
+        }
+      ]
+    },
+    "authentication": {
+      "passed": 8,
+      "failed": 0,
+      "tests": [
+        {
+          "name": "POST /api/auth/register (userA)",
+          "status": "passed",
+          "details": "User registered successfully. ID: 92c49ccf-998a-447c-8730-b562ba12b9e6",
+          "response_time_ms": 407
+        },
+        {
+          "name": "POST /api/auth/register (userB)",
+          "status": "passed",
+          "details": "User registered successfully. ID: e22bf958-3303-4c63-9e13-bd94c5cb6f79",
+          "response_time_ms": 266
+        },
+        {
+          "name": "POST /api/auth/login",
+          "status": "passed",
+          "details": "Login successful",
+          "response_time_ms": 264
+        },
+        {
+          "name": "POST /api/auth/login (invalid)",
+          "status": "passed",
+          "details": "Correctly rejected invalid credentials",
+          "response_time_ms": 43
+        },
+        {
+          "name": "POST /api/auth/email/send-link",
+          "status": "passed",
+          "details": "Email verification link sent. TTL: 900s",
+          "response_time_ms": 73
+        },
+        {
+          "name": "POST /api/auth/email/verify (invalid)",
+          "status": "passed",
+          "details": "Correctly rejected invalid token",
+          "response_time_ms": 42
+        },
+        {
+          "name": "GET /api/auth/me",
+          "status": "passed",
+          "details": "User profile retrieved: usera_1762181859@pizoo.app",
+          "response_time_ms": 43
+        },
+        {
+          "name": "GET /api/auth/me (invalid token)",
+          "status": "passed",
+          "details": "Correctly rejected invalid token",
+          "response_time_ms": 41
+        }
+      ]
+    },
+    "user_management": {
+      "passed": 1,
+      "failed": 2,
+      "tests": [
+        {
+          "name": "GET /api/user/profile",
+          "status": "passed",
+          "details": "Profile retrieved: usera_1762181859@pizoo.app",
+          "response_time_ms": 43
+        },
+        {
+          "name": "PUT /api/users/profile",
+          "status": "failed",
+          "details": "Profile update endpoint not found",
+          "response_time_ms": 41
+        },
+        {
+          "name": "Photo upload endpoints",
+          "status": "failed",
+          "details": "Both /api/users/photos and /api/media/upload failed",
+          "response_time_ms": 41
+        }
+      ]
+    },
+    "matching_discovery": {
+      "passed": 0,
+      "failed": 0,
+      "tests": []
+    },
+    "messaging": {
+      "passed": 0,
+      "failed": 0,
+      "tests": []
+    },
+    "livekit_integration": {
+      "passed": 0,
+      "failed": 2,
+      "tests": [
+        {
+          "name": "POST /api/livekit/token",
+          "status": "failed",
+          "details": "User verification required for LiveKit access",
+          "response_time_ms": 42
+        },
+        {
+          "name": "POST /api/livekit/token (no auth)",
+          "status": "failed",
+          "details": "Should require auth, got 403",
+          "response_time_ms": 41
+        }
+      ]
+    },
+    "cloudinary_integration": {
+      "passed": 0,
+      "failed": 0,
+      "tests": []
+    },
+    "error_handling": {
+      "passed": 2,
+      "failed": 1,
+      "tests": [
+        {
+          "name": "GET /api/nonexistent (404)",
+          "status": "passed",
+          "details": "Correctly returns 404 for non-existent endpoint",
+          "response_time_ms": 41
+        },
+        {
+          "name": "GET /api/user/profile (no auth)",
+          "status": "failed",
+          "details": "Should return 401, got 403",
+          "response_time_ms": 42
+        },
+        {
+          "name": "POST with malformed JSON",
+          "status": "passed",
+          "details": "Correctly handles malformed JSON",
+          "response_time_ms": 41
+        }
+      ]
+    },
+    "cors_testing": {
+      "passed": 1,
+      "failed": 0,
+      "tests": [
+        {
+          "name": "OPTIONS /api/ (CORS preflight)",
+          "status": "passed",
+          "details": "CORS configured. Methods: DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+          "response_time_ms": 42
+        }
+      ]
+    },
+    "performance": {
+      "passed": 2,
+      "failed": 0,
+      "tests": [
+        {
+          "name": "GET /api/ performance",
+          "status": "passed",
+          "details": "Average response time: 42ms",
+          "response_time_ms": 42
+        },
+        {
+          "name": "GET /health performance",
+          "status": "passed",
+          "details": "Average response time: 43ms",
+          "response_time_ms": 43
+        }
+      ]
+    },
+    "database_operations": {
+      "passed": 1,
+      "failed": 0,
+      "tests": [
+        {
+          "name": "User CRUD operations",
+          "status": "passed",
+          "details": "Database operations working (created 2 users)",
+          "response_time_ms": 0
+        }
+      ]
+    }
+  },
+  "test_data": {
+    "userA": {
+      "id": "92c49ccf-998a-447c-8730-b562ba12b9e6",
+      "name": "Test User A",
+      "email": "usera_1762181859@pizoo.app",
+      "subscription_status": "trial",
+      "trial_end_date": "2025-11-17T14:57:39.092048+00:00"
+    },
+    "userB": {
+      "id": "e22bf958-3303-4c63-9e13-bd94c5cb6f79",
+      "name": "Test User B",
+      "email": "userb_1762181859@pizoo.app",
+      "subscription_status": "trial",
+      "trial_end_date": "2025-11-17T14:57:39.487930+00:00"
+    },
+    "auth_tokens": {
+      "userA": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5MmM0OWNjZi05OThhLTQ0N2MtODczMC1iNTYyYmExMmI5ZTYiLCJleHAiOjE3NjI3ODY2NTl9.LEBsysETkGd4HxuFLTOl2gCuGAupClDL5iD1m2Xu7rs",
+      "userB": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMjJiZjk1OC0zMzAzLTRjNjMtOWUxMy1iZDk0YzVjYjZmNzkiLCJleHAiOjE3NjI3ODY2NTl9.U7soIaz1If_quQ0esNL7RC984TiDwrST-xIakZKtHJw"
+    },
+    "test_match_id": null,
+    "test_conversation_id": null
+  },
+  "performance_metrics": {
+    "average_response_time": 42,
+    "slowest_endpoint": "",
+    "fastest_endpoint": ""
+  },
+  "recommendations": [
+    "Fix failing tests in: user_management, livekit_integration, error_handling"
+  ]
+}

@@ -489,6 +489,9 @@ class ProductionHealthChecker:
         # Determine active backend first
         await self.determine_active_backend()
         
+        # Try to authenticate for protected endpoint testing
+        await self.try_authentication()
+        
         # Run all tests
         await self.test_health_endpoint()
         await self.test_root_endpoint()

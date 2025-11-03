@@ -233,12 +233,17 @@ async function generateUserAndProfile(index, gender) {
     // Ensure indices
     console.log('\n📑 Ensuring database indices...');
     
-    await usersCollection.createIndex({ email: 1 }, { unique: true, sparse: true });
-    await usersCollection.createIndex({ phone_number: 1 }, { unique: true, sparse: true });
-    await usersCollection.createIndex({ id: 1 }, { unique: true });
-    await usersCollection.createIndex({ demo: 1 });
-    await usersCollection.createIndex({ verified: 1 });
-    console.log('   ✅ Users collection indices created');
+    // Create indices - use sparse for optional fields to allow empty values
+    try {
+      await usersCollection.createIndex({ email: 1 }, { unique: true, sparse: true });
+      await usersCollection.createIndex({ phone_number: 1 }, { sparse: true }); // Not unique to allow empty
+      await usersCollection.createIndex({ id: 1 }, { unique: true });
+      await usersCollection.createIndex({ demo: 1 });
+      await usersCollection.createIndex({ verified: 1 });
+      console.log('   ✅ Users collection indices created');
+    } catch (err) {
+      console.log('   ⚠️  Some indices may already exist, continuing...');
+    }
     
     await profilesCollection.createIndex({ user_id: 1 }, { unique: true });
     await profilesCollection.createIndex({ id: 1 }, { unique: true });

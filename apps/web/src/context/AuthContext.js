@@ -60,12 +60,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (identifier, password) => {
     try {
-      const response = await axios.post(`${API}/auth/login`, {
-        email,
+      // Determine if identifier is email or phone
+      const isEmail = identifier.includes('@');
+      
+      const payload = {
         password
-      });
+      };
+      
+      // Add the correct field based on type
+      if (isEmail) {
+        payload.email = identifier;
+      } else {
+        payload.phone = identifier;
+      }
+      
+      const response = await axios.post(`${API}/auth/login`, payload);
       const { access_token, user: userData } = response.data;
       
       // Save to state and localStorage

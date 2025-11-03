@@ -57,7 +57,7 @@ verdict: APPROVED FOR PRODUCTION DEPLOYMENT
 
 **Frontend Environment Variables**:
 ```bash
-✅ REACT_APP_BACKEND_URL: https://pizoo-monorepo.preview.emergentagent.com
+✅ REACT_APP_BACKEND_URL: https://dating-backend.preview.emergentagent.com
 ```
 
 **Code Quality**:

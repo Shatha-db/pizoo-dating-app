@@ -747,26 +747,40 @@ class ComprehensiveBackendTester:
             except Exception as e:
                 self.log_test_result("matching_discovery", "Like functionality", False, f"Error: {str(e)}")
 
-        # Test GET /api/likes
+        # Test GET /api/likes/sent and /api/likes/received
         try:
             start_time = time.time()
             response = await self.client.get(
-                f"{self.active_backend_url}/api/likes",
+                f"{self.active_backend_url}/api/likes/sent",
                 headers=headers
             )
             response_time = time.time() - start_time
             
             if response.status_code == 200:
-                self.log_test_result("matching_discovery", "GET /api/likes", True,
-                                   "User likes retrieval working", response_time)
-            elif response.status_code == 404:
-                self.log_test_result("matching_discovery", "GET /api/likes", False,
-                                   "Likes endpoint not found", response_time)
+                self.log_test_result("matching_discovery", "GET /api/likes/sent", True,
+                                   "Sent likes retrieval working", response_time)
             else:
-                self.log_test_result("matching_discovery", "GET /api/likes", False,
+                self.log_test_result("matching_discovery", "GET /api/likes/sent", False,
                                    f"HTTP {response.status_code}", response_time)
         except Exception as e:
-            self.log_test_result("matching_discovery", "GET /api/likes", False, f"Error: {str(e)}")
+            self.log_test_result("matching_discovery", "GET /api/likes/sent", False, f"Error: {str(e)}")
+
+        try:
+            start_time = time.time()
+            response = await self.client.get(
+                f"{self.active_backend_url}/api/likes/received",
+                headers=headers
+            )
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                self.log_test_result("matching_discovery", "GET /api/likes/received", True,
+                                   "Received likes retrieval working", response_time)
+            else:
+                self.log_test_result("matching_discovery", "GET /api/likes/received", False,
+                                   f"HTTP {response.status_code}", response_time)
+        except Exception as e:
+            self.log_test_result("matching_discovery", "GET /api/likes/received", False, f"Error: {str(e)}")
 
     # ===== MESSAGING SYSTEM =====
     

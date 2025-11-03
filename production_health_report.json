@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-11-03T09:44:36.717550",
+  "production_url": "https://multilingual-date.emergent.host",
+  "overall_status": "unhealthy",
+  "services": {
+    "backend_api": {
+      "status": "fail",
+      "response_time_ms": 174,
+      "details": "Health endpoint error: Expecting value: line 1 column 1 (char 0)"
+    },
+    "mongodb": {
+      "status": "unknown",
+      "connection": "unknown",
+      "details": ""
+    },
+    "livekit": {
+      "status": "warn",
+      "url": "",
+      "details": "LiveKit endpoint returned 403"
+    },
+    "cloudinary": {
+      "status": "warn",
+      "cloud_name": "",
+      "details": "Media upload endpoint returned 403"
+    },
+    "sentry": {
+      "status": "unknown",
+      "environment": "",
+      "details": "Cannot verify Sentry: Expecting value: line 1 column 1 (char 0)"
+    },
+    "cors": {
+      "status": "fail",
+      "allowed_origins": [],
+      "details": "CORS not properly configured"
+    }
+  },
+  "environment_variables": {
+    "critical_missing": [],
+    "all_set": false
+  },
+  "recommendations": [
+    "Fix backend_api service: Health endpoint error: Expecting value: line 1 column 1 (char 0)",
+    "Review livekit configuration: LiveKit endpoint returned 403",
+    "Review cloudinary configuration: Media upload endpoint returned 403",
+    "Fix cors service: CORS not properly configured"
+  ]
+}

@@ -315,9 +315,13 @@ class ProductionHealthChecker:
     async def test_sentry_service(self):
         """Test Sentry configuration (indirect)"""
         print("🔍 Testing Sentry service...")
+        if not self.active_backend_url:
+            print("❌ No active backend URL available")
+            return
+            
         try:
             # Test debug endpoint if available
-            response = await self.client.get(f"{PRODUCTION_URL}/debug-sentry")
+            response = await self.client.get(f"{self.active_backend_url}/debug-sentry")
             
             if response.status_code == 200:
                 data = response.json()

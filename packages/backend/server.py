@@ -1085,6 +1085,21 @@ async def register(request: RegisterRequest):
 
 @api_router.post("/auth/login", response_model=TokenResponse)
 async def login(request: LoginRequest):
+    # Verify reCAPTCHA
+    if request.recaptcha_token:
+        recaptcha_valid, recaptcha_error = AuthService.verify_recaptcha(request.recaptcha_token)
+        if not recaptcha_valid:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=recaptcha_error or "reCAPTCHA verification failed"
+            )
+    else:
+        # reCAPTCHA is required
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Please complete the reCAPTCHA verification"
+        )
+    
     user = await db.users.find_one({"email": request.email}, {"_id": 0})
     
     if not user or not verify_password(request.password, user['password_hash']):

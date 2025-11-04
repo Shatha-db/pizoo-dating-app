@@ -8,6 +8,11 @@ import App from "@/App";
 import AppErrorBoundary from "./components/AppErrorBoundary";
 import Loader from "./components/Loader";
 
+// Dev-only: Vercel deployment test marker
+if (process.env.NODE_ENV === 'development') {
+  console.info('🚀 Vercel deployment test - 2025-11-04T08:49:05Z');
+}
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Suspense fallback={<Loader text="Loading..." />}>

@@ -204,10 +204,12 @@ After fixing, verify:
 - [x] `.env` files in `.gitignore`
 - [x] Error handling for missing environment variables
 - [x] Documentation updated
-- [ ] ⏳ Old API key rotated in Telnyx portal
-- [ ] ⏳ New API key added to `.env`
-- [ ] ⏳ Git history cleaned or secret allowed in GitHub
-- [ ] ⏳ Successfully pushed to GitHub
+- [x] Git history cleaned using git-filter-repo
+- [x] Working tree verified clean of all secrets
+- [x] .env.example contains only placeholders
+- [ ] ⏳ Old API key rotated in Telnyx portal (user action required)
+- [ ] ⏳ New API key added to `.env` (user action required)
+- [x] Ready to push to GitHub (secrets purged from history)
 
 ---
 

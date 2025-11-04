@@ -1,94 +1,103 @@
 <analysis>
-The AI engineer successfully progressed through several complex development phases. Initially, the focus was on stabilizing a Turborepo monorepo migration, resolving various frontend and backend issues including hardcoded URLs, ESLint errors, and MongoDB connectivity. A significant task involved detailed MongoDB data seeding with demo users, which was completed, addressing schema compatibility and indexing. Subsequently, the engineer fixed user profile viewing logic and initiated CI/CD workflow fixes on GitHub Actions, encountering and resolving  dependency conflicts for Vercel deployments. The trajectory concludes with the engineer starting a comprehensive app review based on user-defined criteria, analyzing code structure and feature implementation. The key challenge observed was the inability to directly recover source code from a live Emergent deployment for a legacy merge task.
+The previous AI engineer’s work has involved a series of intricate tasks, beginning with crucial environment configuration. Initially, the focus was on stabilizing the Turborepo monorepo by correctly setting environment variables like  and  across backend and frontend, and integrating these with Vercel deployment. A significant challenge arose from the disparity between the local monorepo structure and the GitHub repository's older structure, leading to persistent Vercel build failures due to incorrect root directory and cached build commands.
+
+Subsequently, the engineer implemented Google reCAPTCHA v2, adding site and secret keys, integrating conditional rendering on the frontend (Login.js, Register.js) and validation on the backend (auth_service.py, server.py) with environment-based enforcement. A major obstacle was encountered during Emergent deployments where the  file was missing from the GitHub repository, necessitating modifications to  for graceful handling of missing  files and the creation of compatibility  files in old directory structures.
+
+The trajectory culminates with an ongoing critical security task: purging Telnyx API keys from the Git history using . This was triggered by GitHub's push protection flagging exposed secrets in Python files and generated documentation. The engineer successfully modified files to use environment variables and attempted to rewrite history, but a complete purge is still being verified.
 </analysis>
 
 <product_requirements>
-The Pizoo Dating App aims for enhanced functionality and stability. Initial requirements included i18n, Cloudinary integration, frontend/backend stability (CORS, auth, rendering), LiveKit RTC migration, account verification, MongoDB ObjectId fixes, monorepo migration, and Kubernetes readiness. Explicit recent tasks involved: ensuring environment variable usage for all URLs (no hardcoding), fixing frontend build/runtime errors (ESLint, React child errors), enabling phone-based login, stabilizing the bottom navigation bar, and seeding MongoDB with 400 demo users (350 female, 50 male) with specific attributes and AI-generated avatars. The user later requested enabling full user profile viewing for all logged-in users before liking/matching, fixing GitHub Actions CI/CD workflows, integrating Vercel deployment, and then merging features from an old Global-Dating-4 Emergent deployment into the current monorepo. The final request is a comprehensive app review to identify feature pass/fail, bugs, and improvements.
+The Pizoo Dating App aims for enhanced functionality, stability, and security. Initial requirements included i18n, Cloudinary, LiveKit, account verification, MongoDB fixes, monorepo migration, and Kubernetes readiness. Explicit recent tasks involved:
+1.  **Environment Configuration**: Ensuring environment variable usage for all URLs (no hardcoding), fixing frontend build/runtime errors (ESLint), enabling phone-based login, stabilizing the bottom navigation bar.
+2.  **Data Seeding**: Seeding MongoDB with 400 demo users with specific attributes and AI-generated avatars.
+3.  **User Profile & CI/CD**: Enabling full user profile viewing, fixing GitHub Actions CI/CD workflows, integrating Vercel deployment, and merging features from a legacy Emergent deployment.
+4.  **Comprehensive App Review**: A full deep-dive app review (initial phase completed).
+5.  **Production Domain & CORS**: Configuring  and  as production domains, updating , , , setting Vercel DNS/SSL, and redeploying.
+6.  **Google reCAPTCHA v2**: Adding reCAPTCHA to registration/login forms (frontend/backend), validating tokens, deploying, and generating a verification report.
+7.  **Vercel Build Fix**: Addressing Vercel build path issues for the monorepo, especially the conflict between local  and GitHub's  structure, and overriding  from the repository.
+8.  **Emergent Deployment Fix**: Resolving  file not found errors during Emergent native deployments by updating  to handle missing  gracefully and creating compatibility  files.
+9.  **reCAPTCHA Preview Bypass & Auth Audit**: Making reCAPTCHA optional on preview/staging and mandatory only on production, fixing phone number validation, reviewing CORS/Endpoints, and providing a report.
+10. **GitHub Secret Protection**: Purging Telnyx API keys from Git history, rotating keys, and pushing safely to GitHub.
 </product_requirements>
 
 <key_technical_concepts>
-- **Full-stack Architecture**: React (Frontend), FastAPI (Backend), MongoDB (Database).
-- **Monorepo Tools**: Turborepo, pnpm.
-- **Internationalization**:  for multilingual support.
-- **RTC**: LiveKit for video/voice calls.
-- **Authentication**: JWT, OAuth, Email Magic Link, Phone OTP (Telnyx).
-- **Deployment**: Kubernetes, Supervisor, GitHub Actions, Vercel.
-- **Data Seeding**: Node.js scripts with , .
-- **Pydantic**: For FastAPI request/response models.
+
+-   **Full-stack Architecture**: React (Frontend), FastAPI (Backend), MongoDB.
+-   **Monorepo Tools**: Turborepo, pnpm.
+-   **RTC**: LiveKit for video/voice calls.
+-   **Authentication**: JWT, OAuth, Email Magic Link, Phone OTP (Telnyx), Google reCAPTCHA v2.
+-   **Deployment**: Kubernetes, Supervisor, GitHub Actions, Vercel, Emergent native deployments.
+-   **Version Control**: Git,  for history rewriting.
+-   **Environment Management**: , Vercel Environment Variables.
 </key_technical_concepts>
 
 <code_architecture>
-The application utilizes a Turborepo-based monorepo structure, containing  for client applications and  for shared libraries.
+
+The application uses a Turborepo monorepo with  for client applications (e.g., ) and  for shared libraries (e.g., ).
 
 
 
 -   ****: Main FastAPI app.
-    -   **Changes**: MongoDB connection logic, improved health check,  Pydantic model updated for  or ,  function added for safe datetime sorting in . New  endpoint added.
+    -   **Changes**:  now includes  and is wrapped in a  block to gracefully handle missing  files.  and  endpoints modified to accept  object and pass  to  for conditional enforcement.
 -   ****: Authentication logic.
-    -   **Changes**: Removed hardcoded  and Emergent OAuth URL fallbacks, relying on environment variables.
+    -   **Changes**: Added  and  environment variables.  function updated to conditionally bypass reCAPTCHA validation based on these flags and the incoming request host.
 -   ** & **: Backend environment variables.
-    -   **Changes**:  updated, , , , ,  and Telnyx variables (, , , , ) added/updated.
--   ****: Frontend LiveKit component.
-    -   **Changes**: Removed hardcoded  fallback.
--   ****: Frontend environment variables example.
-    -   **Changes**: Added .
--   ****: Main React component.
-    -   **Changes**: Imports reordered,  dependencies updated, unused imports removed, route for  confirmed.
--   ****: Displays images.
-    -   **Changes**: Fixed React Hook  conditional call.
--   ****: Explore profiles page.
-    -   **Changes**: Placeholder  added.
--   ****: Likes page.
-    -   **Changes**: Removed button calling undefined .
--   ****: Views user profiles.
-    -   **Changes**:  replaced. Confirmed to be a comprehensive component for profile display.
--   ****: Authentication context.
-    -   **Changes**:  and  handle API error responses and pass .
--   ****: Home page.
-    -   **Changes**:  to  for nav bar stability.  button and main card area made clickable to navigate to .
--   ****: Component for displaying explore items.
-    -   **Changes**: Updated to use  instead of  for navigation.
--   ****: Main React entry point.
-    -   **Changes**: Added a  for Vercel deployment testing.
+    -   **Changes**: Added , , , , , .
+-   ****: New utility file.
+    -   **Summary**: Contains  function to determine if reCAPTCHA should be 'required' or 'disabled' based on , , and .
+-   ****: Frontend login page.
+    -   **Changes**: Integrated . Conditionally renders the reCAPTCHA widget and enforces its validation based on . Displays a message if reCAPTCHA is disabled in preview.
+-   ****: Frontend registration page.
+    -   **Changes**: Similar to , integrated conditional reCAPTCHA rendering and validation based on .
+-   ****: Frontend authentication context.
+    -   **Changes**: Modified  and  functions to accept and pass the  conditionally, though the backend now expects the  object for host-based enforcement.
+-   ** & **: Frontend environment variables.
+    -   **Changes**: Added , .
 -   ****: Frontend dependencies.
-    -   **Changes**: Fixed duplicate  entry.  script added.  version updated to resolve Vercel deployment conflict.
--   ****: npm configuration file.
-    -   **Changes**: New file created to configure  for Vercel.
--   ****: i18n translation files.
-    -   **Changes**: Missing  files copied to locale directories.
--   ****: Centralized error handling.
-    -   **Changes**: New file created.
--   ****: MongoDB seeding script.
-    -   **Changes**: New script created (after previous one was archived) that generates 400 demo users with specific attributes, AI-generated avatars, and ensures proper indexing. Uses , , , and . Logic modified to ensure  flag and to match user/profile schema. Updated to use DiceBear API for avatars.
--   ****: Telnyx SMS test script.
-    -   **Changes**: New file created for testing Telnyx integration.
--   ****: GitHub Actions workflows.
-    -   **Changes**:  updated to use  endpoint,  updated with . Environment variables added to workflows.
--   ** (root)**: Root environment variables.
-    -   **Changes**: Created with Vercel variables , , .
--   ****: Archive of old  and  directories.
-    -   **Changes**: New directory created by moving legacy folders for cleanup.
+    -   **Changes**:  package added.
+-   ** (root)**: New file.
+    -   **Summary**: Created to specify Vercel project settings for the monorepo, including , , , and . *Note: An overriding  in the GitHub repo's root caused deployment issues.*
+-   ****: New file.
+    -   **Summary**: Created similarly to the root  for frontend-specific Vercel build configuration.
+-   ** (new directory)** & ** (new directory)**: New files.
+    -   **Summary**: Created for backward compatibility with Emergent deployment system expecting  files in the older  and  top-level directories.
+-   ** & **: Telnyx helper scripts.
+    -   **Changes**: Removed hardcoded Telnyx API keys, replaced with .
+-   ****: Git ignored files.
+    -   **Changes**: Updated to include additional security patterns for  and sensitive files (, , ).
+-   ****: Documentation for Telnyx secret fix.
+    -   **Changes**: Redacted hardcoded API keys that were initially present in the document itself.
 </code_architecture>
 
 <pending_tasks>
-- Build an Admin Web Dashboard (MVP with Next.js).
-- Implement Firebase Analytics.
-- Enhance GDPR compliance (JWT refresh, password hashing, audit logs).
-- Implement E2E and API tests.
-- Set up comprehensive monitoring and observability (Sentry alerts).
-- Improve performance (image optimization, lazy loading, GPS fallbacks, accessibility).
-- Create detailed documentation (README, API docs, demo video).
-- Add recording and push notifications for incoming LiveKit calls.
-- Implement Google OAuth and Telnyx Phone OTP for account verification.
-- Deploy a self-hosted LiveKit stack with Coturn and Caddy.
-- Fix Telnyx integration (requires phone number assignment in Telnyx portal).
-- **Ongoing**: Complete a full deep-dive app review based on user-defined criteria.
+-   Build an Admin Web Dashboard (MVP with Next.js).
+-   Implement Firebase Analytics.
+-   Enhance GDPR compliance (JWT refresh, password hashing, audit logs).
+-   Implement E2E and API tests.
+-   Set up comprehensive monitoring and observability (Sentry alerts).
+-   Improve performance (image optimization, lazy loading, GPS fallbacks, accessibility).
+-   Create detailed documentation (README, API docs, demo video).
+-   Add recording and push notifications for incoming LiveKit calls.
+-   Implement Google OAuth and Telnyx Phone OTP for account verification.
+-   Deploy a self-hosted LiveKit stack with Coturn and Caddy.
+-   Fix Telnyx integration (requires phone number assignment in Telnyx portal).
+-   **Ongoing**: Fully purge Telnyx secrets from Git history using  and push safely.
 </pending_tasks>
 
 <current_work>
-Immediately prior to this summary, the AI engineer was tasked with a comprehensive App Review for the Pizoo Dating App. This review entails evaluating all key features against defined criteria, identifying bugs, and recommending improvements. The engineer started by analyzing the project's code structure, specifically comparing the old (, ) and new monorepo (, ) structures. It was determined that the current monorepo already contains most of the required features. The engineer verified the presence and basic functionality of i18n, bottom navigation, LiveKit, Cloudinary, and authentication methods, as well as crucial environment variables. The review process is ongoing, currently in the initial phase of structural and feature verification.
+Immediately before this summary request, the AI engineer was deep into fixing a critical GitHub Secret Protection issue. This task, explicitly requested by the user, involved purging Telnyx API keys from the repository's history, rotating the keys, and pushing the sanitized history safely.
+
+The work flow has been:
+1.  **Identification**: GitHub's push protection flagged Telnyx API keys in , , and .
+2.  **Sanitize Working Tree**: The engineer modified  and  to use  instead of hardcoded values. The  was also edited to redact keys.
+3.  **Environment Variable & Gitignore Update**: Confirmed  contained Telnyx placeholders and updated  with additional security patterns.
+4.  **History Rewriting**:  was installed and executed with specific regex patterns to purge Telnyx secrets from the Git history of the identified files.
+5.  **Verification**: Post-rewriting, checks for remaining secrets in Git history were performed.
+6.  **Remaining Issue**: The most recent messages indicate that despite running , remnants of secrets were still being detected in the Git history, specifically in the documentation file, leading to another attempt to clean and commit changes to the documentation.
+
+The immediate work is focused on ensuring a complete and verifiable purge of all Telnyx secrets from the repository's history to satisfy GitHub's push protection rules before attempting a final push.
 </current_work>
 
 <optional_next_step>
-The AI engineer will continue the comprehensive App Review, moving on to detailed feature verification and bug identification.
+Complete the verification of the Git history purge to ensure no Telnyx secrets remain.
 </optional_next_step>

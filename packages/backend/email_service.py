@@ -301,7 +301,7 @@ class EmailService:
                         </div>
                     </div>
                     <p style="font-size: 18px;">لا تدع الفرصة تفوتك!</p>
-                    <a href="https://pizoo.app/" class="cta-button">عودة إلى Pizoo</a>
+                    <a href="{FRONTEND_URL}/" class="cta-button">عودة إلى Pizoo</a>
                 </div>
             </div>
         </body>

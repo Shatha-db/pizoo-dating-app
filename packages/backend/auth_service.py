@@ -238,11 +238,28 @@ class AuthService:
         return datetime.now(timezone.utc) + timedelta(days=7)
     
     @staticmethod
-    def verify_recaptcha(recaptcha_token: str, remote_ip: Optional[str] = None) -> Tuple[bool, Optional[str]]:
+    def verify_recaptcha(recaptcha_token: str, remote_ip: Optional[str] = None, request_host: Optional[str] = None) -> Tuple[bool, Optional[str]]:
         """
         Verify reCAPTCHA v2 token with Google
         Returns: (success: bool, error_message: Optional[str])
+        
+        Args:
+            recaptcha_token: Token from client
+            remote_ip: Client IP address (optional)
+            request_host: Hostname from request (for conditional enforcement)
         """
+        # Check if reCAPTCHA enforcement is enabled
+        if not RECAPTCHA_ENFORCE:
+            logger.info("ℹ️  reCAPTCHA enforcement is disabled (RECAPTCHA_ENFORCE=false)")
+            return True, None
+        
+        # Check if request is from an allowed production host
+        if request_host and RECAPTCHA_ALLOWED_HOSTS:
+            if request_host not in RECAPTCHA_ALLOWED_HOSTS:
+                logger.info(f"ℹ️  reCAPTCHA bypassed for non-production host: {request_host}")
+                return True, None
+        
+        # reCAPTCHA is required - proceed with verification
         if not RECAPTCHA_SECRET_KEY:
             logger.error("RECAPTCHA_SECRET_KEY is not configured")
             return False, "reCAPTCHA is not configured on the server"

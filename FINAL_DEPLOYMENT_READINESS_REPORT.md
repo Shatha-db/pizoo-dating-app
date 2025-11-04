@@ -21,7 +21,7 @@ The Pizoo Dating App has been thoroughly audited and is **READY FOR PRODUCTION D
 
 **Frontend** (`/app/apps/web/.env`):
 ```bash
-✅ REACT_APP_BACKEND_URL=https://pizoo-monorepo.preview.emergentagent.com
+✅ REACT_APP_BACKEND_URL=https://pizoo-monorepo-1.preview.emergentagent.com
 ```
 - No hardcoded backend URLs in code
 - All API calls use `process.env.REACT_APP_BACKEND_URL`

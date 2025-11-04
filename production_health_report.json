@@ -1,7 +1,7 @@
 {
   "timestamp": "2025-11-03T09:48:59.746316",
   "production_url": "https://multilingual-date.emergent.host",
-  "backend_url": "https://pizoo-monorepo.preview.emergentagent.com",
+  "backend_url": "https://pizoo-monorepo-1.preview.emergentagent.com",
   "overall_status": "degraded",
   "services": {
     "backend_api": {

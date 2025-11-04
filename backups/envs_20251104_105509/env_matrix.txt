@@ -16,7 +16,7 @@ SENTRY_DSN=[MASKED]
 JWT_SECRET=[MASKED]
 
 === Frontend ENV (/app/apps/web/.env) ===
-REACT_APP_BACKEND_URL=https://dating-backend.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://pizoo-monorepo-1.preview.emergentagent.com
 REACT_APP_SENTRY_DSN=[MASKED]
 
 === Vercel ENV ===

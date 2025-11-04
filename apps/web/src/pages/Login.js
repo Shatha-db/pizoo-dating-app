@@ -29,12 +29,19 @@ const Login = () => {
     password: '',
     rememberMe: false
   });
-  const [countryCode, setCountryCode] = useState('+966'); // Default to Saudi Arabia
+  const [countryCode, setCountryCode] = useState('+41'); // Default to Switzerland (CH)
   const [loginMethod, setLoginMethod] = useState('email'); // 'email' or 'phone'
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // ✅ Password visibility state
   const [recaptchaToken, setRecaptchaToken] = useState(null);
+  const recaptchaEnabled = isRecaptchaRequired();
+  const recaptchaSiteKey = getRecaptchaSiteKey();
+
+  // Log reCAPTCHA configuration on mount
+  useEffect(() => {
+    logRecaptchaConfig();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

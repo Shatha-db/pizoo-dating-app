@@ -180,7 +180,7 @@ class EmailService:
                     <img src="{match_photo}" alt="{match_name}" class="match-photo">
                     <p style="font-size: 18px;">لديك تطابق جديد مع <strong>{match_name}</strong></p>
                     <p>ابدأ المحادثة الآن واكتشف المزيد!</p>
-                    <a href="https://pizoo.app/matches" class="cta-button">شاهد التطابق</a>
+                    <a href="{FRONTEND_URL}/matches" class="cta-button">شاهد التطابق</a>
                 </div>
             </div>
         </body>

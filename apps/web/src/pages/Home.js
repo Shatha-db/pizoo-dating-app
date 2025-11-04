@@ -501,7 +501,10 @@ const Home = () => {
       <main className="max-w-md mx-auto px-4 pt-6">
         {currentProfile ? (
           <Card className="overflow-hidden shadow-2xl">
-            <div className="relative h-96 bg-gradient-to-br from-pink-200 to-purple-200">
+            <div 
+              className="relative h-96 bg-gradient-to-br from-pink-200 to-purple-200 cursor-pointer"
+              onClick={() => navigate(`/profile/${currentProfile.user_id}`)}
+            >
               {currentProfile.photos && currentProfile.photos.length > 0 ? (
                 <img 
                   src={currentProfile.photos[0]} 
@@ -514,7 +517,7 @@ const Home = () => {
                 </div>
               )}
               
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white pointer-events-none">
                 <h2 className="text-3xl font-bold">{currentProfile.display_name}</h2>
                 <p className="text-lg opacity-90">{currentProfile.occupation || 'Professional'}</p>
                 <div className="flex items-center gap-2 text-sm opacity-80 mt-1">

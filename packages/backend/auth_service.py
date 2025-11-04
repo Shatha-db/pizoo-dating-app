@@ -36,6 +36,10 @@ FRONTEND_URL = os.environ.get('FRONTEND_URL') if 'FRONTEND_URL' in os.environ el
 # Emergent OAuth Service URL
 EMERGENT_OAUTH_URL = os.environ.get('EMERGENT_OAUTH_URL', 'https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data')
 
+# reCAPTCHA Settings
+RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY', '')
+RECAPTCHA_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify'
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 

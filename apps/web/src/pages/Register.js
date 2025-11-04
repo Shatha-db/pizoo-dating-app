@@ -63,13 +63,20 @@ const Register = () => {
       return;
     }
 
+    // Verify reCAPTCHA
+    if (!recaptchaToken) {
+      setError('Please complete the reCAPTCHA verification');
+      return;
+    }
+
     setLoading(true);
     const result = await register(
       formData.name,
       formData.email,
       formData.phoneNumber,
       formData.password,
-      formData.termsAccepted
+      formData.termsAccepted,
+      recaptchaToken
     );
     setLoading(false);
 
@@ -95,6 +102,11 @@ const Register = () => {
       navigate('/profile/setup');
     } else {
       setError(result.error);
+      // Reset reCAPTCHA on error
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+        setRecaptchaToken(null);
+      }
     }
   };
 

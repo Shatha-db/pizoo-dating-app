@@ -5572,6 +5572,47 @@ async def update_user_language(payload: LanguagePayload, current_user: dict = De
 
 # ===== Explore & Personal Moments Endpoints =====
 
+# Helper function to normalize datetime fields for sorting
+def _to_dt(value):
+    """
+    Convert various datetime formats to a comparable datetime object.
+    Handles: ISO strings, datetime objects, date objects, unix timestamps (s/ms)
+    Returns datetime or a far past date if unparseable.
+    """
+    if value is None:
+        return datetime.min.replace(tzinfo=timezone.utc)
+    
+    if isinstance(value, datetime):
+        # Already datetime - ensure UTC aware
+        return value if value.tzinfo else value.replace(tzinfo=timezone.utc)
+    
+    if isinstance(value, date):
+        # date object - convert to datetime
+        return datetime.combine(value, datetime.min.time()).replace(tzinfo=timezone.utc)
+    
+    if isinstance(value, (int, float)):
+        # Unix timestamp (seconds or milliseconds)
+        try:
+            # Try milliseconds first (larger number)
+            if value > 10000000000:
+                return datetime.fromtimestamp(value / 1000, tz=timezone.utc)
+            else:
+                return datetime.fromtimestamp(value, tz=timezone.utc)
+        except (ValueError, OSError):
+            return datetime.min.replace(tzinfo=timezone.utc)
+    
+    if isinstance(value, str):
+        # ISO string
+        try:
+            dt = datetime.fromisoformat(value.replace('Z', '+00:00'))
+            return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+        except (ValueError, AttributeError):
+            return datetime.min.replace(tzinfo=timezone.utc)
+    
+    # Unknown type
+    return datetime.min.replace(tzinfo=timezone.utc)
+
+
 @api_router.get("/explore/sections")
 async def get_explore_sections(current_user: dict = Depends(get_current_user)):
     """

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
@@ -12,6 +12,7 @@ import CustomLogo from '../components/CustomLogo';
 import CountryCodeSelect from '../components/CountryCodeSelect';
 import { useTranslation } from 'react-i18next';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { isRecaptchaRequired, getRecaptchaSiteKey, getRecaptchaStatusMessage, logRecaptchaConfig } from '../utils/recaptcha';
 
 const Register = () => {
   const navigate = useNavigate();

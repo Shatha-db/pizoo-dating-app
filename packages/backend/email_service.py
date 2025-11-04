@@ -215,7 +215,7 @@ class EmailService:
                 <div class="content">
                     <h2>رسالة جديدة من {sender_name}</h2>
                     <div class="message-box">"{message_preview}"</div>
-                    <a href="https://pizoo.app/chat" class="cta-button">الرد الآن</a>
+                    <a href="{FRONTEND_URL}/chat" class="cta-button">الرد الآن</a>
                 </div>
             </div>
         </body>

@@ -983,20 +983,19 @@ async def root():
 
 
 @api_router.post("/auth/register", response_model=TokenResponse)
-async def register(request: RegisterRequest):
-    # Verify reCAPTCHA
-    if request.recaptcha_token:
-        recaptcha_valid, recaptcha_error = AuthService.verify_recaptcha(request.recaptcha_token)
-        if not recaptcha_valid:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=recaptcha_error or "reCAPTCHA verification failed"
-            )
-    else:
-        # reCAPTCHA is required
+async def register(request: RegisterRequest, req: Request):
+    # Get request hostname for conditional reCAPTCHA enforcement
+    request_host = req.headers.get('host', '').split(':')[0]
+    
+    # Verify reCAPTCHA (conditional based on environment and host)
+    recaptcha_valid, recaptcha_error = AuthService.verify_recaptcha(
+        request.recaptcha_token,
+        request_host=request_host
+    )
+    if not recaptcha_valid:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Please complete the reCAPTCHA verification"
+            detail=recaptcha_error or "reCAPTCHA verification failed"
         )
     
     # Validate terms accepted

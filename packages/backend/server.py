@@ -5676,7 +5676,7 @@ async def get_explore_sections(current_user: dict = Depends(get_current_user)):
         # Section 4: New Faces (وجوه جديدة)
         newcomers = sorted(
             all_profiles,
-            key=lambda p: p.get('created_at', ''),
+            key=lambda p: _to_dt(p.get('created_at')),
             reverse=True
         )[:10]
         sections.append({

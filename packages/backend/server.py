@@ -59,7 +59,17 @@ def serialize_mongo_doc(doc):
 import httpx
 
 ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
+
+# Load .env file if it exists (for local development)
+# In production/deployment, environment variables are injected by the platform
+env_file = ROOT_DIR / '.env'
+if env_file.exists():
+    load_dotenv(env_file)
+    logger.info(f"✅ Loaded environment variables from {env_file}")
+else:
+    logger.info("ℹ️  No .env file found - using environment variables from platform")
+    # Load environment variables from system (deployment platform provides these)
+    load_dotenv()  # This will load from system environment
 
 # Import LiveKitService AFTER loading .env
 from livekit_service import LiveKitService, LIVEKIT_URL as LK_URL

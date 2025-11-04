@@ -39,6 +39,8 @@ EMERGENT_OAUTH_URL = os.environ.get('EMERGENT_OAUTH_URL', 'https://demobackend.e
 # reCAPTCHA Settings
 RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY', '')
 RECAPTCHA_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify'
+RECAPTCHA_ENFORCE = os.environ.get('RECAPTCHA_ENFORCE', 'false').lower() == 'true'
+RECAPTCHA_ALLOWED_HOSTS = os.environ.get('RECAPTCHA_ALLOWED_HOSTS', 'pizoo.ch,www.pizoo.ch').split(',')
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "buildCommand": "cd apps/web && yarn install && yarn build",
+  "outputDirectory": "apps/web/build",
+  "framework": null,
+  "installCommand": "yarn install",
+  "devCommand": null
+}

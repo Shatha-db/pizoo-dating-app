@@ -31,7 +31,7 @@ TELNYX_API_KEY = '<REDACTED_TELNYX_KEY>***' # Secret removed for security
 ```python
 # BEFORE (INSECURE):
 TELNYX_API_KEY = '<REDACTED_TELNYX_KEY>***' # Secret removed for security
-TELNYX_MESSAGING_PROFILE_ID = '40019a35-****' # Secret removed
+TELNYX_MESSAGING_PROFILE_ID = '<REDACTED_PROFILE_ID>' # Secret removed
 ```
 
 ---

@@ -456,20 +456,33 @@ const Register = () => {
                 </label>
               </div>
 
-              {/* reCAPTCHA */}
-              <div className="flex justify-center">
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
-                  onChange={(token) => setRecaptchaToken(token)}
-                  onExpired={() => setRecaptchaToken(null)}
-                  onErrored={() => setRecaptchaToken(null)}
-                />
-              </div>
+              {/* reCAPTCHA - Only show on production domains */}
+              {recaptchaEnabled && recaptchaSiteKey && (
+                <div className="flex justify-center">
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey={recaptchaSiteKey}
+                    onChange={(token) => setRecaptchaToken(token)}
+                    onExpired={() => setRecaptchaToken(null)}
+                    onErrored={() => setRecaptchaToken(null)}
+                  />
+                </div>
+              )}
+
+              {/* Preview environment notice */}
+              {!recaptchaEnabled && getRecaptchaStatusMessage() && (
+                <div className="flex justify-center">
+                  <Alert className="bg-blue-50 border-blue-200">
+                    <AlertDescription className="text-blue-800 text-sm text-center">
+                      ℹ️ {getRecaptchaStatusMessage()}
+                    </AlertDescription>
+                  </Alert>
+                </div>
+              )}
 
               <Button
                 type="submit"
-                disabled={loading || !recaptchaToken}
+                disabled={loading || (recaptchaEnabled && !recaptchaToken)}
                 className="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-bold py-6 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? t('creating_account') : t('register_title')}

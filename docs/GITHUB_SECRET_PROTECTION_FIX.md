@@ -180,7 +180,7 @@ Then recreate the files with proper environment variable usage.
 
 1. Go to: https://portal.telnyx.com/
 2. Navigate to: API Keys
-3. Delete the exposed key: `KEY019A4E926C71A3382BD9EFE601386B58...`
+3. Delete the exposed key: `<REDACTED_TELNYX_KEY>***` (the old key)
 4. Generate a new API key
 5. Update your `.env` file with the new key
 

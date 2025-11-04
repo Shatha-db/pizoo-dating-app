@@ -500,10 +500,11 @@ const Home = () => {
       {/* Main Card */}
       <main className="max-w-md mx-auto px-4 pt-6">
         {currentProfile ? (
-          <Card className="overflow-hidden shadow-2xl">
+          <Card className="overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow">
             <div 
-              className="relative h-96 bg-gradient-to-br from-pink-200 to-purple-200 cursor-pointer"
+              className="relative h-96 bg-gradient-to-br from-pink-200 to-purple-200 cursor-pointer group"
               onClick={() => navigate(`/profile/${currentProfile.user_id}`)}
+              title={t('home:tapToViewFullProfile') || 'Tap to view full profile'}
             >
               {currentProfile.photos && currentProfile.photos.length > 0 ? (
                 <img 

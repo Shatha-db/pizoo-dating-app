@@ -263,3 +263,11 @@ pizoo-legacy-archive-20251104/frontend/node_modules/.cache/default-development/1
 # Environment files
 *.env
 *.env.*
+
+# Additional security patterns
+*.pem
+*.p12
+*id_rsa*
+.npmrc
+.yarnrc*
+.pnpmrc

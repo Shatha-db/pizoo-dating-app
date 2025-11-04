@@ -234,3 +234,66 @@ class AuthService:
     def calculate_session_expiry() -> datetime:
         """Calculate session expiry (7 days from now)"""
         return datetime.now(timezone.utc) + timedelta(days=7)
+    
+    @staticmethod
+    def verify_recaptcha(recaptcha_token: str, remote_ip: Optional[str] = None) -> Tuple[bool, Optional[str]]:
+        """
+        Verify reCAPTCHA v2 token with Google
+        Returns: (success: bool, error_message: Optional[str])
+        """
+        if not RECAPTCHA_SECRET_KEY:
+            logger.error("RECAPTCHA_SECRET_KEY is not configured")
+            return False, "reCAPTCHA is not configured on the server"
+        
+        if not recaptcha_token:
+            return False, "reCAPTCHA token is required"
+        
+        try:
+            # Prepare verification request
+            payload = {
+                'secret': RECAPTCHA_SECRET_KEY,
+                'response': recaptcha_token
+            }
+            
+            if remote_ip:
+                payload['remoteip'] = remote_ip
+            
+            # Send verification request to Google
+            response = requests.post(
+                RECAPTCHA_VERIFY_URL,
+                data=payload,
+                timeout=5
+            )
+            
+            result = response.json()
+            
+            if result.get('success'):
+                logger.info(f"✅ reCAPTCHA verification successful")
+                return True, None
+            else:
+                error_codes = result.get('error-codes', [])
+                logger.warning(f"❌ reCAPTCHA verification failed: {error_codes}")
+                
+                # Map error codes to user-friendly messages
+                error_messages = {
+                    'missing-input-secret': 'Server configuration error',
+                    'invalid-input-secret': 'Server configuration error',
+                    'missing-input-response': 'Please complete the reCAPTCHA',
+                    'invalid-input-response': 'Invalid reCAPTCHA. Please try again',
+                    'bad-request': 'Invalid reCAPTCHA request',
+                    'timeout-or-duplicate': 'reCAPTCHA expired. Please try again'
+                }
+                
+                error_msg = error_messages.get(
+                    error_codes[0] if error_codes else 'unknown',
+                    'reCAPTCHA verification failed'
+                )
+                
+                return False, error_msg
+                
+        except requests.RequestException as e:
+            logger.error(f"reCAPTCHA verification request failed: {e}")
+            return False, "Failed to verify reCAPTCHA. Please try again"
+        except Exception as e:
+            logger.error(f"Unexpected error during reCAPTCHA verification: {e}")
+            return False, "reCAPTCHA verification error"

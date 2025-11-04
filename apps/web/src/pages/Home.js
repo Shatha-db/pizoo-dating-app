@@ -533,7 +533,9 @@ const Home = () => {
               <Button 
                 size="icon" 
                 variant="ghost" 
-                className="absolute top-4 left-4 bg-white/20 backdrop-blur"
+                className="absolute top-4 left-4 bg-white/20 backdrop-blur hover:bg-white/30 transition-colors"
+                onClick={() => navigate(`/profile/${currentProfile.user_id}`)}
+                title={t('home:viewProfile')}
               >
                 <Info className="w-5 h-5 text-white" />
               </Button>

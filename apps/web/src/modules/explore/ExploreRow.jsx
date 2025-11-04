@@ -33,8 +33,8 @@ const ExploreRow = ({ title, profiles, onSeeAll }) => {
       <div className="flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
         {profiles.map((profile) => (
           <div
-            key={profile.id}
-            onClick={() => handleProfileClick(profile.id)}
+            key={profile.id || profile.user_id}
+            onClick={() => handleProfileClick(profile.user_id || profile.id)}
             className="flex-shrink-0 w-40 cursor-pointer group"
           >
             <div className="relative overflow-hidden rounded-2xl mb-2 h-52 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900 dark:to-purple-900">

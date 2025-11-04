@@ -244,3 +244,6 @@ apps/web/node_modules/.cache/default-development/6.pack
 # Environment files
 *.env
 *.env.*
+pizoo-legacy-archive-20251104/frontend/node_modules/.cache/default-development/4.pack
+pizoo-legacy-archive-20251104/frontend/node_modules/.cache/default-development/0.pack
+pizoo-legacy-archive-20251104/frontend/node_modules/.cache/default-development/1.pack

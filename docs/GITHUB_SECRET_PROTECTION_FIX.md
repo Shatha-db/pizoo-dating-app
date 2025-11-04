@@ -24,14 +24,14 @@ GitHub's Secret Scanning detected hardcoded Telnyx API keys in the following fil
 **File 1:** `check_telnyx_numbers.py`
 ```python
 # BEFORE (INSECURE):
-TELNYX_API_KEY = '<REDACTED_TELNYX_KEY>'
+TELNYX_API_KEY = '<REDACTED_TELNYX_KEY>***' # Secret removed for security
 ```
 
 **File 2:** `check_telnyx_profile.py`
 ```python
 # BEFORE (INSECURE):
-TELNYX_API_KEY = '<REDACTED_TELNYX_KEY>'
-TELNYX_MESSAGING_PROFILE_ID = '<REDACTED_PROFILE_ID>'
+TELNYX_API_KEY = '<REDACTED_TELNYX_KEY>***' # Secret removed for security
+TELNYX_MESSAGING_PROFILE_ID = '40019a35-****' # Secret removed
 ```
 
 ---

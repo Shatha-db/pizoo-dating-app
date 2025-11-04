@@ -255,3 +255,11 @@ pizoo-legacy-archive-20251104/frontend/node_modules/.cache/default-development/1
 # Environment files
 *.env
 *.env.*
+-e 
+# Environment files
+*.env
+*.env.*
+-e 
+# Environment files
+*.env
+*.env.*

@@ -1,0 +1,26 @@
+=== ENV BACKUP (MASKED) ===
+Date: 2025-11-04T10:55:09Z
+
+=== Backend ENV (/app/packages/backend/.env) ===
+MONGO_URL=mongodb://localhost:27017
+DB_NAME=pizoo_database
+FRONTEND_URL=https://datemaps.emergent.host
+CLOUDINARY_URL=[MASKED]
+CLOUDINARY_CLOUD_NAME=[MASKED]
+CLOUDINARY_API_KEY=[MASKED]
+CLOUDINARY_API_SECRET=[MASKED]
+LIVEKIT_URL=[SET]
+LIVEKIT_API_KEY=[MASKED]
+LIVEKIT_API_SECRET=[MASKED]
+SENTRY_DSN=[MASKED]
+JWT_SECRET=[MASKED]
+
+=== Frontend ENV (/app/apps/web/.env) ===
+REACT_APP_BACKEND_URL=https://dating-backend.preview.emergentagent.com
+REACT_APP_SENTRY_DSN=[MASKED]
+
+=== Vercel ENV ===
+VERCEL_API_TOKEN=[MASKED]
+VERCEL_PROJECT_NAME=pizoo
+VERCEL_PROJECT_ID=prj_8ZKPw4z3kOreyIVPywFD4OE3EdxJ
+VERCEL_ORG_NAME=shatha-db

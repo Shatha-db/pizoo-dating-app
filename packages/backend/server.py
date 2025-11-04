@@ -941,11 +941,13 @@ class RegisterRequest(BaseModel):
     phone_number: str
     password: str
     terms_accepted: bool
+    recaptcha_token: Optional[str] = None
 
 
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
+    recaptcha_token: Optional[str] = None
 
 
 class SwipeRequest(BaseModel):

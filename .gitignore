@@ -271,3 +271,11 @@ pizoo-legacy-archive-20251104/frontend/node_modules/.cache/default-development/1
 .npmrc
 .yarnrc*
 .pnpmrc
+-e 
+# Environment files
+*.env
+*.env.*
+-e 
+# Environment files
+*.env
+*.env.*

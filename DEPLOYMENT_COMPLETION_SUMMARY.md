@@ -194,7 +194,7 @@ Once DNS propagates (15-30 minutes), verify these:
 - Sentry: Production mode
 
 **Frontend Environment:**
-- Backend URL: `https://pizoo-monorepo-1.preview.emergentagent.com` (dev)
+- Backend URL: `https://telnyx-secret-fix.preview.emergentagent.com` (dev)
 - Frontend URL: `https://pizoo.ch` (production)
 - Sentry: Production mode
 

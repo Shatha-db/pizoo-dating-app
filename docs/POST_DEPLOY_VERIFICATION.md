@@ -50,7 +50,7 @@ Complete verification of all systems after reCAPTCHA bypass implementation and d
 
 | Variable | Status | Value/Notes |
 |----------|--------|-------------|
-| REACT_APP_BACKEND_URL | ✅ SET | https://pizoo-monorepo-1.preview.emergentagent.com |
+| REACT_APP_BACKEND_URL | ✅ SET | https://telnyx-secret-fix.preview.emergentagent.com |
 | REACT_APP_RECAPTCHA_SITE_KEY | ✅ SET | 6LfYOgIsAAAAAOy... |
 | REACT_APP_ENVIRONMENT | ✅ SET | production |
 | REACT_APP_SENTRY_DSN | ✅ SET | *** |
@@ -275,14 +275,14 @@ Status: Ready for email sending
 ### Current Access Points
 
 **Backend API:**
-- URL: https://pizoo-monorepo-1.preview.emergentagent.com/api
-- Health: https://pizoo-monorepo-1.preview.emergentagent.com/health
+- URL: https://telnyx-secret-fix.preview.emergentagent.com/api
+- Health: https://telnyx-secret-fix.preview.emergentagent.com/health
 - Status: ✅ Operational
 
 **Frontend:**
-- URL: https://pizoo-monorepo-1.preview.emergentagent.com
-- Login: https://pizoo-monorepo-1.preview.emergentagent.com/login
-- Register: https://pizoo-monorepo-1.preview.emergentagent.com/register
+- URL: https://telnyx-secret-fix.preview.emergentagent.com
+- Login: https://telnyx-secret-fix.preview.emergentagent.com/login
+- Register: https://telnyx-secret-fix.preview.emergentagent.com/register
 - Status: ✅ Operational
 
 **Vercel Deployment:**

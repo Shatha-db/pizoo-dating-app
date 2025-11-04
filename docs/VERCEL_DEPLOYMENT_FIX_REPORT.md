@@ -293,7 +293,7 @@ https://pizoo.ch/login
 
 Once a user is registered, check network tab for:
 ```
-POST https://pizoo-monorepo-1.preview.emergentagent.com/api/auth/register
+POST https://telnyx-secret-fix.preview.emergentagent.com/api/auth/register
 Status: 201 Created (or 200 OK)
 
 Response: {
@@ -344,7 +344,7 @@ Access-Control-Allow-Credentials: true
    - Example: `https://pizoo-[hash]-shatha-dbs-projects.vercel.app`
 
 2. **Backend URL:**
-   - Frontend is configured to use: `https://pizoo-monorepo-1.preview.emergentagent.com`
+   - Frontend is configured to use: `https://telnyx-secret-fix.preview.emergentagent.com`
    - Ensure backend is running and accessible
    - CORS is configured for `pizoo.ch` and `www.pizoo.ch`
 

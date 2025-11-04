@@ -57,7 +57,7 @@ verdict: APPROVED FOR PRODUCTION DEPLOYMENT
 
 **Frontend Environment Variables**:
 ```bash
-✅ REACT_APP_BACKEND_URL: https://pizoo-monorepo-1.preview.emergentagent.com
+✅ REACT_APP_BACKEND_URL: https://telnyx-secret-fix.preview.emergentagent.com
 ```
 
 **Code Quality**:

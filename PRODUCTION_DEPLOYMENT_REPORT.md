@@ -271,7 +271,7 @@ Status: RUNNING ✅
 PID: 737
 Uptime: Active
 Port: 8001
-URL: https://pizoo-monorepo-1.preview.emergentagent.com
+URL: https://telnyx-secret-fix.preview.emergentagent.com
 ```
 
 ### Production Backend:

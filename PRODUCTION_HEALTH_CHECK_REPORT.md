@@ -3,7 +3,7 @@
 
 **Date**: November 3, 2025  
 **Frontend URL**: https://multilingual-date.emergent.host  
-**Backend URL**: https://pizoo-monorepo-1.preview.emergentagent.com  
+**Backend URL**: https://telnyx-secret-fix.preview.emergentagent.com  
 **Overall Status**: 🟡 **DEGRADED - Routing Issue**
 
 ---
@@ -41,7 +41,7 @@ Features Tested:
 ---
 
 ### 2. Backend API (Root Level)
-**URL**: https://pizoo-monorepo-1.preview.emergentagent.com/  
+**URL**: https://telnyx-secret-fix.preview.emergentagent.com/  
 **Status**: ❌ **MISCONFIGURED**
 
 ```
@@ -69,7 +69,7 @@ Local backend works correctly ✅
 ---
 
 ### 3. Backend API (Under /api/ prefix)
-**URL**: https://pizoo-monorepo-1.preview.emergentagent.com/api/  
+**URL**: https://telnyx-secret-fix.preview.emergentagent.com/api/  
 **Status**: ✅ **OPERATIONAL**
 
 ```
@@ -193,7 +193,7 @@ INFO:root:   PII Tracking: Enabled
 **Status**: ✅ **PROPERLY CONFIGURED**
 
 ```
-Test: OPTIONS https://pizoo-monorepo-1.preview.emergentagent.com/api/
+Test: OPTIONS https://telnyx-secret-fix.preview.emergentagent.com/api/
 Origin: https://multilingual-date.emergent.host
 
 Response Headers:
@@ -226,7 +226,7 @@ Root-level backend endpoints (`/health`, `/`) are being served by the frontend a
 
 **Evidence**:
 ```bash
-$ curl https://pizoo-monorepo-1.preview.emergentagent.com/health
+$ curl https://telnyx-secret-fix.preview.emergentagent.com/health
 # Returns: <!doctype html><html>... (frontend app)
 # Expected: {"db":"ok","otp":"ok","ai":"ok","status":"healthy"}
 ```
@@ -255,7 +255,7 @@ Auth endpoints return 500 Internal Server Error, indicating the backend cannot c
 
 **Evidence**:
 ```bash
-$ curl -X POST https://pizoo-monorepo-1.preview.emergentagent.com/api/auth/login \
+$ curl -X POST https://telnyx-secret-fix.preview.emergentagent.com/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","password":"testpass"}'
 # Returns: Internal Server Error (HTTP 500)
@@ -428,7 +428,7 @@ FRONTEND_URL=? ← Should be: https://multilingual-date.emergent.host
 {
   "timestamp": "2025-11-03T09:30:00Z",
   "production_url": "https://multilingual-date.emergent.host",
-  "backend_url": "https://pizoo-monorepo-1.preview.emergentagent.com",
+  "backend_url": "https://telnyx-secret-fix.preview.emergentagent.com",
   "overall_status": "degraded",
   "critical_issues": 2,
   "warnings": 1,
@@ -443,14 +443,14 @@ FRONTEND_URL=? ← Should be: https://multilingual-date.emergent.host
     },
     "backend_api": {
       "status": "warn",
-      "url": "https://pizoo-monorepo-1.preview.emergentagent.com/api/",
+      "url": "https://telnyx-secret-fix.preview.emergentagent.com/api/",
       "http_code": 200,
       "response_time_ms": 72,
       "details": "API accessible under /api/ but root endpoints misconfigured"
     },
     "backend_health": {
       "status": "fail",
-      "url": "https://pizoo-monorepo-1.preview.emergentagent.com/health",
+      "url": "https://telnyx-secret-fix.preview.emergentagent.com/health",
       "http_code": 200,
       "content_type": "text/html",
       "details": "Returns HTML instead of JSON - routing issue"

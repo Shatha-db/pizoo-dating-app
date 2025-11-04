@@ -150,7 +150,7 @@ Uptime: Active
 
 ### Register Page - Visual Verification ✅
 
-**URL:** https://pizoo-monorepo-1.preview.emergentagent.com/register
+**URL:** https://telnyx-secret-fix.preview.emergentagent.com/register
 
 **Test Results:**
 
@@ -173,7 +173,7 @@ Uptime: Active
 
 ### Login Page - Visual Verification ✅
 
-**URL:** https://pizoo-monorepo-1.preview.emergentagent.com/login
+**URL:** https://telnyx-secret-fix.preview.emergentagent.com/login
 
 **Test Results:**
 

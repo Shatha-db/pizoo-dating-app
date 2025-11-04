@@ -28,7 +28,7 @@ The Pizoo Dating App has been thoroughly audited and tested for deployment readi
 - ✅ `SECRET_KEY` - SET (JWT signing)
 
 **Frontend** (`/app/apps/web/.env`):
-- ✅ `REACT_APP_BACKEND_URL` - SET (`https://pizoo-monorepo-1.preview.emergentagent.com`)
+- ✅ `REACT_APP_BACKEND_URL` - SET (`https://telnyx-secret-fix.preview.emergentagent.com`)
 
 ### 2. Code Quality & Security
 

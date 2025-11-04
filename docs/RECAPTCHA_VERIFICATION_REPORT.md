@@ -397,7 +397,7 @@ grep "^requests" /app/packages/backend/requirements.txt
 
 ### Registration Page ✅
 
-**URL:** https://pizoo-monorepo-1.preview.emergentagent.com/register
+**URL:** https://telnyx-secret-fix.preview.emergentagent.com/register
 
 **Verification Results:**
 
@@ -417,7 +417,7 @@ grep "^requests" /app/packages/backend/requirements.txt
 
 ### Login Page ✅
 
-**URL:** https://pizoo-monorepo-1.preview.emergentagent.com/login
+**URL:** https://telnyx-secret-fix.preview.emergentagent.com/login
 
 **Verification Results:**
 

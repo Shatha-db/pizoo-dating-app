@@ -243,7 +243,7 @@ REACT_APP_RECAPTCHA_SITE_KEY=6LfYOgIsAAAAAOyBbzOngPQyj0S9etDZ-fHuD8Mk
 
 ### Preview Environment (Current)
 
-**URL:** https://pizoo-monorepo-1.preview.emergentagent.com
+**URL:** https://telnyx-secret-fix.preview.emergentagent.com
 
 **Login Page:**
 - ✅ Sign-in button ENABLED

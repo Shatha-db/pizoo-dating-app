@@ -121,8 +121,8 @@ const Login = () => {
       }
     } else {
       setError(result.error);
-      // Reset reCAPTCHA on error
-      if (recaptchaRef.current) {
+      // Reset reCAPTCHA on error (only if enabled)
+      if (recaptchaEnabled && recaptchaRef.current) {
         recaptchaRef.current.reset();
         setRecaptchaToken(null);
       }

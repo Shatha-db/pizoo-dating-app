@@ -265,3 +265,4 @@ apps/web/node_modules/.cache/default-development/8.pack
 # Environment files
 *.env
 *.env.*
+apps/web/node_modules/.cache/default-development/3.pack

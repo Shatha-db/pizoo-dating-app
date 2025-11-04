@@ -26,13 +26,20 @@ const Register = () => {
     password: '',
     termsAccepted: false
   });
-  const [countryCode, setCountryCode] = useState('+966'); // Default to Saudi Arabia
+  const [countryCode, setCountryCode] = useState('+41'); // Default to Switzerland (CH)
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [registerMethod, setRegisterMethod] = useState('social'); // social, email, or phone
   const [showLanguages, setShowLanguages] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState(null);
+  const recaptchaEnabled = isRecaptchaRequired();
+  const recaptchaSiteKey = getRecaptchaSiteKey();
+
+  // Log reCAPTCHA configuration on mount
+  useEffect(() => {
+    logRecaptchaConfig();
+  }, []);
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);

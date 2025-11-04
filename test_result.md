@@ -182,18 +182,21 @@
 #====================================================================================================
 
 user_problem_statement: |
-  MongoDB Data Maintenance & Seeding with Demo Users:
-  1. Backup: Take full backup of users and profiles collections before any changes
-  2. Indexing: Create optimized indexes for email, phone, location, demo flag, gender, age, geo coordinates
-  3. Schema Verification: Ensure User and Profile models match application requirements
-  4. Demo Data Generation: Seed 400 demo accounts (350 female, 50 male) with:
-     - European names (Swiss, French, Italian, German)
-     - AI-generated avatars (DiceBear API)
-     - Realistic profiles with age, location, bio, interests, occupation, education
-     - Proper GPS coordinates for European cities
-     - Demo flag (demo: true) for easy filtering and cleanup
-  5. Data Quality: Ensure proper distribution (females 20-30 and 40-54, males 18-50)
-  6. Testing: Verify insertion and display sample records
+  1. Full Profile Viewing Feature:
+     - Enable users to click on profile cards from Home/Explore to view full profiles
+     - Allow profile viewing BEFORE liking or matching (no restrictions)
+     - Add Info button on Home cards to view profiles
+     - Full profile should include: photos, bio, interests, age, location, distance
+     - Implement proper routing: /profile/:userId
+     - Ensure authenticated-only access
+  
+  2. CI/CD Workflow Fixes:
+     - Fix failing GitHub Actions workflows (Lint #14, Build #14, Test #14)
+     - Add missing health check endpoint for monitoring
+     - Fix package.json issues (duplicate fields, missing scripts)
+     - Add required environment variables for CI/CD
+     - Validate dependencies and ensure workflows pass
+     - Enable automatic GitHub → Vercel deployment
 
 backend:
   - task: "MongoDB Data Maintenance & Demo User Seeding"

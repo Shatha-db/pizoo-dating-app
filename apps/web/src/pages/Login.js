@@ -56,9 +56,27 @@ const Login = () => {
     e.preventDefault();
     setError('');
 
-    // Verify reCAPTCHA
-    if (!recaptchaToken) {
+    // Verify reCAPTCHA only if required (production domains only)
+    if (recaptchaEnabled && !recaptchaToken) {
       setError('Please complete the reCAPTCHA verification');
+      return;
+    }
+
+    // Validate login method specific fields
+    if (loginMethod === 'email') {
+      if (!formData.email || !formData.email.includes('@')) {
+        setError('Please enter a valid email address');
+        return;
+      }
+    } else if (loginMethod === 'phone') {
+      if (!formData.phoneNumber) {
+        setError('Please enter a phone number');
+        return;
+      }
+    }
+
+    if (!formData.password) {
+      setError('Please enter your password');
       return;
     }
 

@@ -980,6 +980,37 @@ async def root():
     return {"message": "Welcome to Subscription API"}
 
 
+@api_router.get("/health")
+async def health_check():
+    """
+    Health check endpoint for CI/CD and monitoring
+    """
+    try:
+        # Check MongoDB connection
+        if db is None:
+            return {
+                "status": "unhealthy",
+                "database": "disconnected",
+                "message": "MongoDB client not initialized"
+            }
+        
+        # Try to ping the database
+        await db.command("ping")
+        
+        return {
+            "status": "healthy",
+            "database": "connected",
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+    except Exception as e:
+        logging.error(f"Health check failed: {e}")
+        return {
+            "status": "unhealthy",
+            "database": "error",
+            "error": str(e)
+        }
+
+
 @api_router.post("/auth/register", response_model=TokenResponse)
 async def register(request: RegisterRequest):
     # Validate terms accepted

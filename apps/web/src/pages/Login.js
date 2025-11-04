@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../modules/i18n/LanguageSelector';
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { isRecaptchaRequired, getRecaptchaSiteKey, getRecaptchaStatusMessage, logRecaptchaConfig } from '../utils/recaptcha';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 

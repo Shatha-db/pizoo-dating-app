@@ -21,6 +21,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { t } = useTranslation('auth'); // Load auth namespace
+  const recaptchaRef = useRef(null);
   const [formData, setFormData] = useState({
     email: '',
     phoneNumber: '',
@@ -32,6 +33,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // ✅ Password visibility state
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

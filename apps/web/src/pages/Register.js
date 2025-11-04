@@ -17,6 +17,7 @@ const Register = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
   const { t, i18n } = useTranslation('auth');
+  const recaptchaRef = useRef(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -30,6 +31,7 @@ const Register = () => {
   const [registerMethod, setRegisterMethod] = useState('social'); // social, email, or phone
   const [showLanguages, setShowLanguages] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);

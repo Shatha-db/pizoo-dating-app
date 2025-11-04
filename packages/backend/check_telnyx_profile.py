@@ -1,10 +1,25 @@
 import os
 import requests
 import json
+from dotenv import load_dotenv
 
-TELNYX_API_KEY = '<REDACTED_TELNYX_KEY>'
-TELNYX_MESSAGING_PROFILE_ID = '<REDACTED_PROFILE_ID>'
-TELNYX_API_VERSION = 'v2'
+# Load environment variables
+load_dotenv()
+
+# Get from environment variables (NEVER hardcode API keys!)
+TELNYX_API_KEY = os.getenv('TELNYX_API_KEY')
+TELNYX_MESSAGING_PROFILE_ID = os.getenv('TELNYX_MESSAGING_PROFILE_ID')
+TELNYX_API_VERSION = os.getenv('TELNYX_API_VERSION', 'v2')
+
+if not TELNYX_API_KEY:
+    print("❌ Error: TELNYX_API_KEY not found in environment variables")
+    print("Please set TELNYX_API_KEY in your .env file")
+    exit(1)
+
+if not TELNYX_MESSAGING_PROFILE_ID:
+    print("❌ Error: TELNYX_MESSAGING_PROFILE_ID not found in environment variables")
+    print("Please set TELNYX_MESSAGING_PROFILE_ID in your .env file")
+    exit(1)
 
 url = f"https://api.telnyx.com/{TELNYX_API_VERSION}/messaging_profiles/{TELNYX_MESSAGING_PROFILE_ID}/phone_numbers"
 headers = {

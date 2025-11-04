@@ -249,7 +249,7 @@ class EmailService:
                     <h2>❤️ إعجاب جديد!</h2>
                     <p style="font-size: 18px;">{liker_name} أعجب بملفك الشخصي</p>
                     <p>اضغط "أعجبني" أيضاً لإنشاء تطابق!</p>
-                    <a href="https://pizoo.app/likes" style="display: inline-block; background: linear-gradient(135deg, #ec4899, #f472b6); color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; margin-top: 20px;">عرض الإعجابات</a>
+                    <a href="{FRONTEND_URL}/likes" style="display: inline-block; background: linear-gradient(135deg, #ec4899, #f472b6); color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; margin-top: 20px;">عرض الإعجابات</a>
                 </div>
             </div>
         </body>

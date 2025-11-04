@@ -60,11 +60,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (email, password, recaptchaToken = null) => {
     try {
       const response = await axios.post(`${API}/auth/login`, {
         email,
-        password
+        password,
+        recaptcha_token: recaptchaToken
       });
       const { access_token, user: userData } = response.data;
       
@@ -74,7 +75,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', access_token);
       localStorage.setItem('user', JSON.stringify(userData));
       
-      return { success: true };
+      return { success: true, token: access_token };
     } catch (error) {
       return { 
         success: false, 
@@ -83,14 +84,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (name, email, phoneNumber, password, termsAccepted) => {
+  const register = async (name, email, phoneNumber, password, termsAccepted, recaptchaToken = null) => {
     try {
       const response = await axios.post(`${API}/auth/register`, {
         name,
         email,
         phone_number: phoneNumber,
         password,
-        terms_accepted: termsAccepted
+        terms_accepted: termsAccepted,
+        recaptcha_token: recaptchaToken
       });
       const { access_token, user: userData } = response.data;
       

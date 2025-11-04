@@ -47,6 +47,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    // Verify reCAPTCHA
+    if (!recaptchaToken) {
+      setError('Please complete the reCAPTCHA verification');
+      return;
+    }
+
     setLoading(true);
 
     // Determine the login identifier (email or phone with country code)
@@ -54,7 +61,7 @@ const Login = () => {
       ? `${countryCode}${formData.phoneNumber}`
       : formData.email;
 
-    const result = await login(identifier, formData.password);
+    const result = await login(identifier, formData.password, recaptchaToken);
 
     if (result.success) {
       // Save remember me preference
@@ -88,6 +95,11 @@ const Login = () => {
       }
     } else {
       setError(result.error);
+      // Reset reCAPTCHA on error
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+        setRecaptchaToken(null);
+      }
     }
     
     setLoading(false);

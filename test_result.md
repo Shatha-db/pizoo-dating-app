@@ -291,3 +291,5 @@ agent_communication:
     message: "🔧 ADDITIONAL FIXES: Fixed React Error #31 in ChatRoom.js & ChatList.js (objects rendered in JSX). Updated CORS_ORIGINS for proper domain whitelist. Added general /api/media/upload endpoint. Fixed Jitsi prejoin screen to skip directly to call. All services restarted and verified."
   - agent: "main"
     message: "📄 LEGAL & SUPPORT PAGES FIX: Fixed i18n keys showing on Terms/Privacy/Cookies pages by adding missing namespaces to i18n.js. Created 3 new support pages: HelpSupport.js, CommunityGuidelines.js, SafetyCenter.js - all bilingual (EN/AR) with RTL. Added routes to App.js and connected Settings navigation. All pages now working correctly."
+  - agent: "main"
+    message: "🎨 NAVBAR LOGO SIZING: Adjusted Golden logo size in navbar (Home.js) to be proportionate with adjacent icons. Updated CustomLogo size mappings: xs=60px, sm=80px, md=120px, lg=160px, xl=200px. Changed Home.js navbar from size='lg' (was 200px) to size='sm' (now 80px) for better visual balance with bell icon (24px) and other navbar elements."

@@ -1,10 +1,8 @@
 import React from 'react';
-import logoWordmark from '../assets/branding/logo-wordmark.svg';
-import logoMark from '../assets/branding/logo-mark.svg';
+import logo from '../assets/logo/pizoo.svg';
 
-type Variant = 'wordmark' | 'mark' | 'gold';
 interface Props {
-  variant?: Variant;
+  size?: number;
   width?: number | string;
   height?: number | string;
   className?: string;
@@ -12,33 +10,32 @@ interface Props {
 }
 
 const Logo: React.FC<Props> = ({
-  variant = 'wordmark',
-  width = 220,
-  height = 'auto',
+  size = 164,
+  width,
+  height,
   className,
-  title = 'PiZOO'
+  title = 'Pizoo'
 }) => {
-  // Use new SVG files from assets/branding
-  let src = logoWordmark;
-  
-  if (variant === 'mark') {
-    src = logoMark;
-  } else if (variant === 'gold') {
-    // Fallback to old gold variant if needed
-    src = '/brand/pizoo-logo-gold.svg';
-  }
+  // Use size if provided, otherwise use width/height
+  const finalWidth = width || size;
+  const finalHeight = height || size;
 
   return (
     <img
-      src={src}
-      width={typeof width === 'number' ? width : undefined}
-      style={typeof width === 'string' ? { width, height } : { height }}
+      src={logo}
+      width={typeof finalWidth === 'number' ? finalWidth : undefined}
+      height={typeof finalHeight === 'number' ? finalHeight : undefined}
+      style={
+        typeof finalWidth === 'string' || typeof finalHeight === 'string'
+          ? { width: finalWidth, height: finalHeight }
+          : undefined
+      }
       loading="eager"
       fetchPriority="high"
       decoding="async"
-      alt="PiZOO logo"
+      alt="Pizoo logo"
       aria-label={title}
-      className={className}
+      className={className ?? 'select-none'}
     />
   );
 };

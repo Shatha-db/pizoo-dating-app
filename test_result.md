@@ -291,6 +291,12 @@ frontend:
       - working: true
         agent: "main"
         comment: "Optimized auth pages (Login.js, Register.js): Reduced logo from 180px to 120px width. Changed container from flex items-center (center) to flex-col items-center justify-start pt-20 (top-aligned with padding). Reduced logo margin from mb-3 to mb-2. Logo now compact, positioned near top, minimal spacing."
+      - working: false
+        agent: "user"
+        comment: "User clarified: wants LARGE logo, but SMALL spacing. Don't reduce logo size, only reduce the spacing/margins around it."
+      - working: true
+        agent: "main"
+        comment: "CORRECTED: Restored logo to LARGE size (180px for auth pages, 120px for navbar). Reduced ONLY spacing: Login/Register pt-12 & mb-1, Home navbar p-2. CustomLogo sizes increased: xs=100, sm=120, md=140, lg=160, xl=180. Result: Large prominent logos with minimal spacing - exactly as requested."
 
 metadata:
   created_by: "main_agent"

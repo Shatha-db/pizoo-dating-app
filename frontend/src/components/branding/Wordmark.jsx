@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import styles from "./Wordmark.module.css";
 
 /**
@@ -11,10 +11,6 @@ export default function Wordmark({
   width = 220,
   className = "",
   title = "Pizoo",
-}: {
-  width?: number;
-  className?: string;
-  title?: string;
 }) {
   return (
     <div

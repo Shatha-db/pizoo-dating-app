@@ -431,7 +431,7 @@ const Home = () => {
           </Button>
         </div>
         <div className="flex items-center flex-1 justify-center">
-          <CustomLogo size="sm" />
+          <CustomLogo size="lg" />
         </div>
         <div className="flex gap-2">
           {/* Notification Bell */}

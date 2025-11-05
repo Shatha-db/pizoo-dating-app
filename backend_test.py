@@ -455,7 +455,7 @@ async def main():
     
     async with BackendTester() as tester:
         # Core infrastructure tests
-        await tester.test_health_check()
+        await tester.test_backend_connectivity()
         await tester.test_mongodb_connection()
         await tester.test_cors_settings()
         

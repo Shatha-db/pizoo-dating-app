@@ -62,8 +62,8 @@ const SafetyCenter = () => {
       color: 'blue'
     },
     {
-      title: isRTL ? 'دعم Pizoo' : 'Pizoo Support',
-      number: 'support@pizoo.com',
+      title: isRTL ? 'دعم PiZOO' : 'PiZOO Support',
+      number: 'support@pizoo.ch',
       description: isRTL ? 'للإبلاغ عن مشاكل الأمان' : 'Report safety concerns',
       color: 'purple'
     }

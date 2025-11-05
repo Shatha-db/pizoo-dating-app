@@ -1,39 +1,45 @@
 {
-  "name": "PiZOO Dating App",
-  "short_name": "PiZOO",
-  "description": "PiZOO - Connect, Match, and Date",
+  "name": "Pizoo",
+  "short_name": "Pizoo",
+  "description": "Pizoo - Connect, Match, and Date",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0D0D0D",
-  "theme_color": "#FF6A3A",
+  "background_color": "#ffffff",
+  "theme_color": "#FF4D4D",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/src/assets/branding/png/android-chrome-192x192.png",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/src/assets/branding/png/android-chrome-512x512.png",
+      "src": "/icons/icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/src/assets/branding/png/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/src/assets/branding/png/android-chrome-512x512.png",
+      "src": "/icons/maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/src/assets/branding/png/apple-touch-icon.png",
+      "src": "/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png"
     }

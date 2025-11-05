@@ -1,0 +1,17 @@
+{
+  "name": "pizoo-dating-app",
+  "version": "2.0.0",
+  "description": "Pizoo Dating Application - Full Stack",
+  "private": true,
+  "scripts": {
+    "build": "cd frontend && yarn install && yarn build",
+    "start": "cd frontend && yarn start",
+    "test": "cd frontend && yarn test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Shatha-db/pizoo"
+  },
+  "author": "Pizoo Team",
+  "license": "UNLICENSED"
+}

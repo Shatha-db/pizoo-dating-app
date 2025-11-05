@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from '../assets/logo/pizoo.svg';
 
 interface Props {
   size?: number;
@@ -22,7 +21,7 @@ const Logo: React.FC<Props> = ({
 
   return (
     <img
-      src={logo}
+      src="/logo/logo_classic.svg"
       width={typeof finalWidth === 'number' ? finalWidth : undefined}
       height={typeof finalHeight === 'number' ? finalHeight : undefined}
       style={

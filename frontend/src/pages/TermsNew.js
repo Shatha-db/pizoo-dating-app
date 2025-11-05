@@ -118,8 +118,8 @@ const TermsNew = () => {
                   <h3 className="text-xl font-bold mb-3 text-gray-900">{t('terms.section10_title')}</h3>
                   <p>{t('terms.section10_content')}</p>
                   <div className="mt-2 p-4 bg-pink-50 rounded-lg">
-                    <p className="font-medium">{t('email')}: support@pizoo.com</p>
-                    <p className="font-medium">{t('website')}: www.pizoo.com</p>
+                    <p className="font-medium">{t('email')}: support@pizoo.ch</p>
+                    <p className="font-medium">{t('website')}: www.pizoo.ch</p>
                   </div>
                 </section>
               </div>

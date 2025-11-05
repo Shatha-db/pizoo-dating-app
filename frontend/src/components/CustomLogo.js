@@ -1,8 +1,8 @@
 import React from 'react';
-import Logo from './Logo.tsx';
+import GoldenLogo from './branding/GoldenLogo';
 
 const CustomLogo = ({ size = 'lg', className = '' }) => {
-  // Map sizes to pixel widths for the new Logo component
+  // Map sizes to pixel widths for the Golden Logo
   const sizeMap = {
     sm: 120,
     md: 160,
@@ -12,8 +12,8 @@ const CustomLogo = ({ size = 'lg', className = '' }) => {
 
   return (
     <div className={`flex items-center justify-center ${className}`}>
-      <Logo 
-        size={sizeMap[size]} 
+      <GoldenLogo 
+        width={sizeMap[size]} 
         className="mx-auto"
       />
     </div>

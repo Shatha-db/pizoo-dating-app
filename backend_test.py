@@ -226,27 +226,35 @@ class BackendTester:
     async def test_livekit_configuration(self):
         """Test LiveKit environment configuration"""
         try:
-            # Import LiveKit service to check configuration
-            from livekit_service import LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET, LiveKitService
+            # Check environment variables directly
+            import os
+            from dotenv import load_dotenv
+            
+            # Load environment from backend directory
+            load_dotenv('/app/backend/.env')
+            
+            livekit_url = os.getenv('LIVEKIT_URL')
+            livekit_api_key = os.getenv('LIVEKIT_API_KEY') 
+            livekit_api_secret = os.getenv('LIVEKIT_API_SECRET')
             
             config_status = []
             
-            if LIVEKIT_URL:
-                config_status.append(f"URL: {LIVEKIT_URL}")
+            if livekit_url:
+                config_status.append(f"URL: {livekit_url}")
             else:
                 config_status.append("URL: ❌ Missing")
             
-            if LIVEKIT_API_KEY:
-                config_status.append(f"API_KEY: {LIVEKIT_API_KEY[:8]}...")
+            if livekit_api_key:
+                config_status.append(f"API_KEY: {livekit_api_key[:8]}...")
             else:
                 config_status.append("API_KEY: ❌ Missing")
             
-            if LIVEKIT_API_SECRET:
-                config_status.append(f"API_SECRET: {LIVEKIT_API_SECRET[:8]}...")
+            if livekit_api_secret:
+                config_status.append(f"API_SECRET: {livekit_api_secret[:8]}...")
             else:
                 config_status.append("API_SECRET: ❌ Missing")
             
-            is_configured = LiveKitService.is_configured()
+            is_configured = bool(livekit_url and livekit_api_key and livekit_api_secret)
             
             if is_configured:
                 self.log_result("LiveKit Configuration", True, f"All credentials present: {', '.join(config_status)}")

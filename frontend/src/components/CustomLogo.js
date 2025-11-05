@@ -3,13 +3,13 @@ import GoldenLogo from './branding/GoldenLogo';
 
 const CustomLogo = ({ size = 'lg', className = '' }) => {
   // Map sizes to pixel widths for the Golden Logo
-  // Large logo with minimal spacing around it
+  // Using original large sizes as requested
   const sizeMap = {
-    xs: 100,  // Extra small - compact navbar
-    sm: 120,  // Small - standard navbar
-    md: 140,  // Medium - larger headers
-    lg: 160,  // Large - splash/hero
-    xl: 180   // Extra large - auth pages
+    xs: 120,  // Extra small - compact navbar
+    sm: 160,  // Small - standard navbar  
+    md: 180,  // Medium - larger headers
+    lg: 200,  // Large - splash/hero (original size)
+    xl: 240   // Extra large - auth pages
   };
 
   return (

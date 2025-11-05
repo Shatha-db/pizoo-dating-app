@@ -79,6 +79,7 @@
     "build": "craco build",
     "test": "craco test",
     "icons": "node scripts/gen-icons.js",
+    "icons:classic": "node scripts/gen-classic-icons.js",
     "brand:gen": "node scripts/generate-icons.mjs",
     "brand:check": "ls -la src/assets/branding/png && ls -la public | grep -E '(favicon|manifest)'"
   },

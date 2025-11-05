@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1200 450" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <defs>
+    <linearGradient id="pzGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF6A3A" />
+      <stop offset="100%" stop-color="#FF9B4B" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Pizoo Classic Wordmark (paths only, no filters) -->
+  <g fill="url(#pzGrad)" stroke="none">
+    <!-- P -->
+    <path d="M 80 100 L 80 350 M 80 100 L 180 100 Q 250 100 280 140 Q 295 165 295 200 Q 295 235 280 260 Q 250 300 180 300 L 80 300 M 100 120 L 180 120 Q 230 120 250 160 Q 260 180 260 200 Q 260 220 250 240 Q 230 280 180 280 L 100 280 Z" stroke-width="0"/>
+    
+    <!-- i -->
+    <path d="M 330 350 L 330 200 M 320 200 L 340 200 L 340 350 L 320 350 Z" stroke-width="0"/>
+    <circle cx="330" cy="160" r="18" fill="#FFB366"/>
+    
+    <!-- Z -->
+    <path d="M 390 200 L 510 200 L 510 220 L 420 330 L 520 330 L 520 350 L 390 350 L 390 330 L 480 220 L 390 220 Z" stroke-width="0"/>
+    
+    <!-- O -->
+    <ellipse cx="600" cy="275" rx="50" ry="65" stroke="url(#pzGrad)" stroke-width="25" fill="none"/>
+    
+    <!-- O -->
+    <ellipse cx="720" cy="275" rx="50" ry="65" stroke="url(#pzGrad)" stroke-width="25" fill="none"/>
+  </g>
+</svg>

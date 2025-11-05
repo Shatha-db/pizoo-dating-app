@@ -4,29 +4,30 @@ import goldenLogo from "../../assets/branding/pizoo-golden.png";
 
 /**
  * Official Pizoo Logo Component
- * - Classic: Orange-Red gradient (Auth pages)
- * - Golden: Yellow-Orange gradient (In-app)
- * - No text labels underneath
+ * - Classic (Orange): For Auth pages, Splash, Landing
+ * - Golden: For In-app pages, Navbar, Header
+ * - Clean design with minimal padding
  * - Transparent background
+ * - Optimized aspect ratio (712x950 ≈ 3:4)
  */
 export default function PizooLogo({ 
   variant = "classic", 
-  width = 280,
+  width = 200,
   className = "",
   alt = "Pizoo"
 }) {
   const src = variant === "golden" ? goldenLogo : classicLogo;
-  const height = width * 2; // Maintain aspect ratio (512x1024)
+  // Aspect ratio: 712x950 ≈ 0.75 (3:4)
+  const height = Math.round(width * 1.33);
 
   return (
     <img
       src={src}
       alt={alt}
-      width={width}
-      height={height}
       style={{
         width: `${width}px`,
         height: 'auto',
+        maxWidth: '100%',
         display: 'block',
       }}
       loading="eager"

@@ -3,12 +3,12 @@ import PizooLogo from "./PizooLogo";
 
 /**
  * Golden Logo variant for in-app usage
- * - Bright yellow-orange gradient
- * - Perfect for headers, navbars, success states
- * - Width: 160px (recommended for navbar)
+ * - Bright golden-yellow gradient
+ * - Perfect for headers, navbars, in-app pages
+ * - Width: 140px (optimized for navbar)
  */
 export default function GoldenLogo({
-  width = 160,
+  width = 140,
   className = "",
 }) {
   return (

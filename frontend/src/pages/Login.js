@@ -91,7 +91,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-red-500 to-orange-500 dark:from-gray-300 dark:via-gray-400 dark:to-gray-500 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-red-500 to-orange-500 dark:from-gray-300 dark:via-gray-400 dark:to-gray-500 flex flex-col items-center justify-start p-4 pt-20">
       {/* Language Selector - Floating */}
       <div className="fixed top-4 right-4 z-50">
         <LanguageSelector variant="compact" />

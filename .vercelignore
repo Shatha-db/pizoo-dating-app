@@ -1,0 +1,35 @@
+# Backend files (not needed for frontend deployment)
+backend/
+livekit-stack/
+pizoo-clean/
+tests/
+
+# Documentation
+*.md
+!README.md
+
+# Development files
+.git/
+.emergent/
+.ruff_cache/
+*.log
+
+# Node modules (will be installed during build)
+node_modules/
+frontend/node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Build artifacts (will be generated)
+frontend/build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

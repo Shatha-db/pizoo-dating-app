@@ -14,8 +14,8 @@ export default function Wordmark({
   title = "Pizoo",
 }) {
   const logoSrc = variant === "golden" 
-    ? "/logo/pizoo-golden-clean.png"
-    : "/logo/pizoo-classic-clean.png";
+    ? "/logo/pizoo-golden-v2.png"
+    : "/logo/pizoo-classic-v2.png";
 
   return (
     <div

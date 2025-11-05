@@ -1,0 +1,42 @@
+<svg width="1400" height="560" viewBox="0 0 1400 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="brandGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF7A45"/>
+      <stop offset="100%" stop-color="#FF3B2E"/>
+    </linearGradient>
+    <filter id="softGlow" x="-20%" y="-50%" width="140%" height="200%">
+      <feGaussianBlur stdDeviation="24" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="halftone">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="2" />
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0 0 0 0.2 0"/>
+      </feComponentTransfer>
+    </filter>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+      .word { font-family: 'Luckiest Guy', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    </style>
+  </defs>
+
+  <!-- موجة خفيفة/هالفتون خلف النص -->
+  <g opacity="0.85" filter="url(#halftone)">
+    <rect x="0" y="180" width="1400" height="200" fill="url(#brandGradient)" opacity="0.12"/>
+  </g>
+  <g opacity="0.18">
+    <rect x="260" y="170" width="880" height="220" rx="110" fill="url(#brandGradient)" filter="url(#softGlow)"/>
+  </g>
+
+  <!-- النص -->
+  <g filter="url(#softGlow)">
+    <text x="700" y="345" text-anchor="middle" class="word"
+          font-size="240" letter-spacing="6" fill="url(#brandGradient)" stroke="#9B1C13" stroke-width="8">
+      PiZOO
+    </text>
+  </g>
+</svg>

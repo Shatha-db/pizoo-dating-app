@@ -450,6 +450,7 @@ const Register = () => {
           </Link>
         </CardFooter>
       </Card>
+      </div>
     </div>
   );
 };

@@ -1,36 +1,19 @@
 import React from "react";
-import styles from "./Wordmark.module.css";
+import PizooLogo from "./PizooLogo";
 
 /**
- * Official Pizoo Logo (Classic or Golden variant)
- * - Uses the exact original logo image
- * - No text labels underneath
- * - Maintains original 3D effect and texture
+ * Wordmark wrapper for backward compatibility
+ * Uses the new PizooLogo component
  */
 export default function Wordmark({
-  width = 220,
+  width = 280,
   variant = "classic",
   className = "",
   title = "Pizoo",
 }) {
-  const logoSrc = variant === "golden" 
-    ? "/logo/pizoo-golden-v3.png"
-    : "/logo/pizoo-classic-v3.png";
-
   return (
-    <div
-      className={`${styles.wrap} ${className}`}
-      style={{ width, height: "auto" }}
-      aria-label={title}
-      role="img"
-    >
-      <img
-        src={logoSrc}
-        alt="Pizoo"
-        style={{ width: '100%', height: 'auto', display: 'block' }}
-        loading="eager"
-        fetchPriority="high"
-      />
+    <div aria-label={title} role="img" className={className}>
+      <PizooLogo variant={variant} width={width} />
     </div>
   );
 }

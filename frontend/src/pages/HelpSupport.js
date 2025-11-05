@@ -85,13 +85,13 @@ const HelpSupport = () => {
           
           <div className="space-y-4">
             <a
-              href="mailto:support@pizoo.com"
+              href="mailto:support@pizoo.ch"
               className="flex items-center gap-4 p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors"
             >
               <Mail className="w-6 h-6 text-blue-500" />
               <div className={isRTL ? 'text-right' : 'text-left'}>
                 <div className="font-medium">{isRTL ? 'البريد الإلكتروني' : 'Email'}</div>
-                <div className="text-sm text-gray-600">support@pizoo.com</div>
+                <div className="text-sm text-gray-600">support@pizoo.ch</div>
               </div>
             </a>
 

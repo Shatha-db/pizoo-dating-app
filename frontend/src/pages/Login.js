@@ -97,12 +97,12 @@ const Login = () => {
         <LanguageSelector variant="compact" />
       </div>
 
-      {/* Logo/Brand */}
-      <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
-        <CustomLogo size="xl" />
+      {/* Logo/Brand - Above Card */}
+      <div className="flex justify-center mb-4">
+        <Wordmark width={220} />
       </div>
 
-      <Card className="w-full max-w-md mt-20 dark:bg-gray-200" data-testid="login-card">
+      <Card className="w-full max-w-md dark:bg-gray-200" data-testid="login-card">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold dark:text-gray-900">{t('login_title')}</CardTitle>
           <CardDescription className="text-gray-600 dark:text-gray-700">

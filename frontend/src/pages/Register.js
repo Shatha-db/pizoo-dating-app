@@ -198,12 +198,12 @@ const Register = () => {
         )}
       </div>
 
-      {/* Logo/Brand */}
-      <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
-        <CustomLogo size="xl" />
+      {/* Logo/Brand - Above Card */}
+      <div className="flex justify-center mb-4">
+        <Wordmark width={220} />
       </div>
 
-      <Card className="w-full max-w-md mt-20 dark:bg-gray-200 backdrop-blur-sm bg-white/90">
+      <Card className="w-full max-w-md dark:bg-gray-200 backdrop-blur-sm bg-white/90">
         <CardHeader className="text-center pb-2">
           <CardTitle className="text-2xl font-bold dark:text-gray-900 text-pink-700">{t('register_title')}</CardTitle>
           <CardDescription className="text-sm text-gray-700 dark:text-gray-700 mt-3 leading-relaxed">

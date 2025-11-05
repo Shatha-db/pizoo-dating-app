@@ -8,7 +8,7 @@ import { Checkbox } from '../components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { LogIn, Eye, EyeOff, Mail, Phone } from 'lucide-react';
-import CustomLogo from '../components/CustomLogo';
+import Wordmark from '../components/branding/Wordmark';
 import CountryCodeSelect from '../components/CountryCodeSelect';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../modules/i18n/LanguageSelector';

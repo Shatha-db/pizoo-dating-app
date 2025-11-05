@@ -13,8 +13,7 @@ const CustomLogo = ({ size = 'lg', className = '' }) => {
   return (
     <div className={`flex items-center justify-center ${className}`}>
       <Logo 
-        variant="wordmark" 
-        width={sizeMap[size]} 
+        size={sizeMap[size]} 
         className="mx-auto"
       />
     </div>

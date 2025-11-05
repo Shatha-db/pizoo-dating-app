@@ -201,8 +201,8 @@ const Register = () => {
       {/* Auth Container */}
       <div className="w-full max-w-md">
         {/* Logo/Brand - Above Card */}
-        <div className="flex justify-center mb-4">
-          <Wordmark variant="classic" width={280} />
+        <div className="flex justify-center mb-3">
+          <Wordmark variant="classic" width={200} />
         </div>
 
         <Card className="w-full dark:bg-gray-200 backdrop-blur-sm bg-white/90">

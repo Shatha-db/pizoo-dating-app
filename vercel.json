@@ -4,10 +4,10 @@
   "outputDirectory": "frontend/build",
   "installCommand": "cd frontend && yarn install",
   "framework": null,
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ],
   "headers": [

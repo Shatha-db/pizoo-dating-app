@@ -14,8 +14,8 @@ from datetime import datetime, timezone, timedelta
 # Configuration
 EMAIL_PROVIDER = os.getenv('EMAIL_PROVIDER', 'mock')  # sendgrid | mock
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
-EMAIL_FROM = os.getenv('EMAIL_FROM', 'noreply@pizoo.app')
-EMAIL_FROM_NAME = os.getenv('EMAIL_FROM_NAME', 'Pizoo')
+EMAIL_FROM = os.getenv('EMAIL_FROM', 'support@pizoo.ch')
+EMAIL_FROM_NAME = os.getenv('EMAIL_FROM_NAME', 'info Pizoo')
 
 # Store OTP codes temporarily (in production, use Redis or database)
 otp_storage = {}

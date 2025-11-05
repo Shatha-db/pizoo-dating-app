@@ -1,0 +1,12 @@
+/* Wordmark Component - No effects, transparent background */
+.wrap {
+  display: inline-block;
+  line-height: 0;
+  user-select: none;
+}
+
+.wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}

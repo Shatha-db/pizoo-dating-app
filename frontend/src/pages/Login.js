@@ -261,6 +261,7 @@ const Login = () => {
           </Link>
         </CardFooter>
       </Card>
+      </div>
     </div>
   );
 };

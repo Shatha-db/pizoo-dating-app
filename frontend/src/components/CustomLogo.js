@@ -1,5 +1,5 @@
 import React from 'react';
-import Logo from './Logo';
+import Logo from './Logo.tsx';
 
 const CustomLogo = ({ size = 'lg', className = '' }) => {
   // Map sizes to pixel widths for the new Logo component

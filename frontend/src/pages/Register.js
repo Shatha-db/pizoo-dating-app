@@ -108,7 +108,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-pink-200 to-rose-200 dark:from-gray-300 dark:via-gray-400 dark:to-gray-500 flex items-center justify-center p-4" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-pink-200 to-rose-200 dark:from-gray-300 dark:via-gray-400 dark:to-gray-500 flex flex-col items-center justify-start p-4 pt-20" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
       {/* Language Selector - Floating Button */}
       <div className="fixed top-4 right-4 z-50">
         <Button

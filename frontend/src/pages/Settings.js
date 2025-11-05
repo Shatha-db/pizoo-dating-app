@@ -257,16 +257,7 @@ const Settings = () => {
           <h2 className="font-bold text-lg mb-4">{t('support_community')}</h2>
           
           <div className="space-y-2">
-            <button 
-              onClick={() => navigate('/help')}
-              className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg"
-            >
-              <div className="flex items-center gap-3">
-                <HelpCircle className="w-5 h-5 text-blue-500" />
-                <span>{t('help_support')}</span>
-              </div>
-              <ChevronLeft className="w-5 h-5 text-gray-400" />
-            </button>
+            {/* Help & Support button removed per user request */}
 
             <button 
               onClick={() => navigate('/community')}

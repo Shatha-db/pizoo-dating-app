@@ -26,7 +26,14 @@ async def organize_mongodb():
     try:
         # Connect to MongoDB
         client = AsyncIOMotorClient(MONGO_URL)
-        db = client.get_database()
+        # Extract database name from URL or use default
+        if '/' in MONGO_URL and '?' in MONGO_URL:
+            db_name = MONGO_URL.split('/')[-1].split('?')[0]
+        elif '/' in MONGO_URL:
+            db_name = MONGO_URL.split('/')[-1]
+        else:
+            db_name = 'pizoo'
+        db = client[db_name]
         
         print(f"✅ Connected to MongoDB: {db.name}")
         print()

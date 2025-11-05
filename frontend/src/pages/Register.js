@@ -202,7 +202,7 @@ const Register = () => {
       <div className="w-full max-w-md">
         {/* Logo/Brand - Large with minimal margin */}
         <div className="flex justify-center mb-1">
-          <Wordmark variant="classic" width={180} />
+          <Wordmark variant="classic" width={200} />
         </div>
 
         <Card className="w-full dark:bg-gray-200 backdrop-blur-sm bg-white/90">

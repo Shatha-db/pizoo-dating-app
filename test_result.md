@@ -285,6 +285,12 @@ frontend:
       - working: true
         agent: "main"
         comment: "Further reduced Golden logo size. Updated CustomLogo mappings: xs=40px, sm=50px, md=80px, lg=120px, xl=160px. Changed Home.js to size='xs' (40px width, ~53px height). Creates 1.7:1 ratio with 24px bell icon - much more compact and truly proportionate to navbar elements."
+      - working: false
+        agent: "user"
+        comment: "User also wants Classic Orange logo on Login/Register pages to be smaller with less empty space. Logo should be closer to top (vertical), not centered, and have compact frame without large margins."
+      - working: true
+        agent: "main"
+        comment: "Optimized auth pages (Login.js, Register.js): Reduced logo from 180px to 120px width. Changed container from flex items-center (center) to flex-col items-center justify-start pt-20 (top-aligned with padding). Reduced logo margin from mb-3 to mb-2. Logo now compact, positioned near top, minimal spacing."
 
 metadata:
   created_by: "main_agent"

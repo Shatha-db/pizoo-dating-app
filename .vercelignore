@@ -18,9 +18,11 @@ tests/
 node_modules/
 frontend/node_modules/
 
-# Environment files
+# Environment files (keep .env.production for Vercel)
 .env
-.env.*
+.env.local
+.env.development
+!.env.production
 !.env.example
 
 # Build artifacts (will be generated)

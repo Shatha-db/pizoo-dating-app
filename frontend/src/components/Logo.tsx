@@ -2,41 +2,23 @@ import React from 'react';
 
 interface Props {
   size?: number;
-  width?: number | string;
-  height?: number | string;
   className?: string;
-  title?: string;
 }
 
-const Logo: React.FC<Props> = ({
-  size = 164,
-  width,
-  height,
-  className,
-  title = 'Pizoo'
-}) => {
-  // Use size if provided, otherwise use width/height
-  const finalWidth = width || size;
-  const finalHeight = height || size;
-
+const AppLogo: React.FC<Props> = ({ size = 120, className = '' }) => {
   return (
     <img
       src="/logo/logo_classic.svg"
-      width={typeof finalWidth === 'number' ? finalWidth : undefined}
-      height={typeof finalHeight === 'number' ? finalHeight : undefined}
-      style={
-        typeof finalWidth === 'string' || typeof finalHeight === 'string'
-          ? { width: finalWidth, height: finalHeight }
-          : undefined
-      }
+      alt="Pizoo"
+      width={size}
+      height="auto"
       loading="eager"
       fetchPriority="high"
       decoding="async"
-      alt="Pizoo logo"
-      aria-label={title}
-      className={className ?? 'select-none'}
+      className={className}
+      style={{ display: 'inline-block' }}
     />
   );
 };
 
-export default Logo;
+export default AppLogo;

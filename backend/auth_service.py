@@ -26,7 +26,7 @@ SMTP_HOST = os.environ.get('SMTP_HOST', 'smtp.gmail.com')
 SMTP_PORT = int(os.environ.get('SMTP_PORT', '587'))
 SMTP_USER = os.environ.get('SMTP_USER', '')
 SMTP_PASS = os.environ.get('SMTP_PASS', '')
-EMAIL_FROM = os.environ.get('EMAIL_FROM', 'Pizoo App <noreply@pizoo.app>')
+EMAIL_FROM = os.environ.get('EMAIL_FROM', 'info Pizoo <support@pizoo.ch>')
 EMAIL_MODE = os.environ.get('EMAIL_MODE', 'mock')  # 'smtp' or 'mock'
 
 # Frontend URL for magic links

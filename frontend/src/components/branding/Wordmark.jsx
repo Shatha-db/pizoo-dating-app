@@ -2,10 +2,10 @@ import React from "react";
 import styles from "./Wordmark.module.css";
 
 /**
- * Strict, static Pizoo wordmark.
- * - No animation / no glow / no shadow
- * - Transparent background
- * - Renders exactly the provided SVG paths
+ * Official Pizoo Classic Logo
+ * - Uses the exact original logo image
+ * - No modifications to design or quality
+ * - Maintains original 3D effect and texture
  */
 export default function Wordmark({
   width = 220,
@@ -19,39 +19,13 @@ export default function Wordmark({
       aria-label={title}
       role="img"
     >
-      {/* Inline SVG (paths only, transparent BG) */}
-      <svg
-        viewBox="0 0 1200 450"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <defs>
-          <linearGradient id="pzGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#FF6A3A" />
-            <stop offset="100%" stopColor="#FF9B4B" />
-          </linearGradient>
-        </defs>
-
-        {/* Classic Logo Paths - No Filters */}
-        <g fill="url(#pzGrad)" stroke="none">
-          {/* P */}
-          <path d="M 80 100 L 80 350 M 80 100 L 180 100 Q 250 100 280 140 Q 295 165 295 200 Q 295 235 280 260 Q 250 300 180 300 L 80 300 M 100 120 L 180 120 Q 230 120 250 160 Q 260 180 260 200 Q 260 220 250 240 Q 230 280 180 280 L 100 280 Z" />
-          
-          {/* i */}
-          <path d="M 330 350 L 330 200 M 320 200 L 340 200 L 340 350 L 320 350 Z" />
-          <circle cx="330" cy="160" r="18" fill="#FFB366"/>
-          
-          {/* Z */}
-          <path d="M 390 200 L 510 200 L 510 220 L 420 330 L 520 330 L 520 350 L 390 350 L 390 330 L 480 220 L 390 220 Z" />
-          
-          {/* O */}
-          <ellipse cx="600" cy="275" rx="50" ry="65" stroke="url(#pzGrad)" strokeWidth="25" fill="none"/>
-          
-          {/* O */}
-          <ellipse cx="720" cy="275" rx="50" ry="65" stroke="url(#pzGrad)" strokeWidth="25" fill="none"/>
-        </g>
-      </svg>
+      <img
+        src="/logo/pizoo-classic-transparent.png"
+        alt="Pizoo"
+        style={{ width: '100%', height: 'auto', display: 'block' }}
+        loading="eager"
+        fetchPriority="high"
+      />
     </div>
   );
 }

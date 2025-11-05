@@ -225,7 +225,7 @@ async def organize_mongodb():
         
         for coll_name in sorted(all_collections):
             count = await db[coll_name].count_documents({})
-            indexes = await db[coll_name.list_indexes().to_list(length=None)
+            indexes = await db[coll_name].list_indexes().to_list(length=None)
             print(f"\n   {coll_name}:")
             print(f"      Documents: {count}")
             print(f"      Indexes: {len(indexes)}")

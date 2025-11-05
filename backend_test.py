@@ -416,7 +416,7 @@ class BackendTester:
         print("🔍 KEY FINDINGS:")
         
         # Check critical endpoints
-        critical_endpoints = ['Health Check', 'MongoDB Connection', 'Auth Login', 'LiveKit Configuration']
+        critical_endpoints = ['Backend Connectivity', 'MongoDB Connection', 'Auth Login', 'LiveKit Configuration']
         critical_failures = [r for r in self.test_results if r['test'] in critical_endpoints and not r['success']]
         
         if not critical_failures:

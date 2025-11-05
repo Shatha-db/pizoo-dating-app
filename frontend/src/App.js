@@ -36,7 +36,7 @@ import Notifications from './pages/Notifications';
 import Premium from './pages/Premium';
 import Settings from './pages/Settings';
 import TermsNew from './pages/TermsNew';
-import HelpSupport from './pages/HelpSupport';
+// HelpSupport removed per user request
 import CommunityGuidelines from './pages/CommunityGuidelines';
 import SafetyCenter from './pages/SafetyCenter';
 import CustomLogoPage from './pages/CustomLogoPage';

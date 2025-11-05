@@ -6,25 +6,38 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-      
+          node-version: 18
+          cache: 'pnpm'
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
-      
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: Run linters
         env:
           CI: true
@@ -35,24 +48,27 @@ jobs:
 
   lint-backend:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+          cache: 'pip'
+
       - name: Install backend dependencies
         working-directory: ./packages/backend
         run: |
           pip install -r requirements.txt
           pip install ruff mypy
-      
-      - name: Run ruff
+
+      - name: Run Ruff (Python linter)
         working-directory: ./packages/backend
         run: ruff check .
-      
-      - name: Run mypy
+
+      - name: Run MyPy (type checking)
         working-directory: ./packages/backend
         run: mypy . || true

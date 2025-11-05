@@ -265,6 +265,21 @@ frontend:
         agent: "main"
         comment: "Created comprehensive country list with 240+ countries. Added Popular section (CH, DE, FR, IT, AT, MENA, US, GB) at top, then alphabetical. Added search by name and dial code. Updated Login.js with email/phone toggle and country selector for phone login."
 
+  - task: "Golden Logo Navbar Integration & Sizing"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/CustomLogo.js, /app/frontend/src/pages/Home.js, /app/frontend/src/components/branding/GoldenLogo.jsx, /app/frontend/src/components/branding/PizooLogo.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "Golden logo in navbar too large, not proportionate to adjacent icons like bell icon"
+      - working: true
+        agent: "main"
+        comment: "Adjusted logo sizing for navbar use. Updated CustomLogo size mappings to be proportionate to navbar icons (24-28px): xs=60px, sm=80px, md=120px, lg=160px, xl=200px. Changed Home.js navbar logo from size='lg' (200px) to size='sm' (80px). Golden logo now properly sized relative to bell icon and other navbar elements."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"

@@ -1,21 +1,21 @@
 import React from "react";
-import Wordmark from "./Wordmark";
+import PizooLogo from "./PizooLogo";
 
 /**
  * Golden Logo variant for in-app usage
  * - Bright yellow-orange gradient
  * - Perfect for headers, navbars, success states
+ * - Width: 160px (recommended for navbar)
  */
 export default function GoldenLogo({
-  width = 180,
+  width = 160,
   className = "",
 }) {
   return (
-    <Wordmark 
+    <PizooLogo 
       variant="golden" 
       width={width} 
       className={className}
-      title="Pizoo"
     />
   );
 }

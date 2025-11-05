@@ -279,6 +279,12 @@ frontend:
       - working: true
         agent: "main"
         comment: "Adjusted logo sizing for navbar use. Updated CustomLogo size mappings to be proportionate to navbar icons (24-28px): xs=60px, sm=80px, md=120px, lg=160px, xl=200px. Changed Home.js navbar logo from size='lg' (200px) to size='sm' (80px). Golden logo now properly sized relative to bell icon and other navbar elements."
+      - working: false
+        agent: "user"
+        comment: "User wants internal golden logo even smaller, truly equal in size to adjacent icons like bell (24px). Should not extend beyond app frame, needs compact and proportionate sizing."
+      - working: true
+        agent: "main"
+        comment: "Further reduced Golden logo size. Updated CustomLogo mappings: xs=40px, sm=50px, md=80px, lg=120px, xl=160px. Changed Home.js to size='xs' (40px width, ~53px height). Creates 1.7:1 ratio with 24px bell icon - much more compact and truly proportionate to navbar elements."
 
 metadata:
   created_by: "main_agent"

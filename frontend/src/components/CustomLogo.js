@@ -5,11 +5,11 @@ const CustomLogo = ({ size = 'lg', className = '' }) => {
   // Map sizes to pixel widths for the Golden Logo
   // Optimized for navbar use - proportionate to icons (24-28px)
   const sizeMap = {
-    xs: 60,   // Extra small - compact navbar
-    sm: 80,   // Small - standard navbar
-    md: 120,  // Medium - larger headers
-    lg: 160,  // Large - splash/hero
-    xl: 200   // Extra large - auth pages
+    xs: 40,   // Extra small - compact navbar (proportionate to 24px icons)
+    sm: 50,   // Small - standard navbar
+    md: 80,   // Medium - larger headers
+    lg: 120,  // Large - splash/hero
+    xl: 160   // Extra large - auth pages
   };
 
   return (

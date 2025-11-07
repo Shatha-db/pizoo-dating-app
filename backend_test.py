@@ -16,7 +16,7 @@ from typing import Dict, Any, Optional
 sys.path.append('/app/backend')
 
 # Test configuration
-BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://pizoo-rebrand.preview.emergentagent.com')
+BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://pizoo-rebrand-1.preview.emergentagent.com')
 API_BASE = f"{BACKEND_URL}/api"
 
 # Test data

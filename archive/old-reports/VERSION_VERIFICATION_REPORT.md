@@ -354,7 +354,7 @@ Date: November 5, 2025
 
 ### Environment
 ```
-Development: ✅ Running (https://pizoo-rebrand.preview.emergentagent.com)
+Development: ✅ Running (https://pizoo-rebrand-1.preview.emergentagent.com)
 Production: ⏳ Pending Vercel deployment (pizoo.ch)
 ```
 
@@ -373,7 +373,7 @@ Production: ⏳ Pending Vercel deployment (pizoo.ch)
 
 ### Frontend URL
 ```
-Development: https://pizoo-rebrand.preview.emergentagent.com
+Development: https://pizoo-rebrand-1.preview.emergentagent.com
 Production (pending): https://pizoo.ch
 ```
 

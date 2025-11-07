@@ -15,7 +15,7 @@ from datetime import datetime
 sys.path.append('/app/backend')
 
 # Test configuration
-BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://pizoo-rebrand.preview.emergentagent.com')
+BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://pizoo-rebrand-1.preview.emergentagent.com')
 API_BASE = f"{BACKEND_URL}/api"
 
 async def test_livekit_with_verified_user():

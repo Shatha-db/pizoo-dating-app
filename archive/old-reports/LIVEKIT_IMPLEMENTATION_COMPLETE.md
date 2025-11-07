@@ -145,7 +145,7 @@ LIVEKIT_URL: wss://pizoo-app-2jxoavwx.livekit.cloud ✅
 **Solution:**
 ```env
 # Before:
-REACT_APP_BACKEND_URL=https://pizoo-rebrand.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://pizoo-rebrand-1.preview.emergentagent.com
 
 # After:
 REACT_APP_BACKEND_URL=https://datemaps.emergent.host

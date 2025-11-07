@@ -104,7 +104,9 @@ export default function SwipePage() {
         >
           <div className="text-6xl mb-4">⚠️</div>
           <h3 className="text-xl font-bold text-gray-800 mb-2">حدث خطأ</h3>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <p className="text-gray-600 mb-4">
+            {typeof error === 'string' ? error : 'حدث خطأ'}
+          </p>
           <button
             onClick={fetchProfiles}
             className="px-6 py-3 bg-gradient-to-r from-pink-500 to-orange-400 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-shadow"

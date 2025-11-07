@@ -415,7 +415,7 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-pink-25 to-rose-50 dark:from-gray-200 dark:via-gray-300 dark:to-gray-400 pb-20" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-pink-25 to-rose-50 dark:from-gray-200 dark:via-gray-300 dark:to-gray-400 pb-24" dir="rtl">
       {/* Header */}
       <header className="bg-pink-50/80 dark:bg-gray-200 shadow-sm p-4 flex justify-between items-center sticky top-0 z-10 backdrop-blur-sm">
         <div className="flex gap-2">
@@ -500,8 +500,12 @@ const Home = () => {
       {/* Main Card */}
       <main className="max-w-md mx-auto px-4 pt-6">
         {currentProfile ? (
-          <Card className="overflow-hidden shadow-2xl">
-            <div className="relative h-96 bg-gradient-to-br from-pink-200 to-purple-200">
+          <Card className="overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow">
+            <div 
+              className="relative h-96 bg-gradient-to-br from-pink-200 to-purple-200 cursor-pointer group"
+              onClick={() => navigate(`/profile/${currentProfile.user_id}`)}
+              title={t('home:tapToViewFullProfile') || 'Tap to view full profile'}
+            >
               {currentProfile.photos && currentProfile.photos.length > 0 ? (
                 <img 
                   src={currentProfile.photos[0]} 
@@ -514,7 +518,7 @@ const Home = () => {
                 </div>
               )}
               
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white pointer-events-none">
                 <h2 className="text-3xl font-bold">{currentProfile.display_name}</h2>
                 <p className="text-lg opacity-90">{currentProfile.occupation || 'Professional'}</p>
                 <div className="flex items-center gap-2 text-sm opacity-80 mt-1">
@@ -533,7 +537,12 @@ const Home = () => {
               <Button 
                 size="icon" 
                 variant="ghost" 
-                className="absolute top-4 left-4 bg-white/20 backdrop-blur"
+                className="absolute top-4 left-4 bg-white/20 backdrop-blur hover:bg-white/30 transition-colors pointer-events-auto"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/profile/${currentProfile.user_id}`);
+                }}
+                title={t('home:viewProfile')}
               >
                 <Info className="w-5 h-5 text-white" />
               </Button>

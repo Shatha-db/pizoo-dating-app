@@ -17,7 +17,7 @@ from typing import Dict, Any, Optional, List
 # URLs to test - Using local development server as requested
 LOCAL_URL = "http://127.0.0.1:8001"  # Local development server
 PRODUCTION_URL = "https://multilingual-date.emergent.host"  # Production URL
-BACKEND_URL = "https://pizoo-monorepo.preview.emergentagent.com"  # From frontend config
+BACKEND_URL = "https://dating-backend.preview.emergentagent.com"  # From frontend config
 
 class ComprehensiveBackendTester:
     def __init__(self):

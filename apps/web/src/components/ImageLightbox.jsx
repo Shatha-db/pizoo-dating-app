@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 
 export default function ImageLightbox({ open, images = [], index = 0, onClose, onNext, onPrev }) {
-  if (!open) return null;
-
   useEffect(() => {
+    if (!open) return;
+    
     const onKey = (e) => {
       if (e.key === 'Escape') onClose?.();
       if (e.key === 'ArrowRight') onNext?.();
@@ -11,7 +11,9 @@ export default function ImageLightbox({ open, images = [], index = 0, onClose, o
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onClose, onNext, onPrev]);
+  }, [open, onClose, onNext, onPrev]);
+
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">

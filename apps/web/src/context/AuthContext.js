@@ -60,12 +60,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (identifier, password) => {
     try {
-      const response = await axios.post(`${API}/auth/login`, {
-        email,
+      // Determine if identifier is email or phone
+      const isEmail = identifier.includes('@');
+      
+      const payload = {
         password
-      });
+      };
+      
+      // Add the correct field based on type
+      if (isEmail) {
+        payload.email = identifier;
+      } else {
+        payload.phone = identifier;
+      }
+      
+      const response = await axios.post(`${API}/auth/login`, payload);
       const { access_token, user: userData } = response.data;
       
       // Save to state and localStorage
@@ -76,9 +87,32 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true };
     } catch (error) {
+      // Handle FastAPI validation errors (array of objects)
+      let errorMessage = 'حدث خطأ أثناء تسجيل الدخول';
+      
+      if (error.response?.data?.detail) {
+        const detail = error.response.data.detail;
+        
+        // If detail is an array (validation errors)
+        if (Array.isArray(detail)) {
+          errorMessage = detail.map(err => {
+            const field = err.loc?.[1] || err.loc?.[0] || 'field';
+            return `${field}: ${err.msg}`;
+          }).join(', ');
+        } 
+        // If detail is a string
+        else if (typeof detail === 'string') {
+          errorMessage = detail;
+        }
+        // If detail is an object with msg
+        else if (detail.msg) {
+          errorMessage = detail.msg;
+        }
+      }
+      
       return { 
         success: false, 
-        error: error.response?.data?.detail || 'حدث خطأ أثناء تسجيل الدخول'
+        error: errorMessage
       };
     }
   };
@@ -102,9 +136,32 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true };
     } catch (error) {
+      // Handle FastAPI validation errors (array of objects)
+      let errorMessage = 'حدث خطأ أثناء التسجيل';
+      
+      if (error.response?.data?.detail) {
+        const detail = error.response.data.detail;
+        
+        // If detail is an array (validation errors)
+        if (Array.isArray(detail)) {
+          errorMessage = detail.map(err => {
+            const field = err.loc?.[1] || err.loc?.[0] || 'field';
+            return `${field}: ${err.msg}`;
+          }).join(', ');
+        } 
+        // If detail is a string
+        else if (typeof detail === 'string') {
+          errorMessage = detail;
+        }
+        // If detail is an object with msg
+        else if (detail.msg) {
+          errorMessage = detail.msg;
+        }
+      }
+      
       return { 
         success: false, 
-        error: error.response?.data?.detail || 'حدث خطأ أثناء التسجيل'
+        error: errorMessage
       };
     }
   };

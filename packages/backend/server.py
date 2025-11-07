@@ -9,7 +9,7 @@ import logging
 import re
 import time
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict, EmailStr
+from pydantic import BaseModel, Field, ConfigDict, EmailStr, field_validator
 from typing import List, Optional, Dict
 import uuid
 import json
@@ -944,8 +944,18 @@ class RegisterRequest(BaseModel):
 
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    email: Optional[EmailStr] = None
+    phone: Optional[str] = None
     password: str
+    
+    @field_validator('phone')
+    @classmethod
+    def check_at_least_one_identifier(cls, v, info):
+        # Check if at least one of email or phone is provided
+        email = info.data.get('email')
+        if not v and not email:
+            raise ValueError('Either email or phone must be provided')
+        return v
 
 
 class SwipeRequest(BaseModel):
@@ -968,6 +978,37 @@ class BlockRequest(BaseModel):
 @api_router.get("/")
 async def root():
     return {"message": "Welcome to Subscription API"}
+
+
+@api_router.get("/health")
+async def health_check():
+    """
+    Health check endpoint for CI/CD and monitoring
+    """
+    try:
+        # Check MongoDB connection
+        if db is None:
+            return {
+                "status": "unhealthy",
+                "database": "disconnected",
+                "message": "MongoDB client not initialized"
+            }
+        
+        # Try to ping the database
+        await db.command("ping")
+        
+        return {
+            "status": "healthy",
+            "database": "connected",
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+    except Exception as e:
+        logging.error(f"Health check failed: {e}")
+        return {
+            "status": "unhealthy",
+            "database": "error",
+            "error": str(e)
+        }
 
 
 @api_router.post("/auth/register", response_model=TokenResponse)
@@ -1068,7 +1109,19 @@ async def register(request: RegisterRequest):
 
 @api_router.post("/auth/login", response_model=TokenResponse)
 async def login(request: LoginRequest):
-    user = await db.users.find_one({"email": request.email}, {"_id": 0})
+    # Build query based on provided identifier (email or phone)
+    query = {}
+    if request.email:
+        query["email"] = request.email
+    elif request.phone:
+        query["phone"] = request.phone
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email or phone number is required"
+        )
+    
+    user = await db.users.find_one(query, {"_id": 0})
     
     if not user or not verify_password(request.password, user['password_hash']):
         raise HTTPException(

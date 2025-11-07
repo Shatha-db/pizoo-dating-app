@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +6,6 @@ import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { ArrowRight, MapPin, Briefcase, Heart, X, MessageCircle, Star, MoreVertical, Flag, Ban } from 'lucide-react';
 import ImageLightbox from '../components/ImageLightbox';
-import ProfileCard from '../components/ProfileCard';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -136,6 +135,7 @@ const ProfileView = () => {
   };
 
   const handleBlock = async () => {
+    // eslint-disable-next-line no-restricted-globals
     if (!confirm('هل أنت متأكد من حظر هذا المستخدم؟')) return;
 
     try {

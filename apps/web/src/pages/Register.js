@@ -322,7 +322,9 @@ const Register = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
                 <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
+                  <AlertDescription>
+                    {typeof error === 'string' ? error : JSON.stringify(error)}
+                  </AlertDescription>
                 </Alert>
               )}
 

@@ -116,7 +116,9 @@ const AddPayment = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
               <Alert variant="destructive" data-testid="error-alert">
-                <AlertDescription>{error}</AlertDescription>
+                <AlertDescription>
+                  {typeof error === 'string' ? error : JSON.stringify(error)}
+                </AlertDescription>
               </Alert>
             )}
 

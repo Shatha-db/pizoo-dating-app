@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Suspense, useRef } from 'react';
+import { useState, useEffect, Suspense, lazy, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { WebSocketProvider } from './context/WebSocketContext';
@@ -7,7 +7,6 @@ import { NotificationProvider } from './context/NotificationContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import LanguageGuard from './components/LanguageGuard';
 import Register from './pages/Register';
-import RegisterPhone from './modules/otp/RegisterPhone';
 import Login from './pages/Login';
 import PhoneLogin from './pages/PhoneLogin';
 import AddPayment from './pages/AddPayment';
@@ -26,10 +25,6 @@ import ProfileNew from './pages/ProfileNew';
 import ProfileView from './pages/ProfileView';
 import EditProfile from './pages/EditProfile';
 import TopPicks from './pages/TopPicks';
-// ⚠️ Lazy load DiscoverySettings to prevent Leaflet loading on every page
-const DiscoverySettings = React.lazy(() => import('./pages/DiscoverySettings'));
-// ⚠️ Lazy load SwipePage to prevent framer-motion issues
-const SwipePage = React.lazy(() => import('./pages/SwipePage'));
 import DoubleDating from './pages/DoubleDating';
 import DoubleDatingInfo from './pages/DoubleDatingInfo';
 import Notifications from './pages/Notifications';
@@ -44,6 +39,11 @@ import { Toaster } from './components/ui/sonner';
 import { useTranslation } from 'react-i18next';
 import Loader from './components/Loader';
 import './App.css';
+
+// ⚠️ Lazy load DiscoverySettings to prevent Leaflet loading on every page
+const DiscoverySettings = lazy(() => import('./pages/DiscoverySettings'));
+// ⚠️ Lazy load SwipePage to prevent framer-motion issues
+const SwipePage = lazy(() => import('./pages/SwipePage'));
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -96,7 +96,7 @@ function AppRoot() {
     return () => {
       clearTimeout(timer);
     };
-  }, []); // ✅ Empty deps - only run once
+  }, [i18n]); // Added i18n dependency
 
   if (!ready) {
     return (

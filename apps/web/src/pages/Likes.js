@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -167,13 +167,6 @@ const Likes = () => {
               <MessageCircle className="w-3 h-3 ml-1" />
               {t('message')}
             </Button>
-            <Button
-              onClick={() => handleLike(profile.id || profile.user_id)}
-              size="sm"
-              className="flex-1 bg-rose-500 hover:bg-rose-600 text-white text-xs"
-            >
-              ❤️
-            </Button>
           </div>
         </Card>
       ))}
@@ -181,7 +174,7 @@ const Likes = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20" dir="rtl">
+    <div className="min-h-screen bg-gray-50 pb-24" dir="rtl">
       {/* Toast Notification */}
       {toast && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-black/90 text-white px-6 py-3 rounded-full z-50 shadow-lg">

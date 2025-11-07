@@ -114,7 +114,9 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <Alert variant="destructive" data-testid="error-alert">
-                <AlertDescription>{error}</AlertDescription>
+                <AlertDescription>
+                  {typeof error === 'string' ? error : JSON.stringify(error)}
+                </AlertDescription>
               </Alert>
             )}
 

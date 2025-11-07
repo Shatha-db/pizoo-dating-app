@@ -233,6 +233,48 @@ node_modules/@next/swc-linux-arm64-gnu/next-swc.linux-arm64-gnu.node
 *.env.*
 apps/web/node_modules/.cache/default-development/1.pack
 apps/web/node_modules/.cache/default-development/2.pack
+-e 
+# Environment files
+*.env
+*.env.*
+-e 
+# Environment files
+*.env
+*.env.*
+-e 
+# Environment files
+*.env
+*.env.*
 apps/web/node_modules/.cache/default-development/4.pack
+-e 
+# Environment files
+*.env
+*.env.*
+apps/web/node_modules/.cache/default-development/5.pack
+-e 
+# Environment files
+*.env
+*.env.*
 apps/web/node_modules/.cache/default-development/7.pack
-apps/web/node_modules/.cache/default-development/6.pack
+apps/web/node_modules/.cache/default-development/8.pack
+-e 
+# Environment files
+*.env
+*.env.*
+-e 
+# Environment files
+*.env
+*.env.*
+apps/web/node_modules/.cache/default-development/3.pack
+-e 
+# Environment files
+*.env
+*.env.*
+-e 
+# Environment files
+*.env
+*.env.*
+-e 
+# Environment files
+*.env
+*.env.*

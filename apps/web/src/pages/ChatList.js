@@ -124,7 +124,7 @@ const ChatList = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-20" dir="rtl">
+    <div className="min-h-screen bg-white pb-24" dir="rtl">
       {/* Header */}
       <header className="bg-white shadow-sm p-4 sticky top-0 z-10 border-b border-gray-100">
         <div className="flex items-center justify-between max-w-2xl mx-auto">
